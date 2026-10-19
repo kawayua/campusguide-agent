@@ -1,0 +1,380 @@
+"""条款切分：章/条边界识别、前言与附录分块、长条款分段、联系方式脱敏。
+
+切分是 W1 的核心规则，采用纯正则 + 确定性处理：
+- 章标题写入 chapter_path，不单独作为检索单位；
+- 条款正文从“第 X 条”之后开始，到下一条/下一章前结束；
+- 超过 800 字的条款按段落/句子切成多个 part，共享同一个 article_id；
+- 重复条款号追加 ~N 保证 article_id 唯一，并记录告警。
+"""
+
+from __future__ import annotations
+
+import re
+from dataclasses import dataclass, field
+
+from campusguide.domain.enums import BlockType
+from campusguide.domain.ids import article_index_from_no, make_article_id
+from campusguide.domain.models import Article, DocumentVersion
+from campusguide.domain.text import clean_whitespace, normalize_text
+from campusguide.ingest.parse import ParsedDocument
+from campusguide.ingest.redact import redact_text
+
+MAX_ARTICLE_CHARS = 800
+PREFACE_MIN_CHARS = 20
+TAIL_MIN_CHARS = 20
+
+_CN_NUM = "一二三四五六七八九十百千零〇两0-9"
+CHAPTER_RE = re.compile(
+    rf"(?m)^[ \t　]*(?P<title>第[{_CN_NUM}]{{1,12}}章(?:[ \t　]+[^\n]{{0,80}})?)[ \t　]*$"
+)
+ARTICLE_RE = re.compile(
+    rf"(?m)^[ \t　]*(?P<no>第[{_CN_NUM}]{{1,12}}条(?:之[{_CN_NUM}]{{1,3}})?)"
+    rf"(?P<sep>[ \t　]+|[：:、.．]|$)(?P<rest>.*)$"
+)
+# 部分 PDF 会把“第三条学生应当…”粘在一起；仅在严格规则零命中时回退。
+ARTICLE_RE_LOOSE = re.compile(
+    rf"(?m)^[ \t　]*(?P<no>第[{_CN_NUM}]{{1,12}}条(?:之[{_CN_NUM}]{{1,3}})?)"
+    rf"[ \t　]*(?P<rest>.*)$"
+)
+
+PAGE_NUMBER_RE = re.compile(r"^\s*(?:[-—–]?\s*\d{1,4}\s*[-—–]?|第\s*\d+\s*页)\s*$")
+SENTENCE_RE = re.compile(r"(?<=[。！？；!?;])")
+# 文末落款：空行之后的一到三行，最后一行是“YYYY年M月D日”。
+# 落款不进入条款库，避免把发布日期粘到最后一条正文里。
+SIGNATURE_TAIL_RE = re.compile(
+    r"\n[ \t　]*\n"
+    r"(?P<sig>(?:[^\n]{0,80}\n){1,3}[^\n]{0,80}"
+    r"(?:19|20)\d{2}\s*年\s*(?:0?[1-9]|1[0-2])\s*月\s*"
+    r"(?:0?[1-9]|[12]\d|3[01])\s*日[^\n]{0,10})[ \t　]*\n?[ \t　]*$"
+)
+
+
+@dataclass
+class SegmentResult:
+    articles: list[Article] = field(default_factory=list)
+    warnings: list[str] = field(default_factory=list)
+    missing_article_indices: list[int] = field(default_factory=list)
+    duplicate_article_nos: list[str] = field(default_factory=list)
+    redaction_counts: dict[str, int] = field(default_factory=dict)
+    used_loose_article_rule: bool = False
+
+    @property
+    def indexable_articles(self) -> list[Article]:
+        return [
+            article
+            for article in self.articles
+            if article.block_type is BlockType.ARTICLE and article.text_normalized
+        ]
+
+    @property
+    def blocks(self) -> list[Article]:
+        return [article for article in self.articles if article.block_type is not BlockType.ARTICLE]
+
+    def merge_redaction_counts(self, counts: dict[str, int]) -> None:
+        for key, value in counts.items():
+            self.redaction_counts[key] = self.redaction_counts.get(key, 0) + value
+
+
+def _split_text(text: str, max_chars: int) -> list[str]:
+    if len(text) <= max_chars:
+        return [text] if text else []
+
+    units: list[str] = []
+    for paragraph in text.split("\n"):
+        paragraph = paragraph.strip()
+        if not paragraph:
+            continue
+        if len(paragraph) <= max_chars:
+            units.append(paragraph)
+            continue
+        for sentence in SENTENCE_RE.split(paragraph):
+            sentence = sentence.strip()
+            while len(sentence) > max_chars:
+                units.append(sentence[:max_chars])
+                sentence = sentence[max_chars:]
+            if sentence:
+                units.append(sentence)
+
+    chunks: list[str] = []
+    current = ""
+    for unit in units:
+        candidate = f"{current}\n{unit}" if current else unit
+        if len(candidate) <= max_chars:
+            current = candidate
+        else:
+            if current:
+                chunks.append(current.strip())
+            current = unit
+    if current:
+        chunks.append(current.strip())
+    return chunks or [text]
+
+
+def _clean_article_body(text: str) -> str:
+    lines = []
+    for line in text.split("\n"):
+        stripped = line.strip()
+        if not stripped:
+            continue
+        if PAGE_NUMBER_RE.match(stripped):
+            continue
+        lines.append(stripped)
+    return clean_whitespace("\n".join(lines))
+
+
+def _build_article(
+    *,
+    version: DocumentVersion,
+    article_no: str,
+    article_index: int,
+    chapter_path: list[str],
+    text: str,
+    block_type: BlockType,
+    part_no: int,
+    duplicate: int,
+    topic_tags: list[str],
+    flow_ids: list[str],
+    source_format: str,
+) -> Article:
+    return Article(
+        article_id=make_article_id(
+            version.doc_id,
+            version.version_id,
+            article_no,
+            duplicate=duplicate,
+        ),
+        doc_id=version.doc_id,
+        version_id=version.version_id,
+        doc_title=version.title,
+        chapter_path=chapter_path,
+        article_no=article_no,
+        article_index=article_index,
+        part_no=part_no,
+        block_type=block_type,
+        text=text,
+        text_normalized=normalize_text(text),
+        text_raw_ref=f"{version.doc_id}/{version.version_id}/source.{source_format}",
+        audience=version.audience,
+        status=version.status,
+        effective_from=version.effective_from,
+        effective_to=version.effective_to,
+        source_url=version.source_url,
+        published_at=version.published_at,
+        issuing_department=version.issuing_department,
+        topic_tags=topic_tags,
+        flow_ids=flow_ids,
+        source_sha256=version.source_sha256,
+    )
+
+
+def _add_parts(
+    result: SegmentResult,
+    *,
+    version: DocumentVersion,
+    article_no: str,
+    article_index: int,
+    chapter_path: list[str],
+    text: str,
+    block_type: BlockType,
+    duplicate: int,
+    topic_tags: list[str],
+    flow_ids: list[str],
+    source_format: str,
+    max_chars: int,
+) -> None:
+    redacted = redact_text(_clean_article_body(text))
+    result.merge_redaction_counts(redacted.counts)
+    parts = _split_text(redacted.text, max_chars)
+    if not parts:
+        result.warnings.append(f"{article_no} 正文为空")
+    for part_no, part in enumerate(parts, start=1):
+        result.articles.append(
+            _build_article(
+                version=version,
+                article_no=article_no,
+                article_index=article_index,
+                chapter_path=chapter_path,
+                text=part,
+                block_type=block_type,
+                part_no=part_no,
+                duplicate=duplicate,
+                topic_tags=topic_tags,
+                flow_ids=flow_ids,
+                source_format=source_format,
+            )
+        )
+
+
+def segment_document(
+    parsed: ParsedDocument,
+    version: DocumentVersion,
+    *,
+    topic_tags: list[str] | None = None,
+    flow_ids: list[str] | None = None,
+    max_article_chars: int = MAX_ARTICLE_CHARS,
+) -> SegmentResult:
+    return _segment_document(
+        parsed,
+        version,
+        topic_tags=topic_tags or [],
+        flow_ids=flow_ids or [],
+        max_chars=max_article_chars,
+    )
+
+
+def _segment_document(
+    parsed: ParsedDocument,
+    version: DocumentVersion,
+    *,
+    topic_tags: list[str],
+    flow_ids: list[str],
+    max_chars: int,
+) -> SegmentResult:
+    result = SegmentResult()
+    text = parsed.text
+    chapters = list(CHAPTER_RE.finditer(text))
+    articles = list(ARTICLE_RE.finditer(text))
+    if not articles:
+        articles = list(ARTICLE_RE_LOOSE.finditer(text))
+        if articles:
+            result.used_loose_article_rule = True
+            result.warnings.append("严格条款边界零命中，已回退到宽松规则，请人工抽查")
+
+    if not articles:
+        result.warnings.append("未识别到任何“第 X 条”，整篇作为不可检索块保存")
+        _add_parts(
+            result,
+            version=version,
+            article_no="全文",
+            article_index=0,
+            chapter_path=[],
+            text=text,
+            block_type=BlockType.OTHER,
+            duplicate=1,
+            topic_tags=topic_tags,
+            flow_ids=flow_ids,
+            source_format=parsed.format,
+            max_chars=max_chars,
+        )
+        return result
+
+    chapter_starts = [match.start() for match in chapters]
+
+    def chapter_path_at(position: int) -> list[str]:
+        path: list[str] = []
+        for match in chapters:
+            if match.start() < position:
+                path = [match.group("title").strip()]
+            else:
+                break
+        return path
+
+    first_article_start = articles[0].start()
+    first_chapter = next((start for start in chapter_starts if start < first_article_start), None)
+    preface_end = first_chapter if first_chapter is not None else first_article_start
+    preface = text[:preface_end]
+    if len(normalize_text(preface)) >= PREFACE_MIN_CHARS:
+        _add_parts(
+            result,
+            version=version,
+            article_no="前言",
+            article_index=0,
+            chapter_path=[],
+            text=preface,
+            block_type=BlockType.PREFACE,
+            duplicate=1,
+            topic_tags=topic_tags,
+            flow_ids=flow_ids,
+            source_format=parsed.format,
+            max_chars=max_chars,
+        )
+
+    article_starts = [match.start() for match in articles]
+    duplicate_counts: dict[str, int] = {}
+    seen_indices: list[int] = []
+    last_end = first_article_start
+
+    signature = SIGNATURE_TAIL_RE.search(text)
+    tail_start = len(text)
+    if signature is not None and signature.start() > article_starts[-1]:
+        tail_start = signature.start()
+
+    for index, match in enumerate(articles):
+        article_no = match.group("no").strip()
+        article_index = article_index_from_no(article_no)
+        seen_indices.append(article_index)
+
+        next_article = article_starts[index + 1] if index + 1 < len(article_starts) else len(text)
+        next_chapter = next((start for start in chapter_starts if start > match.start()), len(text))
+        body_end = min(next_article, next_chapter)
+        if index == len(articles) - 1:
+            body_end = min(body_end, tail_start)
+        body_start = match.start("rest")
+        body = text[body_start:body_end]
+        last_end = max(last_end, body_end)
+
+        duplicate_counts[article_no] = duplicate_counts.get(article_no, 0) + 1
+        duplicate = duplicate_counts[article_no]
+        if duplicate > 1:
+            result.duplicate_article_nos.append(article_no)
+            result.warnings.append(f"条款号重复：{article_no}（第 {duplicate} 次出现）")
+
+        _add_parts(
+            result,
+            version=version,
+            article_no=article_no,
+            article_index=article_index,
+            chapter_path=chapter_path_at(match.start()),
+            text=body,
+            block_type=BlockType.ARTICLE,
+            duplicate=duplicate,
+            topic_tags=topic_tags,
+            flow_ids=flow_ids,
+            source_format=parsed.format,
+            max_chars=max_chars,
+        )
+
+    if result.duplicate_article_nos:
+        result.duplicate_article_nos = sorted(set(result.duplicate_article_nos))
+
+    valid_indices = sorted({index for index in seen_indices if index > 0})
+    if valid_indices:
+        present = set(valid_indices)
+        missing = [index for index in range(1, max(valid_indices) + 1) if index not in present]
+        result.missing_article_indices = missing
+        if missing:
+            preview = "、".join(str(index) for index in missing[:10])
+            result.warnings.append(f"条款序号不连续，缺失：{preview}")
+
+    tail = text[last_end:]
+    if len(normalize_text(tail)) >= TAIL_MIN_CHARS:
+        if any(keyword in tail[:50] for keyword in ("附件", "附表", "附录")):
+            block_type = BlockType.APPENDIX
+            warning = "尾部附件/附录已单独建块"
+        else:
+            block_type = BlockType.APPENDIX
+            warning = "尾部文本已放入附录块，可能是落款或附件，请人工确认"
+        result.warnings.append(warning)
+        _add_parts(
+            result,
+            version=version,
+            article_no="附录",
+            article_index=9999,
+            chapter_path=[],
+            text=tail,
+            block_type=block_type,
+            duplicate=1,
+            topic_tags=topic_tags,
+            flow_ids=flow_ids,
+            source_format=parsed.format,
+            max_chars=max_chars,
+        )
+    elif normalize_text(tail):
+        result.warnings.append("忽略尾部短文本（可能是落款/页码）")
+
+    if result.redaction_counts:
+        result.warnings.append(
+            "索引文本已脱敏："
+            + ", ".join(f"{key}={value}" for key, value in sorted(result.redaction_counts.items()))
+        )
+    return result

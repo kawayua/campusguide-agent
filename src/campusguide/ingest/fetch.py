@@ -66,10 +66,10 @@ def detect_format(
         return explicit  # type: ignore[return-value]
 
     candidates = []
-    if url:
-        candidates.append(url.split("?", 1)[0].lower())
     if local_path:
         candidates.append(local_path.lower())
+    if url:
+        candidates.append(url.split("?", 1)[0].lower())
     if content_type:
         candidates.append(content_type.lower())
 
@@ -176,9 +176,21 @@ def fetch_one(
     final_url: str | None = None
     content_type: str | None = None
     local_path_value: str | None = None
+    used_local_source = version.local_path is not None
 
     try:
-        if version.url is not None:
+        if used_local_source:
+            local_path_value = version.local_path
+            local_path = Path(version.local_path)
+            if not local_path.is_absolute():
+                local_path = (local_base_dir or config_dir) / local_path
+            if not local_path.exists():
+                raise FetchError(f"本地文件不存在：{local_path}")
+            content = local_path.read_bytes()
+            content_type = mimetypes.guess_type(local_path.name)[0]
+            source_name = version.local_path
+        else:
+            assert version.url is not None
             response = _request_with_retry(client, str(version.url), timeout=timeout)
             http_status = response.status_code
             final_url = str(response.url)
@@ -189,17 +201,6 @@ def fetch_one(
             if len(content) > MAX_BYTES:
                 raise FetchError(f"文件超过 {MAX_BYTES // (1024 * 1024)} MB 限制")
             source_name = str(version.url)
-        else:
-            assert version.local_path is not None
-            local_path_value = version.local_path
-            local_path = Path(version.local_path)
-            if not local_path.is_absolute():
-                local_path = (local_base_dir or config_dir) / local_path
-            if not local_path.exists():
-                raise FetchError(f"本地文件不存在：{local_path}")
-            content = local_path.read_bytes()
-            content_type = mimetypes.guess_type(local_path.name)[0]
-            source_name = version.local_path
 
         source_format = detect_format(
             version.format,
@@ -237,7 +238,7 @@ def fetch_one(
         return FetchResult(
             doc_id=doc.doc_id,
             version_id=version.version_id,
-            status="fetched" if version.url is not None else "copied",
+            status="copied" if used_local_source else "fetched",
             source_path=source_path,
             meta_path=meta_path,
             sha256=digest,

@@ -55,11 +55,21 @@ def test_load_sources_list_format(tmp_path: Path) -> None:
     assert config.documents[0].doc_id == "status-rules"
 
 
-def test_source_requires_exactly_one_location(tmp_path: Path) -> None:
-    bad = {**DOC, "versions": [{**DOC["versions"][0], "local_path": "local.html"}]}
+def test_local_path_requires_citation_url(tmp_path: Path) -> None:
+    bad = {
+        **DOC,
+        "versions": [{**DOC["versions"][0], "url": None, "local_path": "local.html"}],
+    }
     path = write_yaml(tmp_path / "sources.yaml", [bad])
     with pytest.raises(SourcesConfigError):
         load_sources(path)
+
+
+def test_local_path_with_url_is_allowed(tmp_path: Path) -> None:
+    good = {**DOC, "versions": [{**DOC["versions"][0], "local_path": "local.html"}]}
+    path = write_yaml(tmp_path / "sources.yaml", [good])
+    config = load_sources(path)
+    assert config.documents[0].versions[0].local_path == "local.html"
 
 
 def test_duplicate_doc_id_rejected(tmp_path: Path) -> None:

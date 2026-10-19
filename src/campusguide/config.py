@@ -38,10 +38,11 @@ class SourceVersion(BaseModel):
     notes: str | None = None
 
     @model_validator(mode="after")
-    def _exactly_one_source(self) -> SourceVersion:
-        sources = [self.url is not None, self.local_path is not None]
-        if sum(sources) != 1:
-            raise ValueError("url 与 local_path 必须且只能填写一个")
+    def _validate_source(self) -> SourceVersion:
+        if self.url is None and self.local_path is None:
+            raise ValueError("url 与 local_path 至少填写一个")
+        if self.local_path is not None and self.url is None:
+            raise ValueError("local_path 只表示本地内容来源，仍需 url 作为引用链接")
         if self.effective_to and self.effective_from and self.effective_to < self.effective_from:
             raise ValueError("effective_to 不能早于 effective_from")
         return self

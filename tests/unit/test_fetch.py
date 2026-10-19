@@ -100,7 +100,6 @@ def test_fetch_local_file_and_skip_existing(tmp_path: Path) -> None:
     source = tmp_path / "local.html"
     source.write_text(HTML_BYTES.decode(), encoding="utf-8")
     document, version = make_source(
-        url=None,
         local_path="local.html",
         format="html",
     )
