@@ -1,0 +1,510 @@
+"""HTML/PDF 解析：提取正文、标题、表格，记录解析告警。
+
+HTML 采用“候选正文容器 + CJK 字符数最多”策略；PDF 使用 PyMuPDF 文本层，
+并做页眉页脚、页码的重复行清理。扫描件暂时只记录告警，OCR 在后续迭代加入。
+"""
+
+from __future__ import annotations
+
+import hashlib
+import json
+import math
+import os
+import re
+from collections import Counter
+from collections.abc import Iterable
+from dataclasses import dataclass, field
+from pathlib import Path
+from typing import Literal
+
+from bs4 import BeautifulSoup, NavigableString
+from pydantic import BaseModel
+
+from campusguide.domain.text import clean_whitespace, count_cjk, normalize_text
+
+HTML_PARSER_VERSION = "campusguide-html-0.1.0"
+PDF_PARSER_VERSION = "campusguide-pdf-0.1.0"
+PARSE_SCHEMA_VERSION = "1.0"
+
+CONTENT_SELECTORS = (
+    "#vsb_content",
+    "#vsb_content_100",
+    ".wp_articlecontent",
+    ".v_news_content",
+    ".article-content",
+    ".article_content",
+    ".article",
+    "article",
+    "main",
+    ".content",
+    "td.content",
+)
+
+UNWANTED_TAGS = (
+    "script",
+    "style",
+    "noscript",
+    "iframe",
+    "form",
+    "button",
+    "svg",
+    "canvas",
+)
+
+UNWANTED_ATTR_RE = re.compile(
+    r"(^|[-_])(nav|menu|footer|header|breadcrumb|crumb|sidebar|side|share|print|search|"
+    r"copyright|bottom|topbar|toolbar|login|qrcode)([-_]|$)",
+    re.IGNORECASE,
+)
+
+PAGE_NUMBER_RE = re.compile(
+    r"^\s*(?:[-—–]?\s*\d{1,4}\s*[-—–]?|第\s*\d+\s*页(?:\s*共\s*\d+\s*页)?|\d+\s*/\s*\d+)\s*$"
+)
+
+DROP_LINE_RE = re.compile(
+    r"^(上一篇|下一篇|返回列表|打印本页|关闭窗口|分享到|扫一扫|版权所有|Copyright|技术支持)"
+)
+
+PDF_TITLE_HINT_RE = re.compile(r"(办法|规定|细则|通知|指南|方案|意见|条例|章程|制度)")
+
+
+class ParsedDocument(BaseModel):
+    schema_version: str = PARSE_SCHEMA_VERSION
+    doc_id: str
+    version_id: str
+    title: str
+    text: str
+    format: Literal["html", "pdf"]
+    source_sha256: str
+    source_url: str | None = None
+    local_path: str | None = None
+    fetched_at: str | None = None
+    parser_version: str
+    warnings: list[str] = field(default_factory=list)
+    tables: list[str] = field(default_factory=list)
+    page_count: int | None = None
+    cjk_count: int = 0
+    char_count: int = 0
+
+
+@dataclass
+class ParseOutput:
+    title: str
+    text: str
+    format: Literal["html", "pdf"]
+    parser_version: str
+    warnings: list[str] = field(default_factory=list)
+    tables: list[str] = field(default_factory=list)
+    page_count: int | None = None
+
+
+@dataclass
+class ParseResult:
+    doc_id: str
+    version_id: str
+    status: Literal["parsed", "skipped", "error"]
+    output_path: Path | None = None
+    warnings: list[str] = field(default_factory=list)
+    error: str | None = None
+    cjk_count: int = 0
+
+
+def _decode_html(raw: bytes, content_type: str | None) -> tuple[str, str, list[str]]:
+    warnings: list[str] = []
+    encodings: list[str] = []
+    if content_type and "charset=" in content_type.lower():
+        encodings.append(content_type.lower().split("charset=", 1)[1].split(";")[0].strip())
+    encodings.extend(["utf-8-sig", "utf-8", "gb18030"])
+
+    for encoding in dict.fromkeys(encodings):
+        try:
+            return raw.decode(encoding), encoding, warnings
+        except (LookupError, UnicodeDecodeError):
+            continue
+
+    warnings.append("HTML 编码无法确定，使用 UTF-8 replacement 解码")
+    return raw.decode("utf-8", errors="replace"), "utf-8", warnings
+
+
+def _remove_unwanted(soup: BeautifulSoup) -> None:
+    for tag in soup.find_all(UNWANTED_TAGS):
+        tag.decompose()
+
+    to_remove = []
+    for element in soup.find_all(True):
+        classes = " ".join(element.get("class", []))
+        identifier = element.get("id", "")
+        if UNWANTED_ATTR_RE.search(classes) or UNWANTED_ATTR_RE.search(identifier):
+            to_remove.append(element)
+    for element in to_remove:
+        if element.parent is not None:
+            element.decompose()
+
+
+def _extract_title(soup: BeautifulSoup, fallback: str | None) -> str:
+    for selector in ("h1", ".article-title", ".article_title", ".title", "title"):
+        element = soup.select_one(selector)
+        if element:
+            title = clean_whitespace(element.get_text(" ", strip=True))
+            if title:
+                for separator in ("_", "—", "|"):
+                    if separator in title:
+                        title = title.split(separator, 1)[0].strip()
+                if title:
+                    return title
+    return (fallback or "").strip()
+
+
+def _tables_to_text(content: BeautifulSoup) -> tuple[list[str], list[str]]:
+    table_blocks: list[str] = []
+    warnings: list[str] = []
+    tables = [table for table in content.find_all("table") if table.find_parent("table") is None]
+    for table in tables:
+        rows: list[str] = []
+        for row in table.find_all("tr"):
+            cells = [
+                clean_whitespace(cell.get_text(" ", strip=True))
+                for cell in row.find_all(["th", "td"])
+            ]
+            if any(cells):
+                rows.append(" | ".join(cells))
+        if rows:
+            rendered = "\n".join(rows)
+            table_blocks.append(rendered)
+            table.replace_with(NavigableString(f"\n【表格】\n{rendered}\n"))
+        else:
+            table.decompose()
+    if len(table_blocks) > 3:
+        warnings.append(f"检测到 {len(table_blocks)} 个表格，已转为文本，请人工抽查")
+    return table_blocks, warnings
+
+
+def _extract_content(soup: BeautifulSoup) -> tuple[BeautifulSoup, list[str]]:
+    warnings: list[str] = []
+    candidates = []
+    seen: set[int] = set()
+    for selector in CONTENT_SELECTORS:
+        for element in soup.select(selector):
+            if id(element) not in seen:
+                seen.add(id(element))
+                candidates.append(element)
+
+    if candidates:
+        scored = [
+            (count_cjk(element.get_text(" ", strip=True)), index, element)
+            for index, element in enumerate(candidates)
+        ]
+        score, _, best = max(scored, key=lambda item: (item[0], -item[1]))
+        if score >= 50:
+            return best, warnings
+        warnings.append("候选正文容器过短，回退到 body")
+    else:
+        warnings.append("未匹配到正文容器，回退到 body")
+
+    body = soup.body or soup
+    return body, warnings
+
+
+def _drop_noise_lines(text: str) -> str:
+    lines = []
+    for line in text.split("\n"):
+        stripped = line.strip()
+        if not stripped:
+            lines.append("")
+            continue
+        if DROP_LINE_RE.search(stripped):
+            continue
+        if PAGE_NUMBER_RE.match(stripped):
+            continue
+        lines.append(stripped)
+    return clean_whitespace("\n".join(lines))
+
+
+def parse_html_file(
+    path: Path,
+    *,
+    title_hint: str | None = None,
+    content_type: str | None = None,
+) -> ParseOutput:
+    raw = path.read_bytes()
+    html, encoding, warnings = _decode_html(raw, content_type)
+    if encoding not in {"utf-8", "utf-8-sig"}:
+        warnings.append(f"HTML 使用 {encoding} 解码")
+
+    soup = BeautifulSoup(html, "lxml")
+    _remove_unwanted(soup)
+    title = _extract_title(soup, title_hint)
+    content, content_warnings = _extract_content(soup)
+    warnings.extend(content_warnings)
+    tables, table_warnings = _tables_to_text(content)
+    warnings.extend(table_warnings)
+
+    text = _drop_noise_lines(content.get_text("\n"))
+    if count_cjk(text) < 200:
+        warnings.append("正文 CJK 字符少于 200，可能存在解析不全")
+    if not text:
+        warnings.append("解析结果为空")
+
+    return ParseOutput(
+        title=title or title_hint or "",
+        text=text,
+        format="html",
+        parser_version=HTML_PARSER_VERSION,
+        warnings=warnings,
+        tables=tables,
+    )
+
+
+def _page_number_or_repeated(
+    pages: list[list[str]],
+) -> tuple[list[list[str]], list[str]]:
+    warnings: list[str] = []
+    if not pages:
+        return pages, warnings
+
+    counts = Counter(
+        line
+        for page in pages
+        for line in page
+        if line and len(line) <= 80 and not PAGE_NUMBER_RE.match(line)
+    )
+    threshold = max(2, math.ceil(len(pages) * 0.5))
+    repeated = {line for line, count in counts.items() if count >= threshold}
+
+    cleaned_pages: list[list[str]] = []
+    for page in pages:
+        non_empty_positions = [index for index, line in enumerate(page) if line]
+        edge_positions = set(non_empty_positions[:2] + non_empty_positions[-2:])
+        cleaned = []
+        for index, line in enumerate(page):
+            if not line:
+                continue
+            if PAGE_NUMBER_RE.match(line):
+                continue
+            if index in edge_positions and line in repeated and not line.startswith("第"):
+                continue
+            cleaned.append(line)
+        cleaned_pages.append(cleaned if cleaned else page)
+
+    if repeated:
+        warnings.append(
+            f"PDF 检测到 {len(repeated)} 条重复页眉/页脚文本，已在页边缘清理"
+        )
+    return cleaned_pages, warnings
+
+
+def _pdf_tables(document: object, page_texts: list[str]) -> tuple[list[str], list[str]]:
+    tables: list[str] = []
+    warnings: list[str] = []
+    for index, page in enumerate(document, start=1):  # type: ignore[arg-type]
+        try:
+            found = page.find_tables()
+        except (AttributeError, RuntimeError):
+            continue
+        for table in getattr(found, "tables", []):
+            try:
+                rows = table.extract()
+            except (AttributeError, RuntimeError):
+                continue
+            rendered_rows = []
+            for row in rows:
+                cells = [clean_whitespace(str(cell)) for cell in row if cell not in (None, "")]
+                if cells:
+                    rendered_rows.append(" | ".join(cells))
+            if not rendered_rows:
+                continue
+            rendered = "\n".join(rendered_rows)
+            page_normalized = normalize_text(page_texts[index - 1])
+            if normalize_text(rendered) and normalize_text(rendered) in page_normalized:
+                continue
+            tables.append(rendered)
+    if tables:
+        warnings.append(f"PDF 检测到 {len(tables)} 个表格，已单独提取并在文末重建")
+    return tables, warnings
+
+
+def parse_pdf_file(path: Path, *, title_hint: str | None = None) -> ParseOutput:
+    import pymupdf
+
+    warnings: list[str] = []
+    document = pymupdf.open(path)
+    try:
+        metadata_title = (document.metadata or {}).get("title") or ""
+        pages: list[list[str]] = []
+        page_texts: list[str] = []
+        empty_pages = 0
+        for page in document:
+            text = page.get_text("text", sort=True) or ""
+            page_texts.append(text)
+            if count_cjk(text) < 10:
+                empty_pages += 1
+            lines = [line.strip() for line in text.split("\n") if line.strip()]
+            pages.append(lines)
+
+        cleaned_pages, header_warnings = _page_number_or_repeated(pages)
+        warnings.extend(header_warnings)
+        text = "\n\n".join("\n".join(lines) for lines in cleaned_pages if lines)
+        text = clean_whitespace(text)
+
+        tables, table_warnings = _pdf_tables(document, page_texts)
+        warnings.extend(table_warnings)
+
+        if empty_pages:
+            warnings.append(
+                f"{empty_pages}/{len(page_texts)} 页几乎没有文本层，可能为扫描件，需要 OCR"
+            )
+        if count_cjk(text) < 200:
+            warnings.append("PDF 文本 CJK 字符少于 200，可能存在解析不全")
+        if not text:
+            warnings.append("PDF 未提取到文本")
+
+        title = metadata_title.strip()
+        if not title:
+            for line in text.split("\n")[:20]:
+                if line and PDF_TITLE_HINT_RE.search(line) and len(line) <= 80:
+                    title = line
+                    break
+
+        body = text
+        if tables:
+            body = f"{text}\n\n【表格】\n" + "\n\n".join(tables)
+
+        return ParseOutput(
+            title=title or title_hint or "",
+            text=body,
+            format="pdf",
+            parser_version=f"{PDF_PARSER_VERSION}+pymupdf-{pymupdf.__version__}",
+            warnings=warnings,
+            tables=tables,
+            page_count=len(page_texts),
+        )
+    finally:
+        document.close()
+
+
+def parse_file(
+    path: Path,
+    source_format: str,
+    *,
+    title_hint: str | None = None,
+    content_type: str | None = None,
+) -> ParseOutput:
+    if source_format == "html":
+        return parse_html_file(path, title_hint=title_hint, content_type=content_type)
+    if source_format == "pdf":
+        return parse_pdf_file(path, title_hint=title_hint)
+    raise ValueError(f"不支持的格式：{source_format}")
+
+
+def _atomic_write_json(path: Path, payload: dict[str, object]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    text = json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True) + "\n"
+    temporary = path.with_name(path.name + ".part")
+    temporary.write_text(text, encoding="utf-8")
+    os.replace(temporary, path)
+
+
+def _selected(doc_id: str, version_id: str, only: set[str] | None) -> bool:
+    if not only:
+        return True
+    return doc_id in only or f"{doc_id}@{version_id}" in only
+
+
+def parse_corpus(
+    *,
+    raw_dir: Path,
+    processed_dir: Path,
+    only: Iterable[str] | None = None,
+) -> list[ParseResult]:
+    only_set = set(only) if only else None
+    results: list[ParseResult] = []
+    for meta_path in sorted(raw_dir.glob("*/*/meta.json")):
+        try:
+            meta = json.loads(meta_path.read_text(encoding="utf-8"))
+        except (OSError, ValueError) as exc:
+            results.append(
+                ParseResult(
+                    doc_id=meta_path.parent.parent.name,
+                    version_id=meta_path.parent.name,
+                    status="error",
+                    error=f"读取 meta.json 失败：{exc}",
+                )
+            )
+            continue
+
+        doc_id = str(meta.get("doc_id") or meta_path.parent.parent.name)
+        version_id = str(meta.get("version_id") or meta_path.parent.name)
+        if not _selected(doc_id, version_id, only_set):
+            continue
+
+        version_dir = meta_path.parent
+        source_name = meta.get("source_file")
+        source_path = version_dir / str(source_name) if source_name else None
+        if source_path is None or not source_path.exists():
+            candidates = sorted(version_dir.glob("source.*"))
+            source_path = candidates[0] if candidates else None
+        if source_path is None or not source_path.exists():
+            results.append(
+                ParseResult(
+                    doc_id=doc_id,
+                    version_id=version_id,
+                    status="error",
+                    error="找不到原始快照文件",
+                )
+            )
+            continue
+
+        source_format = str(meta.get("format") or source_path.suffix.lstrip("."))
+        output_path = processed_dir / "parsed" / doc_id / f"{version_id}.json"
+        source_sha256 = str(meta.get("sha256") or hashlib.sha256(source_path.read_bytes()).hexdigest())
+        try:
+            parsed = parse_file(
+                source_path,
+                source_format,
+                title_hint=str(meta.get("title") or ""),
+                content_type=meta.get("content_type"),
+            )
+        except Exception as exc:
+            results.append(
+                ParseResult(
+                    doc_id=doc_id,
+                    version_id=version_id,
+                    status="error",
+                    error=f"{type(exc).__name__}: {exc}",
+                )
+            )
+            continue
+
+        document = ParsedDocument(
+            doc_id=doc_id,
+            version_id=version_id,
+            title=parsed.title,
+            text=parsed.text,
+            format=parsed.format,
+            source_sha256=source_sha256,
+            source_url=meta.get("final_url") or meta.get("source_url"),
+            local_path=meta.get("local_path"),
+            fetched_at=meta.get("fetched_at"),
+            parser_version=parsed.parser_version,
+            warnings=parsed.warnings,
+            tables=parsed.tables,
+            page_count=parsed.page_count,
+            cjk_count=count_cjk(parsed.text),
+            char_count=len(parsed.text),
+        )
+        _atomic_write_json(output_path, document.model_dump(mode="json"))
+        results.append(
+            ParseResult(
+                doc_id=doc_id,
+                version_id=version_id,
+                status="parsed",
+                output_path=output_path,
+                warnings=parsed.warnings,
+                cjk_count=document.cjk_count,
+            )
+        )
+    return results
+
+
+def load_parsed_document(path: Path) -> ParsedDocument:
+    return ParsedDocument.model_validate_json(path.read_text(encoding="utf-8"))
