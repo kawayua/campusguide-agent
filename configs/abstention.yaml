@@ -1,0 +1,4 @@
+# W3 起使用。语义核对模型不可用时的策略：strict / allow_with_warning。
+on_semantic_unavailable: strict
+max_clarify_turns: 3
+max_revise_rounds: 2

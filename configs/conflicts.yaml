@@ -1,0 +1,8 @@
+# 已知冲突对由人工登记，W6 起使用。
+# 示例：
+# - left: doc-a@v2025#第九条
+#   right: doc-b@v2025#第三条
+#   topic: 奖学金申请条件
+#   conclusion: pending_review
+#   reviewed_at: 2026-10-19
+conflicts: []

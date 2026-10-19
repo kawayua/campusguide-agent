@@ -1,0 +1,30 @@
+# CampusGuide 来源清单（唯一数据入口）
+#
+# W1 目标：文档版本 >= 50，制度本体 >= 30。
+# 字段说明与填写示例见 docs/data-sources.md。
+#
+# 最小示例（取消注释并替换为真实信息）：
+#
+# documents:
+#   - doc_id: undergraduate-status-rules
+#     title: 华南农业大学本科学生学籍管理实施细则
+#     doc_type: regulation
+#     issuing_department: 教务处
+#     audience: [undergraduate]
+#     flow_ids: []
+#     topic_tags: [学籍, 注册]
+#     versions:
+#       - version_id: v2021
+#         url: https://jwc.scau.edu.cn/2021/0830/c5127a288407/page.htm
+#         published_at: 2021-08-30
+#         effective_from: 2021-09-01
+#         effective_to: null
+#         status: active
+#         format: auto
+#         notes: 华南农办〔2021〕68 号
+
+schema_version: "1.0"
+corpus_id: scau
+school: 华南农业大学
+
+documents: []

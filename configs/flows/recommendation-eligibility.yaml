@@ -1,0 +1,16 @@
+# W5 填充：流程骨架。步骤、材料、时限与依据条款在 W5 按公开制度补齐。
+flow_id: recommendation-eligibility
+version: "0.0.0"
+title: 推免资格确认
+description: 面向本科毕业生的推免资格与后续报名判断流程（W5 实现）
+audience: [undergraduate]
+aliases: ["推免", "保研", "推荐免试"]
+effective_from: 2025-09-01
+effective_to: null
+slots: []
+prerequisites: []
+steps: []
+handoff:
+  department: 教务处
+  url: null
+  note: 具体名额、学院细则与时间节点以当年通知为准

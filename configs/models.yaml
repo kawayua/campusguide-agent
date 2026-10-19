@@ -1,0 +1,20 @@
+provider: openai_compatible
+base_url: ${LLM_BASE_URL}
+api_key_env: LLM_API_KEY
+
+models:
+  planner: ${PLANNER_MODEL}
+  advisor: ${ADVISOR_MODEL}
+  verifier: ${VERIFIER_MODEL}
+
+temperature:
+  planner: 0.0
+  advisor: 0.2
+  verifier: 0.0
+
+timeouts_seconds:
+  planner: 20
+  advisor: 40
+  verifier: 20
+
+max_retries: 1

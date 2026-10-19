@@ -1,0 +1,16 @@
+# W5 填充：流程骨架。步骤、材料、时限与依据条款在 W5 按公开制度补齐。
+flow_id: scholarship-application
+version: "0.0.0"
+title: 本科生奖学金申请
+description: 面向本科生的奖学金申请与评审流程（W5 实现）
+audience: [undergraduate]
+aliases: ["奖学金", "评奖评优"]
+effective_from: 2025-09-01
+effective_to: null
+slots: []
+prerequisites: []
+steps: []
+handoff:
+  department: 学生工作部
+  url: null
+  note: 具体名额和批次以当年通知为准

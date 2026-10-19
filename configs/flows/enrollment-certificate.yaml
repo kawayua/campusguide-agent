@@ -1,0 +1,16 @@
+# W5 填充：流程骨架。步骤、材料、时限与依据条款在 W5 按公开制度补齐。
+flow_id: enrollment-certificate
+version: "0.0.0"
+title: 在读证明开具
+description: 在读证明的办理步骤、材料与领取方式（W5 实现）
+audience: [undergraduate, graduate]
+aliases: ["在读证明", "在校证明", "学籍证明"]
+effective_from: 2025-09-01
+effective_to: null
+slots: []
+prerequisites: []
+steps: []
+handoff:
+  department: 教务处
+  url: null
+  note: 具体模板、盖章与领取方式以教务处说明为准

@@ -1,0 +1,16 @@
+# W4 起使用；W1 只用 collection/vector 配置初始化 Qdrant 骨架。
+collection: articles_v1
+alias: articles_current
+embedding_model: ${EMBEDDING_MODEL}
+dense_vector_name: dense
+dense_vector_size: 1024
+sparse_vector_name: sparse
+
+recall_top_k: 30
+rerank_top_n: 8
+token_budget: 4000
+max_articles: 8
+
+# 以下阈值必须用 20 题开发集校准，不要直接用于生产结论。
+min_rerank_score: 0.30
+min_score_margin: 0.03
