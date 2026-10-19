@@ -254,6 +254,7 @@ def build_index(
     init_qdrant: bool = False,
     qdrant_client: QdrantClient | None = None,
     qdrant_url: str | None = None,
+    manifest_path: Path | None = None,
     recreate_collection: bool = False,
     generated_at: datetime | None = None,
 ) -> BuildResult:
@@ -359,7 +360,7 @@ def build_index(
     output_dir.mkdir(parents=True, exist_ok=True)
     articles_path = output_dir / ARTICLES_FILENAME
     documents_path = output_dir / DOCUMENTS_FILENAME
-    manifest_path = output_dir / MANIFEST_FILENAME
+    manifest_path = manifest_path or (output_dir / MANIFEST_FILENAME)
     _write_jsonl(articles_path, [article.model_dump(mode="json") for article in articles])
     _write_jsonl(
         documents_path,

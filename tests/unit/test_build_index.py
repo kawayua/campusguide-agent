@@ -169,6 +169,21 @@ def test_rebuild_is_deterministic(tmp_path: Path) -> None:
     assert first.manifest["generated_at"] != second.manifest["generated_at"]
 
 
+def test_manifest_path_can_be_overridden(tmp_path: Path) -> None:
+    sources = write_sources(tmp_path / "sources.yaml", with_document=False)
+    manifest_path = tmp_path / "data" / "manifest.json"
+
+    result = build_index(
+        sources_path=sources,
+        parsed_dir=tmp_path / "parsed",
+        output_dir=tmp_path / "out",
+        manifest_path=manifest_path,
+    )
+
+    assert result.manifest_path == manifest_path
+    assert manifest_path.exists()
+
+
 def test_missing_parsed_result_is_reported_not_silently_dropped(tmp_path: Path) -> None:
     sources = write_sources(tmp_path / "sources.yaml")
     result = build_index(

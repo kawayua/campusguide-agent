@@ -5,7 +5,7 @@ PYTEST ?= $(UV) run pytest
 RUFF ?= $(UV) run ruff
 
 .PHONY: help init sync fetch parse index index-qdrant validate-sources \
-	check-segmentation test lint format demo compose-up clean
+	check-segmentation test lint format qa demo compose-up clean
 
 help:
 	@echo "CampusGuide W1 commands"
@@ -19,6 +19,7 @@ help:
 	@echo "  make test              运行离线测试（unit + contract + integration）"
 	@echo "  make lint              ruff check"
 	@echo "  make format            ruff format"
+	@echo "  make qa                lint + test（本地与 CI 共用）"
 
 init: sync
 
@@ -51,6 +52,8 @@ lint:
 
 format:
 	$(RUFF) format .
+
+qa: lint test
 
 demo:
 	$(PYTHON) -m campusguide.ui.app

@@ -21,6 +21,7 @@ def main() -> int:
     )
     parser.add_argument("--parsed-dir", default=str(ROOT / "data" / "processed" / "parsed"))
     parser.add_argument("--output-dir", default=str(ROOT / "data" / "processed"))
+    parser.add_argument("--manifest", default=str(ROOT / "data" / "manifest.json"))
     parser.add_argument("--init-qdrant", action="store_true", help="创建集合与 payload 索引")
     parser.add_argument("--recreate", action="store_true", help="重建已存在的 Qdrant 集合")
     parser.add_argument("--qdrant-url", default=None)
@@ -35,6 +36,7 @@ def main() -> int:
             retrieval=retrieval,
             init_qdrant=args.init_qdrant,
             qdrant_url=args.qdrant_url,
+            manifest_path=Path(args.manifest).resolve(),
             recreate_collection=args.recreate,
         )
     except BuildError as exc:

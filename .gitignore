@@ -20,6 +20,8 @@ build/
 # Local corpus and generated artifacts (never commit full policy text)
 data/raw/*
 !data/raw/.gitkeep
+data/incoming/*
+!data/incoming/.gitkeep
 data/snapshots/*
 !data/snapshots/.gitkeep
 data/processed/*
