@@ -19,8 +19,11 @@ STUDENT_ID_RE = re.compile(
     re.IGNORECASE,
 )
 EMAIL_RE = re.compile(r"[A-Za-z0-9._%+\-]+@[A-Za-z0-9.\-]+\.[A-Za-z]{2,}")
+# 只在“联系人：张三”这类冒号引导的字段值上脱敏。
+# “负责人履行第一责任人”“项目负责人提出申请”是角色描述，不能误伤。
 CONTACT_NAME_RE = re.compile(
-    r"((?:联系人|负责人|经办人)\s*[:：]?\s*)([\u4e00-\u9fff]{2,4})(?!电话|手机|邮箱|办公|联系)"
+    r"((?:联系人|负责人|经办人)\s*[:：]\s*)([\u4e00-\u9fff]{2,4}?)"
+    r"(?=(?:同志|老师)?(?:[，。；、：！？,\s)）]|$))"
 )
 OFFICE_EMAIL_DOMAIN = "scau.edu.cn"
 

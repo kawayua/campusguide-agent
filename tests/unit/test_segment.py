@@ -126,3 +126,30 @@ def test_loose_rule_matches_glued_article_number() -> None:
     result = segment_document(make_parsed(text), make_version())
     assert result.used_loose_article_rule
     assert [item.article_no for item in result.indexable_articles] == ["第一条", "第二条"]
+
+
+def test_loose_rule_supplements_missing_article_in_mixed_document() -> None:
+    text = "第一章 总则\n第一条 内容一。\n第二条内容二。\n第三条 内容三。\n"
+    result = segment_document(make_parsed(text), make_version())
+    assert result.used_loose_article_rule
+    assert [item.article_no for item in result.indexable_articles] == [
+        "第一条",
+        "第二条",
+        "第三条",
+    ]
+    assert result.missing_article_indices == []
+    assert any("补充无分隔符条款：第二条" in warning for warning in result.warnings)
+
+
+def test_wrapped_cjk_lines_are_joined_without_spaces() -> None:
+    text = (
+        "第一章 总则\n"
+        "第一条 学位申请人有下列情形之一\n"
+        "的，不授予学位。\n"
+        "（一）学术不端；\n"
+    )
+    result = segment_document(make_parsed(text), make_version())
+    article = next(item for item in result.indexable_articles if item.article_no == "第一条")
+    assert "情形之一的" in article.text
+    assert "之一\n的" not in article.text
+    assert "\n（一）" in article.text

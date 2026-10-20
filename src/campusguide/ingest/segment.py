@@ -37,7 +37,10 @@ ARTICLE_RE_LOOSE = re.compile(
     rf"[ \t　]*(?P<rest>.*)$"
 )
 
-PAGE_NUMBER_RE = re.compile(r"^\s*(?:[-—–]?\s*\d{1,4}\s*[-—–]?|第\s*\d+\s*页)\s*$")
+# 只清理明确的页码标记；裸数字可能是年份、金额或文号，不能丢弃。
+PAGE_NUMBER_RE = re.compile(
+    r"^\s*(?:[-—–]\s*\d{1,4}\s*[-—–]|第\s*\d+\s*页(?:\s*共\s*\d+\s*页)?|\d+\s*/\s*\d+)\s*$"
+)
 SENTENCE_RE = re.compile(r"(?<=[。！？；!?;])")
 # 文末落款：空行之后的一到三行，最后一行是“YYYY年M月D日”。
 # 落款不进入条款库，避免把发布日期粘到最后一条正文里。
@@ -110,6 +113,11 @@ def _split_text(text: str, max_chars: int) -> list[str]:
     return chunks or [text]
 
 
+_WRAPPED_LINE_RE = re.compile(
+    r"(?<=[\u4e00-\u9fff，、；：,;:0-9])\n(?=[\u4e00-\u9fff])"
+)
+
+
 def _clean_article_body(text: str) -> str:
     lines = []
     for line in text.split("\n"):
@@ -119,7 +127,10 @@ def _clean_article_body(text: str) -> str:
         if PAGE_NUMBER_RE.match(stripped):
             continue
         lines.append(stripped)
-    return clean_whitespace("\n".join(lines))
+    body = "\n".join(lines)
+    # PDF 常按版面宽度硬换行；中文行尾直接续排，避免引文出现“之一 的”。
+    body = _WRAPPED_LINE_RE.sub("", body)
+    return clean_whitespace(body)
 
 
 def _build_article(
@@ -146,6 +157,8 @@ def _build_article(
         doc_id=version.doc_id,
         version_id=version.version_id,
         doc_title=version.title,
+        doc_type=version.doc_type,
+        authority_level=version.authority_level,
         chapter_path=chapter_path,
         article_no=article_no,
         article_index=article_index,
@@ -155,6 +168,7 @@ def _build_article(
         text_normalized=normalize_text(text),
         text_raw_ref=f"{version.doc_id}/{version.version_id}/source.{source_format}",
         audience=version.audience,
+        audience_detail=version.audience_detail,
         status=version.status,
         effective_from=version.effective_from,
         effective_to=version.effective_to,
@@ -239,6 +253,26 @@ def _segment_document(
         if articles:
             result.used_loose_article_rule = True
             result.warnings.append("严格条款边界零命中，已回退到宽松规则，请人工抽查")
+    else:
+        # 少数 PDF/网页会漏掉“第二十四条学生…”中的分隔符。
+        # 只补充严格规则未命中的缺失序号，避免把目录行或交叉引用当成正文条款。
+        strict_starts = {match.start() for match in articles}
+        strict_indices = {article_index_from_no(match.group("no")) for match in articles}
+        max_index = max(strict_indices, default=0)
+        missing = {index for index in range(1, max_index + 1) if index not in strict_indices}
+        supplements = []
+        for match in ARTICLE_RE_LOOSE.finditer(text):
+            if match.start() in strict_starts:
+                continue
+            index = article_index_from_no(match.group("no"))
+            if index in missing:
+                supplements.append(match)
+                missing.discard(index)
+        if supplements:
+            articles = sorted([*articles, *supplements], key=lambda match: match.start())
+            result.used_loose_article_rule = True
+            recovered = "、".join(match.group("no").strip() for match in supplements)
+            result.warnings.append(f"已用宽松规则补充无分隔符条款：{recovered}")
 
     if not articles:
         result.warnings.append("未识别到任何“第 X 条”，整篇作为不可检索块保存")

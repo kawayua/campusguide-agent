@@ -109,7 +109,7 @@ def test_empty_corpus_writes_empty_index_and_manifest(tmp_path: Path) -> None:
     assert result.articles_path is not None and result.articles_path.read_text("utf-8") == ""
     assert result.documents_path is not None and result.documents_path.read_text("utf-8") == ""
     manifest = json.loads(result.manifest_path.read_text("utf-8"))  # type: ignore[union-attr]
-    assert manifest["index_version"] == "w1-articles-v1"
+    assert manifest["index_version"] == "w1-articles-v2"
     assert manifest["generated_at"] == "2026-10-19T00:00:00+00:00"
 
 
@@ -208,6 +208,55 @@ def test_missing_published_at_fails_loudly(tmp_path: Path) -> None:
             parsed_dir=tmp_path / "parsed",
             output_dir=tmp_path / "out",
         )
+
+
+def test_audience_and_jurisdiction_fields_flow_into_index(tmp_path: Path) -> None:
+    sources = write_sources(tmp_path / "sources.yaml")
+    payload = yaml.safe_load(sources.read_text("utf-8"))
+    payload["documents"][0].update(
+        {
+            "authority_level": "binding",
+            "issuer_level": "college",
+            "issuer_college_id": "engineering",
+            "audience_detail": {
+                "colleges": ["engineering"],
+                "stages": ["year1"],
+            },
+        }
+    )
+    payload["documents"][0]["versions"][0]["audience_detail"] = {
+        "colleges": ["engineering"],
+        "stages": ["year2"],
+    }
+    sources.write_text(
+        yaml.safe_dump(payload, allow_unicode=True, sort_keys=False),
+        encoding="utf-8",
+    )
+    write_parsed(tmp_path / "parsed")
+
+    result = build_index(
+        sources_path=sources,
+        parsed_dir=tmp_path / "parsed",
+        output_dir=tmp_path / "out",
+    )
+
+    documents = [
+        json.loads(line)
+        for line in result.documents_path.read_text("utf-8").splitlines()  # type: ignore[union-attr]
+    ]
+    assert documents[0]["authority_level"] == "binding"
+    assert documents[0]["issuer_level"] == "college"
+    assert documents[0]["issuer_college_id"] == "engineering"
+    assert documents[0]["audience_detail"]["stages"] == ["year2"]
+
+    articles = [
+        json.loads(line)
+        for line in result.articles_path.read_text("utf-8").splitlines()  # type: ignore[union-attr]
+    ]
+    assert articles[0]["doc_type"] == "regulation"
+    assert articles[0]["authority_level"] == "binding"
+    assert articles[0]["audience_detail"]["colleges"] == ["engineering"]
+    assert articles[0]["audience_detail"]["stages"] == ["year2"]
 
 
 def test_qdrant_collection_skeleton_is_idempotent() -> None:

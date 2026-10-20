@@ -35,6 +35,23 @@ def test_redacts_personal_email_and_contact_name() -> None:
     assert result.counts["contact_name"] == 1
 
 
+def test_does_not_redact_role_phrases_without_a_colon_field() -> None:
+    text = (
+        "项目负责人具有较强的组织能力，主要负责人履行第一责任人职责，"
+        "项目负责人提出延期申请。"
+    )
+    result = redact_text(text)
+    assert result.text == text
+    assert not result.counts
+
+
+def test_does_not_treat_role_description_as_contact_name() -> None:
+    text = "负责人：履行第一责任人职责，项目负责人：提出延期申请。"
+    result = redact_text(text)
+    assert result.text == text
+    assert not result.counts
+
+
 def test_redaction_is_idempotent() -> None:
     once = redact_text("电话 13800138000").text
     twice = redact_text(once).text

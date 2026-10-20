@@ -9,14 +9,18 @@ from __future__ import annotations
 from datetime import date, datetime
 from typing import Any, Literal
 
-from pydantic import BaseModel, Field, HttpUrl, field_validator
+from pydantic import BaseModel, Field, HttpUrl, field_validator, model_validator
 
+from campusguide.domain.audience import AudienceDetail, has_student_audience
 from campusguide.domain.enums import (
     ArticleStatus,
     Audience,
+    AuthorityLevel,
     BlockType,
     ClaimKind,
     DocType,
+    IssuerLevel,
+    PolicyRelation,
     VersionMode,
 )
 
@@ -26,6 +30,11 @@ class DocumentVersion(BaseModel):
     version_id: str
     title: str
     doc_type: DocType = DocType.OTHER
+    authority_level: AuthorityLevel = AuthorityLevel.UNKNOWN
+    issuer_level: IssuerLevel = IssuerLevel.UNIVERSITY
+    issuer_college_id: str | None = None
+    parent_doc_id: str | None = None
+    relation: PolicyRelation = PolicyRelation.STANDALONE
     issuing_department: str
     source_url: HttpUrl
     published_at: date
@@ -36,6 +45,7 @@ class DocumentVersion(BaseModel):
     fetched_at: datetime
     parser_version: str
     audience: list[Audience]
+    audience_detail: AudienceDetail | None = None
     notes: str | None = None
 
     @field_validator("audience")
@@ -53,12 +63,34 @@ class DocumentVersion(BaseModel):
             raise ValueError("effective_to 不能早于 effective_from")
         return value
 
+    @model_validator(mode="after")
+    def _validate_scope_metadata(self) -> DocumentVersion:
+        if self.issuer_level in {IssuerLevel.COLLEGE, IssuerLevel.DEPARTMENT}:
+            if not self.issuer_college_id:
+                raise ValueError("院/系级版本必须填写 issuer_college_id")
+        elif self.issuer_college_id is not None:
+            raise ValueError("校级版本不能填写 issuer_college_id")
+        if self.relation in {PolicyRelation.IMPLEMENTS, PolicyRelation.SUPPLEMENTS}:
+            if not self.parent_doc_id:
+                raise ValueError("implements/supplements 必须填写 parent_doc_id")
+        elif self.parent_doc_id is not None:
+            raise ValueError("standalone 不能填写 parent_doc_id")
+        if (
+            self.audience_detail is not None
+            and self.audience_detail.has_student_constraints
+            and not has_student_audience(self.audience)
+        ):
+            raise ValueError("非学生角色不能携带年级/阶段/学籍状态等学生约束")
+        return self
+
 
 class Article(BaseModel):
     article_id: str
     doc_id: str
     version_id: str
     doc_title: str
+    doc_type: DocType = DocType.OTHER
+    authority_level: AuthorityLevel = AuthorityLevel.UNKNOWN
     chapter_path: list[str] = Field(default_factory=list)
     article_no: str
     article_index: int
@@ -68,6 +100,7 @@ class Article(BaseModel):
     text_normalized: str
     text_raw_ref: str | None = None
     audience: list[Audience]
+    audience_detail: AudienceDetail | None = None
     status: ArticleStatus
     effective_from: date
     effective_to: date | None = None
@@ -90,6 +123,8 @@ class ArticlePublic(BaseModel):
     doc_id: str
     version_id: str
     doc_title: str
+    doc_type: DocType = DocType.OTHER
+    authority_level: AuthorityLevel = AuthorityLevel.UNKNOWN
     chapter_path: list[str] = Field(default_factory=list)
     article_no: str
     article_index: int
@@ -98,6 +133,7 @@ class ArticlePublic(BaseModel):
     text: str
     text_normalized: str
     audience: list[Audience]
+    audience_detail: AudienceDetail | None = None
     status: ArticleStatus
     effective_from: date
     effective_to: date | None = None

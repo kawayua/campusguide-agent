@@ -60,6 +60,32 @@ UNWANTED_ATTR_RE = re.compile(
 PAGE_NUMBER_RE = re.compile(
     r"^\s*(?:[-—–]?\s*\d{1,4}\s*[-—–]?|第\s*\d+\s*页(?:\s*共\s*\d+\s*页)?|\d+\s*/\s*\d+)\s*$"
 )
+# HTML 正文里的独立数字通常是年份、文号、金额，而不是页码。
+# 只有带页码标记的形式才应丢弃，裸数字必须保留。
+HTML_PAGE_NUMBER_RE = re.compile(
+    r"^\s*(?:[-—–]\s*\d{1,4}\s*[-—–]|第\s*\d+\s*页(?:\s*共\s*\d+\s*页)?|\d+\s*/\s*\d+)\s*$"
+)
+
+BLOCK_TAGS = (
+    "p",
+    "li",
+    "h1",
+    "h2",
+    "h3",
+    "h4",
+    "h5",
+    "h6",
+    "blockquote",
+    "div",
+    "td",
+    "th",
+)
+ARTICLE_HEADING_RE = re.compile(
+    r"^(第[一二三四五六七八九十百千零〇两0-9]{1,12}条(?:之[一二三四五六七八九十百千零〇两0-9]{1,3})?)(?=\S)"
+)
+CHAPTER_HEADING_RE = re.compile(
+    r"^(第[一二三四五六七八九十百千零〇两0-9]{1,12}章)(?=\S)"
+)
 
 DROP_LINE_RE = re.compile(
     r"^(上一篇|下一篇|返回列表|打印本页|关闭窗口|分享到|扫一扫|版权所有|Copyright|技术支持)"
@@ -160,6 +186,16 @@ def _tables_to_text(content: BeautifulSoup) -> tuple[list[str], list[str]]:
     warnings: list[str] = []
     tables = [table for table in content.find_all("table") if table.find_parent("table") is None]
     for table in tables:
+        # 部分老站点把整篇正文放进单个表格单元格；这种布局表格不能压成
+        # “单元格 | 单元格”的一行，否则段落和“第 X 条”边界都会丢失。
+        table_text = table.get_text("", strip=True)
+        if len(table.find_all("p")) >= 3 or re.search(
+            r"第[一二三四五六七八九十百千零〇两0-9]{1,12}条", table_text
+        ):
+            table.unwrap()
+            warnings.append("检测到布局表格，已按段落展开")
+            continue
+
         rows: list[str] = []
         for row in table.find_all("tr"):
             cells = [
@@ -171,7 +207,11 @@ def _tables_to_text(content: BeautifulSoup) -> tuple[list[str], list[str]]:
         if rows:
             rendered = "\n".join(rows)
             table_blocks.append(rendered)
-            table.replace_with(NavigableString(f"\n【表格】\n{rendered}\n"))
+            # 用块级节点占位，保证表格文本留在原位置；直接替换为裸文本
+            # 会被 _extract_html_text 提前到全文开头，挂到错误的条款上。
+            replacement = table.new_tag("p")
+            replacement.string = f"【表格】\n{rendered}"
+            table.replace_with(replacement)
         else:
             table.decompose()
     if len(table_blocks) > 3:
@@ -205,7 +245,54 @@ def _extract_content(soup: BeautifulSoup) -> tuple[BeautifulSoup, list[str]]:
     return body, warnings
 
 
-def _drop_noise_lines(text: str) -> str:
+def _extract_html_text(content: BeautifulSoup) -> str:
+    """按块级元素取正文，保留段落但合并同一段内的行内 span。
+
+    学校 CMS 常把年份、文号、金额拆成独立 span；逐 span 取文本会产生
+    “华南农办〔 / 2015 / 〕 / 150 / 号”这类碎片。这里以 p/div/li 等
+    块级元素为单位，用空分隔符拼接行内片段，再补回“第一条/第一章”后的空格。
+    """
+    br_sentinel = "\ue000"
+    for br in content.find_all("br"):
+        br.replace_with(br_sentinel)
+
+    blocks = [
+        element
+        for element in content.find_all(BLOCK_TAGS)
+        if not element.find(BLOCK_TAGS)
+    ]
+    if content.name in BLOCK_TAGS and not content.find(BLOCK_TAGS):
+        blocks.insert(0, content)
+
+    texts: list[str] = []
+    seen: set[int] = set()
+    for child in content.children:
+        if isinstance(child, NavigableString) and child.strip():
+            texts.append(str(child).strip())
+    for block in blocks:
+        if id(block) in seen:
+            continue
+        seen.add(id(block))
+        text = block.get_text("", strip=True).replace(br_sentinel, "\n")
+        if text:
+            texts.append(text)
+
+    if not texts:
+        return content.get_text("\n")
+
+    normalized: list[str] = []
+    for text in texts:
+        text = ARTICLE_HEADING_RE.sub(r"\1 ", text, count=1)
+        text = CHAPTER_HEADING_RE.sub(r"\1 ", text, count=1)
+        normalized.append(text)
+    return "\n".join(normalized)
+
+
+def _drop_noise_lines(
+    text: str,
+    *,
+    page_number_re: re.Pattern[str] = PAGE_NUMBER_RE,
+) -> str:
     lines = []
     for line in text.split("\n"):
         stripped = line.strip()
@@ -214,7 +301,7 @@ def _drop_noise_lines(text: str) -> str:
             continue
         if DROP_LINE_RE.search(stripped):
             continue
-        if PAGE_NUMBER_RE.match(stripped):
+        if page_number_re.match(stripped):
             continue
         lines.append(stripped)
     return clean_whitespace("\n".join(lines))
@@ -239,7 +326,10 @@ def parse_html_file(
     tables, table_warnings = _tables_to_text(content)
     warnings.extend(table_warnings)
 
-    text = _drop_noise_lines(content.get_text("\n"))
+    text = _drop_noise_lines(
+        _extract_html_text(content),
+        page_number_re=HTML_PAGE_NUMBER_RE,
+    )
     if count_cjk(text) < 200:
         warnings.append("正文 CJK 字符少于 200，可能存在解析不全")
     if not text:

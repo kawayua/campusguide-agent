@@ -18,5 +18,10 @@ def test_clean_whitespace_keeps_paragraphs() -> None:
     assert clean_whitespace(raw) == "第一条 总则\n\n正文 内容"
 
 
+def test_clean_whitespace_drops_private_use_bullet_glyphs() -> None:
+    raw = "第五章 休学与复学\n\ue004第二十四条 学生可以分阶段完成学业。"
+    assert clean_whitespace(raw) == "第五章 休学与复学\n第二十四条 学生可以分阶段完成学业。"
+
+
 def test_count_cjk() -> None:
     assert count_cjk("abc中文，。") == 2

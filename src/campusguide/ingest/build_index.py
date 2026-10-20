@@ -39,13 +39,22 @@ from campusguide.domain.models import Article, DocumentVersion
 from campusguide.ingest.parse import ParsedDocument, load_parsed_document
 from campusguide.ingest.segment import segment_document
 
-INDEX_SCHEMA_VERSION = "1.0"
-INDEX_VERSION = "w1-articles-v1"
+INDEX_SCHEMA_VERSION = "1.1"
+INDEX_VERSION = "w1-articles-v2"
 ARTICLES_FILENAME = "articles.jsonl"
 DOCUMENTS_FILENAME = "documents.jsonl"
 MANIFEST_FILENAME = "manifest.json"
 
-PAYLOAD_KEYWORD_FIELDS = ("doc_id", "version_id", "audience", "status", "flow_ids")
+PAYLOAD_KEYWORD_FIELDS = (
+    "doc_id",
+    "version_id",
+    "doc_type",
+    "authority_level",
+    "issuer_level",
+    "audience",
+    "status",
+    "flow_ids",
+)
 PAYLOAD_DATETIME_FIELDS = ("effective_from", "effective_to")
 
 
@@ -114,11 +123,23 @@ def _make_document_version(
     if not parsed.source_sha256:
         raise BuildError(f"{context} 的解析结果缺少 source_sha256，请重新执行 fetch/parse")
 
+    effective_audience = version.audience or doc.audience
+    effective_detail = (
+        version.audience_detail
+        if version.audience_detail is not None
+        else doc.audience_detail
+    )
+
     return DocumentVersion(
         doc_id=doc.doc_id,
         version_id=version.version_id,
         title=doc.title,
         doc_type=doc.doc_type,
+        authority_level=doc.effective_authority_level,
+        issuer_level=doc.issuer_level,
+        issuer_college_id=doc.issuer_college_id,
+        parent_doc_id=doc.parent_doc_id,
+        relation=doc.relation,
         issuing_department=doc.issuing_department,
         source_url=version.url,
         published_at=version.published_at,
@@ -128,7 +149,8 @@ def _make_document_version(
         source_sha256=parsed.source_sha256,
         fetched_at=_parse_fetched_at(parsed.fetched_at, context=context),
         parser_version=parsed.parser_version,
-        audience=doc.audience,
+        audience=effective_audience,
+        audience_detail=effective_detail,
         notes=version.notes,
     )
 

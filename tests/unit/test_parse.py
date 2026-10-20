@@ -22,6 +22,48 @@ def test_parse_html_extracts_content_and_table(repo_root: Path) -> None:
     assert len(parsed.tables) == 1
 
 
+def test_parse_html_keeps_inline_numbers_and_heading_spacing(tmp_path: Path) -> None:
+    path = tmp_path / "inline-spans.html"
+    path.write_text(
+        """
+<html><body><div class="wp_articlecontent">
+  <p><span>第一条</span><span>依据教育部令第</span><span>41</span><span>号制定。</span></p>
+  <p><span>华南农办〔</span><span>2021</span><span>〕</span><span>68</span><span>号</span></p>
+  <p><span>第二章</span><span>总</span><span>则</span></p>
+  <p>2015</p>
+</div></body></html>
+""",
+        encoding="utf-8",
+    )
+    parsed = parse_html_file(path)
+
+    assert "第一条 依据教育部令第41号制定。" in parsed.text
+    assert "华南农办〔2021〕68号" in parsed.text
+    assert "第二章 总则" in parsed.text
+    assert "\n2015\n" in f"\n{parsed.text}\n"
+
+
+def test_parse_html_unwraps_layout_table_and_keeps_articles(tmp_path: Path) -> None:
+    path = tmp_path / "layout-table.html"
+    path.write_text(
+        """
+<html><body><div class="wp_articlecontent"><table><tr><td>
+  <p>华南农业大学某管理办法</p>
+  <p>第一章 总则</p>
+  <p>第一条 为规范管理，制定本办法。</p>
+  <p>第二条 本办法适用于全体学生。</p>
+</td></tr></table></div></body></html>
+""",
+        encoding="utf-8",
+    )
+    parsed = parse_html_file(path)
+
+    assert "第一条 为规范管理" in parsed.text
+    assert "第二条 本办法适用于全体学生" in parsed.text
+    assert parsed.text.count("\n") >= 3
+    assert any("布局表格" in warning for warning in parsed.warnings)
+
+
 def test_parse_html_falls_back_to_body_with_warning(tmp_path: Path) -> None:
     path = tmp_path / "plain.html"
     path.write_text(

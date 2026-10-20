@@ -6,6 +6,8 @@ import re
 import unicodedata
 
 _ZERO_WIDTH = dict.fromkeys(map(ord, "\u200b\u200c\u200d\ufeff"), None)
+# 部分网页/WPS 导出会在段首插入私用区字形作为列表符号，文本层没有语义。
+_PRIVATE_USE_RE = re.compile(r"[\ue000-\uf8ff]")
 _QUOTE_MAP = str.maketrans(
     {
         "“": '"',
@@ -33,6 +35,7 @@ def normalize_text(text: str) -> str:
 def clean_whitespace(text: str) -> str:
     """保留段落结构，清理行内多余空白与过多空行。"""
     text = text.replace("\r\n", "\n").replace("\r", "\n").replace("\u00a0", " ")
+    text = _PRIVATE_USE_RE.sub("", text)
     lines = [re.sub(r"[ \t]+", " ", line).strip() for line in text.split("\n")]
     text = "\n".join(lines)
     text = re.sub(r"\n{3,}", "\n\n", text)

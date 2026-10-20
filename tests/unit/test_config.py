@@ -35,11 +35,16 @@ def write_yaml(path: Path, payload: object) -> Path:
     return path
 
 
-def test_load_actual_sources_template(repo_root: Path) -> None:
+def test_load_actual_sources_corpus(repo_root: Path) -> None:
     config = load_sources(repo_root / "configs" / "sources.yaml")
     assert config.school == "华南农业大学"
-    assert config.documents == []
-    assert config.version_count == 0
+    assert len(config.documents) >= 30
+    assert config.version_count >= 50
+    assert all(
+        version.published_at is not None
+        for document in config.documents
+        for version in document.versions
+    )
 
 
 def test_load_sources_object_format(tmp_path: Path) -> None:

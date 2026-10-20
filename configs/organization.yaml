@@ -1,0 +1,35 @@
+# 华南农业大学组织注册表
+#
+# 用途：
+# 1. 给院级/专业级制度提供稳定的 college_id / major_id；
+# 2. 校验 sources.yaml 中 issuer_college_id、audience_detail.colleges/majors；
+# 3. 为将来的用户画像（学院、专业）提供同一套主键。
+#
+# 注意：
+# - 不要用“工程学院”“计算机科学与技术”作为主键，只作为 name/aliases；
+# - 学院合并、专业改名时不要复用 ID，补 aliases 和有效期；
+# - 当前 W1 只收校级文件，这里先留空；首次收录院级文件时再填。
+#
+# 示例：
+#
+# colleges:
+#   - college_id: engineering
+#     name: 工程学院
+#     aliases: [工学院]
+#     valid_from: null
+#     valid_to: null
+#
+# majors:
+#   - major_id: computer-science
+#     name: 计算机科学与技术
+#     college_id: engineering
+#     major_code: "080901"
+#     aliases: [计算机, 计科]
+#     valid_from: null
+#     valid_to: null
+
+schema_version: "1.0"
+corpus_id: scau
+
+colleges: []
+majors: []
