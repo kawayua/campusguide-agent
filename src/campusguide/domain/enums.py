@@ -123,6 +123,7 @@ class DocType(StrEnum):
 
 class BlockType(StrEnum):
     ARTICLE = "article"
+    SECTION = "section"
     PREFACE = "preface"
     APPENDIX = "appendix"
     TABLE = "table"

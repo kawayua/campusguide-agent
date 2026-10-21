@@ -22,6 +22,9 @@ dev = [
     "pytest-cov>=5.0.0",
     "ruff>=0.7.0",
 ]
+ocr = [
+    "rapidocr-onnxruntime>=1.4.4",
+]
 
 [build-system]
 requires = ["hatchling"]

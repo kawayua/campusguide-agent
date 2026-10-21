@@ -1,7 +1,9 @@
 """HTML/PDF 解析：提取正文、标题、表格，记录解析告警。
 
 HTML 采用“候选正文容器 + CJK 字符数最多”策略；PDF 使用 PyMuPDF 文本层，
-并做页眉页脚、页码的重复行清理。扫描件暂时只记录告警，OCR 在后续迭代加入。
+并做页眉页脚、页码的重复行清理。无文本层的扫描件在存在 OCR 旁路缓存
+（`data/processed/ocr/{doc_id}/{version_id}.json`）且 SHA-256 匹配时，
+改用 OCR 文本；解析过程本身不依赖 OCR 运行时。
 """
 
 from __future__ import annotations
@@ -21,6 +23,12 @@ from bs4 import BeautifulSoup, NavigableString
 from pydantic import BaseModel
 
 from campusguide.domain.text import clean_whitespace, count_cjk, normalize_text
+from campusguide.ingest.ocr import (
+    OCR_MIN_CJK,
+    OcrDocument,
+    load_ocr_document,
+    ocr_output_path,
+)
 
 HTML_PARSER_VERSION = "campusguide-html-0.1.0"
 PDF_PARSER_VERSION = "campusguide-pdf-0.1.0"
@@ -111,6 +119,8 @@ class ParsedDocument(BaseModel):
     page_count: int | None = None
     cjk_count: int = 0
     char_count: int = 0
+    ocr_used: bool = False
+    ocr_confidence: float | None = None
 
 
 @dataclass
@@ -122,6 +132,8 @@ class ParseOutput:
     warnings: list[str] = field(default_factory=list)
     tables: list[str] = field(default_factory=list)
     page_count: int | None = None
+    ocr_used: bool = False
+    ocr_confidence: float | None = None
 
 
 @dataclass
@@ -133,6 +145,8 @@ class ParseResult:
     warnings: list[str] = field(default_factory=list)
     error: str | None = None
     cjk_count: int = 0
+    ocr_used: bool = False
+    ocr_confidence: float | None = None
 
 
 def _decode_html(raw: bytes, content_type: str | None) -> tuple[str, str, list[str]]:
@@ -472,6 +486,89 @@ def parse_pdf_file(path: Path, *, title_hint: str | None = None) -> ParseOutput:
         document.close()
 
 
+def apply_ocr_document(
+    parsed: ParseOutput,
+    ocr: OcrDocument,
+    *,
+    title_hint: str | None = None,
+) -> ParseOutput:
+    """用 OCR 旁路文本替换空文本层的结果，保留原始解析告警。"""
+    pages = [
+        [line.strip() for line in page.text.splitlines() if line.strip()]
+        for page in ocr.pages
+    ]
+    cleaned_pages, cleanup_warnings = _page_number_or_repeated(pages)
+    text = clean_whitespace(
+        "\n\n".join("\n".join(lines) for lines in cleaned_pages if lines)
+    )
+
+    warnings: list[str] = []
+    for warning in parsed.warnings:
+        if warning == "PDF 未提取到文本" or warning.startswith(
+            "PDF 文本 CJK 字符少于 200"
+        ):
+            continue
+        if "页几乎没有文本层" in warning:
+            warning = warning.replace("需要 OCR", "已用 OCR 旁路补全")
+        warnings.append(warning)
+    warnings.extend(warning.replace("PDF 检测到", "OCR 检测到") for warning in cleanup_warnings)
+    warnings.append(
+        f"使用 OCR 旁路：{ocr.page_count} 页，平均置信度 {ocr.mean_confidence:.3f}；"
+        "文本未经逐字校对，表格按 OCR 行序保留"
+    )
+    warnings.extend(
+        warning if warning.startswith("多尺度 OCR") else f"OCR：{warning}"
+        for warning in ocr.warnings
+    )
+    if count_cjk(text) < 200:
+        warnings.append("OCR 文本 CJK 字符少于 200，可能识别不全")
+
+    title = (title_hint or "").strip() or parsed.title
+    if not title:
+        for line in text.split("\n")[:20]:
+            if line and PDF_TITLE_HINT_RE.search(line) and len(line) <= 80:
+                title = line
+                break
+
+    model = f"{ocr.model}-{ocr.model_version}" if ocr.model_version else ocr.model
+    parsed.title = title
+    parsed.text = text
+    parsed.page_count = ocr.page_count
+    parsed.ocr_used = True
+    parsed.ocr_confidence = round(ocr.mean_confidence, 4)
+    parsed.parser_version = f"{PDF_PARSER_VERSION}+ocr-{model}"
+    parsed.warnings = warnings
+    return parsed
+
+
+def apply_ocr_sidecar(
+    parsed: ParseOutput,
+    *,
+    doc_id: str,
+    version_id: str,
+    source_sha256: str,
+    ocr_dir: Path,
+    title_hint: str | None = None,
+) -> ParseOutput:
+    """文本层过短时尝试读取 SHA 匹配的 OCR 缓存；缺失或不匹配则保持原样。"""
+    if parsed.format != "pdf" or count_cjk(parsed.text) >= OCR_MIN_CJK:
+        return parsed
+
+    path = ocr_output_path(ocr_dir, doc_id, version_id)
+    if not path.exists():
+        parsed.warnings.append("未找到 OCR 缓存；扫描件需先运行 scripts/ocr_scans.py")
+        return parsed
+    try:
+        ocr = load_ocr_document(path)
+    except (OSError, ValueError) as exc:
+        parsed.warnings.append(f"OCR 缓存无法读取，已忽略：{exc}")
+        return parsed
+    if ocr.source_sha256 != source_sha256:
+        parsed.warnings.append("OCR 缓存与当前 PDF 的 SHA-256 不一致，已忽略")
+        return parsed
+    return apply_ocr_document(parsed, ocr, title_hint=title_hint)
+
+
 def parse_file(
     path: Path,
     source_format: str,
@@ -505,8 +602,10 @@ def parse_corpus(
     raw_dir: Path,
     processed_dir: Path,
     only: Iterable[str] | None = None,
+    ocr_dir: Path | None = None,
 ) -> list[ParseResult]:
     only_set = set(only) if only else None
+    ocr_root = ocr_dir if ocr_dir is not None else processed_dir / "ocr"
     results: list[ParseResult] = []
     for meta_path in sorted(raw_dir.glob("*/*/meta.json")):
         try:
@@ -565,6 +664,15 @@ def parse_corpus(
             )
             continue
 
+        parsed = apply_ocr_sidecar(
+            parsed,
+            doc_id=doc_id,
+            version_id=version_id,
+            source_sha256=source_sha256,
+            ocr_dir=ocr_root,
+            title_hint=str(meta.get("title") or ""),
+        )
+
         document = ParsedDocument(
             doc_id=doc_id,
             version_id=version_id,
@@ -581,6 +689,8 @@ def parse_corpus(
             page_count=parsed.page_count,
             cjk_count=count_cjk(parsed.text),
             char_count=len(parsed.text),
+            ocr_used=parsed.ocr_used,
+            ocr_confidence=parsed.ocr_confidence,
         )
         _atomic_write_json(output_path, document.model_dump(mode="json"))
         results.append(
@@ -591,6 +701,8 @@ def parse_corpus(
                 output_path=output_path,
                 warnings=parsed.warnings,
                 cjk_count=document.cjk_count,
+                ocr_used=parsed.ocr_used,
+                ocr_confidence=parsed.ocr_confidence,
             )
         )
     return results

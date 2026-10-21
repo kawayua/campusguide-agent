@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from datetime import UTC, date, datetime
 
-from campusguide.domain.enums import ArticleStatus, Audience, BlockType
+from campusguide.domain.enums import ArticleStatus, Audience, BlockType, DocType
 from campusguide.domain.models import DocumentVersion
 from campusguide.ingest.parse import ParsedDocument
 from campusguide.ingest.segment import segment_document
@@ -153,3 +153,110 @@ def test_wrapped_cjk_lines_are_joined_without_spaces() -> None:
     assert "情形之一的" in article.text
     assert "之一\n的" not in article.text
     assert "\n（一）" in article.text
+
+
+def test_sections_are_indexed_when_no_article_numbers() -> None:
+    text = (
+        "一、培养目标\n"
+        "培养具有实践能力的高素质人才。\n"
+        "二、课程设置\n"
+        "专业核心课程包括数据结构与算法。\n"
+    )
+    result = segment_document(make_parsed(text), make_version())
+
+    assert result.used_section_rule
+    assert [article.article_no for article in result.indexable_articles] == [
+        "一、培养目标",
+        "二、课程设置",
+    ]
+    assert all(
+        article.block_type is BlockType.SECTION
+        for article in result.indexable_articles
+    )
+    assert "数据结构" in result.indexable_articles[1].text
+
+
+def test_guide_without_headings_falls_back_to_paragraph_chunks() -> None:
+    text = "本指南说明学院办事流程。" * 100
+    version = make_version().model_copy(update={"doc_type": DocType.GUIDE})
+    result = segment_document(make_parsed(text), version)
+
+    assert result.used_paragraph_rule
+    assert len(result.indexable_articles) > 1
+    assert all(
+        article.block_type is BlockType.SECTION
+        for article in result.indexable_articles
+    )
+    assert all(article.article_no.startswith("段落") for article in result.indexable_articles)
+
+
+def test_duplicate_section_headings_get_unique_ids() -> None:
+    text = (
+        "一、培养目标\n"
+        "第一段目标。\n"
+        "二、课程设置\n"
+        "课程一。\n"
+        "一、培养目标\n"
+        "第二段目标。\n"
+    )
+    result = segment_document(make_parsed(text), make_version())
+    goals = [
+        article
+        for article in result.indexable_articles
+        if article.article_no == "一、培养目标"
+    ]
+
+    assert len(goals) == 2
+    assert goals[0].article_id != goals[1].article_id
+    assert goals[1].article_id.endswith("~2")
+
+
+def test_chapter_preamble_between_sections_gets_own_block() -> None:
+    text = (
+        "一、学科概况\n"
+        "学科概况正文，介绍学科历史与研究方向。\n"
+        "第二章 培养方案\n"
+        "学院 数学与信息学院 学制 3 年，课程学分 23 学分，培养环节 3 学分。\n"
+        "一、课程设置\n"
+        "专业核心课程包括数据结构与算法。\n"
+    )
+    result = segment_document(make_parsed(text), make_version())
+    articles = result.indexable_articles
+
+    assert [article.article_no for article in articles] == [
+        "一、学科概况",
+        "第二章 培养方案",
+        "一、课程设置",
+    ]
+    assert "第二章" not in articles[0].text
+    assert "学制 3 年" in articles[1].text
+    assert articles[1].chapter_path == []
+    assert articles[2].chapter_path == ["第二章 培养方案"]
+    assert any("章节导语单独建块 1 处" in warning for warning in result.warnings)
+
+
+def test_bound_volume_groups_sections_by_major() -> None:
+    text = (
+        "计算机科学与技术专业人才培养方案（2024 版）\n"
+        "一、培养目标\n"
+        "培养计算机领域拔尖创新人才。\n"
+        "二、课程设置\n"
+        "数据结构、操作系统。\n"
+        "软件工程专业人才培养方案（2024 版）\n"
+        "一、培养目标\n"
+        "培养软件工程领域工程人才。\n"
+        "二、课程设置\n"
+        "软件工程、软件测试。\n"
+    )
+    result = segment_document(make_parsed(text), make_version())
+    articles = result.indexable_articles
+
+    assert [article.article_no for article in articles] == [
+        "一、培养目标",
+        "二、课程设置",
+        "一、培养目标",
+        "二、课程设置",
+    ]
+    assert articles[0].chapter_path == ["计算机科学与技术专业人才培养方案（2024 版）"]
+    assert articles[2].chapter_path == ["软件工程专业人才培养方案（2024 版）"]
+    assert "软件测试" in articles[3].text

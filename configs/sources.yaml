@@ -1068,3 +1068,1248 @@ documents:
     status: active
     format: pdf
     notes: 文号：华南农办〔2026〕5号；发布日期取正文印发日期。
+
+# ===== 数学与信息学院、软件学院（info）=====
+# 2026-10-21 采集；培养方案按入学年级并行版本，不标 repealed。
+# 静态页为结构化转录；原始快照与解析文本只保存在本地 data/ 下。
+- doc_id: info-profile
+  title: 数学与信息学院、软件学院简介
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: info
+  issuing_department: 数学与信息学院、软件学院
+  audience:
+  - public
+  audience_detail:
+    colleges:
+    - info
+    note: 静态页面；页面无明确发布日期，published_at 取核验日期（date_confidence=low）。
+  topic_tags:
+  - 学院简介
+  - 概况
+  versions:
+  - version_id: v2026
+    url: https://info.scau.edu.cn/3765/list.htm
+    local_path: data/incoming/colleges/info/static/info-profile.html
+    published_at: '2026-10-21'
+    effective_from: '2026-10-21'
+    effective_to: null
+    status: active
+    format: html
+    notes: 结构化转录自官网静态页；采集日期 2026-10-21；引用以官网原文为准。
+- doc_id: info-leadership
+  title: 数学与信息学院、软件学院现任领导
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: info
+  issuing_department: 数学与信息学院、软件学院
+  audience:
+  - public
+  audience_detail:
+    colleges:
+    - info
+    note: 静态页面；页面无明确发布日期，published_at 取核验日期（date_confidence=low）。
+  topic_tags:
+  - 现任领导
+  - 分工
+  versions:
+  - version_id: v2026
+    url: https://info.scau.edu.cn/3812/list.htm
+    local_path: data/incoming/colleges/info/static/info-leadership.html
+    published_at: '2026-10-21'
+    effective_from: '2026-10-21'
+    effective_to: null
+    status: active
+    format: html
+    notes: 结构化转录自官网静态页；采集日期 2026-10-21；引用以官网原文为准。
+- doc_id: info-committees
+  title: 数学与信息学院、软件学院分委员会
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: info
+  issuing_department: 数学与信息学院、软件学院
+  audience:
+  - public
+  audience_detail:
+    colleges:
+    - info
+    note: 静态页面；页面无明确发布日期，published_at 取核验日期（date_confidence=low）。
+  topic_tags:
+  - 分委员会
+  - 学术委员会
+  - 学位评定
+  versions:
+  - version_id: v2026
+    url: https://info.scau.edu.cn/xswxwwyh/list.htm
+    local_path: data/incoming/colleges/info/static/info-committees.html
+    published_at: '2026-10-21'
+    effective_from: '2026-10-21'
+    effective_to: null
+    status: active
+    format: html
+    notes: 结构化转录自官网静态页；采集日期 2026-10-21；引用以官网原文为准。
+- doc_id: info-student-affairs
+  title: 数学与信息学院、软件学院学工队伍
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: info
+  issuing_department: 数学与信息学院、软件学院
+  audience:
+  - undergraduate
+  audience_detail:
+    colleges:
+    - info
+    note: 静态页面；页面无明确发布日期，published_at 取核验日期（date_confidence=low）。
+  topic_tags:
+  - 学工
+  - 辅导员
+  versions:
+  - version_id: v2026
+    url: https://info.scau.edu.cn/xgdw/list.htm
+    local_path: data/incoming/colleges/info/static/info-student-affairs.html
+    published_at: '2026-10-21'
+    effective_from: '2026-10-21'
+    effective_to: null
+    status: active
+    format: html
+    notes: 结构化转录自官网静态页；采集日期 2026-10-21；引用以官网原文为准。
+- doc_id: info-supervisors
+  title: 数学与信息学院、软件学院研究生导师
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: info
+  issuing_department: 数学与信息学院、软件学院
+  audience:
+  - graduate
+  audience_detail:
+    colleges:
+    - info
+    note: 静态页面；页面无明确发布日期，published_at 取核验日期（date_confidence=low）。
+  topic_tags:
+  - 研究生导师
+  - 博导
+  - 硕导
+  versions:
+  - version_id: v2026
+    url: https://info.scau.edu.cn/yjsds_11779/list.htm
+    local_path: data/incoming/colleges/info/static/info-supervisors.html
+    published_at: '2026-10-21'
+    effective_from: '2026-10-21'
+    effective_to: null
+    status: active
+    format: html
+    notes: 结构化转录自官网静态页；采集日期 2026-10-21；引用以官网原文为准。
+- doc_id: info-teachers-math
+  title: 数学系教师名单
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: info
+  issuing_department: 数学与信息学院、软件学院
+  audience:
+  - public
+  audience_detail:
+    colleges:
+    - info
+    note: 静态页面；页面无明确发布日期，published_at 取核验日期（date_confidence=low）。
+  topic_tags:
+  - 教师
+  - 数学系
+  versions:
+  - version_id: v2026
+    url: https://info.scau.edu.cn/2020/1129/c11781a261049/page.htm
+    local_path: data/incoming/colleges/info/static/info-teachers-math.html
+    published_at: '2026-10-21'
+    effective_from: '2026-10-21'
+    effective_to: null
+    status: active
+    format: html
+    notes: 结构化转录自官网静态页；采集日期 2026-10-21；引用以官网原文为准。
+- doc_id: info-teachers-cs
+  title: 计算机科学与工程系教师名单
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: info
+  issuing_department: 数学与信息学院、软件学院
+  audience:
+  - public
+  audience_detail:
+    colleges:
+    - info
+    note: 静态页面；页面无明确发布日期，published_at 取核验日期（date_confidence=low）。
+  topic_tags:
+  - 教师
+  - 计算机科学与工程系
+  versions:
+  - version_id: v2026
+    url: https://info.scau.edu.cn/2020/1129/c11781a261048/page.htm
+    local_path: data/incoming/colleges/info/static/info-teachers-cs.html
+    published_at: '2026-10-21'
+    effective_from: '2026-10-21'
+    effective_to: null
+    status: active
+    format: html
+    notes: 结构化转录自官网静态页；采集日期 2026-10-21；引用以官网原文为准。
+- doc_id: info-teachers-ie
+  title: 信息工程系教师名单
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: info
+  issuing_department: 数学与信息学院、软件学院
+  audience:
+  - public
+  audience_detail:
+    colleges:
+    - info
+    note: 静态页面；页面无明确发布日期，published_at 取核验日期（date_confidence=low）。
+  topic_tags:
+  - 教师
+  - 信息工程系
+  versions:
+  - version_id: v2026
+    url: https://info.scau.edu.cn/2020/1129/c11781a261047/page.htm
+    local_path: data/incoming/colleges/info/static/info-teachers-ie.html
+    published_at: '2026-10-21'
+    effective_from: '2026-10-21'
+    effective_to: null
+    status: active
+    format: html
+    notes: 结构化转录自官网静态页；采集日期 2026-10-21；引用以官网原文为准。
+- doc_id: info-majors-undergrad
+  title: 本科专业设置（数学与信息学院、软件学院）
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: info
+  issuing_department: 数学与信息学院、软件学院
+  audience:
+  - undergraduate
+  audience_detail:
+    colleges:
+    - info
+    note: 静态页面；页面无明确发布日期，published_at 取核验日期（date_confidence=low）。
+  topic_tags:
+  - 专业设置
+  - 本科
+  - 培养目标
+  versions:
+  - version_id: v2026
+    url: https://info.scau.edu.cn/zysz/list.htm
+    local_path: data/incoming/colleges/info/static/info-majors-undergrad.html
+    published_at: '2026-10-21'
+    effective_from: '2026-10-21'
+    effective_to: null
+    status: active
+    format: html
+    notes: 结构化转录自官网静态页；采集日期 2026-10-21；引用以官网原文为准。
+- doc_id: info-majors-graduate
+  title: 研究生学位点与招生专业（数学与信息学院、软件学院）
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: info
+  issuing_department: 数学与信息学院、软件学院
+  audience:
+  - graduate
+  audience_detail:
+    colleges:
+    - info
+    note: 静态页面；页面无明确发布日期，published_at 取核验日期（date_confidence=low）。
+  topic_tags:
+  - 专业设置
+  - 研究生
+  - 学位点
+  versions:
+  - version_id: v2026
+    url: https://info.scau.edu.cn/zysz_11789/list.htm
+    local_path: data/incoming/colleges/info/static/info-majors-graduate.html
+    published_at: '2026-10-21'
+    effective_from: '2026-10-21'
+    effective_to: null
+    status: active
+    format: html
+    notes: 结构化转录自官网静态页；采集日期 2026-10-21；引用以官网原文为准。
+- doc_id: info-org-structure
+  title: 数学与信息学院、软件学院党组织设置
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: info
+  issuing_department: 数学与信息学院、软件学院
+  audience:
+  - public
+  audience_detail:
+    colleges:
+    - info
+    note: 静态页面；页面无明确发布日期，published_at 取核验日期（date_confidence=low）。
+  topic_tags:
+  - 组织架构
+  - 党支部
+  versions:
+  - version_id: v2026
+    url: https://info.scau.edu.cn/3766/list.htm
+    local_path: data/incoming/colleges/info/static/info-org-structure.html
+    published_at: '2026-10-21'
+    effective_from: '2026-10-21'
+    effective_to: null
+    status: active
+    format: html
+    notes: 结构化转录自官网静态页；采集日期 2026-10-21；引用以官网原文为准。
+- doc_id: info-practice-bases
+  title: 数学与信息学院、软件学院实践基地
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: info
+  issuing_department: 数学与信息学院、软件学院
+  audience:
+  - public
+  audience_detail:
+    colleges:
+    - info
+    note: 静态页面；页面无明确发布日期，published_at 取核验日期（date_confidence=low）。
+  topic_tags:
+  - 实践基地
+  - 实验室
+  versions:
+  - version_id: v2026
+    url: https://info.scau.edu.cn/sjjd/list.htm
+    local_path: data/incoming/colleges/info/static/info-practice-bases.html
+    published_at: '2026-10-21'
+    effective_from: '2026-10-21'
+    effective_to: null
+    status: active
+    format: html
+    notes: 结构化转录自官网静态页；采集日期 2026-10-21；引用以官网原文为准。
+- doc_id: info-competitions
+  title: 数学与信息学院、软件学院科创竞赛成绩
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: info
+  issuing_department: 数学与信息学院、软件学院
+  audience:
+  - undergraduate
+  audience_detail:
+    colleges:
+    - info
+    note: 静态页面；页面无明确发布日期，published_at 取核验日期（date_confidence=low）。
+  topic_tags:
+  - 科创
+  - 竞赛
+  - ACM
+  versions:
+  - version_id: v2026
+    url: https://info.scau.edu.cn/3755/list.htm
+    local_path: data/incoming/colleges/info/static/info-competitions.html
+    published_at: '2026-10-21'
+    effective_from: '2026-10-21'
+    effective_to: null
+    status: active
+    format: html
+    notes: 结构化转录自官网静态页；采集日期 2026-10-21；引用以官网原文为准。
+- doc_id: info-scholarships
+  title: 数学与信息学院、软件学院奖助学金
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: info
+  issuing_department: 数学与信息学院、软件学院
+  audience:
+  - undergraduate
+  audience_detail:
+    colleges:
+    - info
+    note: 静态页面；页面无明确发布日期，published_at 取核验日期（date_confidence=low）。
+  topic_tags:
+  - 奖助学金
+  - 奖学金
+  - 助学金
+  versions:
+  - version_id: v2026
+    url: https://info.scau.edu.cn/jzxj/list.htm
+    local_path: data/incoming/colleges/info/static/info-scholarships.html
+    published_at: '2026-10-21'
+    effective_from: '2026-10-21'
+    effective_to: null
+    status: active
+    format: html
+    notes: 结构化转录自官网静态页；采集日期 2026-10-21；引用以官网原文为准。
+- doc_id: info-teaching-centers
+  title: 数学与信息学院、软件学院教学实验平台
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: info
+  issuing_department: 数学与信息学院、软件学院
+  audience:
+  - public
+  audience_detail:
+    colleges:
+    - info
+    note: 静态页面；页面无明确发布日期，published_at 取核验日期（date_confidence=low）。
+  topic_tags:
+  - 教学中心
+  - 实验室
+  versions:
+  - version_id: v2026
+    url: https://info.scau.edu.cn/jxpt/list.htm
+    local_path: data/incoming/colleges/info/static/info-teaching-centers.html
+    published_at: '2026-10-21'
+    effective_from: '2026-10-21'
+    effective_to: null
+    status: active
+    format: html
+    notes: 结构化转录自官网静态页；采集日期 2026-10-21；引用以官网原文为准。
+- doc_id: info-industry-colleges
+  title: 数学与信息学院、软件学院产业学院
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: info
+  issuing_department: 数学与信息学院、软件学院
+  audience:
+  - public
+  audience_detail:
+    colleges:
+    - info
+    note: 静态页面；页面无明确发布日期，published_at 取核验日期（date_confidence=low）。
+  topic_tags:
+  - 产业学院
+  - 校企合作
+  versions:
+  - version_id: v2026
+    url: https://info.scau.edu.cn/cyxy/list.htm
+    local_path: data/incoming/colleges/info/static/info-industry-colleges.html
+    published_at: '2026-10-21'
+    effective_from: '2026-10-21'
+    effective_to: null
+    status: active
+    format: html
+    notes: 结构化转录自官网静态页；采集日期 2026-10-21；引用以官网原文为准。
+- doc_id: info-admissions-undergrad
+  title: 数学与信息学院、软件学院本科招生
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: info
+  issuing_department: 数学与信息学院、软件学院
+  audience:
+  - undergraduate
+  audience_detail:
+    colleges:
+    - info
+    note: 静态页面；页面无明确发布日期，published_at 取核验日期（date_confidence=low）。
+  topic_tags:
+  - 招生
+  - 本科招生简章
+  versions:
+  - version_id: v2026
+    url: https://info.scau.edu.cn/bkszs/list.htm
+    local_path: data/incoming/colleges/info/static/info-admissions-undergrad.html
+    published_at: '2026-10-21'
+    effective_from: '2026-10-21'
+    effective_to: null
+    status: active
+    format: html
+    notes: 结构化转录自官网静态页；采集日期 2026-10-21；引用以官网原文为准。
+- doc_id: info-admissions-graduate
+  title: 数学与信息学院、软件学院研究生招生
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: info
+  issuing_department: 数学与信息学院、软件学院
+  audience:
+  - graduate
+  audience_detail:
+    colleges:
+    - info
+    note: 静态页面；页面无明确发布日期，published_at 取核验日期（date_confidence=low）。
+  topic_tags:
+  - 招生
+  - 研究生招生目录
+  versions:
+  - version_id: v2026
+    url: https://info.scau.edu.cn/yjszs/list.htm
+    local_path: data/incoming/colleges/info/static/info-admissions-graduate.html
+    published_at: '2026-10-21'
+    effective_from: '2026-10-21'
+    effective_to: null
+    status: active
+    format: html
+    notes: 结构化转录自官网静态页；采集日期 2026-10-21；引用以官网原文为准。
+- doc_id: info-student-orgs
+  title: 数学与信息学院、软件学院学生组织
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: info
+  issuing_department: 数学与信息学院、软件学院
+  audience:
+  - undergraduate
+  audience_detail:
+    colleges:
+    - info
+    note: 静态页面；页面无明确发布日期，published_at 取核验日期（date_confidence=low）。
+  topic_tags:
+  - 学生组织
+  - 团委
+  - 学生会
+  versions:
+  - version_id: v2026
+    url: https://info.scau.edu.cn/xszz/list.htm
+    local_path: data/incoming/colleges/info/static/info-student-orgs.html
+    published_at: '2026-10-21'
+    effective_from: '2026-10-21'
+    effective_to: null
+    status: active
+    format: html
+    notes: 结构化转录自官网静态页；采集日期 2026-10-21；引用以官网原文为准。
+- doc_id: info-ug-math-plan
+  title: 数学与应用数学专业人才培养方案
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: info
+  issuing_department: 数学与信息学院、软件学院
+  audience:
+  - undergraduate
+  topic_tags:
+  - 培养方案
+  - 本科
+  - 数学与应用数学
+  versions:
+  - version_id: v2022
+    url: https://info.scau.edu.cn/2024/1104/c11786a391180/page.htm
+    local_path: data/incoming/colleges/info/plans/ug-math-2022.pdf
+    published_at: '2024-11-04'
+    effective_from: '2022-09-01'
+    effective_to: null
+    status: active
+    format: pdf
+    audience_detail:
+      colleges:
+      - info
+      majors:
+      - math-applied
+      intake_years:
+      - 2022
+    notes: 适用于2022级本科生；官网页面发布于2024-11-04，PDF 为2022版培养方案。
+  - version_id: v2024
+    url: https://info.scau.edu.cn/2024/1104/c11786a391181/page.htm
+    local_path: data/incoming/colleges/info/plans/ug-math-2024.pdf
+    published_at: '2024-11-04'
+    effective_from: '2024-09-01'
+    effective_to: null
+    status: active
+    format: pdf
+    audience_detail:
+      colleges:
+      - info
+      majors:
+      - math-applied
+      intake_years:
+      - 2024
+    notes: 适用于2024级本科生；官网页面发布于2024-11-04，PDF 为2024版培养方案。
+- doc_id: info-ug-ics-plan
+  title: 信息与计算科学专业人才培养方案
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: info
+  issuing_department: 数学与信息学院、软件学院
+  audience:
+  - undergraduate
+  topic_tags:
+  - 培养方案
+  - 本科
+  - 信息与计算科学
+  versions:
+  - version_id: v2022
+    url: https://info.scau.edu.cn/2024/1104/c11786a391178/page.htm
+    local_path: data/incoming/colleges/info/plans/ug-ics-2022.pdf
+    published_at: '2024-11-04'
+    effective_from: '2022-09-01'
+    effective_to: null
+    status: active
+    format: pdf
+    audience_detail:
+      colleges:
+      - info
+      majors:
+      - info-computing
+      intake_years:
+      - 2022
+    notes: 适用于2022级本科生；官网页面发布于2024-11-04，PDF 为2022版培养方案。
+  - version_id: v2024
+    url: https://info.scau.edu.cn/2024/1104/c11786a391179/page.htm
+    local_path: data/incoming/colleges/info/plans/ug-ics-2024.pdf
+    published_at: '2024-11-04'
+    effective_from: '2024-09-01'
+    effective_to: null
+    status: active
+    format: pdf
+    audience_detail:
+      colleges:
+      - info
+      majors:
+      - info-computing
+      intake_years:
+      - 2024
+    notes: 适用于2024级本科生；官网页面发布于2024-11-04，PDF 为2024版培养方案。
+- doc_id: info-ug-stat-plan
+  title: 统计学专业人才培养方案
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: info
+  issuing_department: 数学与信息学院、软件学院
+  audience:
+  - undergraduate
+  topic_tags:
+  - 培养方案
+  - 本科
+  - 统计学
+  versions:
+  - version_id: v2022
+    url: https://info.scau.edu.cn/2024/1104/c11786a391157/page.htm
+    local_path: data/incoming/colleges/info/plans/ug-stat-2022.pdf
+    published_at: '2024-11-04'
+    effective_from: '2022-09-01'
+    effective_to: null
+    status: active
+    format: pdf
+    audience_detail:
+      colleges:
+      - info
+      majors:
+      - statistics
+      intake_years:
+      - 2022
+    notes: 适用于2022级本科生；官网页面发布于2024-11-04，PDF 为2022版培养方案。
+  - version_id: v2024
+    url: https://info.scau.edu.cn/2024/1104/c11786a391159/page.htm
+    local_path: data/incoming/colleges/info/plans/ug-stat-2024.pdf
+    published_at: '2024-11-04'
+    effective_from: '2024-09-01'
+    effective_to: null
+    status: active
+    format: pdf
+    audience_detail:
+      colleges:
+      - info
+      majors:
+      - statistics
+      intake_years:
+      - 2024
+    notes: 适用于2024级本科生；官网页面发布于2024-11-04，PDF 为2024版培养方案。
+- doc_id: info-ug-ds-plan
+  title: 数据科学与大数据技术专业人才培养方案
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: info
+  issuing_department: 数学与信息学院、软件学院
+  audience:
+  - undergraduate
+  topic_tags:
+  - 培养方案
+  - 本科
+  - 数据科学与大数据技术
+  versions:
+  - version_id: v2022
+    url: https://info.scau.edu.cn/2024/1104/c11786a391182/page.htm
+    local_path: data/incoming/colleges/info/plans/ug-ds-2022.pdf
+    published_at: '2024-11-04'
+    effective_from: '2022-09-01'
+    effective_to: null
+    status: active
+    format: pdf
+    audience_detail:
+      colleges:
+      - info
+      majors:
+      - data-science
+      intake_years:
+      - 2022
+    notes: 适用于2022级本科生；官网页面发布于2024-11-04，PDF 为2022版培养方案。官网列表页标题误写为“数学科学与大数据技术”，PDF 正文为“数据科学与大数据技术”。
+  - version_id: v2024
+    url: https://info.scau.edu.cn/2024/1104/c11786a391183/page.htm
+    local_path: data/incoming/colleges/info/plans/ug-ds-2024.pdf
+    published_at: '2024-11-04'
+    effective_from: '2024-09-01'
+    effective_to: null
+    status: active
+    format: pdf
+    audience_detail:
+      colleges:
+      - info
+      majors:
+      - data-science
+      intake_years:
+      - 2024
+    notes: 适用于2024级本科生；官网页面发布于2024-11-04，PDF 为2024版培养方案。
+- doc_id: info-ug-cs-plan
+  title: 计算机科学与技术专业人才培养方案
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: info
+  issuing_department: 数学与信息学院、软件学院
+  audience:
+  - undergraduate
+  topic_tags:
+  - 培养方案
+  - 本科
+  - 计算机科学与技术
+  versions:
+  - version_id: v2022
+    url: https://info.scau.edu.cn/2024/1104/c11786a391167/page.htm
+    local_path: data/incoming/colleges/info/plans/ug-cs-2022.pdf
+    published_at: '2024-11-04'
+    effective_from: '2022-09-01'
+    effective_to: null
+    status: active
+    format: pdf
+    audience_detail:
+      colleges:
+      - info
+      majors:
+      - computer-science
+      intake_years:
+      - 2022
+    notes: 适用于2022级本科生；官网页面发布于2024-11-04，PDF 为2022版培养方案。
+  - version_id: v2024
+    url: https://info.scau.edu.cn/2024/1104/c11786a391169/page.htm
+    local_path: data/incoming/colleges/info/plans/ug-cs-2024.pdf
+    published_at: '2024-11-04'
+    effective_from: '2024-09-01'
+    effective_to: null
+    status: active
+    format: pdf
+    audience_detail:
+      colleges:
+      - info
+      majors:
+      - computer-science
+      intake_years:
+      - 2024
+    notes: 适用于2024级本科生；官网页面发布于2024-11-04，PDF 为2024版培养方案。
+- doc_id: info-ug-se-plan
+  title: 软件工程专业人才培养方案
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: info
+  issuing_department: 数学与信息学院、软件学院
+  audience:
+  - undergraduate
+  topic_tags:
+  - 培养方案
+  - 本科
+  - 软件工程
+  versions:
+  - version_id: v2022
+    url: https://info.scau.edu.cn/2024/1104/c11786a391160/page.htm
+    local_path: data/incoming/colleges/info/plans/ug-se-2022.pdf
+    published_at: '2024-11-04'
+    effective_from: '2022-09-01'
+    effective_to: null
+    status: active
+    format: pdf
+    audience_detail:
+      colleges:
+      - info
+      majors:
+      - software-engineering
+      intake_years:
+      - 2022
+    notes: 适用于2022级本科生；官网页面发布于2024-11-04，PDF 为2022版培养方案。
+  - version_id: v2024
+    url: https://info.scau.edu.cn/2024/1104/c11786a391162/page.htm
+    local_path: data/incoming/colleges/info/plans/ug-se-2024.pdf
+    published_at: '2024-11-04'
+    effective_from: '2024-09-01'
+    effective_to: null
+    status: active
+    format: pdf
+    audience_detail:
+      colleges:
+      - info
+      majors:
+      - software-engineering
+      intake_years:
+      - 2024
+    notes: 适用于2024级本科生；官网页面发布于2024-11-04，PDF 为2024版培养方案。
+- doc_id: info-ug-imis-plan
+  title: 信息管理与信息系统专业人才培养方案
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: info
+  issuing_department: 数学与信息学院、软件学院
+  audience:
+  - undergraduate
+  topic_tags:
+  - 培养方案
+  - 本科
+  - 信息管理与信息系统
+  versions:
+  - version_id: v2022
+    url: https://info.scau.edu.cn/2024/1104/c11786a391163/page.htm
+    local_path: data/incoming/colleges/info/plans/ug-imis-2022.pdf
+    published_at: '2024-11-04'
+    effective_from: '2022-09-01'
+    effective_to: null
+    status: active
+    format: pdf
+    audience_detail:
+      colleges:
+      - info
+      majors:
+      - information-management
+      intake_years:
+      - 2022
+    notes: 适用于2022级本科生；官网页面发布于2024-11-04，PDF 为2022版培养方案。
+  - version_id: v2024
+    url: https://info.scau.edu.cn/2024/1104/c11786a391164/page.htm
+    local_path: data/incoming/colleges/info/plans/ug-imis-2024.pdf
+    published_at: '2024-11-04'
+    effective_from: '2024-09-01'
+    effective_to: null
+    status: active
+    format: pdf
+    audience_detail:
+      colleges:
+      - info
+      majors:
+      - information-management
+      intake_years:
+      - 2024
+    notes: 适用于2024级本科生；官网页面发布于2024-11-04，PDF 为2024版培养方案。
+- doc_id: info-ug-bigdata-plan
+  title: 大数据管理与应用专业人才培养方案
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: info
+  issuing_department: 数学与信息学院、软件学院
+  audience:
+  - undergraduate
+  topic_tags:
+  - 培养方案
+  - 本科
+  - 大数据管理与应用
+  versions:
+  - version_id: v2022
+    url: https://info.scau.edu.cn/2024/1104/c11786a391172/page.htm
+    local_path: data/incoming/colleges/info/plans/ug-bigdata-2022.pdf
+    published_at: '2024-11-04'
+    effective_from: '2022-09-01'
+    effective_to: null
+    status: active
+    format: pdf
+    audience_detail:
+      colleges:
+      - info
+      majors:
+      - big-data-management
+      intake_years:
+      - 2022
+    notes: 适用于2022级本科生；官网页面发布于2024-11-04，PDF 为2022版培养方案。
+  - version_id: v2024
+    url: https://info.scau.edu.cn/2024/1104/c11786a391175/page.htm
+    local_path: data/incoming/colleges/info/plans/ug-bigdata-2024.pdf
+    published_at: '2024-11-04'
+    effective_from: '2024-09-01'
+    effective_to: null
+    status: active
+    format: pdf
+    audience_detail:
+      colleges:
+      - info
+      majors:
+      - big-data-management
+      intake_years:
+      - 2024
+    notes: 适用于2024级本科生；官网页面发布于2024-11-04，PDF 为2024版培养方案。
+- doc_id: info-grad-math-plan
+  title: 数学学科研究生培养方案（2020–2023级）
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: info
+  issuing_department: 数学与信息学院、软件学院
+  audience:
+  - graduate_master
+  topic_tags:
+  - 培养方案
+  - 研究生
+  - 数学
+  versions:
+  - version_id: v2020
+    url: https://info.scau.edu.cn/2021/0118/c11791a266865/page.htm
+    local_path: data/incoming/colleges/info/plans/grad-math-2020.pdf
+    published_at: '2020-07-01'
+    effective_from: '2020-09-01'
+    effective_to: null
+    status: active
+    format: pdf
+    audience_detail:
+      colleges:
+      - info
+      intake_years:
+      - 2020
+      program_types:
+      - academic
+    notes: 适用于2020级数学；来源页发布于2020-07-01。扫描件，暂无文本层，待 OCR。
+  - version_id: v2021
+    url: https://info.scau.edu.cn/2021/0118/c11791a266864/page.htm
+    local_path: data/incoming/colleges/info/plans/grad-math-2021.pdf
+    published_at: '2021-07-01'
+    effective_from: '2021-09-01'
+    effective_to: null
+    status: active
+    format: pdf
+    audience_detail:
+      colleges:
+      - info
+      intake_years:
+      - 2021
+      program_types:
+      - academic
+    notes: 适用于2021级数学；来源页发布于2021-07-01。
+  - version_id: v2022
+    url: https://info.scau.edu.cn/2021/0118/c11791a266863/page.htm
+    local_path: data/incoming/colleges/info/plans/grad-math-2022.pdf
+    published_at: '2022-07-01'
+    effective_from: '2022-09-01'
+    effective_to: null
+    status: active
+    format: pdf
+    audience_detail:
+      colleges:
+      - info
+      intake_years:
+      - 2022
+      program_types:
+      - academic
+    notes: 适用于2022级数学；来源页发布于2022-07-01；官网附件与2021级版本字节相同，正文落款为2021年6月。
+  - version_id: v2023
+    url: https://info.scau.edu.cn/2023/0824/c11791a353314/page.htm
+    local_path: data/incoming/colleges/info/plans/grad-math-2023.pdf
+    published_at: '2023-07-01'
+    effective_from: '2023-09-01'
+    effective_to: null
+    status: active
+    format: pdf
+    audience_detail:
+      colleges:
+      - info
+      intake_years:
+      - 2023
+      program_types:
+      - academic
+    notes: 适用于2023级数学；来源页发布于2023-07-01。
+- doc_id: info-grad-cs-plan
+  title: 计算机科学与技术学科研究生培养方案（2020–2023级）
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: info
+  issuing_department: 数学与信息学院、软件学院
+  audience:
+  - graduate_master
+  topic_tags:
+  - 培养方案
+  - 研究生
+  - 计算机科学与技术
+  versions:
+  - version_id: v2020
+    url: https://info.scau.edu.cn/2021/0118/c11791a266865/page.htm
+    local_path: data/incoming/colleges/info/plans/grad-cs-2020.pdf
+    published_at: '2020-07-01'
+    effective_from: '2020-09-01'
+    effective_to: null
+    status: active
+    format: pdf
+    audience_detail:
+      colleges:
+      - info
+      intake_years:
+      - 2020
+      program_types:
+      - academic
+    notes: 适用于2020级计算机科学与技术；来源页发布于2020-07-01。扫描件，暂无文本层，待 OCR。
+  - version_id: v2021
+    url: https://info.scau.edu.cn/2021/0118/c11791a266864/page.htm
+    local_path: data/incoming/colleges/info/plans/grad-cs-2021.pdf
+    published_at: '2021-07-01'
+    effective_from: '2021-09-01'
+    effective_to: null
+    status: active
+    format: pdf
+    audience_detail:
+      colleges:
+      - info
+      intake_years:
+      - 2021
+      program_types:
+      - academic
+    notes: 适用于2021级计算机科学与技术；来源页发布于2021-07-01。
+  - version_id: v2022
+    url: https://info.scau.edu.cn/2021/0118/c11791a266863/page.htm
+    local_path: data/incoming/colleges/info/plans/grad-cs-2022.pdf
+    published_at: '2022-07-01'
+    effective_from: '2022-09-01'
+    effective_to: null
+    status: active
+    format: pdf
+    audience_detail:
+      colleges:
+      - info
+      intake_years:
+      - 2022
+      program_types:
+      - academic
+    notes: 适用于2022级计算机科学与技术；来源页发布于2022-07-01；官网附件与2021级版本字节相同，正文落款为2021年6月。
+  - version_id: v2023
+    url: https://info.scau.edu.cn/2023/0824/c11791a353314/page.htm
+    local_path: data/incoming/colleges/info/plans/grad-cs-2023.pdf
+    published_at: '2023-07-01'
+    effective_from: '2023-09-01'
+    effective_to: null
+    status: active
+    format: pdf
+    audience_detail:
+      colleges:
+      - info
+      intake_years:
+      - 2023
+      program_types:
+      - academic
+    notes: 适用于2023级计算机科学与技术；来源页发布于2023-07-01。
+- doc_id: info-grad-computer-tech-plan
+  title: 计算机技术领域研究生培养方案（2022–2023级）
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: info
+  issuing_department: 数学与信息学院、软件学院
+  audience:
+  - graduate_master
+  topic_tags:
+  - 培养方案
+  - 研究生
+  - 计算机技术
+  versions:
+  - version_id: v2022
+    url: https://info.scau.edu.cn/2021/0118/c11791a266863/page.htm
+    local_path: data/incoming/colleges/info/plans/grad-computer-tech-2022.pdf
+    published_at: '2022-07-01'
+    effective_from: '2022-09-01'
+    effective_to: null
+    status: active
+    format: pdf
+    audience_detail:
+      colleges:
+      - info
+      intake_years:
+      - 2022
+      program_types:
+      - professional
+    notes: 适用于2022级计算机技术；来源页发布于2022-07-01。
+  - version_id: v2023
+    url: https://info.scau.edu.cn/2023/0824/c11791a353314/page.htm
+    local_path: data/incoming/colleges/info/plans/grad-computer-tech-2023.pdf
+    published_at: '2023-07-01'
+    effective_from: '2023-09-01'
+    effective_to: null
+    status: active
+    format: pdf
+    audience_detail:
+      colleges:
+      - info
+      intake_years:
+      - 2023
+      program_types:
+      - professional
+    notes: 适用于2023级计算机技术；来源页发布于2023-07-01。
+- doc_id: info-grad-electronic-info-plan
+  title: 电子信息研究生培养方案（2020–2021级）
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: info
+  issuing_department: 数学与信息学院、软件学院
+  audience:
+  - graduate_master
+  topic_tags:
+  - 培养方案
+  - 研究生
+  - 电子信息
+  versions:
+  - version_id: v2020
+    url: https://info.scau.edu.cn/2021/0118/c11791a266865/page.htm
+    local_path: data/incoming/colleges/info/plans/grad-electronic-info-2020.pdf
+    published_at: '2020-07-01'
+    effective_from: '2020-09-01'
+    effective_to: null
+    status: active
+    format: pdf
+    audience_detail:
+      colleges:
+      - info
+      intake_years:
+      - 2020
+      program_types:
+      - professional
+    notes: 适用于2020级电子信息；来源页发布于2020-07-01。
+  - version_id: v2021
+    url: https://info.scau.edu.cn/2021/0118/c11791a266864/page.htm
+    local_path: data/incoming/colleges/info/plans/grad-electronic-info-2021.pdf
+    published_at: '2021-07-01'
+    effective_from: '2021-09-01'
+    effective_to: null
+    status: active
+    format: pdf
+    audience_detail:
+      colleges:
+      - info
+      intake_years:
+      - 2021
+      program_types:
+      - professional
+    notes: 适用于2021级电子信息；来源页发布于2021-07-01。
+- doc_id: info-grad-agri-it-plan
+  title: 农业工程与信息技术领域研究生培养方案（2020–2021级）
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: info
+  issuing_department: 数学与信息学院、软件学院
+  audience:
+  - graduate_master
+  topic_tags:
+  - 培养方案
+  - 研究生
+  - 农业工程与信息技术
+  versions:
+  - version_id: v2020
+    url: https://info.scau.edu.cn/2021/0118/c11791a266865/page.htm
+    local_path: data/incoming/colleges/info/plans/grad-agri-it-2020.pdf
+    published_at: '2020-07-01'
+    effective_from: '2020-09-01'
+    effective_to: null
+    status: active
+    format: pdf
+    audience_detail:
+      colleges:
+      - info
+      intake_years:
+      - 2020
+      program_types:
+      - professional
+    notes: 适用于2020级农业工程与信息技术；来源页发布于2020-07-01。
+  - version_id: v2021
+    url: https://info.scau.edu.cn/2021/0118/c11791a266864/page.htm
+    local_path: data/incoming/colleges/info/plans/grad-agri-it-2021.pdf
+    published_at: '2021-07-01'
+    effective_from: '2021-09-01'
+    effective_to: null
+    status: active
+    format: pdf
+    audience_detail:
+      colleges:
+      - info
+      intake_years:
+      - 2021
+      program_types:
+      - professional
+    notes: 适用于2021级农业工程与信息技术；来源页发布于2021-07-01。
+- doc_id: info-grad-iem-plan
+  title: 工业工程与管理领域研究生培养方案（2020–2023级）
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: info
+  issuing_department: 数学与信息学院、软件学院
+  audience:
+  - graduate_master
+  topic_tags:
+  - 培养方案
+  - 研究生
+  - 工业工程与管理
+  versions:
+  - version_id: v2020
+    url: https://info.scau.edu.cn/2021/0118/c11791a266865/page.htm
+    local_path: data/incoming/colleges/info/plans/grad-iem-2020.pdf
+    published_at: '2020-07-01'
+    effective_from: '2020-09-01'
+    effective_to: null
+    status: active
+    format: pdf
+    audience_detail:
+      colleges:
+      - info
+      intake_years:
+      - 2020
+      program_types:
+      - professional
+    notes: 适用于2020级工业工程与管理；来源页发布于2020-07-01。
+  - version_id: v2021
+    url: https://info.scau.edu.cn/2021/0118/c11791a266864/page.htm
+    local_path: data/incoming/colleges/info/plans/grad-iem-2021.pdf
+    published_at: '2021-07-01'
+    effective_from: '2021-09-01'
+    effective_to: null
+    status: active
+    format: pdf
+    audience_detail:
+      colleges:
+      - info
+      intake_years:
+      - 2021
+      program_types:
+      - professional
+    notes: 适用于2021级工业工程与管理；来源页发布于2021-07-01。
+  - version_id: v2022
+    url: https://info.scau.edu.cn/2021/0118/c11791a266863/page.htm
+    local_path: data/incoming/colleges/info/plans/grad-iem-2022.pdf
+    published_at: '2022-07-01'
+    effective_from: '2022-09-01'
+    effective_to: null
+    status: active
+    format: pdf
+    audience_detail:
+      colleges:
+      - info
+      intake_years:
+      - 2022
+      program_types:
+      - professional
+    notes: 适用于2022级工业工程与管理；来源页发布于2022-07-01；官网附件与2021级版本字节相同，正文落款为2021年6月。
+  - version_id: v2023
+    url: https://info.scau.edu.cn/2023/0824/c11791a353314/page.htm
+    local_path: data/incoming/colleges/info/plans/grad-iem-2023.pdf
+    published_at: '2023-07-01'
+    effective_from: '2023-09-01'
+    effective_to: null
+    status: active
+    format: pdf
+    audience_detail:
+      colleges:
+      - info
+      intake_years:
+      - 2023
+      program_types:
+      - professional
+    notes: 适用于2023级工业工程与管理；来源页发布于2023-07-01。

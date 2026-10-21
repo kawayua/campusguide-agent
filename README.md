@@ -2,7 +2,7 @@
 
 面向高校公开制度文档的**条款级**问答与办事指引 Agent（个人作品集项目）。
 
-当前目标院校：**华南农业大学**。当前进度：W1（数据与索引地基）代码层完成，真实语料待项目作者补齐；问答链路从 W2 开始。
+当前目标院校：**华南农业大学**。当前进度：W1 数据与索引地基完成，已收录 77 份文档 / 105 个版本（含两份 2020 级扫描件 OCR）；问答链路从 W2 开始实现。
 
 > 本系统为个人演示项目，只覆盖指定学校的公开制度文件，不构成官方答复。具体政策以学校官网和负责部门解释为准。请勿输入学号、身份证、成绩单等个人信息。
 
@@ -47,6 +47,15 @@ python -m uv run python scripts/check_segmentation.py
 python -m uv run pytest
 python -m uv run ruff check .
 ```
+
+扫描版 PDF 需要可选 OCR 依赖。识别缓存只写入本地 `data/processed/ocr/`，原始 PDF 不改动；解析时按 SHA-256 匹配后自动接入：
+
+```bash
+python -m uv sync --group ocr
+python -m uv run --group ocr python scripts/ocr_scans.py --only <doc_id>@<version_id>
+```
+
+OCR 默认逐页比较 200dpi 与 240dpi 两个渲染结果，以覆盖更多的版本为底稿并补齐漏行；表格仍按 OCR 行序保留，文本未经逐字校对，引用以官网原文为准。
 
 ## 来源清单
 

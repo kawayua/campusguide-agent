@@ -16,6 +16,11 @@ def main() -> int:
     parser.add_argument("--raw-dir", default=str(ROOT / "data" / "raw"))
     parser.add_argument("--processed-dir", default=str(ROOT / "data" / "processed"))
     parser.add_argument(
+        "--ocr-dir",
+        default=None,
+        help="OCR 缓存目录，默认 <processed-dir>/ocr",
+    )
+    parser.add_argument(
         "--only",
         action="append",
         default=None,
@@ -32,6 +37,7 @@ def main() -> int:
         raw_dir=raw_dir,
         processed_dir=Path(args.processed_dir).resolve(),
         only=args.only,
+        ocr_dir=Path(args.ocr_dir).resolve() if args.ocr_dir else None,
     )
     if not results:
         print("没有找到可解析的 meta.json，请先执行 make fetch。")
@@ -41,6 +47,9 @@ def main() -> int:
     for result in results:
         counts[result.status] = counts.get(result.status, 0) + 1
         detail = result.error or f"cjk={result.cjk_count}"
+        if result.ocr_used:
+            confidence = result.ocr_confidence or 0.0
+            detail += f" ocr=yes confidence={confidence:.3f}"
         print(f"[{result.status:7}] {result.doc_id}@{result.version_id} {detail}")
         for warning in result.warnings:
             print(f"          warning: {warning}")

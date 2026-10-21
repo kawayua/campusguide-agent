@@ -1,10 +1,11 @@
-"""条款切分：章/条边界识别、前言与附录分块、长条款分段、联系方式脱敏。
+"""条款切分：章/条边界识别、节级/段落回退、前言与附录分块、联系方式脱敏。
 
 切分是 W1 的核心规则，采用纯正则 + 确定性处理：
-- 章标题写入 chapter_path，不单独作为检索单位；
-- 条款正文从“第 X 条”之后开始，到下一条/下一章前结束；
-- 超过 800 字的条款按段落/句子切成多个 part，共享同一个 article_id；
-- 重复条款号追加 ~N 保证 article_id 唯一，并记录告警。
+- 制度类文档优先按“第 X 条”切分，章标题写入 chapter_path；
+- 没有“第 X 条”时，先尝试“一、二、三”节级切分（培养方案、指南）；
+- 仍无节标题的 guide 按段落切块，保证正文可检索；
+- 超过 800 字的条款/节按段落或句子切成多个 part，共享同一个 article_id；
+- 重复条款号/节标题追加 ~N 保证 article_id 唯一，并记录告警。
 """
 
 from __future__ import annotations
@@ -12,7 +13,7 @@ from __future__ import annotations
 import re
 from dataclasses import dataclass, field
 
-from campusguide.domain.enums import BlockType
+from campusguide.domain.enums import BlockType, DocType
 from campusguide.domain.ids import article_index_from_no, make_article_id
 from campusguide.domain.models import Article, DocumentVersion
 from campusguide.domain.text import clean_whitespace, normalize_text
@@ -35,6 +36,21 @@ ARTICLE_RE = re.compile(
 ARTICLE_RE_LOOSE = re.compile(
     rf"(?m)^[ \t　]*(?P<no>第[{_CN_NUM}]{{1,12}}条(?:之[{_CN_NUM}]{{1,3}})?)"
     rf"[ \t　]*(?P<rest>.*)$"
+)
+# 培养方案、指南常用“一、培养目标”“二、课程设置”的节级标题。
+# 只认行首编号 + 不超过 60 字的短标题，避免把正文中的列举项当成节。
+SECTION_RE = re.compile(
+    r"(?m)^[ \t　]*(?P<no>[一二三四五六七八九十百]+)[、.．][ \t　]*"
+    r"(?P<title>[^\n]{1,60})[ \t　]*$"
+)
+# “第一章”“第一部分”等只写入 chapter_path，不单独作为检索单位。
+PART_RE = re.compile(
+    rf"(?m)^[ \t　]*(?P<title>第[{_CN_NUM}]{{1,12}}(?:章|部分)[^\n]{{0,80}})[ \t　]*$"
+)
+# 合订本/单专业方案的专业标题，用于 chapter_path 的第一级。
+MAJOR_HEADING_RE = re.compile(
+    r"(?m)^[ \t　]*(?P<title>[^\n]{2,50}?专业(?:人才培养)?方案"
+    r"(?:[（(]\d{4}\s*版[）)])?)[ \t　]*$"
 )
 
 # 只清理明确的页码标记；裸数字可能是年份、金额或文号，不能丢弃。
@@ -60,22 +76,37 @@ class SegmentResult:
     duplicate_article_nos: list[str] = field(default_factory=list)
     redaction_counts: dict[str, int] = field(default_factory=dict)
     used_loose_article_rule: bool = False
+    used_section_rule: bool = False
+    used_paragraph_rule: bool = False
 
     @property
     def indexable_articles(self) -> list[Article]:
         return [
             article
             for article in self.articles
-            if article.block_type is BlockType.ARTICLE and article.text_normalized
+            if article.block_type in {BlockType.ARTICLE, BlockType.SECTION}
+            and article.text_normalized
         ]
 
     @property
     def blocks(self) -> list[Article]:
-        return [article for article in self.articles if article.block_type is not BlockType.ARTICLE]
+        return [
+            article
+            for article in self.articles
+            if article.block_type not in {BlockType.ARTICLE, BlockType.SECTION}
+        ]
 
     def merge_redaction_counts(self, counts: dict[str, int]) -> None:
         for key, value in counts.items():
             self.redaction_counts[key] = self.redaction_counts.get(key, 0) + value
+
+
+def _append_redaction_warning(result: SegmentResult) -> None:
+    if result.redaction_counts:
+        result.warnings.append(
+            "索引文本已脱敏："
+            + ", ".join(f"{key}={value}" for key, value in sorted(result.redaction_counts.items()))
+        )
 
 
 def _split_text(text: str, max_chars: int) -> list[str]:
@@ -219,6 +250,194 @@ def _add_parts(
         )
 
 
+def _plausible_section(match: re.Match[str]) -> bool:
+    """过滤正文中形似“一、……”的句子，只保留短标题。"""
+    title = match.group("title").strip()
+    if not title or title.endswith(("。", "！", "？", "；", "，", ",", ".", ";")):
+        return False
+    return len(re.findall(r"[\u4e00-\u9fff]", title)) >= 2
+
+
+def _context_at(
+    position: int,
+    parts: list[re.Match[str]],
+    majors: list[re.Match[str]],
+) -> list[str]:
+    context: list[str] = []
+    major: str | None = None
+    for match in majors:
+        if match.start() < position:
+            major = clean_whitespace(match.group("title"))
+        else:
+            break
+    if major:
+        context.append(major)
+
+    part: str | None = None
+    for match in parts:
+        if match.start() < position:
+            part = clean_whitespace(match.group("title"))
+        else:
+            break
+    if part:
+        context.append(part)
+    return context
+
+
+def _major_context_at(position: int, majors: list[re.Match[str]]) -> list[str]:
+    major: str | None = None
+    for match in majors:
+        if match.start() < position:
+            major = clean_whitespace(match.group("title"))
+        else:
+            break
+    return [major] if major else []
+
+
+def _add_sections(
+    result: SegmentResult,
+    *,
+    parsed: ParsedDocument,
+    version: DocumentVersion,
+    sections: list[re.Match[str]],
+    parts: list[re.Match[str]],
+    majors: list[re.Match[str]],
+    topic_tags: list[str],
+    flow_ids: list[str],
+    max_chars: int,
+) -> None:
+    text = parsed.text
+    first_start = sections[0].start()
+    preface = text[:first_start]
+    if len(normalize_text(preface)) >= PREFACE_MIN_CHARS:
+        _add_parts(
+            result,
+            version=version,
+            article_no="前言",
+            article_index=0,
+            chapter_path=[],
+            text=preface,
+            block_type=BlockType.PREFACE,
+            duplicate=1,
+            topic_tags=topic_tags,
+            flow_ids=flow_ids,
+            source_format=parsed.format,
+            max_chars=max_chars,
+        )
+
+    duplicate_counts: dict[str, int] = {}
+    block_order = 0
+    preamble_blocks = 0
+    for order, match in enumerate(sections, start=1):
+        heading = clean_whitespace(f"{match.group('no')}、{match.group('title')}")
+        body_start = match.end()
+        body_end = (
+            sections[order].start() if order < len(sections) else len(text)
+        )
+        raw_body_end = body_end
+
+        # 章/部分标题后、下一节标题前的内容（如“第二章 培养方案”的学制、
+        # 学分表）不属于上一节；单独建块，避免把表格挂到“学位论文要求”下。
+        preamble = None
+        for candidate in [*parts, *majors]:
+            if (
+                body_start <= candidate.start() < body_end
+                and (preamble is None or candidate.start() > preamble.start())
+            ):
+                preamble = candidate
+        if preamble is not None:
+            if len(normalize_text(text[preamble.end():raw_body_end])) < PREFACE_MIN_CHARS:
+                preamble = None
+            else:
+                body_end = preamble.start()
+
+        duplicate_counts[heading] = duplicate_counts.get(heading, 0) + 1
+        duplicate = duplicate_counts[heading]
+        if duplicate > 1:
+            result.warnings.append(f"节标题重复：{heading}（第 {duplicate} 次出现）")
+
+        block_order += 1
+        _add_parts(
+            result,
+            version=version,
+            article_no=heading,
+            article_index=block_order,
+            chapter_path=_context_at(match.start(), parts, majors),
+            text=text[body_start:body_end],
+            block_type=BlockType.SECTION,
+            duplicate=duplicate,
+            topic_tags=topic_tags,
+            flow_ids=flow_ids,
+            source_format=parsed.format,
+            max_chars=max_chars,
+        )
+
+        if preamble is not None:
+            preamble_heading = clean_whitespace(preamble.group("title"))
+            duplicate_counts[preamble_heading] = (
+                duplicate_counts.get(preamble_heading, 0) + 1
+            )
+            preamble_duplicate = duplicate_counts[preamble_heading]
+            if preamble_duplicate > 1:
+                result.warnings.append(
+                    f"章节标题重复：{preamble_heading}（第 {preamble_duplicate} 次出现）"
+                )
+            block_order += 1
+            preamble_blocks += 1
+            _add_parts(
+                result,
+                version=version,
+                article_no=preamble_heading,
+                article_index=block_order,
+                chapter_path=_major_context_at(preamble.start(), majors),
+                text=text[preamble.end():raw_body_end],
+                block_type=BlockType.SECTION,
+                duplicate=preamble_duplicate,
+                topic_tags=topic_tags,
+                flow_ids=flow_ids,
+                source_format=parsed.format,
+                max_chars=max_chars,
+            )
+
+    result.used_section_rule = True
+    summary = f"未识别到“第X条”，已按节切分：{len(sections)} 节"
+    if preamble_blocks:
+        summary += f"，章节导语单独建块 {preamble_blocks} 处"
+    result.warnings.append(summary)
+
+
+def _add_paragraph_chunks(
+    result: SegmentResult,
+    *,
+    parsed: ParsedDocument,
+    version: DocumentVersion,
+    topic_tags: list[str],
+    flow_ids: list[str],
+    max_chars: int,
+) -> None:
+    chunks = _split_text(_clean_article_body(parsed.text), max_chars)
+    if not chunks:
+        result.warnings.append("正文为空，未生成段落块")
+        return
+    for order, chunk in enumerate(chunks, start=1):
+        _add_parts(
+            result,
+            version=version,
+            article_no=f"段落{order}",
+            article_index=order,
+            chapter_path=[],
+            text=chunk,
+            block_type=BlockType.SECTION,
+            duplicate=1,
+            topic_tags=topic_tags,
+            flow_ids=flow_ids,
+            source_format=parsed.format,
+            max_chars=max_chars,
+        )
+    result.used_paragraph_rule = True
+    result.warnings.append(f"未识别到条款或节标题，已按段落切分：{len(chunks)} 段")
+
+
 def segment_document(
     parsed: ParsedDocument,
     version: DocumentVersion,
@@ -275,6 +494,39 @@ def _segment_document(
             result.warnings.append(f"已用宽松规则补充无分隔符条款：{recovered}")
 
     if not articles:
+        sections = [match for match in SECTION_RE.finditer(text) if _plausible_section(match)]
+        if sections:
+            _add_sections(
+                result,
+                parsed=parsed,
+                version=version,
+                sections=sections,
+                parts=list(PART_RE.finditer(text)),
+                majors=list(MAJOR_HEADING_RE.finditer(text)),
+                topic_tags=topic_tags,
+                flow_ids=flow_ids,
+                max_chars=max_chars,
+            )
+            if result.indexable_articles:
+                _append_redaction_warning(result)
+                return result
+            result.articles.clear()
+            result.warnings.append("节标题下没有可用正文，回退为整篇块")
+
+        if version.doc_type is DocType.GUIDE and len(normalize_text(text)) >= PREFACE_MIN_CHARS:
+            _add_paragraph_chunks(
+                result,
+                parsed=parsed,
+                version=version,
+                topic_tags=topic_tags,
+                flow_ids=flow_ids,
+                max_chars=max_chars,
+            )
+            if result.indexable_articles:
+                _append_redaction_warning(result)
+                return result
+            result.articles.clear()
+
         result.warnings.append("未识别到任何“第 X 条”，整篇作为不可检索块保存")
         _add_parts(
             result,
@@ -290,6 +542,7 @@ def _segment_document(
             source_format=parsed.format,
             max_chars=max_chars,
         )
+        _append_redaction_warning(result)
         return result
 
     chapter_starts = [match.start() for match in chapters]
@@ -406,9 +659,5 @@ def _segment_document(
     elif normalize_text(tail):
         result.warnings.append("忽略尾部短文本（可能是落款/页码）")
 
-    if result.redaction_counts:
-        result.warnings.append(
-            "索引文本已脱敏："
-            + ", ".join(f"{key}={value}" for key, value in sorted(result.redaction_counts.items()))
-        )
+    _append_redaction_warning(result)
     return result

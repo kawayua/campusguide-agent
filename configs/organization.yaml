@@ -31,5 +31,70 @@
 schema_version: "1.0"
 corpus_id: scau
 
-colleges: []
-majors: []
+# 数学与信息学院、软件学院下设数学系、计算机科学与工程系、信息工程系。
+# 当前 organization 只登记学院与专业两级；系作为教师/专业页面的组织单位，
+# 写入教师名单文档标题与 aliases，不单独占用主键。
+colleges:
+  - college_id: info
+    name: 数学与信息学院、软件学院
+    aliases: [数信学院, 数学与信息学院, 软件学院]
+    valid_from: null
+    valid_to: null
+
+majors:
+  - major_id: math-applied
+    name: 数学与应用数学
+    college_id: info
+    major_code: "070101"
+    aliases: [数学, 应数]
+    valid_from: null
+    valid_to: null
+  - major_id: info-computing
+    name: 信息与计算科学
+    college_id: info
+    major_code: "070102"
+    aliases: [信计, 信息与计算科学]
+    valid_from: null
+    valid_to: null
+  - major_id: statistics
+    name: 统计学
+    college_id: info
+    major_code: "071201"
+    aliases: [统计]
+    valid_from: null
+    valid_to: null
+  - major_id: data-science
+    name: 数据科学与大数据技术
+    college_id: info
+    major_code: "080910T"
+    aliases: [数据科学, 大数据技术, 数学科学与大数据技术]
+    valid_from: null
+    valid_to: null
+  - major_id: computer-science
+    name: 计算机科学与技术
+    college_id: info
+    major_code: "080901"
+    aliases: [计算机, 计科, 计算机科学与技术]
+    valid_from: null
+    valid_to: null
+  - major_id: software-engineering
+    name: 软件工程
+    college_id: info
+    major_code: "080902"
+    aliases: [软工, 软件工程]
+    valid_from: null
+    valid_to: null
+  - major_id: information-management
+    name: 信息管理与信息系统
+    college_id: info
+    major_code: "120102"
+    aliases: [信管, 信息管理与信息系统]
+    valid_from: null
+    valid_to: null
+  - major_id: big-data-management
+    name: 大数据管理与应用
+    college_id: info
+    major_code: "120108T"
+    aliases: [大数据管理, 大数据管理与应用]
+    valid_from: null
+    valid_to: null

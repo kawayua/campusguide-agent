@@ -113,7 +113,10 @@ class Article(BaseModel):
 
     @property
     def is_indexable(self) -> bool:
-        return self.block_type is BlockType.ARTICLE and bool(self.text_normalized)
+        return (
+            self.block_type in {BlockType.ARTICLE, BlockType.SECTION}
+            and bool(self.text_normalized)
+        )
 
 
 class ArticlePublic(BaseModel):
