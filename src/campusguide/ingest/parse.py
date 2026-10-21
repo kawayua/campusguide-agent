@@ -39,6 +39,9 @@ CONTENT_SELECTORS = (
     "#vsb_content_100",
     ".wp_articlecontent",
     ".v_news_content",
+    ".paging_content",
+    ".col_news_list",
+    "#xzld",
     ".article-content",
     ".article_content",
     ".article",
@@ -244,6 +247,25 @@ def _extract_content(soup: BeautifulSoup) -> tuple[BeautifulSoup, list[str]]:
                 candidates.append(element)
 
     if candidates:
+        # 学院 CMS 的 .paging_content 是明确的主内容容器；委员会名单等
+        # 页面本身只有几十个汉字，且与 .wp_articlecontent 同文，按 50 字
+        # 门槛会误回退到带导航的 body。这里优先采用它。
+        paging = [
+            element
+            for element in candidates
+            if "paging_content" in (element.get("class") or [])
+        ]
+        if paging:
+            paging_score, _, paging_best = max(
+                (
+                    (count_cjk(element.get_text(" ", strip=True)), index, element)
+                    for index, element in enumerate(paging)
+                ),
+                key=lambda item: (item[0], -item[1]),
+            )
+            if paging_score >= 20:
+                return paging_best, warnings
+
         scored = [
             (count_cjk(element.get_text(" ", strip=True)), index, element)
             for index, element in enumerate(candidates)

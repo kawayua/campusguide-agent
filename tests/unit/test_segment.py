@@ -190,6 +190,27 @@ def test_guide_without_headings_falls_back_to_paragraph_chunks() -> None:
     assert all(article.article_no.startswith("段落") for article in result.indexable_articles)
 
 
+def test_metadata_rows_with_dates_stay_separate() -> None:
+    text = (
+        "2026-10-20｜新闻一｜https://example.org/a\n"
+        "2026-10-19｜新闻二｜https://example.org/b\n"
+        "2026-10-18｜新闻三｜https://example.org/c\n"
+    )
+    version = make_version().model_copy(
+        update={"doc_type": DocType.GUIDE, "title": "近一年学院新闻"}
+    )
+    result = segment_document(make_parsed(text), version)
+
+    articles = result.indexable_articles
+    assert len(articles) == 3
+    assert [article.text.split("｜", 1)[0] for article in articles] == [
+        "2026-10-20",
+        "2026-10-19",
+        "2026-10-18",
+    ]
+    assert all(article.article_no.startswith("段落") for article in articles)
+
+
 def test_duplicate_section_headings_get_unique_ids() -> None:
     text = (
         "一、培养目标\n"

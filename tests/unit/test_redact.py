@@ -56,3 +56,19 @@ def test_redaction_is_idempotent() -> None:
     once = redact_text("电话 13800138000").text
     twice = redact_text(once).text
     assert once == twice
+
+
+def test_keeps_public_staff_contacts_when_disabled() -> None:
+    text = "联系人：李四，电话 13800138000，邮箱 lisi@example.com。"
+    result = redact_text(text, redact_contacts=False)
+    assert result.text == text
+    assert not result.counts
+
+
+def test_disabled_contacts_still_redact_id_and_student_id() -> None:
+    text = "李四，13800138000，身份证 440101199001011234，学号：2023123456。"
+    result = redact_text(text, redact_contacts=False)
+    assert "13800138000" in result.text
+    assert "440101199001011234" not in result.text
+    assert "2023123456" not in result.text
+    assert result.counts == {"id_card": 1, "student_id": 1}

@@ -52,15 +52,19 @@ def _redact_email(match: re.Match[str]) -> str:
     return "[个人邮箱已脱敏]"
 
 
-def redact_text(text: str) -> RedactionResult:
+def redact_text(text: str, *, redact_contacts: bool = True) -> RedactionResult:
+    """脱敏可索引文本。
+
+    ``redact_contacts=False`` 用于院系官网公开的教职工名录：手机号、邮箱和
+    联系人姓名按原文保留（这些信息本意就是供师生联系），身份证号与学号
+    仍然脱敏。配置项见 ``SourceDocument.redact_contacts``。
+    """
+
     counts: dict[str, int] = {}
     warnings: list[str] = []
 
     text, id_count = ID_CARD_RE.subn("[身份证号已脱敏]", text)
     _count(counts, "id_card", id_count)
-
-    text, mobile_count = MOBILE_RE.subn("[手机号已脱敏]", text)
-    _count(counts, "mobile", mobile_count)
 
     def replace_student_id(match: re.Match[str]) -> str:
         _count(counts, "student_id")
@@ -68,19 +72,23 @@ def redact_text(text: str) -> RedactionResult:
 
     text = STUDENT_ID_RE.sub(replace_student_id, text)
 
-    def replace_email(match: re.Match[str]) -> str:
-        redacted = _redact_email(match)
-        if redacted != match.group(0):
-            _count(counts, "personal_email")
-        return redacted
+    if redact_contacts:
+        text, mobile_count = MOBILE_RE.subn("[手机号已脱敏]", text)
+        _count(counts, "mobile", mobile_count)
 
-    text = EMAIL_RE.sub(replace_email, text)
+        def replace_email(match: re.Match[str]) -> str:
+            redacted = _redact_email(match)
+            if redacted != match.group(0):
+                _count(counts, "personal_email")
+            return redacted
 
-    def replace_contact_name(match: re.Match[str]) -> str:
-        _count(counts, "contact_name")
-        return f"{match.group(1)}[姓名已脱敏]"
+        text = EMAIL_RE.sub(replace_email, text)
 
-    text = CONTACT_NAME_RE.sub(replace_contact_name, text)
+        def replace_contact_name(match: re.Match[str]) -> str:
+            _count(counts, "contact_name")
+            return f"{match.group(1)}[姓名已脱敏]"
+
+        text = CONTACT_NAME_RE.sub(replace_contact_name, text)
 
     if counts:
         warnings.append(

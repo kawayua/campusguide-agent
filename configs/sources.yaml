@@ -1942,12 +1942,11 @@ documents:
       - 2024
     notes: 适用于2024级本科生；官网页面发布于2024-11-04，PDF 为2024版培养方案。
 - doc_id: info-grad-math-plan
-  title: 数学学科研究生培养方案（2020–2023级）
+  title: 数学（0701）研究生培养方案（2025–2026级）
   doc_type: guide
   authority_level: informational
-  issuer_level: college
-  issuer_college_id: info
-  issuing_department: 数学与信息学院、软件学院
+  issuer_level: university
+  issuing_department: 研究生院
   audience:
   - graduate_master
   topic_tags:
@@ -1955,77 +1954,28 @@ documents:
   - 研究生
   - 数学
   versions:
-  - version_id: v2020
-    url: https://info.scau.edu.cn/2021/0118/c11791a266865/page.htm
-    local_path: data/incoming/colleges/info/plans/grad-math-2020.pdf
-    published_at: '2020-07-01'
-    effective_from: '2020-09-01'
+  - version_id: v2025-2026
+    url: https://yjsy.scau.edu.cn/_upload/article/files/ff/fe/98064fb44c7783be4f64b5063124/411a29f1-ec78-4e66-ad35-8ccdb04476e0.pdf
+    published_at: '2025-08-02'
+    effective_from: '2025-09-01'
     effective_to: null
     status: active
     format: pdf
+    notes: 2025/2026 两页指向同一 PDF；来源页 https://yjsy.scau.edu.cn/2025/0802/c241a441846/page.htm；0701 数学一级学科硕士方案。
     audience_detail:
       colleges:
       - info
       intake_years:
-      - 2020
+      - 2025
+      - 2026
       program_types:
       - academic
-    notes: 适用于2020级数学；来源页发布于2020-07-01。扫描件，暂无文本层，待 OCR。
-  - version_id: v2021
-    url: https://info.scau.edu.cn/2021/0118/c11791a266864/page.htm
-    local_path: data/incoming/colleges/info/plans/grad-math-2021.pdf
-    published_at: '2021-07-01'
-    effective_from: '2021-09-01'
-    effective_to: null
-    status: active
-    format: pdf
-    audience_detail:
-      colleges:
-      - info
-      intake_years:
-      - 2021
-      program_types:
-      - academic
-    notes: 适用于2021级数学；来源页发布于2021-07-01。
-  - version_id: v2022
-    url: https://info.scau.edu.cn/2021/0118/c11791a266863/page.htm
-    local_path: data/incoming/colleges/info/plans/grad-math-2022.pdf
-    published_at: '2022-07-01'
-    effective_from: '2022-09-01'
-    effective_to: null
-    status: active
-    format: pdf
-    audience_detail:
-      colleges:
-      - info
-      intake_years:
-      - 2022
-      program_types:
-      - academic
-    notes: 适用于2022级数学；来源页发布于2022-07-01；官网附件与2021级版本字节相同，正文落款为2021年6月。
-  - version_id: v2023
-    url: https://info.scau.edu.cn/2023/0824/c11791a353314/page.htm
-    local_path: data/incoming/colleges/info/plans/grad-math-2023.pdf
-    published_at: '2023-07-01'
-    effective_from: '2023-09-01'
-    effective_to: null
-    status: active
-    format: pdf
-    audience_detail:
-      colleges:
-      - info
-      intake_years:
-      - 2023
-      program_types:
-      - academic
-    notes: 适用于2023级数学；来源页发布于2023-07-01。
 - doc_id: info-grad-cs-plan
-  title: 计算机科学与技术学科研究生培养方案（2020–2023级）
+  title: 计算机科学与技术（0812）研究生培养方案（2025–2026级）
   doc_type: guide
   authority_level: informational
-  issuer_level: college
-  issuer_college_id: info
-  issuing_department: 数学与信息学院、软件学院
+  issuer_level: university
+  issuing_department: 研究生院
   audience:
   - graduate_master
   topic_tags:
@@ -2033,77 +1983,28 @@ documents:
   - 研究生
   - 计算机科学与技术
   versions:
-  - version_id: v2020
-    url: https://info.scau.edu.cn/2021/0118/c11791a266865/page.htm
-    local_path: data/incoming/colleges/info/plans/grad-cs-2020.pdf
-    published_at: '2020-07-01'
-    effective_from: '2020-09-01'
+  - version_id: v2025-2026
+    url: https://yjsy.scau.edu.cn/_upload/article/files/ff/fe/98064fb44c7783be4f64b5063124/ef4e947b-0621-4293-b0b1-88f4c90809bf.pdf
+    published_at: '2025-08-02'
+    effective_from: '2025-09-01'
     effective_to: null
     status: active
     format: pdf
+    notes: 2025/2026 两页指向同一 PDF；来源页 https://yjsy.scau.edu.cn/2025/0802/c241a441846/page.htm；0812 计算机科学与技术一级学科硕士方案。
     audience_detail:
       colleges:
       - info
       intake_years:
-      - 2020
+      - 2025
+      - 2026
       program_types:
       - academic
-    notes: 适用于2020级计算机科学与技术；来源页发布于2020-07-01。扫描件，暂无文本层，待 OCR。
-  - version_id: v2021
-    url: https://info.scau.edu.cn/2021/0118/c11791a266864/page.htm
-    local_path: data/incoming/colleges/info/plans/grad-cs-2021.pdf
-    published_at: '2021-07-01'
-    effective_from: '2021-09-01'
-    effective_to: null
-    status: active
-    format: pdf
-    audience_detail:
-      colleges:
-      - info
-      intake_years:
-      - 2021
-      program_types:
-      - academic
-    notes: 适用于2021级计算机科学与技术；来源页发布于2021-07-01。
-  - version_id: v2022
-    url: https://info.scau.edu.cn/2021/0118/c11791a266863/page.htm
-    local_path: data/incoming/colleges/info/plans/grad-cs-2022.pdf
-    published_at: '2022-07-01'
-    effective_from: '2022-09-01'
-    effective_to: null
-    status: active
-    format: pdf
-    audience_detail:
-      colleges:
-      - info
-      intake_years:
-      - 2022
-      program_types:
-      - academic
-    notes: 适用于2022级计算机科学与技术；来源页发布于2022-07-01；官网附件与2021级版本字节相同，正文落款为2021年6月。
-  - version_id: v2023
-    url: https://info.scau.edu.cn/2023/0824/c11791a353314/page.htm
-    local_path: data/incoming/colleges/info/plans/grad-cs-2023.pdf
-    published_at: '2023-07-01'
-    effective_from: '2023-09-01'
-    effective_to: null
-    status: active
-    format: pdf
-    audience_detail:
-      colleges:
-      - info
-      intake_years:
-      - 2023
-      program_types:
-      - academic
-    notes: 适用于2023级计算机科学与技术；来源页发布于2023-07-01。
 - doc_id: info-grad-computer-tech-plan
-  title: 计算机技术领域研究生培养方案（2022–2023级）
+  title: 计算机技术（085404）研究生培养方案（2025–2026级）
   doc_type: guide
   authority_level: informational
-  issuer_level: college
-  issuer_college_id: info
-  issuing_department: 数学与信息学院、软件学院
+  issuer_level: university
+  issuing_department: 研究生院
   audience:
   - graduate_master
   topic_tags:
@@ -2111,137 +2012,28 @@ documents:
   - 研究生
   - 计算机技术
   versions:
-  - version_id: v2022
-    url: https://info.scau.edu.cn/2021/0118/c11791a266863/page.htm
-    local_path: data/incoming/colleges/info/plans/grad-computer-tech-2022.pdf
-    published_at: '2022-07-01'
-    effective_from: '2022-09-01'
+  - version_id: v2025-2026
+    url: https://yjsy.scau.edu.cn/_upload/article/files/ff/fe/98064fb44c7783be4f64b5063124/3d7f8c10-909f-496b-acb9-6d5e48ff5364.pdf
+    published_at: '2025-08-02'
+    effective_from: '2025-09-01'
     effective_to: null
     status: active
     format: pdf
+    notes: 2025/2026 两页指向同一 PDF；来源页 https://yjsy.scau.edu.cn/2025/0802/c241a441846/page.htm；085404 计算机技术专业硕士方案。
     audience_detail:
       colleges:
       - info
       intake_years:
-      - 2022
+      - 2025
+      - 2026
       program_types:
       - professional
-    notes: 适用于2022级计算机技术；来源页发布于2022-07-01。
-  - version_id: v2023
-    url: https://info.scau.edu.cn/2023/0824/c11791a353314/page.htm
-    local_path: data/incoming/colleges/info/plans/grad-computer-tech-2023.pdf
-    published_at: '2023-07-01'
-    effective_from: '2023-09-01'
-    effective_to: null
-    status: active
-    format: pdf
-    audience_detail:
-      colleges:
-      - info
-      intake_years:
-      - 2023
-      program_types:
-      - professional
-    notes: 适用于2023级计算机技术；来源页发布于2023-07-01。
-- doc_id: info-grad-electronic-info-plan
-  title: 电子信息研究生培养方案（2020–2021级）
-  doc_type: guide
-  authority_level: informational
-  issuer_level: college
-  issuer_college_id: info
-  issuing_department: 数学与信息学院、软件学院
-  audience:
-  - graduate_master
-  topic_tags:
-  - 培养方案
-  - 研究生
-  - 电子信息
-  versions:
-  - version_id: v2020
-    url: https://info.scau.edu.cn/2021/0118/c11791a266865/page.htm
-    local_path: data/incoming/colleges/info/plans/grad-electronic-info-2020.pdf
-    published_at: '2020-07-01'
-    effective_from: '2020-09-01'
-    effective_to: null
-    status: active
-    format: pdf
-    audience_detail:
-      colleges:
-      - info
-      intake_years:
-      - 2020
-      program_types:
-      - professional
-    notes: 适用于2020级电子信息；来源页发布于2020-07-01。
-  - version_id: v2021
-    url: https://info.scau.edu.cn/2021/0118/c11791a266864/page.htm
-    local_path: data/incoming/colleges/info/plans/grad-electronic-info-2021.pdf
-    published_at: '2021-07-01'
-    effective_from: '2021-09-01'
-    effective_to: null
-    status: active
-    format: pdf
-    audience_detail:
-      colleges:
-      - info
-      intake_years:
-      - 2021
-      program_types:
-      - professional
-    notes: 适用于2021级电子信息；来源页发布于2021-07-01。
-- doc_id: info-grad-agri-it-plan
-  title: 农业工程与信息技术领域研究生培养方案（2020–2021级）
-  doc_type: guide
-  authority_level: informational
-  issuer_level: college
-  issuer_college_id: info
-  issuing_department: 数学与信息学院、软件学院
-  audience:
-  - graduate_master
-  topic_tags:
-  - 培养方案
-  - 研究生
-  - 农业工程与信息技术
-  versions:
-  - version_id: v2020
-    url: https://info.scau.edu.cn/2021/0118/c11791a266865/page.htm
-    local_path: data/incoming/colleges/info/plans/grad-agri-it-2020.pdf
-    published_at: '2020-07-01'
-    effective_from: '2020-09-01'
-    effective_to: null
-    status: active
-    format: pdf
-    audience_detail:
-      colleges:
-      - info
-      intake_years:
-      - 2020
-      program_types:
-      - professional
-    notes: 适用于2020级农业工程与信息技术；来源页发布于2020-07-01。
-  - version_id: v2021
-    url: https://info.scau.edu.cn/2021/0118/c11791a266864/page.htm
-    local_path: data/incoming/colleges/info/plans/grad-agri-it-2021.pdf
-    published_at: '2021-07-01'
-    effective_from: '2021-09-01'
-    effective_to: null
-    status: active
-    format: pdf
-    audience_detail:
-      colleges:
-      - info
-      intake_years:
-      - 2021
-      program_types:
-      - professional
-    notes: 适用于2021级农业工程与信息技术；来源页发布于2021-07-01。
 - doc_id: info-grad-iem-plan
-  title: 工业工程与管理领域研究生培养方案（2020–2023级）
+  title: 工业工程与管理（125603）研究生培养方案（2025–2026级）
   doc_type: guide
   authority_level: informational
-  issuer_level: college
-  issuer_college_id: info
-  issuing_department: 数学与信息学院、软件学院
+  issuer_level: university
+  issuing_department: 研究生院
   audience:
   - graduate_master
   topic_tags:
@@ -2249,67 +2041,3814 @@ documents:
   - 研究生
   - 工业工程与管理
   versions:
-  - version_id: v2020
-    url: https://info.scau.edu.cn/2021/0118/c11791a266865/page.htm
-    local_path: data/incoming/colleges/info/plans/grad-iem-2020.pdf
-    published_at: '2020-07-01'
-    effective_from: '2020-09-01'
+  - version_id: v2025-2026
+    url: https://yjsy.scau.edu.cn/_upload/article/files/ff/fe/98064fb44c7783be4f64b5063124/b1677aef-8396-4942-b96c-0995c7a4ad4a.pdf
+    published_at: '2025-08-02'
+    effective_from: '2025-09-01'
     effective_to: null
     status: active
     format: pdf
+    notes: 2025/2026 两页指向同一 PDF；来源页 https://yjsy.scau.edu.cn/2025/0802/c241a441846/page.htm；125603 工业工程与管理专业硕士方案。
     audience_detail:
       colleges:
       - info
       intake_years:
-      - 2020
+      - 2025
+      - 2026
       program_types:
       - professional
-    notes: 适用于2020级工业工程与管理；来源页发布于2020-07-01。
-  - version_id: v2021
-    url: https://info.scau.edu.cn/2021/0118/c11791a266864/page.htm
-    local_path: data/incoming/colleges/info/plans/grad-iem-2021.pdf
-    published_at: '2021-07-01'
-    effective_from: '2021-09-01'
+- doc_id: info-grad-software-plan
+  title: 软件工程（0835）研究生培养方案（2025–2026级）
+  doc_type: guide
+  authority_level: informational
+  issuer_level: university
+  issuing_department: 研究生院
+  audience:
+  - graduate_master
+  topic_tags:
+  - 培养方案
+  - 研究生
+  - 软件工程
+  versions:
+  - version_id: v2025-2026
+    url: https://yjsy.scau.edu.cn/_upload/article/files/ff/fe/98064fb44c7783be4f64b5063124/218f3182-927a-4600-ae7a-ceeb5e90963d.pdf
+    published_at: '2025-08-02'
+    effective_from: '2025-09-01'
     effective_to: null
     status: active
     format: pdf
+    notes: 2025/2026 两页指向同一 PDF；来源页 https://yjsy.scau.edu.cn/2025/0802/c241a441846/page.htm；0835 软件工程一级学科硕士方案；旧配置无对应文档。
     audience_detail:
       colleges:
       - info
       intake_years:
-      - 2021
+      - 2025
+      - 2026
       program_types:
-      - professional
-    notes: 适用于2021级工业工程与管理；来源页发布于2021-07-01。
+      - academic
+- doc_id: info-grad-agri-engineering-plan
+  title: 农业工程（0828，信息学院“农业电气化与自动化”方向）研究生培养方案（2026级）
+  doc_type: guide
+  authority_level: informational
+  issuer_level: university
+  issuing_department: 研究生院
+  audience:
+  - graduate_doctor
+  topic_tags:
+  - 培养方案
+  - 研究生
+  - 农业工程
+  versions:
+  - version_id: v2026
+    url: https://yjsy.scau.edu.cn/_upload/article/files/ff/fe/98064fb44c7783be4f64b5063124/b63b6c20-3533-4219-9f62-5c78b05a4c80.pdf
+    published_at: '2025-08-02'
+    effective_from: '2026-09-01'
+    effective_to: null
+    status: active
+    format: pdf
+    notes: 来源页 https://yjsy.scau.edu.cn/2025/0802/c241a441846/page.htm；工程学院牵头，信息学院“农业电气化与自动化”博士方向共享；2025 版为扫描件、无文本层，不入。
+    audience_detail:
+      colleges:
+      - info
+      intake_years:
+      - 2026
+      program_types:
+      - academic
+
+# 数学与信息学院近期栏目元数据（一栏目一文档，逐行保存日期/标题/链接）。
+# 只存标题级目录，不抓正文和附件；名单/公示类只登记标题。
+- doc_id: info-recent-news
+  title: 数学与信息学院、软件学院近一年新闻（2025-10-21 至 2026-10-20）
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: info
+  issuing_department: 数学与信息学院、软件学院
+  audience:
+  - public
+  audience_detail:
+    colleges:
+    - info
+    note: 近一年栏目元数据；窗口 2025-10-21 至 2026-10-21；只登记标题/日期/链接。
+  topic_tags:
+  - 近期动态
+  - 学院新闻
+  versions:
+  - version_id: v2026
+    url: https://info.scau.edu.cn/3758/list.htm
+    local_path: data/incoming/colleges/info/recent/info-recent-news.html
+    published_at: '2026-10-21'
+    effective_from: '2026-10-21'
+    effective_to: null
+    status: active
+    format: html
+    notes: 近一年栏目元数据；最新一条 2026-10-20；只登记标题/日期/链接；不抓正文和附件；采集日期 2026-10-21。
+- doc_id: info-recent-notices
+  title: 数学与信息学院、软件学院近一年本科生通知（2025-10-21 至 2026-10-19）
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: info
+  issuing_department: 数学与信息学院、软件学院
+  audience:
+  - undergraduate
+  audience_detail:
+    colleges:
+    - info
+    note: 近一年栏目元数据；窗口 2025-10-21 至 2026-10-21；只登记标题/日期/链接。
+  topic_tags:
+  - 近期动态
+  - 本科生通知
+  versions:
+  - version_id: v2026
+    url: https://info.scau.edu.cn/3772/list.htm
+    local_path: data/incoming/colleges/info/recent/info-recent-notices.html
+    published_at: '2026-10-21'
+    effective_from: '2026-10-21'
+    effective_to: null
+    status: active
+    format: html
+    notes: 近一年栏目元数据；最新一条 2026-10-19；只登记标题/日期/链接；名单/公示类不抓正文和附件；采集日期 2026-10-21。
+- doc_id: info-recent-academic
+  title: 数学与信息学院、软件学院近一年学术动态（2025-10-21 至 2026-08-10）
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: info
+  issuing_department: 数学与信息学院、软件学院
+  audience:
+  - public
+  audience_detail:
+    colleges:
+    - info
+    note: 近一年栏目元数据；窗口 2025-10-21 至 2026-10-21；只登记标题/日期/链接。
+  topic_tags:
+  - 近期动态
+  - 学术动态
+  versions:
+  - version_id: v2026
+    url: https://info.scau.edu.cn/xsdt/list.htm
+    local_path: data/incoming/colleges/info/recent/info-recent-academic.html
+    published_at: '2026-10-21'
+    effective_from: '2026-10-21'
+    effective_to: null
+    status: active
+    format: html
+    notes: 近一年栏目元数据；最新一条 2026-08-10；只登记标题/日期/链接；不抓正文和附件；采集日期 2026-10-21。
+
+# 农学院 P0：学院概况、师资概览、培养方案、制度与招生（37 文档 / 40 版本）。
+- doc_id: agri-profile
+  title: 华南农业大学农学院简介
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  audience:
+  - public
+  audience_detail:
+    colleges:
+    - agri
+    note: 页面标注 2025-06 更新；published_at 取月份锚点 2025-06-30（date_confidence=low）。
+  topic_tags:
+  - 学院简介
+  - 概况
+  - 作物学
+  - 双一流
+  versions:
+  - version_id: v2026
+    url: https://nxy.scau.edu.cn/xyjj_17955/list.htm
+    published_at: '2025-06-30'
+    effective_from: '2025-06-30'
+    effective_to: null
+    status: active
+    format: html
+    notes: 页面标注 2025-06 更新；published_at 取月份锚点 2025-06-30（date_confidence=low）。
+- doc_id: agri-org-structure
+  title: 农学院机构设置
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  audience:
+  - public
+  audience_detail:
+    colleges:
+    - agri
+    note: 现版实际是党委委员及 7 个子页；无完整行政架构图，按页面原文入库。
+  topic_tags:
+  - 机构设置
+  - 组织架构
+  versions:
+  - version_id: v2026
+    url: https://nxy.scau.edu.cn/jgsz/list.htm
+    published_at: '2026-10-21'
+    effective_from: '2026-10-21'
+    effective_to: null
+    status: active
+    format: html
+    notes: 现版实际是党委委员及 7 个子页；无完整行政架构图，按页面原文入库。
+- doc_id: agri-leadership
+  title: 农学院现任领导及分工
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  audience:
+  - public
+  audience_detail:
+    colleges:
+    - agri
+    note: 7 名领导；官网公开办公电话按原文保留。
+  topic_tags:
+  - 现任领导
+  - 分工
+  redact_contacts: false
+  versions:
+  - version_id: v2026
+    url: https://nxy.scau.edu.cn/xrld_17997/list.htm
+    published_at: '2026-10-21'
+    effective_from: '2026-10-21'
+    effective_to: null
+    status: active
+    format: html
+    notes: 7 名领导；官网公开办公电话按原文保留。
+- doc_id: agri-committee-academic
+  title: 农学院学术分委员会
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  audience:
+  - public
+  audience_detail:
+    colleges:
+    - agri
+    note: 静态页面；页面无明确发布日期，published_at 取采集日 2026-10-21（date_confidence=low）。
+  topic_tags:
+  - 学术分委员会
+  - 委员会
+  versions:
+  - version_id: v2026
+    url: https://nxy.scau.edu.cn/xyxsfwyh_18042/list.htm
+    published_at: '2026-10-21'
+    effective_from: '2026-10-21'
+    effective_to: null
+    status: active
+    format: html
+    notes: 采集日 2026-10-21；按官网原文入库；引用以官网原文为准。
+- doc_id: agri-committee-degree
+  title: 农学院学位分委员会
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  audience:
+  - public
+  audience_detail:
+    colleges:
+    - agri
+    note: 静态页面；页面无明确发布日期，published_at 取采集日 2026-10-21（date_confidence=low）。
+  topic_tags:
+  - 学位分委员会
+  - 委员会
+  versions:
+  - version_id: v2026
+    url: https://nxy.scau.edu.cn/xyxwfwyh_18043/list.htm
+    published_at: '2026-10-21'
+    effective_from: '2026-10-21'
+    effective_to: null
+    status: active
+    format: html
+    notes: 采集日 2026-10-21；按官网原文入库；引用以官网原文为准。
+- doc_id: agri-committee-teaching
+  title: 农学院教学指导委员会
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  audience:
+  - public
+  audience_detail:
+    colleges:
+    - agri
+    note: 不单设督导分委会；按教学指导委员会页面原文入库。
+  topic_tags:
+  - 教学指导委员会
+  - 委员会
+  versions:
+  - version_id: v2026
+    url: https://nxy.scau.edu.cn/xyjxzdwyh_18044/list.htm
+    published_at: '2026-10-21'
+    effective_from: '2026-10-21'
+    effective_to: null
+    status: active
+    format: html
+    notes: 不单设督导分委会；按教学指导委员会页面原文入库。
+- doc_id: agri-dept-plant-breeding
+  title: 植物遗传育种系
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  audience:
+  - public
+  audience_detail:
+    colleges:
+    - agri
+    note: 静态页面；页面无明确发布日期，published_at 取采集日 2026-10-21（date_confidence=low）。
+  topic_tags:
+  - 植物遗传育种系
+  - 系所
+  versions:
+  - version_id: v2026
+    url: https://nxy.scau.edu.cn/zwyzx_18054/list.htm
+    published_at: '2026-10-21'
+    effective_from: '2026-10-21'
+    effective_to: null
+    status: active
+    format: html
+    notes: 采集日 2026-10-21；按官网原文入库；引用以官网原文为准。
+- doc_id: agri-dept-crop-info
+  title: 作物信息与基因工程系
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  audience:
+  - public
+  audience_detail:
+    colleges:
+    - agri
+    note: 静态页面；页面无明确发布日期，published_at 取采集日 2026-10-21（date_confidence=low）。
+  topic_tags:
+  - 作物信息与基因工程系
+  - 系所
+  versions:
+  - version_id: v2026
+    url: https://nxy.scau.edu.cn/zwkxjsx_18055/list.htm
+    published_at: '2026-10-21'
+    effective_from: '2026-10-21'
+    effective_to: null
+    status: active
+    format: html
+    notes: 采集日 2026-10-21；按官网原文入库；引用以官网原文为准。
+- doc_id: agri-dept-crop-tech
+  title: 作物科学技术系
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  audience:
+  - public
+  audience_detail:
+    colleges:
+    - agri
+    note: 静态页面；页面无明确发布日期，published_at 取采集日 2026-10-21（date_confidence=low）。
+  topic_tags:
+  - 作物科学技术系
+  - 系所
+  versions:
+  - version_id: v2026
+    url: https://nxy.scau.edu.cn/zzkxjsx_18056/list.htm
+    published_at: '2026-10-21'
+    effective_from: '2026-10-21'
+    effective_to: null
+    status: active
+    format: html
+    notes: 采集日 2026-10-21；按官网原文入库；引用以官网原文为准。
+- doc_id: agri-dept-seed-engineering
+  title: 种子工程与技术系
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  audience:
+  - public
+  audience_detail:
+    colleges:
+    - agri
+    note: 静态页面；页面无明确发布日期，published_at 取采集日 2026-10-21（date_confidence=low）。
+  topic_tags:
+  - 种子工程与技术系
+  - 系所
+  versions:
+  - version_id: v2026
+    url: https://nxy.scau.edu.cn/zzgcyjsx/list.htm
+    published_at: '2026-10-21'
+    effective_from: '2026-10-21'
+    effective_to: null
+    status: active
+    format: html
+    notes: 采集日 2026-10-21；按官网原文入库；引用以官网原文为准。
+- doc_id: agri-faculty-roster
+  title: 农学院在编教师名录（按职称）
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  audience:
+  - public
+  audience_detail:
+    colleges:
+    - agri
+    note: 91 名在编教师；教授/研究员 40、副教授/副研究员 46、中级/助理研究员 5；联系方式按官网公开信息保留。
+  topic_tags:
+  - 教师
+  - 师资队伍
+  - 名录
+  redact_contacts: false
+  versions:
+  - version_id: v2026
+    url: https://nxy.scau.edu.cn/jsmlw/list.htm
+    published_at: '2026-10-21'
+    effective_from: '2026-10-21'
+    effective_to: null
+    status: active
+    format: html
+    notes: 91 名在编教师；教授/研究员 40、副教授/副研究员 46、中级/助理研究员 5；联系方式按官网公开信息保留。
+- doc_id: agri-majors-undergrad
+  title: 农学院本科专业与创新班
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  audience:
+  - undergraduate
+  audience_detail:
+    colleges:
+    - agri
+    majors:
+    - agronomy
+    - seed-science
+    - bio-breeding
+    note: 3 个本科专业 + 农学（丁颖创新班）+ 新农学本-博贯通班；与本科培养方案互为补充。
+  topic_tags:
+  - 本科专业
+  - 专业设置
+  - 丁颖创新班
+  - 新农学
+  versions:
+  - version_id: v2026
+    url: https://nxy.scau.edu.cn/zyjs_17962/list.htm
+    published_at: '2026-10-21'
+    effective_from: '2026-10-21'
+    effective_to: null
+    status: active
+    format: html
+    notes: 3 个本科专业 + 农学（丁颖创新班）+ 新农学本-博贯通班；与本科培养方案互为补充。
+- doc_id: agri-practice-bases
+  title: 农学院实践教学基地
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  audience:
+  - public
+  audience_detail:
+    colleges:
+    - agri
+    note: 12 个实践教学基地（国家 1、省 1、院 10）；协议负责人姓名与公开联系方式按原文保留。
+  topic_tags:
+  - 实践基地
+  - 教学基地
+  redact_contacts: false
+  versions:
+  - version_id: v2026
+    url: https://nxy.scau.edu.cn/sjjd/list.htm
+    published_at: '2026-10-21'
+    effective_from: '2026-10-21'
+    effective_to: null
+    status: active
+    format: html
+    notes: 12 个实践教学基地（国家 1、省 1、院 10）；协议负责人姓名与公开联系方式按原文保留。
+- doc_id: agri-student-affairs-team
+  title: 农学院辅导员队伍
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  audience:
+  - undergraduate
+  audience_detail:
+    colleges:
+    - agri
+    note: 6 名辅导员；办公地点、办公电话、邮箱按官网公开信息保留。
+  topic_tags:
+  - 辅导员
+  - 学工队伍
+  redact_contacts: false
+  versions:
+  - version_id: v2026
+    url: https://nxy.scau.edu.cn/fdy/list.htm
+    published_at: '2026-10-21'
+    effective_from: '2026-10-21'
+    effective_to: null
+    status: active
+    format: html
+    notes: 6 名辅导员；办公地点、办公电话、邮箱按官网公开信息保留。
+- doc_id: agri-crop-discipline-report-2024
+  title: 作物学一级学科学位授权点建设年度报告（2024年）
+  doc_type: report
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  audience:
+  - graduate
+  audience_detail:
+    colleges:
+    - agri
+    program_types:
+    - academic
+    note: 作物学一级学科学位授权点年度报告；覆盖作物遗传育种、作物栽培学与耕作学、种子科学与技术 3 个方向。
+  topic_tags:
+  - 学位授权点
+  - 年度报告
+  - 作物学
+  - 研究生
+  versions:
+  - version_id: v2024
+    url: https://nxy.scau.edu.cn/_upload/article/files/3d/30/5e0fad004e68864b7373a09e856f/d9e24438-717b-4113-b345-7942ab95afc5.pdf
+    published_at: '2025-02-26'
+    effective_from: '2025-02-26'
+    effective_to: null
+    status: active
+    format: pdf
+    notes: 来源页 https://nxy.scau.edu.cn/2025/0226/c18766a400255/page.htm；版本号取报告年度 2024。
+- doc_id: agri-ug-plan-2022
+  title: 农学院本科人才培养方案（2022版，农学/农学丁颖/种子科学与工程）
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  audience:
+  - undergraduate
+  audience_detail:
+    colleges:
+    - agri
+    majors: &id001
+    - agronomy
+    - seed-science
+    intake_years:
+    - 2022
+  topic_tags:
+  - 培养方案
+  - 本科
+  - 2022版
+  versions:
   - version_id: v2022
-    url: https://info.scau.edu.cn/2021/0118/c11791a266863/page.htm
-    local_path: data/incoming/colleges/info/plans/grad-iem-2022.pdf
-    published_at: '2022-07-01'
+    url: https://nxy.scau.edu.cn/_upload/article/files/af/7a/c767f5b54496b9bddf39ea8da726/07663f13-10ce-43a8-9150-08437ecfe5d2.pdf
+    published_at: '2023-05-12'
     effective_from: '2022-09-01'
     effective_to: null
     status: active
     format: pdf
+    notes: 来源页 https://nxy.scau.edu.cn/_t1378/2023/0512/c14476a346218/page.htm；40 页合并册；一个文档覆盖农学/丁颖/种子 3 个方向，不重复抓 3 份。
     audience_detail:
       colleges:
-      - info
+      - agri
+      majors: *id001
       intake_years:
       - 2022
-      program_types:
-      - professional
-    notes: 适用于2022级工业工程与管理；来源页发布于2022-07-01；官网附件与2021级版本字节相同，正文落款为2021年6月。
-  - version_id: v2023
-    url: https://info.scau.edu.cn/2023/0824/c11791a353314/page.htm
-    local_path: data/incoming/colleges/info/plans/grad-iem-2023.pdf
-    published_at: '2023-07-01'
-    effective_from: '2023-09-01'
+- doc_id: agri-ug-plan-new-agronomy-2022
+  title: 新农学创新班本-博连读人才培养方案（2022版）
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  audience:
+  - undergraduate
+  audience_detail:
+    colleges:
+    - agri
+    majors: &id002
+    - agronomy
+    intake_years:
+    - 2022
+  topic_tags:
+  - 培养方案
+  - 本科
+  - 2022版
+  versions:
+  - version_id: v2022
+    url: https://nxy.scau.edu.cn/_upload/article/files/ec/5d/06b3bed2402b838eac56027b7004/02852e11-8cd1-4486-bcfb-2c99116d99f4.pdf
+    published_at: '2023-05-12'
+    effective_from: '2022-09-01'
     effective_to: null
     status: active
     format: pdf
+    notes: 来源页 https://nxy.scau.edu.cn/_t1378/2023/0512/c14476a346219/page.htm；10 页；本-博贯通。
     audience_detail:
       colleges:
-      - info
+      - agri
+      majors: *id002
       intake_years:
-      - 2023
+      - 2022
+- doc_id: agri-ug-plan-agronomy-2024
+  title: 农学专业人才培养方案（2024版）
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  audience:
+  - undergraduate
+  audience_detail:
+    colleges:
+    - agri
+    majors: &id003
+    - agronomy
+    intake_years:
+    - 2024
+  topic_tags:
+  - 培养方案
+  - 本科
+  - 2024版
+  versions:
+  - version_id: v2024
+    url: https://nxy.scau.edu.cn/_upload/article/files/ad/0c/f096268a4a71812dc3c84d17eee8/5b6a253e-2518-48e0-a3e7-0bda15dbe505.pdf
+    published_at: '2024-10-15'
+    effective_from: '2024-09-01'
+    effective_to: null
+    status: active
+    format: pdf
+    notes: 来源页 https://nxy.scau.edu.cn/2024/1015/c17963a388860/page.htm；12 页 / 14,417 字。
+    audience_detail:
+      colleges:
+      - agri
+      majors: *id003
+      intake_years:
+      - 2024
+- doc_id: agri-ug-plan-agronomy-dingying-2024
+  title: 农学（丁颖创新班）人才培养方案（2024版）
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  audience:
+  - undergraduate
+  audience_detail:
+    colleges:
+    - agri
+    majors: &id004
+    - agronomy
+    intake_years:
+    - 2024
+  topic_tags:
+  - 培养方案
+  - 本科
+  - 2024版
+  versions:
+  - version_id: v2024
+    url: https://nxy.scau.edu.cn/_upload/article/files/8b/d9/6b27009142dd8fc6e2cbb57478ac/c1a2003d-b93e-49fc-99e3-a1eea152c7b7.pdf
+    published_at: '2024-10-15'
+    effective_from: '2024-09-01'
+    effective_to: null
+    status: active
+    format: pdf
+    notes: 来源页 https://nxy.scau.edu.cn/2024/1015/c17963a388859/page.htm；12 页；与农学同专业代码，班型写入标题。
+    audience_detail:
+      colleges:
+      - agri
+      majors: *id004
+      intake_years:
+      - 2024
+- doc_id: agri-ug-plan-new-agronomy-2024
+  title: 新农学创新班（本-博连读）人才培养方案（2024版）
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  audience:
+  - undergraduate
+  audience_detail:
+    colleges:
+    - agri
+    majors: &id005
+    - agronomy
+    intake_years:
+    - 2024
+  topic_tags:
+  - 培养方案
+  - 本科
+  - 2024版
+  versions:
+  - version_id: v2024
+    url: https://nxy.scau.edu.cn/_upload/article/files/b6/06/e66ba72b493b9faa766fc2d95267/1d7c5a6b-47aa-4d44-8d46-11cb7572ffce.pdf
+    published_at: '2024-10-15'
+    effective_from: '2024-09-01'
+    effective_to: null
+    status: active
+    format: pdf
+    notes: 来源页 https://nxy.scau.edu.cn/2024/1015/c17963a388862/page.htm；15 页；本-博连读主方案。
+    audience_detail:
+      colleges:
+      - agri
+      majors: *id005
+      intake_years:
+      - 2024
+- doc_id: agri-ug-plan-new-agronomy-supplement-2024
+  title: 新农学创新班本科阶段人才培养方案（补充方案，2024版）
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  relation: supplements
+  parent_doc_id: agri-ug-plan-new-agronomy-2024
+  audience:
+  - undergraduate
+  audience_detail:
+    colleges:
+    - agri
+    majors: &id006
+    - agronomy
+    intake_years:
+    - 2024
+  topic_tags:
+  - 培养方案
+  - 本科
+  - 2024版
+  versions:
+  - version_id: v2024
+    url: https://nxy.scau.edu.cn/_upload/article/files/6d/5e/2911d07f4e8591af462be4bf148a/1bd68e94-2659-4106-a2e7-0eb4c42b5d60.pdf
+    published_at: '2024-10-15'
+    effective_from: '2024-09-01'
+    effective_to: null
+    status: active
+    format: pdf
+    notes: 来源页 https://nxy.scau.edu.cn/2024/1015/c17963a388863/page.htm；11 页；补充方案。
+    audience_detail:
+      colleges:
+      - agri
+      majors: *id006
+      intake_years:
+      - 2024
+- doc_id: agri-ug-plan-seed-2024
+  title: 种子科学与工程专业人才培养方案（2024版）
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  audience:
+  - undergraduate
+  audience_detail:
+    colleges:
+    - agri
+    majors: &id007
+    - seed-science
+    intake_years:
+    - 2024
+  topic_tags:
+  - 培养方案
+  - 本科
+  - 2024版
+  versions:
+  - version_id: v2024
+    url: https://nxy.scau.edu.cn/_upload/article/files/39/ca/369f5a9849828f8990e00f6859b4/629f376f-34da-4d44-9f98-113dc2353c72.pdf
+    published_at: '2024-10-15'
+    effective_from: '2024-09-01'
+    effective_to: null
+    status: active
+    format: pdf
+    notes: 来源页 https://nxy.scau.edu.cn/2024/1015/c17963a388864/page.htm；12 页；正文核对专业代码 090105。
+    audience_detail:
+      colleges:
+      - agri
+      majors: *id007
+      intake_years:
+      - 2024
+- doc_id: agri-ug-plan-bio-breeding-2024
+  title: 生物育种科学专业人才培养方案（2024版）
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  audience:
+  - undergraduate
+  audience_detail:
+    colleges:
+    - agri
+    majors: &id008
+    - bio-breeding
+    intake_years:
+    - 2024
+  topic_tags:
+  - 培养方案
+  - 本科
+  - 2024版
+  versions:
+  - version_id: v2024
+    url: https://nxy.scau.edu.cn/_upload/article/files/f4/4b/83b0498b4374baa5deac63862358/55c150bc-9fe6-497f-b612-7fcb295dd485.pdf
+    published_at: '2024-10-15'
+    effective_from: '2024-09-01'
+    effective_to: null
+    status: active
+    format: pdf
+    notes: 来源页 https://nxy.scau.edu.cn/2024/1015/c17963a388861/page.htm；12 页；正文核对专业代码 090116TK。
+    audience_detail:
+      colleges:
+      - agri
+      majors: *id008
+      intake_years:
+      - 2024
+- doc_id: agri-grad-plan-crop-0901
+  title: 作物学（0901）研究生培养方案
+  doc_type: guide
+  authority_level: informational
+  issuer_level: university
+  issuing_department: 研究生院
+  audience:
+  - graduate
+  topic_tags:
+  - 培养方案
+  - 研究生
+  - 作物学
+  - 0901
+  versions:
+  - version_id: v2025
+    url: https://yjsy.scau.edu.cn/_upload/article/files/d8/71/a8cafde947f5a50db99c1e19373e/f97a41ca-92a4-4e42-b859-981f44482715.pdf
+    published_at: '2025-08-02'
+    effective_from: '2025-09-01'
+    effective_to: '2026-08-31'
+    status: active
+    format: pdf
+    notes: 2025 级汇总页 https://yjsy.scau.edu.cn/2025/0802/c241a414557/page.htm；24 页 / 19,457 字；博士+硕士。
+    audience_detail:
+      colleges:
+      - agri
+      intake_years:
+      - 2025
+      program_types:
+      - academic
+  - version_id: v2026
+    url: https://yjsy.scau.edu.cn/_upload/article/files/ff/fe/98064fb44c7783be4f64b5063124/ade883fb-69f6-4d5f-8353-7c0a99989b8a.pdf
+    published_at: '2025-08-02'
+    effective_from: '2026-09-01'
+    effective_to: null
+    status: active
+    format: pdf
+    notes: 2026 级汇总页 https://yjsy.scau.edu.cn/2025/0802/c241a441846/page.htm；24 页 / 19,562 字；较 2025 版删去选修“生物信息学（全英）”。
+    audience_detail:
+      colleges:
+      - agri
+      intake_years:
+      - 2026
+      program_types:
+      - academic
+- doc_id: agri-grad-plan-agronomy-095131
+  title: 农艺与种业（095131）研究生培养方案
+  doc_type: guide
+  authority_level: informational
+  issuer_level: university
+  issuing_department: 研究生院
+  audience:
+  - graduate_master
+  topic_tags:
+  - 培养方案
+  - 研究生
+  - 农艺与种业
+  - 095131
+  versions:
+  - version_id: v2025-2026
+    url: https://yjsy.scau.edu.cn/_upload/article/files/ff/fe/98064fb44c7783be4f64b5063124/e9c928ed-ceee-4459-b937-8c7882bbde25.pdf
+    published_at: '2025-08-02'
+    effective_from: '2025-09-01'
+    effective_to: null
+    status: active
+    format: pdf
+    notes: 2025/2026 两页指向内容相同的 PDF，按一个版本处理；13 页 / 8,677 字；农学院/园艺学院/林学与风景园林学院共建的校级共享方案。
+    audience_detail:
+      colleges:
+      - agri
+      intake_years:
+      - 2025
+      - 2026
       program_types:
       - professional
-    notes: 适用于2023级工业工程与管理；来源页发布于2023-07-01。
+- doc_id: agri-undergrad-mentor-rule-2025
+  title: 农学院本科生导师制实施办法（2025年修订）
+  doc_type: regulation
+  authority_level: binding
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  audience:
+  - undergraduate
+  - faculty
+  audience_detail:
+    colleges:
+    - agri
+  topic_tags:
+  - 规章制度
+  versions:
+  - version_id: v2025
+    url: https://nxy.scau.edu.cn/_upload/article/files/56/4e/de862aaf49fdac8da28a8ecbb4cc/c4e5e917-85ad-49e7-b8c4-36479474ae06.pdf
+    published_at: '2026-03-11'
+    effective_from: '2026-03-11'
+    effective_to: null
+    status: active
+    format: pdf
+    notes: 来源页 https://nxy.scau.edu.cn/2026/0311/c17984a429001/page.htm；6 页 / 2,351 字；文号农学（办）字〔2026〕1 号；2025 年修订、2026 年印发。
+- doc_id: agri-postgrad-recommendation-rule-2024
+  title: 农学院推荐优秀应届本科毕业生免试攻读研究生工作细则
+  doc_type: regulation
+  authority_level: binding
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  audience:
+  - undergraduate
+  audience_detail:
+    colleges:
+    - agri
+    stages:
+    - final_year
+    status:
+    - graduating
+  topic_tags:
+  - 规章制度
+  versions:
+  - version_id: v2024
+    url: https://nxy.scau.edu.cn/_upload/article/files/af/cc/8666385842938abb5c03bf034266/7e60438e-b5d2-49c9-a1ab-f2616072e89a.pdf
+    published_at: '2024-08-25'
+    effective_from: '2024-08-25'
+    effective_to: null
+    status: active
+    format: pdf
+    notes: 来源页 https://nxy.scau.edu.cn/2024/0825/c17984a382772/page.htm；4 页 / 1,857 字；附 2 个 XLS 评价表不下载。
+- doc_id: agri-postdoc-rule-2024
+  title: 农学院博士后流动站管理细则（试行）
+  doc_type: regulation
+  authority_level: binding
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  audience:
+  - postdoc
+  - faculty
+  audience_detail:
+    colleges:
+    - agri
+  topic_tags:
+  - 规章制度
+  versions:
+  - version_id: v2024
+    url: https://nxy.scau.edu.cn/_upload/article/files/a9/80/7413a0154e148763fc815ee7e33a/5090fce1-f650-4b1a-bedf-34dc27b87f55.pdf
+    published_at: '2024-08-25'
+    effective_from: '2024-08-25'
+    effective_to: null
+    status: active
+    format: pdf
+    notes: 来源页 https://nxy.scau.edu.cn/2024/0825/c17984a382771/page.htm；14 页 / 7,087 字。
+- doc_id: agri-phd-supervisor-rule-2025
+  title: 博士生导师岗位资格选聘实施细则（2025年修订）
+  doc_type: regulation
+  authority_level: binding
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  audience:
+  - faculty
+  audience_detail:
+    colleges:
+    - agri
+  topic_tags:
+  - 规章制度
+  versions:
+  - version_id: v2025
+    url: https://nxy.scau.edu.cn/_upload/article/files/21/c1/d347be6d41ba9a599353d1da2b52/ee772aeb-dc8b-4bc8-a795-bb50fa83582e.pdf
+    published_at: '2025-09-19'
+    effective_from: '2025-09-19'
+    effective_to: null
+    status: active
+    format: pdf
+    notes: 来源页 https://nxy.scau.edu.cn/2025/0919/c18766a417325/page.htm；15 页 / 6,626 字。
+- doc_id: agri-master-supervisor-rule-2025
+  title: 硕士生导师岗位资格选聘实施细则（2025年修订）
+  doc_type: regulation
+  authority_level: binding
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  audience:
+  - faculty
+  audience_detail:
+    colleges:
+    - agri
+  topic_tags:
+  - 规章制度
+  versions:
+  - version_id: v2025
+    url: https://nxy.scau.edu.cn/_upload/article/files/da/ea/e4195b5c4e50aa5d6cec8878c938/c394a4d2-cb9e-4d98-b976-ff9d5f41f303.pdf
+    published_at: '2025-09-19'
+    effective_from: '2025-09-19'
+    effective_to: null
+    status: active
+    format: pdf
+    notes: 来源页 https://nxy.scau.edu.cn/2025/0919/c18766a417326/page.htm；14 页 / 7,155 字。
+- doc_id: agri-external-supervisor-rule-2025
+  title: 研究生校外导师岗位资格选聘实施细则（2025年修订）
+  doc_type: regulation
+  authority_level: binding
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  audience:
+  - faculty
+  audience_detail:
+    colleges:
+    - agri
+  topic_tags:
+  - 规章制度
+  versions:
+  - version_id: v2025
+    url: https://nxy.scau.edu.cn/_upload/article/files/69/43/ff83572e4ba0a1a4be7fee874e3b/a1a4282d-6720-41be-9bd1-9b3485644dd9.pdf
+    published_at: '2025-09-19'
+    effective_from: '2025-09-19'
+    effective_to: null
+    status: active
+    format: pdf
+    notes: 来源页 https://nxy.scau.edu.cn/2025/0919/c18766a417327/page.htm；13 页 / 6,024 字。
+- doc_id: agri-external-second-supervisor-rule-2025
+  title: 研究生校外第二导师岗位资格选聘实施细则（2025年修订）
+  doc_type: regulation
+  authority_level: binding
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  audience:
+  - faculty
+  audience_detail:
+    colleges:
+    - agri
+  topic_tags:
+  - 规章制度
+  versions:
+  - version_id: v2025
+    url: https://nxy.scau.edu.cn/_upload/article/files/15/0c/612ebf93488d9901f016d035918c/e0aaa60e-ad68-48e1-98b6-7da07651da64.pdf
+    published_at: '2025-09-19'
+    effective_from: '2025-09-19'
+    effective_to: null
+    status: active
+    format: pdf
+    notes: 来源页 https://nxy.scau.edu.cn/2025/0919/c18766a417328/page.htm；6 页 / 2,514 字。
+- doc_id: agri-grad-scholarship-rule-2026
+  title: 农学院研究生学业奖学金和国家奖学金评选办法（2021年修订、2026年增补修订版）
+  doc_type: regulation
+  authority_level: binding
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  audience:
+  - graduate
+  audience_detail:
+    colleges:
+    - agri
+  topic_tags:
+  - 规章制度
+  versions:
+  - version_id: v2026
+    url: https://nxy.scau.edu.cn/_upload/article/files/b7/3c/b631ac1047ba9627c0de47a437a6/1a4f38e9-f0f5-438c-ad14-f092a9bc568a.pdf
+    published_at: '2026-09-18'
+    effective_from: '2026-09-18'
+    effective_to: null
+    status: active
+    format: pdf
+    notes: 来源页 https://nxy.scau.edu.cn/2026/0918/c17982a446367/page.htm；20 页 / 12,653 字；正文与附件同页。
+- doc_id: agri-grad-scholarship-supplement-2026
+  title: 关于联培研究生科研成果署名认定及奖学金评审的补充说明
+  doc_type: regulation
+  authority_level: binding
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  relation: supplements
+  parent_doc_id: agri-grad-scholarship-rule-2026
+  audience:
+  - graduate
+  audience_detail:
+    colleges:
+    - agri
+  topic_tags:
+  - 规章制度
+  versions:
+  - version_id: v2026
+    url: https://nxy.scau.edu.cn/_upload/article/files/b7/3c/b631ac1047ba9627c0de47a437a6/19e2d0e8-6bde-4d93-8d2b-6b721901ebd2.pdf
+    published_at: '2026-09-18'
+    effective_from: '2026-09-18'
+    effective_to: null
+    status: active
+    format: pdf
+    notes: 来源页 https://nxy.scau.edu.cn/2026/0918/c17982a446367/page.htm；2 页 / 641 字。
+- doc_id: agri-master-admission-rule
+  title: 农学院硕士研究生招生复试及录取工作细则
+  doc_type: regulation
+  authority_level: binding
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  audience:
+  - graduate_master
+  topic_tags:
+  - 研究生招生
+  - 硕士
+  - 复试
+  - 录取
+  versions:
+  - version_id: v2025
+    url: https://nxy.scau.edu.cn/2025/0319/c18654a402933/page.htm
+    published_at: '2025-03-19'
+    effective_from: '2025-03-19'
+    effective_to: '2026-03-18'
+    status: repealed
+    format: html
+    notes: 2025 年细则；正文约 4,451 字；页面附件为复试名单，不下载。
+    audience_detail:
+      colleges:
+      - agri
+      cycle: '2025'
+  - version_id: v2026
+    url: https://nxy.scau.edu.cn/_upload/article/files/72/58/be7a673e49b5b2afe7e583de37b9/662453cc-0072-4efa-a6ca-aaacb63bf77a.pdf
+    published_at: '2026-03-19'
+    effective_from: '2026-03-19'
+    effective_to: null
+    status: active
+    format: pdf
+    notes: 来源页 https://nxy.scau.edu.cn/2026/0319/c18654a429676/page.htm；8 页 / 3,929 字；复试名单 PDF 不下载。
+    audience_detail:
+      colleges:
+      - agri
+      cycle: '2026'
+- doc_id: agri-phd-admission-rule
+  title: 农学院“申请-考核”制博士研究生招生实施细则
+  doc_type: regulation
+  authority_level: binding
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  audience:
+  - graduate_doctor
+  topic_tags:
+  - 研究生招生
+  - 博士
+  - 申请-考核
+  versions:
+  - version_id: v2025
+    url: https://nxy.scau.edu.cn/2024/1230/c18654a396871/page.htm
+    published_at: '2024-12-30'
+    effective_from: '2024-12-30'
+    effective_to: '2025-12-30'
+    status: repealed
+    format: html
+    notes: 2025 年细则；正文约 3,732 字。
+    audience_detail:
+      colleges:
+      - agri
+      cycle: '2025'
+  - version_id: v2026
+    url: https://nxy.scau.edu.cn/2025/1231/c18654a426004/page.htm
+    published_at: '2025-12-31'
+    effective_from: '2025-12-31'
+    effective_to: null
+    status: active
+    format: html
+    notes: 2026 年细则；正文 3,744 字；页面无名单附件。
+    audience_detail:
+      colleges:
+      - agri
+      cycle: '2026'
+- doc_id: agri-competition-notice-2026
+  title: 关于举办农学院 2026 年“丁颖杯”暨“挑战杯”大学生课外学术科技作品竞赛的通知
+  doc_type: notice
+  authority_level: operational
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  audience:
+  - undergraduate
+  audience_detail:
+    colleges:
+    - agri
+  topic_tags:
+  - 科创竞赛
+  - 丁颖杯
+  - 挑战杯
+  versions:
+  - version_id: v2026
+    url: https://nxy.scau.edu.cn/_t1378/2026/1015/c14465a448898/page.htm
+    published_at: '2026-10-15'
+    effective_from: '2026-10-15'
+    effective_to: null
+    status: active
+    format: html
+    notes: 2026 年丁颖杯通知；旧版创新创业/品牌项目不纳入。
+
+# 农学院 P1：91 名在编教师详情（一人一文档）。
+# 农学院教师详情候选（由 agri-teachers.csv 生成，待审核）
+# 用法：审核后整体并入 configs/sources.yaml 的 documents 列表。
+# 约定：doc_id 取详情页文章号；一人一文档；redact_contacts: false 保留官网公开联系方式。
+- doc_id: agri-teacher-402950
+  title: 蔡占东（教授）
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  audience:
+  - public
+  audience_detail:
+    colleges:
+    - agri
+    note: 教师详情页；页面发布于 2024-08-19；导师类别：博导+硕导。
+  topic_tags:
+  - 教师
+  - 教授
+  - 研究生导师
+  redact_contacts: false
+  versions:
+  - version_id: v20240819
+    url: https://nxy.scau.edu.cn/2024/0819/c18018a402950/page.htm
+    published_at: '2024-08-19'
+    effective_from: '2024-08-19'
+    effective_to: null
+    status: active
+    format: html
+    notes: 教师详情页；职称：教授；导师类别：博导+硕导；联系方式按官网公开信息保留。
+- doc_id: agri-teacher-382341
+  title: 储成才（教授）
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  audience:
+  - public
+  audience_detail:
+    colleges:
+    - agri
+    note: 教师详情页；页面发布于 2024-08-19；导师类别：博导。
+  topic_tags:
+  - 教师
+  - 教授
+  - 研究生导师
+  redact_contacts: false
+  versions:
+  - version_id: v20240819
+    url: https://nxy.scau.edu.cn/2024/0819/c18018a382341/page.htm
+    published_at: '2024-08-19'
+    effective_from: '2024-08-19'
+    effective_to: null
+    status: active
+    format: html
+    notes: 教师详情页；职称：教授；导师类别：博导；联系方式按官网公开信息保留。
+- doc_id: agri-teacher-382372
+  title: 陈乐天（教授）
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  audience:
+  - public
+  audience_detail:
+    colleges:
+    - agri
+    note: 教师详情页；页面发布于 2024-08-19；导师类别：博导+硕导。
+  topic_tags:
+  - 教师
+  - 教授
+  - 研究生导师
+  redact_contacts: false
+  versions:
+  - version_id: v20240819
+    url: https://nxy.scau.edu.cn/2024/0819/c18018a382372/page.htm
+    published_at: '2024-08-19'
+    effective_from: '2024-08-19'
+    effective_to: null
+    status: active
+    format: html
+    notes: 教师详情页；职称：教授；导师类别：博导+硕导；联系方式按官网公开信息保留。
+- doc_id: agri-teacher-382367
+  title: 陈勇（教授）
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  audience:
+  - public
+  audience_detail:
+    colleges:
+    - agri
+    note: 教师详情页；页面发布于 2024-08-19；导师类别：博导+硕导。
+  topic_tags:
+  - 教师
+  - 教授
+  - 研究生导师
+  redact_contacts: false
+  versions:
+  - version_id: v20240819
+    url: https://nxy.scau.edu.cn/2024/0819/c18018a382367/page.htm
+    published_at: '2024-08-19'
+    effective_from: '2024-08-19'
+    effective_to: null
+    status: active
+    format: html
+    notes: 教师详情页；职称：教授；导师类别：博导+硕导；联系方式按官网公开信息保留。
+- doc_id: agri-teacher-400929
+  title: 程艳波（教授）
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  audience:
+  - public
+  audience_detail:
+    colleges:
+    - agri
+    note: 教师详情页；页面发布于 2024-08-19；导师类别：博导+硕导。
+  topic_tags:
+  - 教师
+  - 教授
+  - 研究生导师
+  redact_contacts: false
+  versions:
+  - version_id: v20240819
+    url: https://nxy.scau.edu.cn/2024/0819/c18018a400929/page.htm
+    published_at: '2024-08-19'
+    effective_from: '2024-08-19'
+    effective_to: null
+    status: active
+    format: html
+    notes: 教师详情页；职称：教授；导师类别：博导+硕导；联系方式按官网公开信息保留。
+- doc_id: agri-teacher-382382
+  title: 傅雪琳（教授）
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  audience:
+  - public
+  audience_detail:
+    colleges:
+    - agri
+    note: 教师详情页；页面发布于 2024-08-19；导师类别：博导+硕导。
+  topic_tags:
+  - 教师
+  - 教授
+  - 研究生导师
+  redact_contacts: false
+  versions:
+  - version_id: v20240819
+    url: https://nxy.scau.edu.cn/2024/0819/c18018a382382/page.htm
+    published_at: '2024-08-19'
+    effective_from: '2024-08-19'
+    effective_to: null
+    status: active
+    format: html
+    notes: 教师详情页；职称：教授；导师类别：博导+硕导；联系方式按官网公开信息保留。
+- doc_id: agri-teacher-382385
+  title: 葛良法（教授）
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  audience:
+  - public
+  audience_detail:
+    colleges:
+    - agri
+    note: 教师详情页；页面发布于 2024-08-19；导师类别：博导+硕导。
+  topic_tags:
+  - 教师
+  - 教授
+  - 研究生导师
+  redact_contacts: false
+  versions:
+  - version_id: v20240819
+    url: https://nxy.scau.edu.cn/2024/0819/c18018a382385/page.htm
+    published_at: '2024-08-19'
+    effective_from: '2024-08-19'
+    effective_to: null
+    status: active
+    format: html
+    notes: 教师详情页；职称：教授；导师类别：博导+硕导；联系方式按官网公开信息保留。
+- doc_id: agri-teacher-382386
+  title: 郭涛（教授/研究员）
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  audience:
+  - public
+  audience_detail:
+    colleges:
+    - agri
+    note: 教师详情页；页面发布于 2024-08-19；导师类别：博导。
+  topic_tags:
+  - 教师
+  - 教授/研究员
+  - 研究生导师
+  redact_contacts: false
+  versions:
+  - version_id: v20240819
+    url: https://nxy.scau.edu.cn/2024/0819/c18018a382386/page.htm
+    published_at: '2024-08-19'
+    effective_from: '2024-08-19'
+    effective_to: null
+    status: active
+    format: html
+    notes: 教师详情页；职称：教授/研究员；导师类别：博导；联系方式按官网公开信息保留。
+- doc_id: agri-teacher-382368
+  title: 郭晶心（研究员）
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  audience:
+  - public
+  audience_detail:
+    colleges:
+    - agri
+    note: 教师详情页；页面发布于 2024-08-19；导师类别：博导。
+  topic_tags:
+  - 教师
+  - 研究员
+  - 研究生导师
+  redact_contacts: false
+  versions:
+  - version_id: v20240819
+    url: https://nxy.scau.edu.cn/2024/0819/c18018a382368/page.htm
+    published_at: '2024-08-19'
+    effective_from: '2024-08-19'
+    effective_to: null
+    status: active
+    format: html
+    notes: 教师详情页；职称：研究员；导师类别：博导；联系方式按官网公开信息保留。
+- doc_id: agri-teacher-382351
+  title: 赫圣博（首聘）
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  audience:
+  - public
+  audience_detail:
+    colleges:
+    - agri
+    note: 教师详情页；页面发布于 2024-08-19；导师类别：博导。
+  topic_tags:
+  - 教师
+  - 首聘
+  - 研究生导师
+  redact_contacts: false
+  versions:
+  - version_id: v20240819
+    url: https://nxy.scau.edu.cn/2024/0819/c18018a382351/page.htm
+    published_at: '2024-08-19'
+    effective_from: '2024-08-19'
+    effective_to: null
+    status: active
+    format: html
+    notes: 教师详情页；职称：首聘；导师类别：博导；联系方式按官网公开信息保留。
+- doc_id: agri-teacher-382366
+  title: 胡斌（教授）
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  audience:
+  - public
+  audience_detail:
+    colleges:
+    - agri
+    note: 教师详情页；页面发布于 2024-08-19；导师类别：博导+硕导。
+  topic_tags:
+  - 教师
+  - 教授
+  - 研究生导师
+  redact_contacts: false
+  versions:
+  - version_id: v20240819
+    url: https://nxy.scau.edu.cn/2024/0819/c18018a382366/page.htm
+    published_at: '2024-08-19'
+    effective_from: '2024-08-19'
+    effective_to: null
+    status: active
+    format: html
+    notes: 教师详情页；职称：教授；导师类别：博导+硕导；联系方式按官网公开信息保留。
+- doc_id: agri-teacher-382384
+  title: 贾津布（首聘）
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  audience:
+  - public
+  audience_detail:
+    colleges:
+    - agri
+    note: 教师详情页；页面发布于 2024-08-19；导师类别：博导+硕导。
+  topic_tags:
+  - 教师
+  - 首聘
+  - 研究生导师
+  redact_contacts: false
+  versions:
+  - version_id: v20240819
+    url: https://nxy.scau.edu.cn/2024/0819/c18018a382384/page.htm
+    published_at: '2024-08-19'
+    effective_from: '2024-08-19'
+    effective_to: null
+    status: active
+    format: html
+    notes: 教师详情页；职称：首聘；导师类别：博导+硕导；联系方式按官网公开信息保留。
+- doc_id: agri-teacher-382380
+  title: 林秋鹏（首聘）
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  audience:
+  - public
+  audience_detail:
+    colleges:
+    - agri
+    note: 教师详情页；页面发布于 2024-08-19；导师类别：博导。
+  topic_tags:
+  - 教师
+  - 首聘
+  - 研究生导师
+  redact_contacts: false
+  versions:
+  - version_id: v20240819
+    url: https://nxy.scau.edu.cn/2024/0819/c18018a382380/page.htm
+    published_at: '2024-08-19'
+    effective_from: '2024-08-19'
+    effective_to: null
+    status: active
+    format: html
+    notes: 教师详情页；职称：首聘；导师类别：博导；联系方式按官网公开信息保留。
+- doc_id: agri-teacher-400930
+  title: 刘伟（教授）
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  audience:
+  - public
+  audience_detail:
+    colleges:
+    - agri
+    note: 教师详情页；页面发布于 2024-08-19；导师类别：博导+硕导。
+  topic_tags:
+  - 教师
+  - 教授
+  - 研究生导师
+  redact_contacts: false
+  versions:
+  - version_id: v20240819
+    url: https://nxy.scau.edu.cn/2024/0819/c18018a400930/page.htm
+    published_at: '2024-08-19'
+    effective_from: '2024-08-19'
+    effective_to: null
+    status: active
+    format: html
+    notes: 教师详情页；职称：教授；导师类别：博导+硕导；联系方式按官网公开信息保留。 采集备注：电话字段异常。
+- doc_id: agri-teacher-382235
+  title: 刘向东（教授/研究员）
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  audience:
+  - public
+  audience_detail:
+    colleges:
+    - agri
+    note: 教师详情页；页面发布于 2024-08-16；导师类别：未标注。
+  topic_tags:
+  - 教师
+  - 教授/研究员
+  redact_contacts: false
+  versions:
+  - version_id: v20240816
+    url: https://nxy.scau.edu.cn/2024/0816/c18018a382235/page.htm
+    published_at: '2024-08-16'
+    effective_from: '2024-08-16'
+    effective_to: null
+    status: active
+    format: html
+    notes: 教师详情页；职称：教授/研究员；导师类别：未标注；联系方式按官网公开信息保留。
+- doc_id: agri-teacher-382373
+  title: 刘耀光（研究员）
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  audience:
+  - public
+  audience_detail:
+    colleges:
+    - agri
+    note: 教师详情页；页面发布于 2024-08-19；导师类别：博导+硕导。
+  topic_tags:
+  - 教师
+  - 研究员
+  - 研究生导师
+  redact_contacts: false
+  versions:
+  - version_id: v20240819
+    url: https://nxy.scau.edu.cn/2024/0819/c18018a382373/page.htm
+    published_at: '2024-08-19'
+    effective_from: '2024-08-19'
+    effective_to: null
+    status: active
+    format: html
+    notes: 教师详情页；职称：研究员；导师类别：博导+硕导；联系方式按官网公开信息保留。 采集备注：邮箱字段不完整。
+- doc_id: agri-teacher-382383
+  title: 刘永柱（教授）
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  audience:
+  - public
+  audience_detail:
+    colleges:
+    - agri
+    note: 教师详情页；页面发布于 2024-08-19；导师类别：硕导。
+  topic_tags:
+  - 教师
+  - 教授
+  - 研究生导师
+  redact_contacts: false
+  versions:
+  - version_id: v20240819
+    url: https://nxy.scau.edu.cn/2024/0819/c18018a382383/page.htm
+    published_at: '2024-08-19'
+    effective_from: '2024-08-19'
+    effective_to: null
+    status: active
+    format: html
+    notes: 教师详情页；职称：教授；导师类别：硕导；联系方式按官网公开信息保留。
+- doc_id: agri-teacher-382381
+  title: 刘自强（教授）
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  audience:
+  - public
+  audience_detail:
+    colleges:
+    - agri
+    note: 教师详情页；页面发布于 2024-08-19；导师类别：硕导。
+  topic_tags:
+  - 教师
+  - 教授
+  - 研究生导师
+  redact_contacts: false
+  versions:
+  - version_id: v20240819
+    url: https://nxy.scau.edu.cn/2024/0819/c18018a382381/page.htm
+    published_at: '2024-08-19'
+    effective_from: '2024-08-19'
+    effective_to: null
+    status: active
+    format: html
+    notes: 教师详情页；职称：教授；导师类别：硕导；联系方式按官网公开信息保留。
+- doc_id: agri-teacher-382371
+  title: 罗利军（研究员）
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  audience:
+  - public
+  audience_detail:
+    colleges:
+    - agri
+    note: 教师详情页；页面发布于 2024-08-19；导师类别：博导。
+  topic_tags:
+  - 教师
+  - 研究员
+  - 研究生导师
+  redact_contacts: false
+  versions:
+  - version_id: v20240819
+    url: https://nxy.scau.edu.cn/2024/0819/c18018a382371/page.htm
+    published_at: '2024-08-19'
+    effective_from: '2024-08-19'
+    effective_to: null
+    status: active
+    format: html
+    notes: 教师详情页；职称：研究员；导师类别：博导；联系方式按官网公开信息保留。
+- doc_id: agri-teacher-382365
+  title: 马彪（首聘）
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  audience:
+  - public
+  audience_detail:
+    colleges:
+    - agri
+    note: 教师详情页；页面发布于 2024-08-19；导师类别：博导。
+  topic_tags:
+  - 教师
+  - 首聘
+  - 研究生导师
+  redact_contacts: false
+  versions:
+  - version_id: v20240819
+    url: https://nxy.scau.edu.cn/2024/0819/c18018a382365/page.htm
+    published_at: '2024-08-19'
+    effective_from: '2024-08-19'
+    effective_to: null
+    status: active
+    format: html
+    notes: 教师详情页；职称：首聘；导师类别：博导；联系方式按官网公开信息保留。
+- doc_id: agri-teacher-382379
+  title: 马启彬（教授）
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  audience:
+  - public
+  audience_detail:
+    colleges:
+    - agri
+    note: 教师详情页；页面发布于 2024-08-19；导师类别：博导+硕导。
+  topic_tags:
+  - 教师
+  - 教授
+  - 研究生导师
+  redact_contacts: false
+  versions:
+  - version_id: v20240819
+    url: https://nxy.scau.edu.cn/2024/0819/c18018a382379/page.htm
+    published_at: '2024-08-19'
+    effective_from: '2024-08-19'
+    effective_to: null
+    status: active
+    format: html
+    notes: 教师详情页；职称：教授；导师类别：博导+硕导；联系方式按官网公开信息保留。
+- doc_id: agri-teacher-382364
+  title: 沈万宽（研究员）
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  audience:
+  - public
+  audience_detail:
+    colleges:
+    - agri
+    note: 教师详情页；页面发布于 2024-08-19；导师类别：硕导。
+  topic_tags:
+  - 教师
+  - 研究员
+  - 研究生导师
+  redact_contacts: false
+  versions:
+  - version_id: v20240819
+    url: https://nxy.scau.edu.cn/2024/0819/c18018a382364/page.htm
+    published_at: '2024-08-19'
+    effective_from: '2024-08-19'
+    effective_to: null
+    status: active
+    format: html
+    notes: 教师详情页；职称：研究员；导师类别：硕导；联系方式按官网公开信息保留。
+- doc_id: agri-teacher-382370
+  title: 唐湘如（教授）
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  audience:
+  - public
+  audience_detail:
+    colleges:
+    - agri
+    note: 教师详情页；页面发布于 2024-08-19；导师类别：博导。
+  topic_tags:
+  - 教师
+  - 教授
+  - 研究生导师
+  redact_contacts: false
+  versions:
+  - version_id: v20240819
+    url: https://nxy.scau.edu.cn/2024/0819/c18018a382370/page.htm
+    published_at: '2024-08-19'
+    effective_from: '2024-08-19'
+    effective_to: null
+    status: active
+    format: html
+    notes: 教师详情页；职称：教授；导师类别：博导；联系方式按官网公开信息保留。
+- doc_id: agri-teacher-382378
+  title: 谭志远（教授）
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  audience:
+  - public
+  audience_detail:
+    colleges:
+    - agri
+    note: 教师详情页；页面发布于 2024-08-19；导师类别：博导+硕导。
+  topic_tags:
+  - 教师
+  - 教授
+  - 研究生导师
+  redact_contacts: false
+  versions:
+  - version_id: v20240819
+    url: https://nxy.scau.edu.cn/2024/0819/c18018a382378/page.htm
+    published_at: '2024-08-19'
+    effective_from: '2024-08-19'
+    effective_to: null
+    status: active
+    format: html
+    notes: 教师详情页；职称：教授；导师类别：博导+硕导；联系方式按官网公开信息保留。
+- doc_id: agri-teacher-382234
+  title: 王少奎（教授/研究员）
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  audience:
+  - public
+  audience_detail:
+    colleges:
+    - agri
+    note: 教师详情页；页面发布于 2024-08-16；导师类别：未标注。
+  topic_tags:
+  - 教师
+  - 教授/研究员
+  redact_contacts: false
+  versions:
+  - version_id: v20240816
+    url: https://nxy.scau.edu.cn/2024/0816/c18018a382234/page.htm
+    published_at: '2024-08-16'
+    effective_from: '2024-08-16'
+    effective_to: null
+    status: active
+    format: html
+    notes: 教师详情页；职称：教授/研究员；导师类别：未标注；联系方式按官网公开信息保留。
+- doc_id: agri-teacher-382354
+  title: 王州飞（教授）
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  audience:
+  - public
+  audience_detail:
+    colleges:
+    - agri
+    note: 教师详情页；页面发布于 2024-08-19；导师类别：博导+硕导。
+  topic_tags:
+  - 教师
+  - 教授
+  - 研究生导师
+  redact_contacts: false
+  versions:
+  - version_id: v20240819
+    url: https://nxy.scau.edu.cn/2024/0819/c18018a382354/page.htm
+    published_at: '2024-08-19'
+    effective_from: '2024-08-19'
+    effective_to: null
+    status: active
+    format: html
+    notes: 教师详情页；职称：教授；导师类别：博导+硕导；联系方式按官网公开信息保留。
+- doc_id: agri-teacher-382376
+  title: 王孝林（首聘教授）
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  audience:
+  - public
+  audience_detail:
+    colleges:
+    - agri
+    note: 教师详情页；页面发布于 2024-08-19；导师类别：博导。
+  topic_tags:
+  - 教师
+  - 首聘教授
+  - 研究生导师
+  redact_contacts: false
+  versions:
+  - version_id: v20240819
+    url: https://nxy.scau.edu.cn/2024/0819/c18018a382376/page.htm
+    published_at: '2024-08-19'
+    effective_from: '2024-08-19'
+    effective_to: null
+    status: active
+    format: html
+    notes: 教师详情页；职称：首聘教授；导师类别：博导；联系方式按官网公开信息保留。
+- doc_id: agri-teacher-382375
+  title: 吴健（首聘）
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  audience:
+  - public
+  audience_detail:
+    colleges:
+    - agri
+    note: 教师详情页；页面发布于 2024-08-19；导师类别：博导。
+  topic_tags:
+  - 教师
+  - 首聘
+  - 研究生导师
+  redact_contacts: false
+  versions:
+  - version_id: v20240819
+    url: https://nxy.scau.edu.cn/2024/0819/c18018a382375/page.htm
+    published_at: '2024-08-19'
+    effective_from: '2024-08-19'
+    effective_to: null
+    status: active
+    format: html
+    notes: 教师详情页；职称：首聘；导师类别：博导；联系方式按官网公开信息保留。
+- doc_id: agri-teacher-382363
+  title: 夏辉（教授）
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  audience:
+  - public
+  audience_detail:
+    colleges:
+    - agri
+    note: 教师详情页；页面发布于 2024-08-19；导师类别：博导+硕导。
+  topic_tags:
+  - 教师
+  - 教授
+  - 研究生导师
+  redact_contacts: false
+  versions:
+  - version_id: v20240819
+    url: https://nxy.scau.edu.cn/2024/0819/c18018a382363/page.htm
+    published_at: '2024-08-19'
+    effective_from: '2024-08-19'
+    effective_to: null
+    status: active
+    format: html
+    notes: 教师详情页；职称：教授；导师类别：博导+硕导；联系方式按官网公开信息保留。
+- doc_id: agri-teacher-382357
+  title: 薛红卫（教授）
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  audience:
+  - public
+  audience_detail:
+    colleges:
+    - agri
+    note: 教师详情页；页面发布于 2024-08-19；导师类别：博导+硕导。
+  topic_tags:
+  - 教师
+  - 教授
+  - 研究生导师
+  redact_contacts: false
+  versions:
+  - version_id: v20240819
+    url: https://nxy.scau.edu.cn/2024/0819/c18018a382357/page.htm
+    published_at: '2024-08-19'
+    effective_from: '2024-08-19'
+    effective_to: null
+    status: active
+    format: html
+    notes: 教师详情页；职称：教授；导师类别：博导+硕导；联系方式按官网公开信息保留。 采集备注：邮箱字段不完整。
+- doc_id: agri-teacher-382360
+  title: 余新桥（教授）
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  audience:
+  - public
+  audience_detail:
+    colleges:
+    - agri
+    note: 教师详情页；页面发布于 2024-08-19；导师类别：博导+硕导。
+  topic_tags:
+  - 教师
+  - 教授
+  - 研究生导师
+  redact_contacts: false
+  versions:
+  - version_id: v20240819
+    url: https://nxy.scau.edu.cn/2024/0819/c18018a382360/page.htm
+    published_at: '2024-08-19'
+    effective_from: '2024-08-19'
+    effective_to: null
+    status: active
+    format: html
+    notes: 教师详情页；职称：教授；导师类别：博导+硕导；联系方式按官网公开信息保留。
+- doc_id: agri-teacher-382353
+  title: 杨存义（教授）
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  audience:
+  - public
+  audience_detail:
+    colleges:
+    - agri
+    note: 教师详情页；页面发布于 2024-08-19；导师类别：博导+硕导。
+  topic_tags:
+  - 教师
+  - 教授
+  - 研究生导师
+  redact_contacts: false
+  versions:
+  - version_id: v20240819
+    url: https://nxy.scau.edu.cn/2024/0819/c18018a382353/page.htm
+    published_at: '2024-08-19'
+    effective_from: '2024-08-19'
+    effective_to: null
+    status: active
+    format: html
+    notes: 教师详情页；职称：教授；导师类别：博导+硕导；联系方式按官网公开信息保留。
+- doc_id: agri-teacher-382392
+  title: 张静懿（教授）
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  audience:
+  - public
+  audience_detail:
+    colleges:
+    - agri
+    note: 教师详情页；页面发布于 2024-08-19；导师类别：博导+硕导。
+  topic_tags:
+  - 教师
+  - 教授
+  - 研究生导师
+  redact_contacts: false
+  versions:
+  - version_id: v20240819
+    url: https://nxy.scau.edu.cn/2024/0819/c18018a382392/page.htm
+    published_at: '2024-08-19'
+    effective_from: '2024-08-19'
+    effective_to: null
+    status: active
+    format: html
+    notes: 教师详情页；职称：教授；导师类别：博导+硕导；联系方式按官网公开信息保留。
+- doc_id: agri-teacher-382355
+  title: 谢庆军（教授）
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  audience:
+  - public
+  audience_detail:
+    colleges:
+    - agri
+    note: 教师详情页；页面发布于 2024-08-19；导师类别：博导+硕导。
+  topic_tags:
+  - 教师
+  - 教授
+  - 研究生导师
+  redact_contacts: false
+  versions:
+  - version_id: v20240819
+    url: https://nxy.scau.edu.cn/2024/0819/c18018a382355/page.htm
+    published_at: '2024-08-19'
+    effective_from: '2024-08-19'
+    effective_to: null
+    status: active
+    format: html
+    notes: 教师详情页；职称：教授；导师类别：博导+硕导；联系方式按官网公开信息保留。
+- doc_id: agri-teacher-401676
+  title: 谢婷（教授）
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  audience:
+  - public
+  audience_detail:
+    colleges:
+    - agri
+    note: 教师详情页；页面发布于 2024-08-19；导师类别：博导+硕导。
+  topic_tags:
+  - 教师
+  - 教授
+  - 研究生导师
+  redact_contacts: false
+  versions:
+  - version_id: v20240819
+    url: https://nxy.scau.edu.cn/2024/0819/c18018a401676/page.htm
+    published_at: '2024-08-19'
+    effective_from: '2024-08-19'
+    effective_to: null
+    status: active
+    format: html
+    notes: 教师详情页；职称：教授；导师类别：博导+硕导；联系方式按官网公开信息保留。
+- doc_id: agri-teacher-382362
+  title: 谢勇尧（研究员）
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  audience:
+  - public
+  audience_detail:
+    colleges:
+    - agri
+    note: 教师详情页；页面发布于 2024-08-19；导师类别：博导+硕导。
+  topic_tags:
+  - 教师
+  - 研究员
+  - 研究生导师
+  redact_contacts: false
+  versions:
+  - version_id: v20240819
+    url: https://nxy.scau.edu.cn/2024/0819/c18018a382362/page.htm
+    published_at: '2024-08-19'
+    effective_from: '2024-08-19'
+    effective_to: null
+    status: active
+    format: html
+    notes: 教师详情页；职称：研究员；导师类别：博导+硕导；联系方式按官网公开信息保留。
+- doc_id: agri-teacher-382342
+  title: 王晴晴（教授）
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  audience:
+  - public
+  audience_detail:
+    colleges:
+    - agri
+    note: 教师详情页；页面发布于 2024-08-19；导师类别：博导+硕导。
+  topic_tags:
+  - 教师
+  - 教授
+  - 研究生导师
+  redact_contacts: false
+  versions:
+  - version_id: v20240819
+    url: https://nxy.scau.edu.cn/2024/0819/c18018a382342/page.htm
+    published_at: '2024-08-19'
+    effective_from: '2024-08-19'
+    effective_to: null
+    status: active
+    format: html
+    notes: 教师详情页；职称：教授；导师类别：博导+硕导；联系方式按官网公开信息保留。
+- doc_id: agri-teacher-382359
+  title: 张艳霞（教授/研究员）
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  audience:
+  - public
+  audience_detail:
+    colleges:
+    - agri
+    note: 教师详情页；页面发布于 2024-08-19；导师类别：博导。
+  topic_tags:
+  - 教师
+  - 教授/研究员
+  - 研究生导师
+  redact_contacts: false
+  versions:
+  - version_id: v20240819
+    url: https://nxy.scau.edu.cn/2024/0819/c18018a382359/page.htm
+    published_at: '2024-08-19'
+    effective_from: '2024-08-19'
+    effective_to: null
+    status: active
+    format: html
+    notes: 教师详情页；职称：教授/研究员；导师类别：博导；联系方式按官网公开信息保留。
+- doc_id: agri-teacher-382388
+  title: 张泽民（研究员）
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  audience:
+  - public
+  audience_detail:
+    colleges:
+    - agri
+    note: 教师详情页；页面发布于 2024-08-19；导师类别：博导+硕导。
+  topic_tags:
+  - 教师
+  - 研究员
+  - 研究生导师
+  redact_contacts: false
+  versions:
+  - version_id: v20240819
+    url: https://nxy.scau.edu.cn/2024/0819/c18018a382388/page.htm
+    published_at: '2024-08-19'
+    effective_from: '2024-08-19'
+    effective_to: null
+    status: active
+    format: html
+    notes: 教师详情页；职称：研究员；导师类别：博导+硕导；联系方式按官网公开信息保留。
+- doc_id: agri-teacher-382358
+  title: 祝钦泷（研究员）
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  audience:
+  - public
+  audience_detail:
+    colleges:
+    - agri
+    note: 教师详情页；页面发布于 2024-08-19；导师类别：博导+硕导。
+  topic_tags:
+  - 教师
+  - 研究员
+  - 研究生导师
+  redact_contacts: false
+  versions:
+  - version_id: v20240819
+    url: https://nxy.scau.edu.cn/2024/0819/c18018a382358/page.htm
+    published_at: '2024-08-19'
+    effective_from: '2024-08-19'
+    effective_to: null
+    status: active
+    format: html
+    notes: 教师详情页；职称：研究员；导师类别：博导+硕导；联系方式按官网公开信息保留。
+- doc_id: agri-teacher-382424
+  title: 陈健文（副研究员）
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  audience:
+  - public
+  audience_detail:
+    colleges:
+    - agri
+    note: 教师详情页；页面发布于 2024-08-19；导师类别：硕导。
+  topic_tags:
+  - 教师
+  - 副研究员
+  - 研究生导师
+  redact_contacts: false
+  versions:
+  - version_id: v20240819
+    url: https://nxy.scau.edu.cn/2024/0819/c18019a382424/page.htm
+    published_at: '2024-08-19'
+    effective_from: '2024-08-19'
+    effective_to: null
+    status: active
+    format: html
+    notes: 教师详情页；职称：副研究员；导师类别：硕导；联系方式按官网公开信息保留。
+- doc_id: agri-teacher-382396
+  title: 陈婷婷（副教授）
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  audience:
+  - public
+  audience_detail:
+    colleges:
+    - agri
+    note: 教师详情页；页面发布于 2024-08-19；导师类别：硕导。
+  topic_tags:
+  - 教师
+  - 副教授
+  - 研究生导师
+  redact_contacts: false
+  versions:
+  - version_id: v20240819
+    url: https://nxy.scau.edu.cn/2024/0819/c18019a382396/page.htm
+    published_at: '2024-08-19'
+    effective_from: '2024-08-19'
+    effective_to: null
+    status: active
+    format: html
+    notes: 教师详情页；职称：副教授；导师类别：硕导；联系方式按官网公开信息保留。
+- doc_id: agri-teacher-382434
+  title: 陈志雄（副研究员）
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  audience:
+  - public
+  audience_detail:
+    colleges:
+    - agri
+    note: 教师详情页；页面发布于 2024-08-19；导师类别：硕导。
+  topic_tags:
+  - 教师
+  - 副研究员
+  - 研究生导师
+  redact_contacts: false
+  versions:
+  - version_id: v20240819
+    url: https://nxy.scau.edu.cn/2024/0819/c18019a382434/page.htm
+    published_at: '2024-08-19'
+    effective_from: '2024-08-19'
+    effective_to: null
+    status: active
+    format: html
+    notes: 教师详情页；职称：副研究员；导师类别：硕导；联系方式按官网公开信息保留。
+- doc_id: agri-teacher-382423
+  title: 初志战（副）
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  audience:
+  - public
+  audience_detail:
+    colleges:
+    - agri
+    note: 教师详情页；页面发布于 2024-08-19；导师类别：硕导。
+  topic_tags:
+  - 教师
+  - 副
+  - 研究生导师
+  redact_contacts: false
+  versions:
+  - version_id: v20240819
+    url: https://nxy.scau.edu.cn/2024/0819/c18019a382423/page.htm
+    published_at: '2024-08-19'
+    effective_from: '2024-08-19'
+    effective_to: null
+    status: active
+    format: html
+    notes: 教师详情页；职称：副；导师类别：硕导；联系方式按官网公开信息保留。
+- doc_id: agri-teacher-382422
+  title: 邓世媛（副）
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  audience:
+  - public
+  audience_detail:
+    colleges:
+    - agri
+    note: 教师详情页；页面发布于 2024-08-19；导师类别：硕导。
+  topic_tags:
+  - 教师
+  - 副
+  - 研究生导师
+  redact_contacts: false
+  versions:
+  - version_id: v20240819
+    url: https://nxy.scau.edu.cn/2024/0819/c18019a382422/page.htm
+    published_at: '2024-08-19'
+    effective_from: '2024-08-19'
+    effective_to: null
+    status: active
+    format: html
+    notes: 教师详情页；职称：副；导师类别：硕导；联系方式按官网公开信息保留。
+- doc_id: agri-teacher-382395
+  title: 冯发强（副研究员）
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  audience:
+  - public
+  audience_detail:
+    colleges:
+    - agri
+    note: 教师详情页；页面发布于 2024-08-19；导师类别：未标注。
+  topic_tags:
+  - 教师
+  - 副研究员
+  redact_contacts: false
+  versions:
+  - version_id: v20240819
+    url: https://nxy.scau.edu.cn/2024/0819/c18019a382395/page.htm
+    published_at: '2024-08-19'
+    effective_from: '2024-08-19'
+    effective_to: null
+    status: active
+    format: html
+    notes: 教师详情页；职称：副研究员；导师类别：未标注；联系方式按官网公开信息保留。
+- doc_id: agri-teacher-382394
+  title: 何永奇（副教授）
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  audience:
+  - public
+  audience_detail:
+    colleges:
+    - agri
+    note: 教师详情页；页面发布于 2024-08-19；导师类别：硕导。
+  topic_tags:
+  - 教师
+  - 副教授
+  - 研究生导师
+  redact_contacts: false
+  versions:
+  - version_id: v20240819
+    url: https://nxy.scau.edu.cn/2024/0819/c18019a382394/page.htm
+    published_at: '2024-08-19'
+    effective_from: '2024-08-19'
+    effective_to: null
+    status: active
+    format: html
+    notes: 教师详情页；职称：副教授；导师类别：硕导；联系方式按官网公开信息保留。
+- doc_id: agri-teacher-382421
+  title: 胡飞（副）
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  audience:
+  - public
+  audience_detail:
+    colleges:
+    - agri
+    note: 教师详情页；页面发布于 2024-08-19；导师类别：硕导。
+  topic_tags:
+  - 教师
+  - 副
+  - 研究生导师
+  redact_contacts: false
+  versions:
+  - version_id: v20240819
+    url: https://nxy.scau.edu.cn/2024/0819/c18019a382421/page.htm
+    published_at: '2024-08-19'
+    effective_from: '2024-08-19'
+    effective_to: null
+    status: active
+    format: html
+    notes: 教师详情页；职称：副；导师类别：硕导；联系方式按官网公开信息保留。
+- doc_id: agri-teacher-382433
+  title: 黄君（副教授）
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  audience:
+  - public
+  audience_detail:
+    colleges:
+    - agri
+    note: 教师详情页；页面发布于 2024-08-19；导师类别：硕导。
+  topic_tags:
+  - 教师
+  - 副教授
+  - 研究生导师
+  redact_contacts: false
+  versions:
+  - version_id: v20240819
+    url: https://nxy.scau.edu.cn/2024/0819/c18019a382433/page.htm
+    published_at: '2024-08-19'
+    effective_from: '2024-08-19'
+    effective_to: null
+    status: active
+    format: html
+    notes: 教师详情页；职称：副教授；导师类别：硕导；联系方式按官网公开信息保留。
+- doc_id: agri-teacher-382418
+  title: 蒋志敏（首聘副）
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  audience:
+  - public
+  audience_detail:
+    colleges:
+    - agri
+    note: 教师详情页；页面发布于 2024-08-19；导师类别：硕导。
+  topic_tags:
+  - 教师
+  - 首聘副
+  - 研究生导师
+  redact_contacts: false
+  versions:
+  - version_id: v20240819
+    url: https://nxy.scau.edu.cn/2024/0819/c18019a382418/page.htm
+    published_at: '2024-08-19'
+    effective_from: '2024-08-19'
+    effective_to: null
+    status: active
+    format: html
+    notes: 教师详情页；职称：首聘副；导师类别：硕导；联系方式按官网公开信息保留。
+- doc_id: agri-teacher-382420
+  title: 金晶（副教授）
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  audience:
+  - public
+  audience_detail:
+    colleges:
+    - agri
+    note: 教师详情页；页面发布于 2024-08-19；导师类别：硕导。
+  topic_tags:
+  - 教师
+  - 副教授
+  - 研究生导师
+  redact_contacts: false
+  versions:
+  - version_id: v20240819
+    url: https://nxy.scau.edu.cn/2024/0819/c18019a382420/page.htm
+    published_at: '2024-08-19'
+    effective_from: '2024-08-19'
+    effective_to: null
+    status: active
+    format: html
+    notes: 教师详情页；职称：副教授；导师类别：硕导；联系方式按官网公开信息保留。 采集备注：电话字段异常。
+- doc_id: agri-teacher-382432
+  title: 卡森（副研究员）
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  audience:
+  - public
+  audience_detail:
+    colleges:
+    - agri
+    note: 教师详情页；页面发布于 2024-08-19；导师类别：未标注。
+  topic_tags:
+  - 教师
+  - 副研究员
+  redact_contacts: false
+  versions:
+  - version_id: v20240819
+    url: https://nxy.scau.edu.cn/2024/0819/c18019a382432/page.htm
+    published_at: '2024-08-19'
+    effective_from: '2024-08-19'
+    effective_to: null
+    status: active
+    format: html
+    notes: 教师详情页；职称：副研究员；导师类别：未标注；联系方式按官网公开信息保留。
+- doc_id: agri-teacher-382417
+  title: 连腾祥（副）
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  audience:
+  - public
+  audience_detail:
+    colleges:
+    - agri
+    note: 教师详情页；页面发布于 2024-08-19；导师类别：硕导。
+  topic_tags:
+  - 教师
+  - 副
+  - 研究生导师
+  redact_contacts: false
+  versions:
+  - version_id: v20240819
+    url: https://nxy.scau.edu.cn/2024/0819/c18019a382417/page.htm
+    published_at: '2024-08-19'
+    effective_from: '2024-08-19'
+    effective_to: null
+    status: active
+    format: html
+    notes: 教师详情页；职称：副；导师类别：硕导；联系方式按官网公开信息保留。
+- doc_id: agri-teacher-382416
+  title: 廖志刚（首聘）
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  audience:
+  - public
+  audience_detail:
+    colleges:
+    - agri
+    note: 教师详情页；页面发布于 2024-08-19；导师类别：硕导。
+  topic_tags:
+  - 教师
+  - 首聘
+  - 研究生导师
+  redact_contacts: false
+  versions:
+  - version_id: v20240819
+    url: https://nxy.scau.edu.cn/2024/0819/c18019a382416/page.htm
+    published_at: '2024-08-19'
+    effective_from: '2024-08-19'
+    effective_to: null
+    status: active
+    format: html
+    notes: 教师详情页；职称：首聘；导师类别：硕导；联系方式按官网公开信息保留。 采集备注：邮箱字段不完整。
+- doc_id: agri-teacher-428440
+  title: 罗琪宇（首聘副教授）
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  audience:
+  - public
+  audience_detail:
+    colleges:
+    - agri
+    note: 教师详情页；页面发布于 2026-03-02；导师类别：硕导。
+  topic_tags:
+  - 教师
+  - 首聘副教授
+  - 研究生导师
+  redact_contacts: false
+  versions:
+  - version_id: v20260302
+    url: https://nxy.scau.edu.cn/2026/0302/c18019a428440/page.htm
+    published_at: '2026-03-02'
+    effective_from: '2026-03-02'
+    effective_to: null
+    status: active
+    format: html
+    notes: 教师详情页；职称：首聘副教授；导师类别：硕导；联系方式按官网公开信息保留。
+- doc_id: agri-teacher-382414
+  title: 莫钊文（副教授）
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  audience:
+  - public
+  audience_detail:
+    colleges:
+    - agri
+    note: 教师详情页；页面发布于 2024-08-19；导师类别：硕导。
+  topic_tags:
+  - 教师
+  - 副教授
+  - 研究生导师
+  redact_contacts: false
+  versions:
+  - version_id: v20240819
+    url: https://nxy.scau.edu.cn/2024/0819/c18019a382414/page.htm
+    published_at: '2024-08-19'
+    effective_from: '2024-08-19'
+    effective_to: null
+    status: active
+    format: html
+    notes: 教师详情页；职称：副教授；导师类别：硕导；联系方式按官网公开信息保留。
+- doc_id: agri-teacher-382413
+  title: 潘圣刚（副）
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  audience:
+  - public
+  audience_detail:
+    colleges:
+    - agri
+    note: 教师详情页；页面发布于 2024-08-19；导师类别：硕导。
+  topic_tags:
+  - 教师
+  - 副
+  - 研究生导师
+  redact_contacts: false
+  versions:
+  - version_id: v20240819
+    url: https://nxy.scau.edu.cn/2024/0819/c18019a382413/page.htm
+    published_at: '2024-08-19'
+    effective_from: '2024-08-19'
+    effective_to: null
+    status: active
+    format: html
+    notes: 教师详情页；职称：副；导师类别：硕导；联系方式按官网公开信息保留。
+- doc_id: agri-teacher-382412
+  title: 祁剑英（首聘副）
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  audience:
+  - public
+  audience_detail:
+    colleges:
+    - agri
+    note: 教师详情页；页面发布于 2024-08-19；导师类别：未标注。
+  topic_tags:
+  - 教师
+  - 首聘副
+  redact_contacts: false
+  versions:
+  - version_id: v20240819
+    url: https://nxy.scau.edu.cn/2024/0819/c18019a382412/page.htm
+    published_at: '2024-08-19'
+    effective_from: '2024-08-19'
+    effective_to: null
+    status: active
+    format: html
+    notes: 教师详情页；职称：首聘副；导师类别：未标注；联系方式按官网公开信息保留。
+- doc_id: agri-teacher-382411
+  title: 石碧海（首聘副）
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  audience:
+  - public
+  audience_detail:
+    colleges:
+    - agri
+    note: 教师详情页；页面发布于 2024-08-19；导师类别：硕导。
+  topic_tags:
+  - 教师
+  - 首聘副
+  - 研究生导师
+  redact_contacts: false
+  versions:
+  - version_id: v20240819
+    url: https://nxy.scau.edu.cn/2024/0819/c18019a382411/page.htm
+    published_at: '2024-08-19'
+    effective_from: '2024-08-19'
+    effective_to: null
+    status: active
+    format: html
+    notes: 教师详情页；职称：首聘副；导师类别：硕导；联系方式按官网公开信息保留。
+- doc_id: agri-teacher-382403
+  title: 孙虎威（副）
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  audience:
+  - public
+  audience_detail:
+    colleges:
+    - agri
+    note: 教师详情页；页面发布于 2024-08-19；导师类别：硕导。
+  topic_tags:
+  - 教师
+  - 副
+  - 研究生导师
+  redact_contacts: false
+  versions:
+  - version_id: v20240819
+    url: https://nxy.scau.edu.cn/2024/0819/c18019a382403/page.htm
+    published_at: '2024-08-19'
+    effective_from: '2024-08-19'
+    effective_to: null
+    status: active
+    format: html
+    notes: 教师详情页；职称：副；导师类别：硕导；联系方式按官网公开信息保留。 采集备注：电话字段异常。
+- doc_id: agri-teacher-382410
+  title: 田华（副研究员）
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  audience:
+  - public
+  audience_detail:
+    colleges:
+    - agri
+    note: 教师详情页；页面发布于 2024-08-19；导师类别：硕导。
+  topic_tags:
+  - 教师
+  - 副研究员
+  - 研究生导师
+  redact_contacts: false
+  versions:
+  - version_id: v20240819
+    url: https://nxy.scau.edu.cn/2024/0819/c18019a382410/page.htm
+    published_at: '2024-08-19'
+    effective_from: '2024-08-19'
+    effective_to: null
+    status: active
+    format: html
+    notes: 教师详情页；职称：副研究员；导师类别：硕导；联系方式按官网公开信息保留。
+- doc_id: agri-teacher-382439
+  title: 王波（副教授）
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  audience:
+  - public
+  audience_detail:
+    colleges:
+    - agri
+    note: 教师详情页；页面发布于 2024-08-19；导师类别：硕导。
+  topic_tags:
+  - 教师
+  - 副教授
+  - 研究生导师
+  redact_contacts: false
+  versions:
+  - version_id: v20240819
+    url: https://nxy.scau.edu.cn/2024/0819/c18019a382439/page.htm
+    published_at: '2024-08-19'
+    effective_from: '2024-08-19'
+    effective_to: null
+    status: active
+    format: html
+    notes: 教师详情页；职称：副教授；导师类别：硕导；联系方式按官网公开信息保留。
+- doc_id: agri-teacher-382428
+  title: 王加峰（副研究员）
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  audience:
+  - public
+  audience_detail:
+    colleges:
+    - agri
+    note: 教师详情页；页面发布于 2024-08-19；导师类别：硕导。
+  topic_tags:
+  - 教师
+  - 副研究员
+  - 研究生导师
+  redact_contacts: false
+  versions:
+  - version_id: v20240819
+    url: https://nxy.scau.edu.cn/2024/0819/c18019a382428/page.htm
+    published_at: '2024-08-19'
+    effective_from: '2024-08-19'
+    effective_to: null
+    status: active
+    format: html
+    notes: 教师详情页；职称：副研究员；导师类别：硕导；联系方式按官网公开信息保留。 采集备注：邮箱字段不完整。
+- doc_id: agri-teacher-382429
+  title: 王兰（副教授）
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  audience:
+  - public
+  audience_detail:
+    colleges:
+    - agri
+    note: 教师详情页；页面发布于 2024-08-19；导师类别：硕导。
+  topic_tags:
+  - 教师
+  - 副教授
+  - 研究生导师
+  redact_contacts: false
+  versions:
+  - version_id: v20240819
+    url: https://nxy.scau.edu.cn/2024/0819/c18019a382429/page.htm
+    published_at: '2024-08-19'
+    effective_from: '2024-08-19'
+    effective_to: null
+    status: active
+    format: html
+    notes: 教师详情页；职称：副教授；导师类别：硕导；联系方式按官网公开信息保留。
+- doc_id: agri-teacher-382405
+  title: 王蕾迪（副教授）
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  audience:
+  - public
+  audience_detail:
+    colleges:
+    - agri
+    note: 教师详情页；页面发布于 2024-08-19；导师类别：硕导。
+  topic_tags:
+  - 教师
+  - 副教授
+  - 研究生导师
+  redact_contacts: false
+  versions:
+  - version_id: v20240819
+    url: https://nxy.scau.edu.cn/2024/0819/c18019a382405/page.htm
+    published_at: '2024-08-19'
+    effective_from: '2024-08-19'
+    effective_to: null
+    status: active
+    format: html
+    notes: 教师详情页；职称：副教授；导师类别：硕导；联系方式按官网公开信息保留。
+- doc_id: agri-teacher-382406
+  title: 王威（首聘副教授）
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  audience:
+  - public
+  audience_detail:
+    colleges:
+    - agri
+    note: 教师详情页；页面发布于 2024-08-19；导师类别：硕导。
+  topic_tags:
+  - 教师
+  - 首聘副教授
+  - 研究生导师
+  redact_contacts: false
+  versions:
+  - version_id: v20240819
+    url: https://nxy.scau.edu.cn/2024/0819/c18019a382406/page.htm
+    published_at: '2024-08-19'
+    effective_from: '2024-08-19'
+    effective_to: null
+    status: active
+    format: html
+    notes: 教师详情页；职称：首聘副教授；导师类别：硕导；联系方式按官网公开信息保留。
+- doc_id: agri-teacher-382409
+  title: 王维（副）
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  audience:
+  - public
+  audience_detail:
+    colleges:
+    - agri
+    note: 教师详情页；页面发布于 2024-08-19；导师类别：硕导。
+  topic_tags:
+  - 教师
+  - 副
+  - 研究生导师
+  redact_contacts: false
+  versions:
+  - version_id: v20240819
+    url: https://nxy.scau.edu.cn/2024/0819/c18019a382409/page.htm
+    published_at: '2024-08-19'
+    effective_from: '2024-08-19'
+    effective_to: null
+    status: active
+    format: html
+    notes: 教师详情页；职称：副；导师类别：硕导；联系方式按官网公开信息保留。
+- doc_id: agri-teacher-382430
+  title: 汪文毅（副教授）
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  audience:
+  - public
+  audience_detail:
+    colleges:
+    - agri
+    note: 教师详情页；页面发布于 2024-08-19；导师类别：硕导。
+  topic_tags:
+  - 教师
+  - 副教授
+  - 研究生导师
+  redact_contacts: false
+  versions:
+  - version_id: v20240819
+    url: https://nxy.scau.edu.cn/2024/0819/c18019a382430/page.htm
+    published_at: '2024-08-19'
+    effective_from: '2024-08-19'
+    effective_to: null
+    status: active
+    format: html
+    notes: 教师详情页；职称：副教授；导师类别：硕导；联系方式按官网公开信息保留。
+- doc_id: agri-teacher-382408
+  title: 王小龙（副）
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  audience:
+  - public
+  audience_detail:
+    colleges:
+    - agri
+    note: 教师详情页；页面发布于 2024-08-19；导师类别：硕导。
+  topic_tags:
+  - 教师
+  - 副
+  - 研究生导师
+  redact_contacts: false
+  versions:
+  - version_id: v20240819
+    url: https://nxy.scau.edu.cn/2024/0819/c18019a382408/page.htm
+    published_at: '2024-08-19'
+    effective_from: '2024-08-19'
+    effective_to: null
+    status: active
+    format: html
+    notes: 教师详情页；职称：副；导师类别：硕导；联系方式按官网公开信息保留。
+- doc_id: agri-teacher-382407
+  title: 王媛媛（首聘副教授）
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  audience:
+  - public
+  audience_detail:
+    colleges:
+    - agri
+    note: 教师详情页；页面发布于 2024-08-19；导师类别：硕导。
+  topic_tags:
+  - 教师
+  - 首聘副教授
+  - 研究生导师
+  redact_contacts: false
+  versions:
+  - version_id: v20240819
+    url: https://nxy.scau.edu.cn/2024/0819/c18019a382407/page.htm
+    published_at: '2024-08-19'
+    effective_from: '2024-08-19'
+    effective_to: null
+    status: active
+    format: html
+    notes: 教师详情页；职称：首聘副教授；导师类别：硕导；联系方式按官网公开信息保留。
+- doc_id: agri-teacher-382438
+  title: 吴锦文（副教授）
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  audience:
+  - public
+  audience_detail:
+    colleges:
+    - agri
+    note: 教师详情页；页面发布于 2024-08-19；导师类别：硕导。
+  topic_tags:
+  - 教师
+  - 副教授
+  - 研究生导师
+  redact_contacts: false
+  versions:
+  - version_id: v20240819
+    url: https://nxy.scau.edu.cn/2024/0819/c18019a382438/page.htm
+    published_at: '2024-08-19'
+    effective_from: '2024-08-19'
+    effective_to: null
+    status: active
+    format: html
+    notes: 教师详情页；职称：副教授；导师类别：硕导；联系方式按官网公开信息保留。
+- doc_id: agri-teacher-382404
+  title: 吴丽姬（副）
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  audience:
+  - public
+  audience_detail:
+    colleges:
+    - agri
+    note: 教师详情页；页面发布于 2024-08-19；导师类别：硕导。
+  topic_tags:
+  - 教师
+  - 副
+  - 研究生导师
+  redact_contacts: false
+  versions:
+  - version_id: v20240819
+    url: https://nxy.scau.edu.cn/2024/0819/c18019a382404/page.htm
+    published_at: '2024-08-19'
+    effective_from: '2024-08-19'
+    effective_to: null
+    status: active
+    format: html
+    notes: 教师详情页；职称：副；导师类别：硕导；联系方式按官网公开信息保留。
+- doc_id: agri-teacher-382427
+  title: 肖武名（副研究员）
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  audience:
+  - public
+  audience_detail:
+    colleges:
+    - agri
+    note: 教师详情页；页面发布于 2024-08-19；导师类别：硕导。
+  topic_tags:
+  - 教师
+  - 副研究员
+  - 研究生导师
+  redact_contacts: false
+  versions:
+  - version_id: v20240819
+    url: https://nxy.scau.edu.cn/2024/0819/c18019a382427/page.htm
+    published_at: '2024-08-19'
+    effective_from: '2024-08-19'
+    effective_to: null
+    status: active
+    format: html
+    notes: 教师详情页；职称：副研究员；导师类别：硕导；联系方式按官网公开信息保留。
+- doc_id: agri-teacher-382402
+  title: 谢先荣（副）
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  audience:
+  - public
+  audience_detail:
+    colleges:
+    - agri
+    note: 教师详情页；页面发布于 2024-08-19；导师类别：硕导。
+  topic_tags:
+  - 教师
+  - 副
+  - 研究生导师
+  redact_contacts: false
+  versions:
+  - version_id: v20240819
+    url: https://nxy.scau.edu.cn/2024/0819/c18019a382402/page.htm
+    published_at: '2024-08-19'
+    effective_from: '2024-08-19'
+    effective_to: null
+    status: active
+    format: html
+    notes: 教师详情页；职称：副；导师类别：硕导；联系方式按官网公开信息保留。 采集备注：邮箱字段不完整。
+- doc_id: agri-teacher-382393
+  title: 杨倩颖（首聘副教授）
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  audience:
+  - public
+  audience_detail:
+    colleges:
+    - agri
+    note: 教师详情页；页面发布于 2024-08-19；导师类别：硕导。
+  topic_tags:
+  - 教师
+  - 首聘副教授
+  - 研究生导师
+  redact_contacts: false
+  versions:
+  - version_id: v20240819
+    url: https://nxy.scau.edu.cn/2024/0819/c18019a382393/page.htm
+    published_at: '2024-08-19'
+    effective_from: '2024-08-19'
+    effective_to: null
+    status: active
+    format: html
+    notes: 教师详情页；职称：首聘副教授；导师类别：硕导；联系方式按官网公开信息保留。 采集备注：电话字段异常。
+- doc_id: agri-teacher-403287
+  title: 杨维丰（首聘副教授）
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  audience:
+  - public
+  audience_detail:
+    colleges:
+    - agri
+    note: 教师详情页；页面发布于 2024-08-19；导师类别：硕导。
+  topic_tags:
+  - 教师
+  - 首聘副教授
+  - 研究生导师
+  redact_contacts: false
+  versions:
+  - version_id: v20240819
+    url: https://nxy.scau.edu.cn/2024/0819/c18019a403287/page.htm
+    published_at: '2024-08-19'
+    effective_from: '2024-08-19'
+    effective_to: null
+    status: active
+    format: html
+    notes: 教师详情页；职称：首聘副教授；导师类别：硕导；联系方式按官网公开信息保留。 采集备注：电话字段异常。
+- doc_id: agri-teacher-382431
+  title: 于世霞（首聘副教授）
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  audience:
+  - public
+  audience_detail:
+    colleges:
+    - agri
+    note: 教师详情页；页面发布于 2024-08-19；导师类别：硕导。
+  topic_tags:
+  - 教师
+  - 首聘副教授
+  - 研究生导师
+  redact_contacts: false
+  versions:
+  - version_id: v20240819
+    url: https://nxy.scau.edu.cn/2024/0819/c18019a382431/page.htm
+    published_at: '2024-08-19'
+    effective_from: '2024-08-19'
+    effective_to: null
+    status: active
+    format: html
+    notes: 教师详情页；职称：首聘副教授；导师类别：硕导；联系方式按官网公开信息保留。
+- doc_id: agri-teacher-382401
+  title: 张栋（首聘副）
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  audience:
+  - public
+  audience_detail:
+    colleges:
+    - agri
+    note: 教师详情页；页面发布于 2024-08-19；导师类别：硕导。
+  topic_tags:
+  - 教师
+  - 首聘副
+  - 研究生导师
+  redact_contacts: false
+  versions:
+  - version_id: v20240819
+    url: https://nxy.scau.edu.cn/2024/0819/c18019a382401/page.htm
+    published_at: '2024-08-19'
+    effective_from: '2024-08-19'
+    effective_to: null
+    status: active
+    format: html
+    notes: 教师详情页；职称：首聘副；导师类别：硕导；联系方式按官网公开信息保留。
+- doc_id: agri-teacher-382399
+  title: 张慧（首聘副教授）
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  audience:
+  - public
+  audience_detail:
+    colleges:
+    - agri
+    note: 教师详情页；页面发布于 2024-08-19；导师类别：硕导。
+  topic_tags:
+  - 教师
+  - 首聘副教授
+  - 研究生导师
+  redact_contacts: false
+  versions:
+  - version_id: v20240819
+    url: https://nxy.scau.edu.cn/2024/0819/c18019a382399/page.htm
+    published_at: '2024-08-19'
+    effective_from: '2024-08-19'
+    effective_to: null
+    status: active
+    format: html
+    notes: 教师详情页；职称：首聘副教授；导师类别：硕导；联系方式按官网公开信息保留。
+- doc_id: agri-teacher-382400
+  title: 张雷（副研究员）
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  audience:
+  - public
+  audience_detail:
+    colleges:
+    - agri
+    note: 教师详情页；页面发布于 2024-08-19；导师类别：博导。
+  topic_tags:
+  - 教师
+  - 副研究员
+  - 研究生导师
+  redact_contacts: false
+  versions:
+  - version_id: v20240819
+    url: https://nxy.scau.edu.cn/2024/0819/c18019a382400/page.htm
+    published_at: '2024-08-19'
+    effective_from: '2024-08-19'
+    effective_to: null
+    status: active
+    format: html
+    notes: 教师详情页；职称：副研究员；导师类别：博导；联系方式按官网公开信息保留。
+- doc_id: agri-teacher-382426
+  title: 张群洁（副研究员）
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  audience:
+  - public
+  audience_detail:
+    colleges:
+    - agri
+    note: 教师详情页；页面发布于 2024-08-19；导师类别：硕导。
+  topic_tags:
+  - 教师
+  - 副研究员
+  - 研究生导师
+  redact_contacts: false
+  versions:
+  - version_id: v20240819
+    url: https://nxy.scau.edu.cn/2024/0819/c18019a382426/page.htm
+    published_at: '2024-08-19'
+    effective_from: '2024-08-19'
+    effective_to: null
+    status: active
+    format: html
+    notes: 教师详情页；职称：副研究员；导师类别：硕导；联系方式按官网公开信息保留。
+- doc_id: agri-teacher-382391
+  title: 张亚锋（副）
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  audience:
+  - public
+  audience_detail:
+    colleges:
+    - agri
+    note: 教师详情页；页面发布于 2024-08-19；导师类别：硕导。
+  topic_tags:
+  - 教师
+  - 副
+  - 研究生导师
+  redact_contacts: false
+  versions:
+  - version_id: v20240819
+    url: https://nxy.scau.edu.cn/2024/0819/c18019a382391/page.htm
+    published_at: '2024-08-19'
+    effective_from: '2024-08-19'
+    effective_to: null
+    status: active
+    format: html
+    notes: 教师详情页；职称：副；导师类别：硕导；联系方式按官网公开信息保留。
+- doc_id: agri-teacher-382390
+  title: 赵佳（副）
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  audience:
+  - public
+  audience_detail:
+    colleges:
+    - agri
+    note: 教师详情页；页面发布于 2024-08-19；导师类别：硕导。
+  topic_tags:
+  - 教师
+  - 副
+  - 研究生导师
+  redact_contacts: false
+  versions:
+  - version_id: v20240819
+    url: https://nxy.scau.edu.cn/2024/0819/c18019a382390/page.htm
+    published_at: '2024-08-19'
+    effective_from: '2024-08-19'
+    effective_to: null
+    status: active
+    format: html
+    notes: 教师详情页；职称：副；导师类别：硕导；联系方式按官网公开信息保留。
+- doc_id: agri-teacher-382398
+  title: 赵哲（首聘副）
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  audience:
+  - public
+  audience_detail:
+    colleges:
+    - agri
+    note: 教师详情页；页面发布于 2024-08-19；导师类别：硕导。
+  topic_tags:
+  - 教师
+  - 首聘副
+  - 研究生导师
+  redact_contacts: false
+  versions:
+  - version_id: v20240819
+    url: https://nxy.scau.edu.cn/2024/0819/c18019a382398/page.htm
+    published_at: '2024-08-19'
+    effective_from: '2024-08-19'
+    effective_to: null
+    status: active
+    format: html
+    notes: 教师详情页；职称：首聘副；导师类别：硕导；联系方式按官网公开信息保留。
+- doc_id: agri-teacher-382389
+  title: 周玉亮（副）
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  audience:
+  - public
+  audience_detail:
+    colleges:
+    - agri
+    note: 教师详情页；页面发布于 2024-08-19；导师类别：硕导。
+  topic_tags:
+  - 教师
+  - 副
+  - 研究生导师
+  redact_contacts: false
+  versions:
+  - version_id: v20240819
+    url: https://nxy.scau.edu.cn/2024/0819/c18019a382389/page.htm
+    published_at: '2024-08-19'
+    effective_from: '2024-08-19'
+    effective_to: null
+    status: active
+    format: html
+    notes: 教师详情页；职称：副；导师类别：硕导；联系方式按官网公开信息保留。
+- doc_id: agri-teacher-401787
+  title: 朱伟（副）
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  audience:
+  - public
+  audience_detail:
+    colleges:
+    - agri
+    note: 教师详情页；页面发布于 2024-08-19；导师类别：硕导。
+  topic_tags:
+  - 教师
+  - 副
+  - 研究生导师
+  redact_contacts: false
+  versions:
+  - version_id: v20240819
+    url: https://nxy.scau.edu.cn/2024/0819/c18019a401787/page.htm
+    published_at: '2024-08-19'
+    effective_from: '2024-08-19'
+    effective_to: null
+    status: active
+    format: html
+    notes: 教师详情页；职称：副；导师类别：硕导；联系方式按官网公开信息保留。
+- doc_id: agri-teacher-382441
+  title: 布素红（讲师）
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  audience:
+  - public
+  audience_detail:
+    colleges:
+    - agri
+    note: 教师详情页；页面发布于 2024-08-19；导师类别：未标注。
+  topic_tags:
+  - 教师
+  - 讲师
+  redact_contacts: false
+  versions:
+  - version_id: v20240819
+    url: https://nxy.scau.edu.cn/2024/0819/c18020a382441/page.htm
+    published_at: '2024-08-19'
+    effective_from: '2024-08-19'
+    effective_to: null
+    status: active
+    format: html
+    notes: 教师详情页；职称：讲师；导师类别：未标注；联系方式按官网公开信息保留。
+- doc_id: agri-teacher-382436
+  title: 安静（讲师）
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  audience:
+  - public
+  audience_detail:
+    colleges:
+    - agri
+    note: 教师详情页；页面发布于 2024-08-19；导师类别：未标注。
+  topic_tags:
+  - 教师
+  - 讲师
+  redact_contacts: false
+  versions:
+  - version_id: v20240819
+    url: https://nxy.scau.edu.cn/2024/0819/c18020a382436/page.htm
+    published_at: '2024-08-19'
+    effective_from: '2024-08-19'
+    effective_to: null
+    status: active
+    format: html
+    notes: 教师详情页；职称：讲师；导师类别：未标注；联系方式按官网公开信息保留。
+- doc_id: agri-teacher-382437
+  title: 杨瑰丽（中级/助理研究员）
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  audience:
+  - public
+  audience_detail:
+    colleges:
+    - agri
+    note: 教师详情页；页面发布于 2024-08-19；导师类别：博导+硕导。
+  topic_tags:
+  - 教师
+  - 中级/助理研究员
+  - 研究生导师
+  redact_contacts: false
+  versions:
+  - version_id: v20240819
+    url: https://nxy.scau.edu.cn/2024/0819/c18020a382437/page.htm
+    published_at: '2024-08-19'
+    effective_from: '2024-08-19'
+    effective_to: null
+    status: active
+    format: html
+    notes: 教师详情页；职称：中级/助理研究员；导师类别：博导+硕导；联系方式按官网公开信息保留。
+- doc_id: agri-teacher-382440
+  title: 黄明（助理研究员）
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  audience:
+  - public
+  audience_detail:
+    colleges:
+    - agri
+    note: 教师详情页；页面发布于 2024-08-19；导师类别：硕导。
+  topic_tags:
+  - 教师
+  - 助理研究员
+  - 研究生导师
+  redact_contacts: false
+  versions:
+  - version_id: v20240819
+    url: https://nxy.scau.edu.cn/2024/0819/c18020a382440/page.htm
+    published_at: '2024-08-19'
+    effective_from: '2024-08-19'
+    effective_to: null
+    status: active
+    format: html
+    notes: 教师详情页；职称：助理研究员；导师类别：硕导；联系方式按官网公开信息保留。
+- doc_id: agri-teacher-382435
+  title: 谭斌（讲师）
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  audience:
+  - public
+  audience_detail:
+    colleges:
+    - agri
+    note: 教师详情页；页面发布于 2024-08-19；导师类别：未标注。
+  topic_tags:
+  - 教师
+  - 讲师
+  redact_contacts: false
+  versions:
+  - version_id: v20240819
+    url: https://nxy.scau.edu.cn/2024/0819/c18020a382435/page.htm
+    published_at: '2024-08-19'
+    effective_from: '2024-08-19'
+    effective_to: null
+    status: active
+    format: html
+    notes: 教师详情页；职称：讲师；导师类别：未标注；联系方式按官网公开信息保留。
+- doc_id: agri-supervisors
+  title: 农学院研究生导师名单（83人）
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  audience:
+  - public
+  audience_detail:
+    colleges:
+    - agri
+    note: 由 91 个在编教师详情页结构化汇总；按导师类别分组；8 名未标注不列入；采集日期 2026-10-21。
+  topic_tags:
+  - 研究生导师
+  - 博导
+  - 硕导
+  - 名录
+  versions:
+  - version_id: v2026
+    url: https://nxy.scau.edu.cn/jsmlw/list.htm
+    local_path: data/incoming/colleges/agri/static/agri-supervisors.html
+    published_at: '2026-10-21'
+    effective_from: '2026-10-21'
+    effective_to: null
+    status: active
+    format: html
+    notes: 结构化汇总页，不是官网单一页面；正文只放姓名、职称、导师类别、详情链接；电话/邮箱见个人详情页。
+
+# 农学院近一年核心栏目元数据（一栏目一文档，逐行保存日期/标题/链接）。
+# 只存标题级目录，不抓正文和附件；标题含个人姓名的条目不登记。
+- doc_id: agri-recent-news
+  title: 农学院近一年新闻（2025-10-21 至 2026-10-14）
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  audience:
+  - public
+  audience_detail:
+    colleges:
+    - agri
+    note: 近一年栏目元数据；窗口 2025-10-21 至 2026-10-21；只登记标题/日期/链接。
+  topic_tags:
+  - 近期动态
+  - 学院新闻
+  versions:
+  - version_id: v2026
+    url: https://nxy.scau.edu.cn/xyxw/list.htm
+    local_path: data/incoming/colleges/agri/recent/agri-recent-news.html
+    published_at: '2026-10-21'
+    effective_from: '2026-10-21'
+    effective_to: null
+    status: active
+    format: html
+    notes: 近一年栏目元数据；最新一条 2026-10-14；只登记标题/日期/链接；不抓正文和附件；采集日期 2026-10-21。
+- doc_id: agri-recent-notices
+  title: 农学院近一年通知公告（2025-10-21 至 2026-10-09）
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  audience:
+  - all
+  audience_detail:
+    colleges:
+    - agri
+    note: 近一年栏目元数据；窗口 2025-10-21 至 2026-10-21；只登记标题/日期/链接。
+  topic_tags:
+  - 近期动态
+  - 通知公告
+  versions:
+  - version_id: v2026
+    url: https://nxy.scau.edu.cn/tzgg_17977/list.htm
+    local_path: data/incoming/colleges/agri/recent/agri-recent-notices.html
+    published_at: '2026-10-21'
+    effective_from: '2026-10-21'
+    effective_to: null
+    status: active
+    format: html
+    notes: 近一年栏目元数据；最新一条 2026-10-09；只登记标题/日期/链接；名单/公示类不抓正文和附件；标题含个人姓名的已剔除。
+- doc_id: agri-recent-lectures
+  title: 农学院近一年讲座论坛（2025-10-21 至 2026-09-17）
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  audience:
+  - public
+  audience_detail:
+    colleges:
+    - agri
+    note: 近一年栏目元数据；窗口 2025-10-21 至 2026-10-21；只登记标题/日期/链接。
+  topic_tags:
+  - 近期动态
+  - 讲座论坛
+  versions:
+  - version_id: v2026
+    url: https://nxy.scau.edu.cn/jzltw/list.htm
+    local_path: data/incoming/colleges/agri/recent/agri-recent-lectures.html
+    published_at: '2026-10-21'
+    effective_from: '2026-10-21'
+    effective_to: null
+    status: active
+    format: html
+    notes: 近一年栏目元数据；最新一条 2026-09-17；只登记标题/日期/链接；不抓正文和附件；采集日期 2026-10-21。
+- doc_id: agri-recent-research
+  title: 农学院近一年科研进展（2025-10-21 至 2026-09-24）
+  doc_type: guide
+  authority_level: informational
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  audience:
+  - public
+  audience_detail:
+    colleges:
+    - agri
+    note: 近一年栏目元数据；窗口 2025-10-21 至 2026-10-21；只登记标题/日期/链接。
+  topic_tags:
+  - 近期动态
+  - 科研进展
+  versions:
+  - version_id: v2026
+    url: https://nxy.scau.edu.cn/kyjz/list.htm
+    local_path: data/incoming/colleges/agri/recent/agri-recent-research.html
+    published_at: '2026-10-21'
+    effective_from: '2026-10-21'
+    effective_to: null
+    status: active
+    format: html
+    notes: 近一年栏目元数据；最新一条 2026-09-24；只登记标题/日期/链接；不抓正文和附件；采集日期 2026-10-21。

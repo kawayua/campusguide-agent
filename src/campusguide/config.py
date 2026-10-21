@@ -98,6 +98,9 @@ class SourceDocument(BaseModel):
     audience_detail: AudienceDetail | None = None
     flow_ids: list[str] = Field(default_factory=list)
     topic_tags: list[str] = Field(default_factory=list)
+    # 院系官网公开的教职工名录可设为 false：保留手机号、邮箱、联系人姓名，
+    # 身份证号与学号始终脱敏。制度类文档保持默认值。
+    redact_contacts: bool = True
     versions: list[SourceVersion] = Field(min_length=1)
 
     @property

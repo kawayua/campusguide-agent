@@ -310,6 +310,7 @@ def build_index(
                 document_version,
                 topic_tags=doc.topic_tags,
                 flow_ids=doc.flow_ids,
+                redact_contacts=doc.redact_contacts,
             )
             blocks_skipped += len(segment.blocks)
             warnings.extend(f"{label}: {warning}" for warning in segment.warnings)

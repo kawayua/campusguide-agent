@@ -58,6 +58,9 @@ PAGE_NUMBER_RE = re.compile(
     r"^\s*(?:[-—–]\s*\d{1,4}\s*[-—–]|第\s*\d+\s*页(?:\s*共\s*\d+\s*页)?|\d+\s*/\s*\d+)\s*$"
 )
 SENTENCE_RE = re.compile(r"(?<=[。！？；!?;])")
+# 近一年栏目元数据按“日期｜标题｜链接”一行一条；日期行必须独立成块，
+# 否则段落回退会把多行合并进同一个 800 字块，单条就无法精确引用。
+ROW_LINE_RE = re.compile(r"^\s*\d{4}-\d{2}-\d{2}\s*[｜|]")
 # 文末落款：空行之后的一到三行，最后一行是“YYYY年M月D日”。
 # 落款不进入条款库，避免把发布日期粘到最后一条正文里。
 SIGNATURE_TAIL_RE = re.compile(
@@ -110,37 +113,51 @@ def _append_redaction_warning(result: SegmentResult) -> None:
 
 
 def _split_text(text: str, max_chars: int) -> list[str]:
-    if len(text) <= max_chars:
+    paragraphs = [paragraph.strip() for paragraph in text.split("\n") if paragraph.strip()]
+    has_rows = any(ROW_LINE_RE.match(paragraph) for paragraph in paragraphs)
+    if len(text) <= max_chars and not has_rows:
         return [text] if text else []
 
-    units: list[str] = []
-    for paragraph in text.split("\n"):
-        paragraph = paragraph.strip()
-        if not paragraph:
+    units: list[tuple[bool, str]] = []
+    for paragraph in paragraphs:
+        if ROW_LINE_RE.match(paragraph):
+            units.append((True, paragraph))
             continue
         if len(paragraph) <= max_chars:
-            units.append(paragraph)
+            units.append((False, paragraph))
             continue
         for sentence in SENTENCE_RE.split(paragraph):
             sentence = sentence.strip()
             while len(sentence) > max_chars:
-                units.append(sentence[:max_chars])
+                units.append((False, sentence[:max_chars]))
                 sentence = sentence[max_chars:]
             if sentence:
-                units.append(sentence)
+                units.append((False, sentence))
 
     chunks: list[str] = []
     current = ""
-    for unit in units:
+
+    def flush() -> None:
+        nonlocal current
+        if current:
+            chunks.append(current.strip())
+            current = ""
+
+    for is_row, unit in units:
+        if is_row:
+            flush()
+            if len(unit) <= max_chars:
+                chunks.append(unit)
+            else:
+                chunks.extend(unit[index : index + max_chars] for index in range(0, len(unit), max_chars))
+            continue
         candidate = f"{current}\n{unit}" if current else unit
         if len(candidate) <= max_chars:
             current = candidate
         else:
-            if current:
-                chunks.append(current.strip())
+            flush()
             current = unit
-    if current:
-        chunks.append(current.strip())
+    flush()
     return chunks or [text]
 
 
@@ -226,8 +243,9 @@ def _add_parts(
     flow_ids: list[str],
     source_format: str,
     max_chars: int,
+    redact_contacts: bool = True,
 ) -> None:
-    redacted = redact_text(_clean_article_body(text))
+    redacted = redact_text(_clean_article_body(text), redact_contacts=redact_contacts)
     result.merge_redaction_counts(redacted.counts)
     parts = _split_text(redacted.text, max_chars)
     if not parts:
@@ -305,6 +323,7 @@ def _add_sections(
     topic_tags: list[str],
     flow_ids: list[str],
     max_chars: int,
+    redact_contacts: bool = True,
 ) -> None:
     text = parsed.text
     first_start = sections[0].start()
@@ -323,6 +342,7 @@ def _add_sections(
             flow_ids=flow_ids,
             source_format=parsed.format,
             max_chars=max_chars,
+            redact_contacts=redact_contacts,
         )
 
     duplicate_counts: dict[str, int] = {}
@@ -370,6 +390,7 @@ def _add_sections(
             flow_ids=flow_ids,
             source_format=parsed.format,
             max_chars=max_chars,
+            redact_contacts=redact_contacts,
         )
 
         if preamble is not None:
@@ -397,6 +418,7 @@ def _add_sections(
                 flow_ids=flow_ids,
                 source_format=parsed.format,
                 max_chars=max_chars,
+                redact_contacts=redact_contacts,
             )
 
     result.used_section_rule = True
@@ -414,6 +436,7 @@ def _add_paragraph_chunks(
     topic_tags: list[str],
     flow_ids: list[str],
     max_chars: int,
+    redact_contacts: bool = True,
 ) -> None:
     chunks = _split_text(_clean_article_body(parsed.text), max_chars)
     if not chunks:
@@ -433,6 +456,7 @@ def _add_paragraph_chunks(
             flow_ids=flow_ids,
             source_format=parsed.format,
             max_chars=max_chars,
+            redact_contacts=redact_contacts,
         )
     result.used_paragraph_rule = True
     result.warnings.append(f"未识别到条款或节标题，已按段落切分：{len(chunks)} 段")
@@ -445,6 +469,7 @@ def segment_document(
     topic_tags: list[str] | None = None,
     flow_ids: list[str] | None = None,
     max_article_chars: int = MAX_ARTICLE_CHARS,
+    redact_contacts: bool = True,
 ) -> SegmentResult:
     return _segment_document(
         parsed,
@@ -452,6 +477,7 @@ def segment_document(
         topic_tags=topic_tags or [],
         flow_ids=flow_ids or [],
         max_chars=max_article_chars,
+        redact_contacts=redact_contacts,
     )
 
 
@@ -462,6 +488,7 @@ def _segment_document(
     topic_tags: list[str],
     flow_ids: list[str],
     max_chars: int,
+    redact_contacts: bool = True,
 ) -> SegmentResult:
     result = SegmentResult()
     text = parsed.text
@@ -506,6 +533,7 @@ def _segment_document(
                 topic_tags=topic_tags,
                 flow_ids=flow_ids,
                 max_chars=max_chars,
+                redact_contacts=redact_contacts,
             )
             if result.indexable_articles:
                 _append_redaction_warning(result)
@@ -521,6 +549,7 @@ def _segment_document(
                 topic_tags=topic_tags,
                 flow_ids=flow_ids,
                 max_chars=max_chars,
+                redact_contacts=redact_contacts,
             )
             if result.indexable_articles:
                 _append_redaction_warning(result)
@@ -541,6 +570,7 @@ def _segment_document(
             flow_ids=flow_ids,
             source_format=parsed.format,
             max_chars=max_chars,
+            redact_contacts=redact_contacts,
         )
         _append_redaction_warning(result)
         return result
@@ -574,6 +604,7 @@ def _segment_document(
             flow_ids=flow_ids,
             source_format=parsed.format,
             max_chars=max_chars,
+            redact_contacts=redact_contacts,
         )
 
     article_starts = [match.start() for match in articles]
@@ -619,6 +650,7 @@ def _segment_document(
             flow_ids=flow_ids,
             source_format=parsed.format,
             max_chars=max_chars,
+            redact_contacts=redact_contacts,
         )
 
     if result.duplicate_article_nos:
@@ -655,6 +687,7 @@ def _segment_document(
             flow_ids=flow_ids,
             source_format=parsed.format,
             max_chars=max_chars,
+            redact_contacts=redact_contacts,
         )
     elif normalize_text(tail):
         result.warnings.append("忽略尾部短文本（可能是落款/页码）")

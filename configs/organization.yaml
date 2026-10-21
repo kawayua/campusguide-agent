@@ -40,6 +40,11 @@ colleges:
     aliases: [数信学院, 数学与信息学院, 软件学院]
     valid_from: null
     valid_to: null
+  - college_id: agri
+    name: 农学院
+    aliases: [华农农学院, 华南农业大学农学院]
+    valid_from: null
+    valid_to: null
 
 majors:
   - major_id: math-applied
@@ -96,5 +101,29 @@ majors:
     college_id: info
     major_code: "120108T"
     aliases: [大数据管理, 大数据管理与应用]
+    valid_from: null
+    valid_to: null
+
+  # 农学院：下设植物遗传育种系、作物信息与基因工程系、作物科学技术系、
+  # 种子工程与技术系。系不单设主键，写入文档标题与 aliases。
+  - major_id: agronomy
+    name: 农学
+    college_id: agri
+    major_code: "090101"
+    aliases: [农学, 农学丁颖, 丁颖创新班, 新农学]
+    valid_from: null
+    valid_to: null
+  - major_id: seed-science
+    name: 种子科学与工程
+    college_id: agri
+    major_code: "090105"
+    aliases: [种子科学与工程, 种子]
+    valid_from: null
+    valid_to: null
+  - major_id: bio-breeding
+    name: 生物育种科学
+    college_id: agri
+    major_code: "090116TK"
+    aliases: [生物育种科学, 生物育种]
     valid_from: null
     valid_to: null

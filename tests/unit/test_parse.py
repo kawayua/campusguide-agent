@@ -24,6 +24,29 @@ def test_parse_html_extracts_content_and_table(repo_root: Path) -> None:
     assert len(parsed.tables) == 1
 
 
+def test_parse_html_prefers_cms_paging_content(tmp_path: Path) -> None:
+    path = tmp_path / "cms-list.html"
+    path.write_text(
+        """
+<html><body>
+<div class="header">网站首页 学院概况 师资队伍 人才培养</div>
+<div class="paging_content">
+  <p>主任：张泽民</p>
+  <p>副主任：吴健</p>
+  <p>教师：马启彬、王兰、王慧、王少奎、王加峰、布素红、卡森、刘永柱、刘向东、刘自强、年海、陈淳、陈志雄、汪文毅、杨维丰、杨瑰丽、沈任佳</p>
+</div>
+<div class="link-items">友情链接 林学与风景园林学院 园艺学院 兽医学院 动物科学学院</div>
+</body></html>
+""",
+        encoding="utf-8",
+    )
+    parsed = parse_html_file(path)
+
+    assert "主任：张泽民" in parsed.text
+    assert "友情链接" not in parsed.text
+    assert "网站首页" not in parsed.text
+
+
 def test_parse_html_keeps_inline_numbers_and_heading_spacing(tmp_path: Path) -> None:
     path = tmp_path / "inline-spans.html"
     path.write_text(
