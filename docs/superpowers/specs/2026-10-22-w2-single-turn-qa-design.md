@@ -133,6 +133,9 @@ W2 的检索、Evidence、Citation 和 UI 都必须携带 `block_type`：
 
 `PolicyFilters` 增加 `block_types: list[BlockType] = [BlockType.ARTICLE]`。W2 默认只查 `article`。
 
+`Citation` 增加 `part_no`（默认 1）：同一 `article_id` 可能有多个 part，没有 `part_no` 就无法确定 quote 来自哪一片段，也无法正确回链到 Qdrant 点。Evidence、Citation 和 UI 都以
+`(article_id, part_no)` 作为片段身份，`article_id` 仍是对外展示的主引用 ID。
+
 ### 3.3 Qdrant payload
 
 每个点保存检索与引用所需字段，不保存整篇文档：
@@ -345,8 +348,8 @@ W2 的 `ClaimValidator` 只做确定性校验：
 1. `article_id` 在本轮 Evidence 集合中，否则丢弃该 citation；
 2. `quote` 非空、至少 6 个字符；
 3. `normalize_text(quote)` 必须能在 `article.text_normalized` 中定位；
-4. 补全 `Citation` 的 doc_title、article_no、effective_from、source_url、block_type；
-5. `quote_start/end` 记录在 `text_normalized` 中的位置；
+4. 补全 `Citation` 的 doc_title、article_no、part_no、effective_from、source_url、block_type；
+5. `quote_start/end` 记录在被引片段 `text_normalized` 中的位置；
 6. 一条 claim 的 citations 全部无效则丢弃该 claim，并在 trace 记录原因。
 
 W2 不检查：
