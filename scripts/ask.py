@@ -1,0 +1,117 @@
+"""单题 CLI：便于调试检索、生成、校验与 trace。"""
+
+from __future__ import annotations
+
+import argparse
+import json
+import sys
+import time
+from pathlib import Path
+
+from campusguide.domain.enums import Audience
+from campusguide.env import load_dotenv
+from campusguide.qa.runtime import create_qa_service, create_qdrant_client
+
+ROOT = Path(__file__).resolve().parents[1]
+AUDIENCE_MAP = {
+    "undergraduate": Audience.UNDERGRADUATE,
+    "graduate": Audience.GRADUATE,
+    "faculty": Audience.FACULTY,
+}
+
+
+def main() -> int:
+    load_dotenv(ROOT / ".env")
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("question", nargs="?", help="单轮问题")
+    parser.add_argument("--audience", choices=sorted(AUDIENCE_MAP), default=None)
+    parser.add_argument("--json", action="store_true", help="输出机器可读 JSON")
+    parser.add_argument(
+        "--no-warmup",
+        action="store_true",
+        help="不预加载 embedding 模型，用于测量冷启动首问延迟",
+    )
+    args = parser.parse_args()
+    question = args.question or input("问题：").strip()
+    if not question:
+        print("error: 问题为空", file=sys.stderr)
+        return 2
+
+    try:
+        client = create_qdrant_client()
+        service = create_qa_service(client=client)
+    except Exception as exc:
+        print(
+            f"error: 服务未就绪（{type(exc).__name__}）：{exc}\n"
+            "请检查 .env 的 LLM_BASE_URL / LLM_API_KEY / ADVISOR_MODEL、"
+            "Qdrant 是否启动，以及 data/vector_manifest.json 是否已生成。",
+            file=sys.stderr,
+        )
+        return 2
+    warmup_ms = 0
+    if not args.no_warmup:
+        warmup_started = time.perf_counter()
+        service.warmup()
+        warmup_ms = int((time.perf_counter() - warmup_started) * 1000)
+        print(f"-- warmup={warmup_ms}ms", file=sys.stderr)
+    result = service.ask(
+        question,
+        audience=AUDIENCE_MAP.get(args.audience) if args.audience else None,
+    )
+
+    if args.json:
+        payload = {
+            "trace_id": result.trace_id,
+            "outcome": result.outcome.value,
+            "answer_markdown": result.answer_markdown,
+            "message": result.message,
+            "warmup_ms": warmup_ms,
+            "latency_scope": "cold" if args.no_warmup else "warm",
+            "duration_ms": result.duration_ms,
+            "queries": result.queries,
+            "citations": [
+                {
+                    "article_id": citation.article_id,
+                    "part_no": citation.part_no,
+                    "block_type": citation.block_type.value,
+                    "doc_title": citation.doc_title,
+                    "article_no": citation.article_no,
+                    "quote": citation.quote,
+                    "quote_start": citation.quote_start,
+                    "quote_end": citation.quote_end,
+                    "source_url": str(citation.source_url),
+                    "date_confidence": citation.date_confidence,
+                }
+                for citation in result.citations
+            ],
+            "retrieval": result.retrieval_scores,
+            "dropped_claims": result.dropped_claims,
+            "dropped_citations": result.dropped_citations,
+        }
+        print(json.dumps(payload, ensure_ascii=False, indent=2))
+        return 0
+
+    if result.answered:
+        print(result.answer_markdown)
+    else:
+        print(f"[{result.outcome.value}] {result.message}")
+    print(
+        f"\n-- trace_id={result.trace_id} duration={result.duration_ms}ms "
+        f"warmup={warmup_ms}ms scope={'cold' if args.no_warmup else 'warm'}"
+    )
+    if result.retrieval_scores:
+        print("-- retrieval:")
+        for item in result.retrieval_scores:
+            print(
+                f"   #{item['rank']} {item['article_id']}#part{item['part_no']} "
+                f"{item['score']:.4f} [{item['block_type']}]"
+            )
+    for dropped in result.dropped_claims:
+        print(f"-- dropped claim: {dropped}")
+    for dropped in result.dropped_citations:
+        print(f"-- dropped citation: {dropped}")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
