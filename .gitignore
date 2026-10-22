@@ -31,6 +31,13 @@ data/review/*
 data/handoff/*
 !data/handoff/.gitkeep
 data/manifest.json
+data/vector_manifest.json
+data/traces/
+data/qdrant_storage/
+data/qdrant_local/
+data/eval/w2-dev-report.*
+data/eval/w2-relay-report.*
+data/eval/w2-niuma-report.*
 
 # OS / editor
 .DS_Store

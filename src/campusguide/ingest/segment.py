@@ -222,6 +222,7 @@ def _build_article(
         effective_to=version.effective_to,
         source_url=version.source_url,
         published_at=version.published_at,
+        date_confidence=version.date_confidence,
         issuing_department=version.issuing_department,
         topic_tags=topic_tags,
         flow_ids=flow_ids,

@@ -7,7 +7,11 @@ import sys
 from pathlib import Path
 
 from campusguide.config import load_retrieval_config
-from campusguide.ingest.build_index import BuildError, build_index
+from campusguide.ingest.build_index import (
+    EXPECTED_LOW_CONFIDENCE_VERSIONS,
+    BuildError,
+    build_index,
+)
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -38,6 +42,7 @@ def main() -> int:
             qdrant_url=args.qdrant_url,
             manifest_path=Path(args.manifest).resolve(),
             recreate_collection=args.recreate,
+            expected_low_confidence_versions=EXPECTED_LOW_CONFIDENCE_VERSIONS,
         )
     except BuildError as exc:
         print(f"error: {exc}", file=sys.stderr)
@@ -48,7 +53,8 @@ def main() -> int:
         "Index built: "
         f"documents={counts['documents']}, versions={counts['versions']}, "
         f"articles={counts['articles']}, blocks_excluded={counts['blocks_excluded']}, "
-        f"missing_versions={counts['missing_versions']}"
+        f"missing_versions={counts['missing_versions']}, "
+        f"date_confidence_low={counts['date_confidence_low']}"
     )
     print(f"content_hash: {result.manifest['content_hash']}")
     print(f"output: {result.output_dir}")

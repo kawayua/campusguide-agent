@@ -25,6 +25,11 @@ dev = [
 ocr = [
     "rapidocr-onnxruntime>=1.4.4",
 ]
+w2 = [
+    "torch>=2.6",
+    "sentence-transformers>=3.0",
+    "gradio>=5.0",
+]
 
 [build-system]
 requires = ["hatchling"]

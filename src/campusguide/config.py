@@ -69,6 +69,7 @@ class SourceVersion(BaseModel):
     format: Literal["auto", "html", "pdf"] = "auto"
     audience: list[Audience] | None = None
     audience_detail: AudienceDetail | None = None
+    date_confidence: Literal["high", "low"] = "high"
     notes: str | None = None
 
     @model_validator(mode="after")
@@ -81,6 +82,8 @@ class SourceVersion(BaseModel):
             raise ValueError("effective_to 不能早于 effective_from")
         if self.audience is not None:
             _check_audience(self.audience)
+        if self.notes and "date_confidence=low" in self.notes:
+            self.date_confidence = "low"
         return self
 
 
@@ -251,6 +254,11 @@ class RetrievalConfig(BaseModel):
     max_articles: int = 8
     min_rerank_score: float = 0.30
     min_score_margin: float = 0.03
+    query_top_k: int = 20
+    max_evidence: int = 8
+    max_chars_per_evidence: int = 800
+    min_dense_score: float = 0.35
+    include_sections_default: bool = False
 
 
 def load_yaml(path: str | Path) -> Any:

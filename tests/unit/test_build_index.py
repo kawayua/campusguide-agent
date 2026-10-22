@@ -109,7 +109,7 @@ def test_empty_corpus_writes_empty_index_and_manifest(tmp_path: Path) -> None:
     assert result.articles_path is not None and result.articles_path.read_text("utf-8") == ""
     assert result.documents_path is not None and result.documents_path.read_text("utf-8") == ""
     manifest = json.loads(result.manifest_path.read_text("utf-8"))  # type: ignore[union-attr]
-    assert manifest["index_version"] == "w1-articles-v2"
+    assert manifest["index_version"] == "w2-articles-v1"
     assert manifest["generated_at"] == "2026-10-19T00:00:00+00:00"
 
 

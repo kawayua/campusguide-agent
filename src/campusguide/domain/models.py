@@ -24,6 +24,8 @@ from campusguide.domain.enums import (
     VersionMode,
 )
 
+DateConfidence = Literal["high", "low"]
+
 
 class DocumentVersion(BaseModel):
     doc_id: str
@@ -46,6 +48,7 @@ class DocumentVersion(BaseModel):
     parser_version: str
     audience: list[Audience]
     audience_detail: AudienceDetail | None = None
+    date_confidence: DateConfidence = "high"
     notes: str | None = None
 
     @field_validator("audience")
@@ -106,6 +109,7 @@ class Article(BaseModel):
     effective_to: date | None = None
     source_url: HttpUrl
     published_at: date
+    date_confidence: DateConfidence = "high"
     issuing_department: str
     topic_tags: list[str] = Field(default_factory=list)
     flow_ids: list[str] = Field(default_factory=list)
@@ -141,6 +145,7 @@ class ArticlePublic(BaseModel):
     effective_to: date | None = None
     source_url: HttpUrl
     published_at: date
+    date_confidence: DateConfidence = "high"
     issuing_department: str
     topic_tags: list[str] = Field(default_factory=list)
     flow_ids: list[str] = Field(default_factory=list)
@@ -159,6 +164,21 @@ class Evidence(BaseModel):
     sparse_score: float | None = None
     rerank_score: float | None = None
     retrieval_query: str = ""
+    rank: int = 0
+
+    @property
+    def key(self) -> tuple[str, int]:
+        return (self.article.article_id, self.article.part_no)
+
+    @property
+    def score(self) -> float:
+        if self.rerank_score is not None:
+            return self.rerank_score
+        if self.dense_score is not None:
+            return self.dense_score
+        if self.sparse_score is not None:
+            return self.sparse_score
+        return 0.0
 
 
 class Citation(BaseModel):
@@ -168,7 +188,10 @@ class Citation(BaseModel):
     quote_end: int
     doc_title: str
     article_no: str
+    part_no: int = 1
+    block_type: BlockType = BlockType.ARTICLE
     effective_from: date
+    date_confidence: DateConfidence = "high"
     source_url: HttpUrl
 
 
@@ -271,8 +294,9 @@ class FlowDefinition(BaseModel):
 
 
 class PolicyFilters(BaseModel):
+    block_types: list[BlockType] = Field(default_factory=lambda: [BlockType.ARTICLE])
     audience: list[Audience] | None = None
-    status: list[ArticleStatus] | None = None
+    status: list[ArticleStatus] | None = Field(default_factory=lambda: [ArticleStatus.ACTIVE])
     as_of: date = Field(default_factory=date.today)
     version_mode: VersionMode = VersionMode.CURRENT
     doc_ids: list[str] | None = None

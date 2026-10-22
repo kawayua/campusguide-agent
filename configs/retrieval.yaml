@@ -14,3 +14,10 @@ max_articles: 8
 # 以下阈值必须用 20 题开发集校准，不要直接用于生产结论。
 min_rerank_score: 0.30
 min_score_margin: 0.03
+
+# W2 dense-only 检索参数
+query_top_k: 20
+max_evidence: 8
+max_chars_per_evidence: 800
+min_dense_score: 0.55   # 2026-10-22 用 dev_v0 校准：可答题最低证据 0.598，非可答题最高 0.545
+include_sections_default: false

@@ -39,23 +39,30 @@ from campusguide.domain.models import Article, DocumentVersion
 from campusguide.ingest.parse import ParsedDocument, load_parsed_document
 from campusguide.ingest.segment import segment_document
 
-INDEX_SCHEMA_VERSION = "1.1"
-INDEX_VERSION = "w1-articles-v2"
+INDEX_SCHEMA_VERSION = "1.2"
+INDEX_VERSION = "w2-articles-v1"
+EXPECTED_LOW_CONFIDENCE_VERSIONS = 16
 ARTICLES_FILENAME = "articles.jsonl"
 DOCUMENTS_FILENAME = "documents.jsonl"
 MANIFEST_FILENAME = "manifest.json"
 
 PAYLOAD_KEYWORD_FIELDS = (
+    "article_id",
     "doc_id",
     "version_id",
+    "block_type",
     "doc_type",
     "authority_level",
     "issuer_level",
     "audience",
+    "audience_colleges",
+    "audience_majors",
     "status",
+    "date_confidence",
     "flow_ids",
 )
 PAYLOAD_DATETIME_FIELDS = ("effective_from", "effective_to")
+PAYLOAD_INTEGER_FIELDS = ("article_index", "part_no")
 
 
 class BuildError(RuntimeError):
@@ -147,6 +154,7 @@ def _make_document_version(
         parser_version=parsed.parser_version,
         audience=effective_audience,
         audience_detail=effective_detail,
+        date_confidence=version.date_confidence,
         notes=version.notes,
     )
 
@@ -227,6 +235,16 @@ def init_qdrant_collection(
         except Exception as exc:  # 本地模式能力不同，不应阻断构建
             warnings.append(f"payload 索引 {field_name} 创建失败：{exc}")
 
+    for field_name in PAYLOAD_INTEGER_FIELDS:
+        try:
+            client.create_payload_index(
+                collection_name=retrieval.collection,
+                field_name=field_name,
+                field_schema=PayloadSchemaType.INTEGER,
+            )
+        except Exception as exc:  # 本地模式能力不同，不应阻断构建
+            warnings.append(f"payload 索引 {field_name} 创建失败：{exc}")
+
     try:
         client.update_collection_aliases(
             change_aliases_operations=[
@@ -275,6 +293,7 @@ def build_index(
     manifest_path: Path | None = None,
     recreate_collection: bool = False,
     generated_at: datetime | None = None,
+    expected_low_confidence_versions: int | None = None,
 ) -> BuildResult:
     config: SourcesConfig = load_sources(sources_path)
     articles: list[Article] = []
@@ -327,6 +346,21 @@ def build_index(
     articles.sort(key=_article_sort_key)
     documents.sort(key=lambda item: (item.doc_id, item.version_id))
 
+    low_confidence_versions = [
+        f"{document.doc_id}@{document.version_id}"
+        for document in documents
+        if document.date_confidence == "low"
+    ]
+    if (
+        expected_low_confidence_versions is not None
+        and len(low_confidence_versions) != expected_low_confidence_versions
+    ):
+        raise BuildError(
+            "date_confidence=low 的版本数不符合 W2 基线："
+            f"期望 {expected_low_confidence_versions}，实际 {len(low_confidence_versions)}；"
+            "请核对 sources.yaml 的 notes 或更新基线常量"
+        )
+
     keys = Counter((article.article_id, article.part_no) for article in articles)
     duplicates = sorted(key for key, count in keys.items() if count > 1)
     if duplicates:
@@ -358,7 +392,9 @@ def build_index(
             "blocks_excluded": blocks_skipped,
             "empty_text": empty_text,
             "missing_versions": len(missing_versions),
+            "date_confidence_low": len(low_confidence_versions),
         },
+        "low_confidence_versions": low_confidence_versions,
         "sources": sources_manifest,
         "missing_versions": missing_versions,
         "warnings": warnings,
