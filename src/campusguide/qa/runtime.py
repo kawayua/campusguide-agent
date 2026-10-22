@@ -137,7 +137,11 @@ def create_qa_service(
         aliases_path=paths.aliases,
     )
     provider = provider or OpenAICompatibleChat.from_env()
-    advisor = Advisor(provider)
+    # 推理型模型的思考 token 也计入 completion 预算，可按厂商调大。
+    advisor = Advisor(
+        provider,
+        max_tokens=int(os.getenv("ADVISOR_MAX_TOKENS", "1200")),
+    )
     return QAService(
         retriever=retriever,
         advisor=advisor,
