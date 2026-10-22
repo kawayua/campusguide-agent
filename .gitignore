@@ -39,6 +39,7 @@ data/eval/w2-dev-report.*
 data/eval/w2-relay-report.*
 data/eval/w2-niuma-report.*
 data/eval/w2-deepseek-report.*
+data/eval/w2-mimo-flash-report.*
 
 # OS / editor
 .DS_Store
