@@ -4,6 +4,8 @@
 
 当前目标院校：**华南农业大学**。当前进度：W1 数据与索引地基完成，已收录 213 份文档 / 232 个版本（含两份 2020 级扫描件 OCR）；问答链路从 W2 开始实现。
 
+这里的“条款级”专指 `article` 块（第 X 条）；培养方案、教师详情、新闻/讲座目录以 `section` 块入库。检索、引用和评测必须显式区分 `block_type`，不能把 `section` 计入条款指标。
+
 > 本系统为个人演示项目，只覆盖指定学校的公开制度文件，不构成官方答复。具体政策以学校官网和负责部门解释为准。请勿输入学号、身份证、成绩单等个人信息。
 
 ## W1 能做什么
@@ -30,7 +32,7 @@ make parse                # 解析到 data/processed/parsed（已 gitignore）
 make index                # 生成条款 JSONL 与 data/manifest.json
 make index-qdrant         # 额外创建 Qdrant 集合骨架（需本地 Qdrant）
 make check-segmentation   # 生成 20 条人工抽检清单
-make qa                   # ruff + 全量离线测试
+make qa                   # ruff check + format check + 全量离线测试
 ```
 
 `local_path` 建议指向 `data/incoming/` 下的文件；该目录与所有快照、解析结果一样不会进入公开仓库。`url` 仍须填写，作为最终引用链接。
@@ -46,6 +48,7 @@ python -m uv run python scripts/build_index.py
 python -m uv run python scripts/check_segmentation.py
 python -m uv run pytest
 python -m uv run ruff check .
+python -m uv run ruff format --check src tests scripts
 ```
 
 扫描版 PDF 需要可选 OCR 依赖。识别缓存只写入本地 `data/processed/ocr/`，原始 PDF 不改动；解析时按 SHA-256 匹配后自动接入：
@@ -61,7 +64,7 @@ OCR 默认逐页比较 200dpi 与 240dpi 两个渲染结果，以覆盖更多的
 
 `configs/sources.yaml` 是唯一数据入口，字段与填写方式见 [docs/data-sources.md](docs/data-sources.md)。
 
-W1 验收目标：文档版本 ≥ 50 个、制度本体 ≥ 30 个；20 条抽检切分正确率 ≥ 95%。当前语料由项目作者收集，仓库只提交清单、元数据与哈希，不提交完整原文。字段说明、版本规则和抽检流程见该文档。
+W1 验收目标：文档版本 ≥ 50 个、制度本体 ≥ 30 个；20 条 `article` 抽检切分正确率 ≥ 95%。当前语料由项目作者收集，仓库只提交清单、元数据与哈希，不提交完整原文。字段说明、版本规则和抽检流程见该文档。
 
 ## 目录
 
@@ -76,7 +79,7 @@ docs/               数据来源、评测与质量门、周记录
 
 ## 质量门
 
-`make qa`（等价于 `scripts/qa.sh`）执行 ruff 与全量 pytest。所有测试使用 mock HTTP、临时目录和动态生成的 PDF，不访问学校站点，也不需要 Qdrant 服务。当前测试覆盖抓取、解析、切分、脱敏、版本解析、索引确定性、Qdrant 集合骨架与本地 HTML 端到端管线。
+`make qa`（等价于 `scripts/qa.sh`）执行 `ruff check`、`ruff format --check src tests scripts` 与全量 pytest。所有测试使用 mock HTTP、临时目录和动态生成的 PDF，不访问学校站点，也不需要 Qdrant 服务。当前测试覆盖抓取、解析、切分、脱敏、版本解析、索引确定性、Qdrant 集合骨架与本地 HTML 端到端管线。
 
 W1 的验收状态、实测数字和遗留风险记录在 [docs/weekly/w1.md](docs/weekly/w1.md)；W1 工程质量门与 W7 效果评测的边界见 [docs/evaluation.md](docs/evaluation.md)。GitHub Actions 工作流位于 `.github/workflows/ci.yml`；Gitee 仓库可使用本地 `make qa`。
 

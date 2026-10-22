@@ -2,7 +2,7 @@
 
 本文说明如何把华南农业大学的公开制度文件登记进 `configs/sources.yaml`。该文件是**唯一数据入口**，抓取、解析、切分和索引都以它为准。
 
-当前状态：`configs/sources.yaml` 已登记 44 个校级公开制度、52 个版本，`validate_sources.py` 报告 `w1_target=met`。完整快照与解析文本只保存在本地 `data/` 下，不入库；引用始终指向官网原文。
+当前状态：`configs/sources.yaml` 已登记 213 个文档、232 个版本（校级 44/52、信息学院 36/44、农学院 133/136），`validate_sources.py` 报告 `w1_target=met`。完整快照与解析文本只保存在本地 `data/` 下，不入库；引用始终指向官网原文。
 
 ## 合规边界
 
@@ -39,7 +39,7 @@
 | `issuing_department` | 是 | 发文部门，例如 `教务处`；院级文件填学院名称 |
 | `audience` | 否 | 角色标签，可多选：`undergraduate` / `graduate` / `graduate_master` / `graduate_doctor` / `faculty` / `staff` / `unit` / `public` / `postdoc` / `all`。默认 `all` 仅用于未细分对象的公开文件；非学生文件不要用 `all` |
 | `audience_detail` | 否 | 角色之外的年级、阶段、培养类型、群体、学院/专业限制，见下文 |
-| `flow_ids` | 否 | 关联流程 ID，W1 只登记，W5 使用 |
+| `flow_ids` | 否 | 关联流程 ID；W1 只登记，W5 使用。流程事实的逐项引用门禁也在 W5 实现 |
 | `topic_tags` | 否 | 检索辅助标签，不作为回答依据 |
 | `versions` | 是 | 至少一个版本 |
 
@@ -57,7 +57,13 @@
 | `format` | 否 | `auto` / `html` / `pdf`；`auto` 依据扩展名与 Content-Type 判断 |
 | `audience` | 否 | 版本级角色覆盖；不填继承 `documents[]`。只有新版改变适用对象时才填 |
 | `audience_detail` | 否 | 版本级约束覆盖；不填继承文档级。填 `{}` 表示显式取消文档级限制 |
-| `notes` | 否 | 文号、修订说明等自由文本 |
+| `notes` | 否 | 文号、修订说明等自由文本；低置信日期必须在 notes 标注 `date_confidence=low` |
+
+#### 日期置信度
+
+如果只知道文号年份、没有准确发布日期，`published_at` 取该年 12-31 作为保守锚点，并在 `notes` 写 `date_confidence=low`。当前有 15 个版本使用这种锚点，另有 1 个版本（`agri-profile`）使用月份锚点 2025-06-30。
+
+这类日期**不能当精确发布日**使用。W2 起版本/证据元数据需要携带 `date_confidence`（尚未实现，W2 增加该字段）；回答“去年/2020 年版本/当时有效版本”时先提示日期不确定，历史版本比较优先看版本序号和文号，不按锚点日期唯一排序。
 
 ### 适用人群细目（audience_detail）
 
@@ -83,7 +89,7 @@
 
 ### 组织注册表（organization.yaml）
 
-院系和专业使用稳定 ID，不使用中文名称做主键。`configs/organization.yaml` 登记 `college_id`、`major_id`、所属学院、专业代码和别名；`sources.yaml` 只能引用已登记的 ID。当前 W1 只收校级文件，注册表为空；首次收录院级/专业级文件时再填。
+院系和专业使用稳定 ID，不使用中文名称做主键。`configs/organization.yaml` 登记 `college_id`、`major_id`、所属学院、专业代码和别名；`sources.yaml` 只能引用已登记的 ID。当前已登记 `info`（数学与信息学院、软件学院）和 `agri`（农学院）两个学院、11 个本科专业；系不单设主键，写入文档标题与 aliases。
 
 院级文件不是校级文件的新版本：校级《推免办法》和学院《推免实施细则》使用不同 `doc_id`，后者用 `parent_doc_id` 指向校级文件，`relation: implements`。学院 2026 年工作通知再用独立 `doc_id`、`doc_type: notice`、`cycle: 2025-2026`，也不放进 `versions[]`。
 

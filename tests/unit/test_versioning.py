@@ -34,7 +34,12 @@ def make_version(
 
 def test_current_selects_latest_active_in_range() -> None:
     versions = [
-        make_version("v2021", effective_from=date(2021, 9, 1), effective_to=date(2025, 8, 31), status=ArticleStatus.REPEALED),
+        make_version(
+            "v2021",
+            effective_from=date(2021, 9, 1),
+            effective_to=date(2025, 8, 31),
+            status=ArticleStatus.REPEALED,
+        ),
         make_version("v2025", effective_from=date(2025, 9, 1)),
     ]
     resolution = resolve_version(versions, as_of=date(2026, 10, 19))
@@ -65,7 +70,12 @@ def test_current_reports_conflict_for_overlapping_versions() -> None:
 
 def test_historical_uses_as_of_and_adds_warning() -> None:
     versions = [
-        make_version("v2021", effective_from=date(2021, 9, 1), effective_to=date(2025, 8, 31), status=ArticleStatus.REPEALED),
+        make_version(
+            "v2021",
+            effective_from=date(2021, 9, 1),
+            effective_to=date(2025, 8, 31),
+            status=ArticleStatus.REPEALED,
+        ),
         make_version("v2025", effective_from=date(2025, 9, 1)),
     ]
     resolution = resolve_version(
@@ -80,7 +90,12 @@ def test_historical_uses_as_of_and_adds_warning() -> None:
 
 def test_include_repealed_returns_repealed_with_warning() -> None:
     versions = [
-        make_version("v2021", effective_from=date(2021, 9, 1), effective_to=date(2025, 8, 31), status=ArticleStatus.REPEALED),
+        make_version(
+            "v2021",
+            effective_from=date(2021, 9, 1),
+            effective_to=date(2025, 8, 31),
+            status=ArticleStatus.REPEALED,
+        ),
     ]
     resolution = resolve_version(
         versions,

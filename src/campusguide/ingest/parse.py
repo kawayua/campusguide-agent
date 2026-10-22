@@ -94,9 +94,7 @@ BLOCK_TAGS = (
 ARTICLE_HEADING_RE = re.compile(
     r"^(第[一二三四五六七八九十百千零〇两0-9]{1,12}条(?:之[一二三四五六七八九十百千零〇两0-9]{1,3})?)(?=\S)"
 )
-CHAPTER_HEADING_RE = re.compile(
-    r"^(第[一二三四五六七八九十百千零〇两0-9]{1,12}章)(?=\S)"
-)
+CHAPTER_HEADING_RE = re.compile(r"^(第[一二三四五六七八九十百千零〇两0-9]{1,12}章)(?=\S)")
 
 DROP_LINE_RE = re.compile(
     r"^(上一篇|下一篇|返回列表|打印本页|关闭窗口|分享到|扫一扫|版权所有|Copyright|技术支持)"
@@ -251,9 +249,7 @@ def _extract_content(soup: BeautifulSoup) -> tuple[BeautifulSoup, list[str]]:
         # 页面本身只有几十个汉字，且与 .wp_articlecontent 同文，按 50 字
         # 门槛会误回退到带导航的 body。这里优先采用它。
         paging = [
-            element
-            for element in candidates
-            if "paging_content" in (element.get("class") or [])
+            element for element in candidates if "paging_content" in (element.get("class") or [])
         ]
         if paging:
             paging_score, _, paging_best = max(
@@ -292,11 +288,7 @@ def _extract_html_text(content: BeautifulSoup) -> str:
     for br in content.find_all("br"):
         br.replace_with(br_sentinel)
 
-    blocks = [
-        element
-        for element in content.find_all(BLOCK_TAGS)
-        if not element.find(BLOCK_TAGS)
-    ]
+    blocks = [element for element in content.find_all(BLOCK_TAGS) if not element.find(BLOCK_TAGS)]
     if content.name in BLOCK_TAGS and not content.find(BLOCK_TAGS):
         blocks.insert(0, content)
 
@@ -413,9 +405,7 @@ def _page_number_or_repeated(
         cleaned_pages.append(cleaned if cleaned else page)
 
     if repeated:
-        warnings.append(
-            f"PDF 检测到 {len(repeated)} 条重复页眉/页脚文本，已在页边缘清理"
-        )
+        warnings.append(f"PDF 检测到 {len(repeated)} 条重复页眉/页脚文本，已在页边缘清理")
     return cleaned_pages, warnings
 
 
@@ -516,19 +506,14 @@ def apply_ocr_document(
 ) -> ParseOutput:
     """用 OCR 旁路文本替换空文本层的结果，保留原始解析告警。"""
     pages = [
-        [line.strip() for line in page.text.splitlines() if line.strip()]
-        for page in ocr.pages
+        [line.strip() for line in page.text.splitlines() if line.strip()] for page in ocr.pages
     ]
     cleaned_pages, cleanup_warnings = _page_number_or_repeated(pages)
-    text = clean_whitespace(
-        "\n\n".join("\n".join(lines) for lines in cleaned_pages if lines)
-    )
+    text = clean_whitespace("\n\n".join("\n".join(lines) for lines in cleaned_pages if lines))
 
     warnings: list[str] = []
     for warning in parsed.warnings:
-        if warning == "PDF 未提取到文本" or warning.startswith(
-            "PDF 文本 CJK 字符少于 200"
-        ):
+        if warning == "PDF 未提取到文本" or warning.startswith("PDF 文本 CJK 字符少于 200"):
             continue
         if "页几乎没有文本层" in warning:
             warning = warning.replace("需要 OCR", "已用 OCR 旁路补全")
@@ -667,7 +652,9 @@ def parse_corpus(
 
         source_format = str(meta.get("format") or source_path.suffix.lstrip("."))
         output_path = processed_dir / "parsed" / doc_id / f"{version_id}.json"
-        source_sha256 = str(meta.get("sha256") or hashlib.sha256(source_path.read_bytes()).hexdigest())
+        source_sha256 = str(
+            meta.get("sha256") or hashlib.sha256(source_path.read_bytes()).hexdigest()
+        )
         try:
             parsed = parse_file(
                 source_path,

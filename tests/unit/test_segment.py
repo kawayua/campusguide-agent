@@ -142,12 +142,7 @@ def test_loose_rule_supplements_missing_article_in_mixed_document() -> None:
 
 
 def test_wrapped_cjk_lines_are_joined_without_spaces() -> None:
-    text = (
-        "第一章 总则\n"
-        "第一条 学位申请人有下列情形之一\n"
-        "的，不授予学位。\n"
-        "（一）学术不端；\n"
-    )
+    text = "第一章 总则\n第一条 学位申请人有下列情形之一\n的，不授予学位。\n（一）学术不端；\n"
     result = segment_document(make_parsed(text), make_version())
     article = next(item for item in result.indexable_articles if item.article_no == "第一条")
     assert "情形之一的" in article.text
@@ -169,10 +164,7 @@ def test_sections_are_indexed_when_no_article_numbers() -> None:
         "一、培养目标",
         "二、课程设置",
     ]
-    assert all(
-        article.block_type is BlockType.SECTION
-        for article in result.indexable_articles
-    )
+    assert all(article.block_type is BlockType.SECTION for article in result.indexable_articles)
     assert "数据结构" in result.indexable_articles[1].text
 
 
@@ -183,10 +175,7 @@ def test_guide_without_headings_falls_back_to_paragraph_chunks() -> None:
 
     assert result.used_paragraph_rule
     assert len(result.indexable_articles) > 1
-    assert all(
-        article.block_type is BlockType.SECTION
-        for article in result.indexable_articles
-    )
+    assert all(article.block_type is BlockType.SECTION for article in result.indexable_articles)
     assert all(article.article_no.startswith("段落") for article in result.indexable_articles)
 
 
@@ -212,19 +201,10 @@ def test_metadata_rows_with_dates_stay_separate() -> None:
 
 
 def test_duplicate_section_headings_get_unique_ids() -> None:
-    text = (
-        "一、培养目标\n"
-        "第一段目标。\n"
-        "二、课程设置\n"
-        "课程一。\n"
-        "一、培养目标\n"
-        "第二段目标。\n"
-    )
+    text = "一、培养目标\n第一段目标。\n二、课程设置\n课程一。\n一、培养目标\n第二段目标。\n"
     result = segment_document(make_parsed(text), make_version())
     goals = [
-        article
-        for article in result.indexable_articles
-        if article.article_no == "一、培养目标"
+        article for article in result.indexable_articles if article.article_no == "一、培养目标"
     ]
 
     assert len(goals) == 2

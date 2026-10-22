@@ -5,7 +5,7 @@ PYTEST ?= $(UV) run pytest
 RUFF ?= $(UV) run ruff
 
 .PHONY: help init sync fetch parse index index-qdrant validate-sources \
-	check-segmentation test lint format qa demo compose-up clean
+	check-segmentation test lint format format-check qa demo compose-up clean
 
 help:
 	@echo "CampusGuide W1 commands"
@@ -15,11 +15,12 @@ help:
 	@echo "  make index             生成 articles.jsonl、documents.jsonl、manifest.json"
 	@echo "  make index-qdrant      额外初始化 Qdrant 空集合与 payload 索引"
 	@echo "  make validate-sources  校验来源清单的版本/元数据完整性"
-	@echo "  make check-segmentation 抽样 20 条条款，生成人工核对清单"
+	@echo "  make check-segmentation 抽样 20 条 article，生成人工核对清单"
 	@echo "  make test              运行离线测试（unit + contract + integration）"
 	@echo "  make lint              ruff check"
-	@echo "  make format            ruff format"
-	@echo "  make qa                lint + test（本地与 CI 共用）"
+	@echo "  make format            ruff format（写入）"
+	@echo "  make format-check      ruff format --check src tests scripts"
+	@echo "  make qa                lint + format-check + test（本地与 CI 共用）"
 
 init: sync
 
@@ -51,9 +52,12 @@ lint:
 	$(RUFF) check .
 
 format:
-	$(RUFF) format .
+	$(RUFF) format src tests scripts
 
-qa: lint test
+format-check:
+	$(RUFF) format --check src tests scripts
+
+qa: lint format-check test
 
 demo:
 	$(PYTHON) -m campusguide.ui.app

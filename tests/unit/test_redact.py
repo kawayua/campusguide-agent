@@ -36,10 +36,7 @@ def test_redacts_personal_email_and_contact_name() -> None:
 
 
 def test_does_not_redact_role_phrases_without_a_colon_field() -> None:
-    text = (
-        "项目负责人具有较强的组织能力，主要负责人履行第一责任人职责，"
-        "项目负责人提出延期申请。"
-    )
+    text = "项目负责人具有较强的组织能力，主要负责人履行第一责任人职责，项目负责人提出延期申请。"
     result = redact_text(text)
     assert result.text == text
     assert not result.counts

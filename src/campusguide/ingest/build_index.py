@@ -90,9 +90,7 @@ def _atomic_write_json(path: Path, payload: dict[str, Any]) -> None:
 
 
 def _write_jsonl(path: Path, rows: list[dict[str, Any]]) -> None:
-    text = "".join(
-        json.dumps(row, ensure_ascii=False, sort_keys=True) + "\n" for row in rows
-    )
+    text = "".join(json.dumps(row, ensure_ascii=False, sort_keys=True) + "\n" for row in rows)
     _atomic_write_text(path, text)
 
 
@@ -125,9 +123,7 @@ def _make_document_version(
 
     effective_audience = version.audience or doc.audience
     effective_detail = (
-        version.audience_detail
-        if version.audience_detail is not None
-        else doc.audience_detail
+        version.audience_detail if version.audience_detail is not None else doc.audience_detail
     )
 
     return DocumentVersion(
@@ -337,7 +333,9 @@ def build_index(
         preview = ", ".join(f"{article_id}#part{part_no}" for article_id, part_no in duplicates[:5])
         raise BuildError(f"存在重复条款键（article_id + part_no）：{preview}")
 
-    multi_part = sum(1 for count in Counter(article.article_id for article in articles).values() if count > 1)
+    multi_part = sum(
+        1 for count in Counter(article.article_id for article in articles).values() if count > 1
+    )
     empty_text = sum(1 for article in articles if not article.text.strip())
     manifest: dict[str, Any] = {
         "schema_version": INDEX_SCHEMA_VERSION,

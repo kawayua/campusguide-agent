@@ -234,9 +234,7 @@ class OrganizationConfig(BaseModel):
         known_colleges = set(college_ids)
         for major in self.majors:
             if major.college_id not in known_colleges:
-                raise ValueError(
-                    f"{major.major_id} 引用了未登记的学院：{major.college_id}"
-                )
+                raise ValueError(f"{major.major_id} 引用了未登记的学院：{major.college_id}")
         return self
 
 
@@ -340,13 +338,8 @@ def validate_organization_refs(
     errors: list[str] = []
 
     for document in config.documents:
-        if (
-            document.issuer_college_id is not None
-            and document.issuer_college_id not in college_ids
-        ):
-            errors.append(
-                f"{document.doc_id} 的发文学院未登记：{document.issuer_college_id}"
-            )
+        if document.issuer_college_id is not None and document.issuer_college_id not in college_ids:
+            errors.append(f"{document.doc_id} 的发文学院未登记：{document.issuer_college_id}")
 
         errors.extend(
             _detail_errors(
@@ -379,8 +372,7 @@ def validate_organization_refs(
                 and parent.issuer_level is not IssuerLevel.UNIVERSITY
             ):
                 errors.append(
-                    f"{document.doc_id} 是校级文件，不能以院/系级文件 "
-                    f"{parent.doc_id} 为上位文件"
+                    f"{document.doc_id} 是校级文件，不能以院/系级文件 {parent.doc_id} 为上位文件"
                 )
 
             seen = {document.doc_id}

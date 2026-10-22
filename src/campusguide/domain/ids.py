@@ -21,7 +21,9 @@ _DIGITS = {
 }
 _UNITS = {"十": 10, "百": 100, "千": 1000}
 
-ARTICLE_NO_RE = re.compile(r"^第(?P<number>[一二三四五六七八九十百千零〇两0-9]+)条(?:之(?P<sub>[一二三四五六七八九十0-9]+))?$")
+ARTICLE_NO_RE = re.compile(
+    r"^第(?P<number>[一二三四五六七八九十百千零〇两0-9]+)条(?:之(?P<sub>[一二三四五六七八九十0-9]+))?$"
+)
 
 
 def chinese_to_int(value: str) -> int | None:

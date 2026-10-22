@@ -83,7 +83,9 @@ def test_duplicate_doc_id_rejected(tmp_path: Path) -> None:
         load_sources(path)
 
 
-def test_retrieval_config_uses_embedding_default(repo_root: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+def test_retrieval_config_uses_embedding_default(
+    repo_root: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
     monkeypatch.delenv("EMBEDDING_MODEL", raising=False)
     config = load_retrieval_config(repo_root / "configs" / "retrieval.yaml")
     assert config.collection == "articles_v1"

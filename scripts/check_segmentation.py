@@ -1,4 +1,9 @@
-"""从 articles.jsonl 抽样条款，生成人工核对清单（规格书 6.4 的 20 条抽检）。"""
+"""从 articles.jsonl 抽样条款，生成人工核对清单（规格书 6.4 的 20 条抽检）。
+
+默认只抽 ``block_type=article``，即“第 X 条”条款；培养方案、教师名录、
+近期栏目等 ``section`` 块不计入条款切分正确率，可单独用
+``--block-type section`` 抽查。
+"""
 
 from __future__ import annotations
 
@@ -38,7 +43,14 @@ def _cell(value: str) -> str:
     return value.replace("|", "\\|")
 
 
-def render_report(articles: list[dict[str, Any]], *, sample_size: int, seed: int) -> str:
+def render_report(
+    articles: list[dict[str, Any]],
+    *,
+    sample_size: int,
+    seed: int,
+    block_type: str = "article",
+    total_articles: int | None = None,
+) -> str:
     ordered = sorted(articles, key=lambda item: str(item.get("article_id", "")))
     if len(ordered) > sample_size:
         sampled = random.Random(seed).sample(ordered, sample_size)
@@ -50,20 +62,28 @@ def render_report(articles: list[dict[str, Any]], *, sample_size: int, seed: int
         "# 条款切分人工抽检",
         "",
         f"- 生成时间：{datetime.now(UTC).isoformat(timespec='seconds')}",
-        f"- 条款总数：{len(articles)}",
-        f"- 抽样数量：{len(sampled)}（seed={seed}）",
-        "- 判定项：边界、编号、章节路径、正文完整性；四项全部通过才算正确。",
-        "- 目标：正确率 ≥95%；发现错误时记录类型并回到切分规则修正。",
-        "",
-        "| # | article_id | 文档 | 章节 | 条款 | 正文预览 | 边界 | 编号 | 章节 | 完整 |",
-        "|---|---|---|---|---|---|---|---|---|---|",
+        f"- 块类型：{block_type}",
+        f"- 抽样池：{len(articles)}",
     ]
+    if total_articles is not None:
+        lines.append(f"- 全库块数：{total_articles}")
+    lines.extend(
+        [
+            f"- 抽样数量：{len(sampled)}（seed={seed}）",
+            "- 判定项：边界、编号、章节路径、正文完整性；四项全部通过才算正确。",
+            "- 目标：正确率 ≥95%；发现错误时记录类型并回到切分规则修正。",
+            "",
+            "| # | block_type | article_id | 文档 | 章节 | 条款 | 正文预览 | 边界 | 编号 | 章节 | 完整 |",
+            "|---|---|---|---|---|---|---|---|---|---|---|",
+        ]
+    )
     for index, article in enumerate(sampled, start=1):
         chapter = " > ".join(article.get("chapter_path") or []) or "-"
         lines.append(
-            "| {index} | {article_id} | {doc} | {chapter} | {no} | {preview} | "
+            "| {index} | {block_type} | {article_id} | {doc} | {chapter} | {no} | {preview} | "
             "[ ] | [ ] | [ ] | [ ] |".format(
                 index=index,
+                block_type=_cell(str(article.get("block_type", ""))),
                 article_id=_cell(str(article.get("article_id", ""))),
                 doc=_cell(str(article.get("doc_title", ""))),
                 chapter=_cell(chapter),
@@ -96,7 +116,13 @@ def main() -> int:
         default=str(ROOT / "data" / "review" / "segmentation-sample.md"),
     )
     parser.add_argument("--sample-size", type=int, default=20)
-    parser.add_argument("--seed", type=int, default=20261019)
+    parser.add_argument("--seed", type=int, default=20261022)
+    parser.add_argument(
+        "--block-type",
+        choices=("article", "section", "all"),
+        default="article",
+        help="抽样块类型；条款切分正确率只统计 article",
+    )
     args = parser.parse_args()
 
     articles_path = Path(args.articles)
@@ -108,16 +134,32 @@ def main() -> int:
         return 2
 
     try:
-        articles = _load_articles(articles_path)
+        all_articles = _load_articles(articles_path)
     except ValueError as exc:
         print(f"error: {exc}", file=sys.stderr)
         return 1
 
-    report = render_report(articles, sample_size=args.sample_size, seed=args.seed)
+    articles = all_articles
+    if args.block_type != "all":
+        articles = [item for item in all_articles if item.get("block_type") == args.block_type]
+    if not articles:
+        print(f"error: 没有 block_type={args.block_type} 的可抽样块", file=sys.stderr)
+        return 2
+
+    report = render_report(
+        articles,
+        sample_size=args.sample_size,
+        seed=args.seed,
+        block_type=args.block_type,
+        total_articles=len(all_articles),
+    )
     output_path = Path(args.output)
     output_path.parent.mkdir(parents=True, exist_ok=True)
     output_path.write_text(report, encoding="utf-8")
-    print(f"sampled {min(args.sample_size, len(articles))}/{len(articles)} articles")
+    print(
+        f"sampled {min(args.sample_size, len(articles))}/{len(articles)} "
+        f"{args.block_type} blocks (all={len(all_articles)})"
+    )
     print(f"report: {output_path}")
     return 0
 

@@ -149,7 +149,9 @@ def _split_text(text: str, max_chars: int) -> list[str]:
             if len(unit) <= max_chars:
                 chunks.append(unit)
             else:
-                chunks.extend(unit[index : index + max_chars] for index in range(0, len(unit), max_chars))
+                chunks.extend(
+                    unit[index : index + max_chars] for index in range(0, len(unit), max_chars)
+                )
             continue
         candidate = f"{current}\n{unit}" if current else unit
         if len(candidate) <= max_chars:
@@ -161,9 +163,7 @@ def _split_text(text: str, max_chars: int) -> list[str]:
     return chunks or [text]
 
 
-_WRAPPED_LINE_RE = re.compile(
-    r"(?<=[\u4e00-\u9fff，、；：,;:0-9])\n(?=[\u4e00-\u9fff])"
-)
+_WRAPPED_LINE_RE = re.compile(r"(?<=[\u4e00-\u9fff，、；：,;:0-9])\n(?=[\u4e00-\u9fff])")
 
 
 def _clean_article_body(text: str) -> str:
@@ -351,22 +351,19 @@ def _add_sections(
     for order, match in enumerate(sections, start=1):
         heading = clean_whitespace(f"{match.group('no')}、{match.group('title')}")
         body_start = match.end()
-        body_end = (
-            sections[order].start() if order < len(sections) else len(text)
-        )
+        body_end = sections[order].start() if order < len(sections) else len(text)
         raw_body_end = body_end
 
         # 章/部分标题后、下一节标题前的内容（如“第二章 培养方案”的学制、
         # 学分表）不属于上一节；单独建块，避免把表格挂到“学位论文要求”下。
         preamble = None
         for candidate in [*parts, *majors]:
-            if (
-                body_start <= candidate.start() < body_end
-                and (preamble is None or candidate.start() > preamble.start())
+            if body_start <= candidate.start() < body_end and (
+                preamble is None or candidate.start() > preamble.start()
             ):
                 preamble = candidate
         if preamble is not None:
-            if len(normalize_text(text[preamble.end():raw_body_end])) < PREFACE_MIN_CHARS:
+            if len(normalize_text(text[preamble.end() : raw_body_end])) < PREFACE_MIN_CHARS:
                 preamble = None
             else:
                 body_end = preamble.start()
@@ -395,9 +392,7 @@ def _add_sections(
 
         if preamble is not None:
             preamble_heading = clean_whitespace(preamble.group("title"))
-            duplicate_counts[preamble_heading] = (
-                duplicate_counts.get(preamble_heading, 0) + 1
-            )
+            duplicate_counts[preamble_heading] = duplicate_counts.get(preamble_heading, 0) + 1
             preamble_duplicate = duplicate_counts[preamble_heading]
             if preamble_duplicate > 1:
                 result.warnings.append(
@@ -411,7 +406,7 @@ def _add_sections(
                 article_no=preamble_heading,
                 article_index=block_order,
                 chapter_path=_major_context_at(preamble.start(), majors),
-                text=text[preamble.end():raw_body_end],
+                text=text[preamble.end() : raw_body_end],
                 block_type=BlockType.SECTION,
                 duplicate=preamble_duplicate,
                 topic_tags=topic_tags,

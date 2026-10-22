@@ -94,11 +94,7 @@ def main() -> int:
         if has_detail:
             documents_with_audience_detail += 1
 
-    errors = (
-        validate_organization_refs(config, organization)
-        if organization is not None
-        else []
-    )
+    errors = validate_organization_refs(config, organization) if organization is not None else []
 
     report = {
         "document_count": len(config.documents),

@@ -72,7 +72,9 @@ def test_fetch_url_writes_snapshot_and_meta(tmp_path: Path) -> None:
     assert result.status == "fetched"
     assert result.source_path is not None and result.source_path.exists()
     assert result.sha256 == hashlib.sha256(HTML_BYTES).hexdigest()
-    meta = json.loads((tmp_path / "raw" / "status-rules" / "v2025" / "meta.json").read_text("utf-8"))
+    meta = json.loads(
+        (tmp_path / "raw" / "status-rules" / "v2025" / "meta.json").read_text("utf-8")
+    )
     assert meta["http_status"] == 200
     assert meta["format"] == "html"
     assert meta["source_file"] == "source.html"
