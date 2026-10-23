@@ -262,6 +262,7 @@ def render_markdown(report: dict[str, Any]) -> str:
         f"- 生成时间：{report.get('generated_at', '')}",
         f"- commit：`{report.get('git_commit', 'n/a')}`",
         f"- 模型：{report.get('advisor_model', 'n/a')}",
+        f"- 运行模式：{'warm' if report.get('warm', True) else 'cold'}",
         (
             f"- 支持标注：{report.get('support_labels', {}).get('count', 0)} 条，"
             f"标注人 {', '.join(report.get('support_labels', {}).get('annotators', []) or ['n/a'])}"
@@ -376,4 +377,5 @@ def default_metadata(
         "advisor_model": advisor_model,
         "vector_manifest_sha256": vector_manifest_sha256,
         "config_hash": config_hash,
+        "warm": True,  # runner 在评测前调用 service.warmup()
     }

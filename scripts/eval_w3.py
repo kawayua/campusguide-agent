@@ -283,6 +283,7 @@ def main() -> int:
                 "advisor_model",
                 "vector_manifest_sha256",
                 "config_hash",
+                "warm",
             )
         },
     )
