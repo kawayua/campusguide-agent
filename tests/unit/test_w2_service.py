@@ -157,15 +157,17 @@ def test_service_generation_failed_after_two_bad_outputs(tmp_path: Path) -> None
     assert result.answer_markdown == ""
 
 
-def test_service_no_valid_claim_when_quote_fabricated(tmp_path: Path) -> None:
+def test_service_unverifiable_when_quote_fabricated(tmp_path: Path) -> None:
+    # W3 判定树：有 claim 但全部未通过核对 -> UNVERIFIABLE（零 claims 才是 NO_VALID_CLAIM）
     service, _ = _service(
         retrieval=RetrievalResult(evidence=_evidence(), queries=["奖学金"]),
         responses=[_claims_json(quote="原文中没有这句话")],
         trace_dir=tmp_path,
     )
     result = service.ask("国家奖学金申请条件是什么？")
-    assert result.outcome is OutcomeCode.NO_VALID_CLAIM
-    assert result.dropped_citations[0]["reason"] == "QUOTE_NOT_LOCATABLE"
+    assert result.outcome is OutcomeCode.UNVERIFIABLE
+    assert result.answer_markdown == ""
+    assert result.dropped_citations[0]["reason"] == "QUOTE_MISMATCH"
 
 
 def test_service_guard_short_circuits_before_retrieval(tmp_path: Path) -> None:

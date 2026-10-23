@@ -30,7 +30,8 @@ def test_valid_quote_is_located_and_fields_filled() -> None:
     assert citation.part_no == article.part_no
     assert citation.block_type is BlockType.ARTICLE
     assert citation.date_confidence == "low"
-    assert citation.quote_start >= 0
+    assert citation.quote_match == "exact"
+    assert citation.quote_start == article.text.find(citation.quote)
     assert citation.quote_end > citation.quote_start
     assert result.dropped == []
     assert result.dropped_citations == []
@@ -42,6 +43,18 @@ def test_quote_can_span_whitespace_differences() -> None:
         [_draft("（一）成绩优异；（二）品行端正")], [make_evidence(article)]
     )
     assert len(result.claims) == 1
+
+
+def test_quote_span_maps_back_to_original_text() -> None:
+    article = make_article(text="申请条件：\n（一）成绩优异；\n（二）品行端正。")
+    result = ClaimValidator().validate(
+        [_draft("（一）成绩优异；（二）品行端正")], [make_evidence(article)]
+    )
+    citation = result.claims[0].citations[0]
+    assert citation.quote_match == "normalized"
+    assert article.text[citation.quote_start : citation.quote_end] == (
+        "（一）成绩优异；\n（二）品行端正"
+    )
 
 
 def test_citation_not_in_evidence_is_dropped() -> None:
@@ -66,7 +79,7 @@ def test_quote_not_locatable_and_ellipsis_are_rejected() -> None:
     )
     assert result.claims == []
     reasons = {item["reason"] for item in result.dropped_citations}
-    assert "QUOTE_NOT_LOCATABLE" in reasons
+    assert "QUOTE_MISMATCH" in reasons
     assert "QUOTE_ELLIPSIS" in reasons
 
 

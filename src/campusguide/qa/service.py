@@ -10,12 +10,17 @@ import time
 import uuid
 from dataclasses import dataclass, field
 from datetime import UTC, date, datetime
-from typing import Any
+from typing import Any, ClassVar
 
 from campusguide.agents.advisor import Advisor, AdvisorError, AdvisorResult
 from campusguide.agents.providers import ChatProviderError
 from campusguide.config import RetrievalConfig
-from campusguide.domain.enums import Audience, BlockType, OutcomeCode
+from campusguide.domain.enums import (
+    Audience,
+    BlockType,
+    OutcomeCode,
+    VerificationDecision,
+)
 from campusguide.domain.models import Citation, Claim, Evidence, PolicyFilters
 from campusguide.observability.redact import redact_sensitive
 from campusguide.observability.trace import TraceWriter
@@ -24,6 +29,8 @@ from campusguide.qa.guard import MAX_QUERY_CHARS, check_guard
 from campusguide.retrieval.normalize import normalize_query
 from campusguide.retrieval.service import DenseRetriever, RetrievalError
 from campusguide.verification.claims import ClaimValidator
+from campusguide.verification.issues import VerificationIssue, VerificationResult
+from campusguide.verification.verifier import DeterministicVerifier
 
 _MESSAGES = {
     OutcomeCode.NO_EVIDENCE: (
@@ -37,6 +44,19 @@ _MESSAGES = {
     ),
     OutcomeCode.INDEX_UNAVAILABLE: (
         "向量索引不可用（Qdrant 未启动或索引未构建）。请先启动 Qdrant 并运行 build_vectors.py。"
+    ),
+    OutcomeCode.ONLY_REPEALED: (
+        "该问题只命中已废止的文件版本，现行依据暂缺。请关注学校官网的文件更新，"
+        "或直接咨询相关职能部门。"
+    ),
+    OutcomeCode.VERSION_CONFLICT: (
+        "同一文件检索到多个现行版本且内容可能冲突，暂不作答。请稍后重试或查看学校官网原文。"
+    ),
+    OutcomeCode.VERSION_MISMATCH: (
+        "检索到的条款不在现行有效期内，暂不作答。请确认事项的时间范围后重试。"
+    ),
+    OutcomeCode.UNVERIFIABLE: (
+        "模型给出的结论均未通过引用核对，因此不作答。请换一种问法，或直接查看学校官网原文。"
     ),
 }
 
@@ -79,14 +99,20 @@ class QAResult:
     queries: list[str] = field(default_factory=list)
     dropped_claims: list[dict[str, str]] = field(default_factory=list)
     dropped_citations: list[dict[str, str]] = field(default_factory=list)
+    partial: bool = False
+    issues: list[VerificationIssue] = field(default_factory=list)
+    verification: VerificationResult | None = None
+    draft_claims: list[dict[str, Any]] = field(default_factory=list)
     message: str = ""
     duration_ms: int = 0
+    probe_ms: int = 0
     llm_model: str = ""
     retrieval_scores: list[dict[str, Any]] = field(default_factory=list)
 
     @property
     def answered(self) -> bool:
-        return self.outcome is OutcomeCode.ANSWERED
+        # PARTIAL_ANSWER 仍算“有答案”，但不计入“完整回答”指标
+        return self.outcome in {OutcomeCode.ANSWERED, OutcomeCode.PARTIAL_ANSWER}
 
 
 class QAService:
@@ -97,13 +123,14 @@ class QAService:
         advisor: Advisor,
         settings: QASettings | None = None,
         validator: ClaimValidator | None = None,
+        verifier: DeterministicVerifier | None = None,
         trace_writer: TraceWriter | None = None,
         today: date | None = None,
     ) -> None:
         self._retriever = retriever
         self._advisor = advisor
         self._settings = settings or QASettings()
-        self._validator = validator or ClaimValidator()
+        self._verifier = verifier or DeterministicVerifier(validator=validator)
         self._trace_writer = trace_writer
         self._today = today
 
@@ -183,6 +210,18 @@ class QAService:
         ]
         trace_extra["candidates"] = retrieval.candidates
         if not evidence:
+            probe_hit = False
+            probe_latency_ms = 0
+            probe = getattr(self._retriever, "probe_repealed", None)
+            if probe is not None:
+                probe_started = time.perf_counter()
+                try:
+                    probe_hit = bool(probe(question, filters=filters))
+                except Exception:  # 探针失败按无命中处理
+                    probe_hit = False
+                probe_latency_ms = int((time.perf_counter() - probe_started) * 1000)
+            trace_extra["repealed_probe"] = {"hit": probe_hit, "latency_ms": probe_latency_ms}
+            outcome = OutcomeCode.ONLY_REPEALED if probe_hit else OutcomeCode.NO_EVIDENCE
             return self._finish(
                 trace_id=trace_id,
                 session_id=session_id,
@@ -192,14 +231,43 @@ class QAService:
                 trace_extra=trace_extra,
                 result=QAResult(
                     trace_id=trace_id,
-                    outcome=OutcomeCode.NO_EVIDENCE,
+                    outcome=outcome,
                     queries=retrieval.queries,
-                    message=_MESSAGES[OutcomeCode.NO_EVIDENCE],
+                    message=_MESSAGES[outcome],
+                    probe_ms=probe_latency_ms,
+                    retrieval_scores=trace_extra["retrieval"],
+                ),
+            )
+
+        as_of = filters.as_of
+        scope = self._verifier.check_scope(evidence, audience, as_of)
+        if scope.abstain:
+            trace_extra["verification"] = {
+                "decision": VerificationDecision.ABSTAIN.value,
+                "issues": [issue.model_dump(mode="json") for issue in scope.issues],
+                "dropped_claim_ids": [],
+                "partial": False,
+            }
+            return self._finish(
+                trace_id=trace_id,
+                session_id=session_id,
+                started=started,
+                started_at=started_at,
+                question=question,
+                trace_extra=trace_extra,
+                result=QAResult(
+                    trace_id=trace_id,
+                    outcome=scope.abstain_reason or OutcomeCode.UNVERIFIABLE,
+                    queries=retrieval.queries,
+                    evidence=evidence,
+                    issues=scope.issues,
+                    message=_MESSAGES[scope.abstain_reason or OutcomeCode.UNVERIFIABLE],
+                    retrieval_scores=trace_extra["retrieval"],
                 ),
             )
 
         try:
-            advisor_result = self._advisor.generate(question, evidence, audience)
+            advisor_result = self._advisor.generate(question, scope.evidence, audience)
         except (ChatProviderError, AdvisorError) as exc:
             trace_extra["error"] = str(exc)[:300]
             return self._finish(
@@ -213,19 +281,38 @@ class QAService:
                     trace_id=trace_id,
                     outcome=OutcomeCode.GENERATION_FAILED,
                     queries=retrieval.queries,
-                    evidence=evidence,
+                    evidence=scope.evidence,
                     message=_MESSAGES[OutcomeCode.GENERATION_FAILED],
                 ),
             )
 
         trace_extra["llm"] = self._llm_trace(advisor_result)
-        validation = self._validator.validate(advisor_result.drafts, evidence)
+        verification = self._verifier.verify(advisor_result.drafts, scope.evidence, audience, as_of)
+        merged_issues = [*scope.issues, *verification.issues]
         trace_extra["claims_total"] = len(advisor_result.drafts)
-        trace_extra["claims_kept"] = len(validation.claims)
-        trace_extra["dropped_claims"] = validation.dropped
-        trace_extra["dropped_citations"] = validation.dropped_citations
+        trace_extra["claims_kept"] = len(verification.claims)
+        trace_extra["verification"] = {
+            "decision": verification.decision.value,
+            "issues": [issue.model_dump(mode="json") for issue in verification.issues],
+            "dropped_claim_ids": verification.dropped_claim_ids,
+            "partial": verification.partial,
+        }
+        dropped_claims = self._claim_drops(merged_issues)
+        dropped_citations = self._citation_drops(merged_issues)
+        draft_claims = [
+            {
+                "claim_id": draft.claim_id or "",
+                "text": draft.text,
+                "citations": [
+                    {"article_id": citation.article_id, "quote": citation.quote}
+                    for citation in draft.citations
+                ],
+            }
+            for draft in advisor_result.drafts
+        ]
 
-        if not validation.claims:
+        if verification.decision is VerificationDecision.ABSTAIN:
+            outcome = verification.reason_code or OutcomeCode.UNVERIFIABLE
             return self._finish(
                 trace_id=trace_id,
                 session_id=session_id,
@@ -235,17 +322,22 @@ class QAService:
                 trace_extra=trace_extra,
                 result=QAResult(
                     trace_id=trace_id,
-                    outcome=OutcomeCode.NO_VALID_CLAIM,
+                    outcome=outcome,
                     queries=retrieval.queries,
-                    evidence=evidence,
-                    dropped_claims=validation.dropped,
-                    dropped_citations=validation.dropped_citations,
-                    message=_MESSAGES[OutcomeCode.NO_VALID_CLAIM],
+                    evidence=scope.evidence,
+                    dropped_claims=dropped_claims,
+                    dropped_citations=dropped_citations,
+                    issues=merged_issues,
+                    verification=verification,
+                    draft_claims=draft_claims,
+                    message=_MESSAGES.get(outcome, ""),
                     retrieval_scores=trace_extra["retrieval"],
                 ),
             )
 
-        finished: FinalizeResult = finalize(validation.claims)
+        partial = verification.decision is VerificationDecision.PARTIAL
+        finished: FinalizeResult = finalize(verification.claims, partial=partial)
+        outcome = OutcomeCode.PARTIAL_ANSWER if partial else OutcomeCode.ANSWERED
         return self._finish(
             trace_id=trace_id,
             session_id=session_id,
@@ -255,18 +347,57 @@ class QAService:
             trace_extra=trace_extra,
             result=QAResult(
                 trace_id=trace_id,
-                outcome=OutcomeCode.ANSWERED,
+                outcome=outcome,
                 answer_markdown=finished.answer_markdown,
-                claims=validation.claims,
+                claims=verification.claims,
                 citations=finished.citations,
-                evidence=evidence,
+                evidence=scope.evidence,
                 queries=retrieval.queries,
-                dropped_claims=validation.dropped,
-                dropped_citations=validation.dropped_citations,
+                dropped_claims=dropped_claims,
+                dropped_citations=dropped_citations,
+                partial=partial,
+                issues=merged_issues,
+                verification=verification,
+                draft_claims=draft_claims,
                 llm_model=advisor_result.responses[-1].model if advisor_result.responses else "",
                 retrieval_scores=trace_extra["retrieval"],
             ),
         )
+
+    _CITATION_DROP_CODES: ClassVar[set[str]] = {
+        "QUOTE_TOO_SHORT",
+        "QUOTE_ELLIPSIS",
+        "QUOTE_MISMATCH",
+        "CITATION_NOT_IN_EVIDENCE",
+    }
+    _CLAIM_DROP_CODES: ClassVar[set[str]] = {
+        "MISSING_CITATION",
+        "EMPTY_CLAIM_TEXT",
+        "DUPLICATE_CLAIM_ID",
+        "TOO_MANY_CLAIMS",
+        "NUMBER_NOT_SUPPORTED",
+        "PRIVACY_VIOLATION",
+    }
+
+    @staticmethod
+    def _claim_drops(issues: list[VerificationIssue]) -> list[dict[str, str]]:
+        return [
+            {"claim_id": issue.claim_id or "", "reason": issue.code, "detail": issue.detail}
+            for issue in issues
+            if issue.code in QAService._CLAIM_DROP_CODES
+        ]
+
+    @staticmethod
+    def _citation_drops(issues: list[VerificationIssue]) -> list[dict[str, str]]:
+        return [
+            {
+                "claim_id": issue.claim_id or "",
+                "article_id": issue.article_id or "",
+                "reason": issue.code,
+            }
+            for issue in issues
+            if issue.code in QAService._CITATION_DROP_CODES
+        ]
 
     def _llm_trace(self, result: AdvisorResult) -> dict[str, Any]:
         return {

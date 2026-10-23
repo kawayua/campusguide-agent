@@ -107,6 +107,7 @@ class ClaimKind(StrEnum):
 
 class VerificationDecision(StrEnum):
     PASS = "pass"
+    PARTIAL = "partial"
     REVISE = "revise"
     ABSTAIN = "abstain"
     CLARIFY = "clarify"
@@ -122,6 +123,12 @@ class OutcomeCode(StrEnum):
     GENERATION_FAILED = "GENERATION_FAILED"
     NO_VALID_CLAIM = "NO_VALID_CLAIM"
     INDEX_UNAVAILABLE = "INDEX_UNAVAILABLE"
+    # W3：拒答判定树 v0
+    PARTIAL_ANSWER = "PARTIAL_ANSWER"
+    ONLY_REPEALED = "ONLY_REPEALED"
+    VERSION_CONFLICT = "VERSION_CONFLICT"
+    VERSION_MISMATCH = "VERSION_MISMATCH"
+    UNVERIFIABLE = "UNVERIFIABLE"
 
 
 class DocType(StrEnum):

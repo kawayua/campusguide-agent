@@ -71,6 +71,7 @@ def _debug_panel(result: QAResult) -> str:
     ]
     payload = {
         "outcome": result.outcome.value,
+        "partial": result.partial,
         "trace_id": result.trace_id,
         "duration_ms": result.duration_ms,
         "queries": result.queries,
@@ -78,6 +79,7 @@ def _debug_panel(result: QAResult) -> str:
         "retrieval": retrieval,
         "dropped_claims": result.dropped_claims,
         "dropped_citations": result.dropped_citations,
+        "issues": [issue.model_dump(mode="json") for issue in result.issues],
         "reason": result.message,
     }
     return "```json\n" + json.dumps(payload, ensure_ascii=False, indent=2) + "\n```"
@@ -152,7 +154,8 @@ def build_demo() -> gr.Blocks:
         )
         gr.Markdown(
             "> 演示系统不构成官方答复，具体以学校官网为准。"
-            "W2 不报告答案正确率；引用 ID 与 quote 可定位是本周硬门禁。"
+            "W3 在 W2 引用门禁之上增加数字/日期覆盖、版本/受众检查与拒答判定；"
+            "PARTIAL_ANSWER 表示部分结论因未通过核对被省略。"
         )
     return demo
 
