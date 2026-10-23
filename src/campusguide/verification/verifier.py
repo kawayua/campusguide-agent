@@ -44,6 +44,16 @@ class ScopeResult:
         return self.abstain_reason is not None
 
 
+_EVIDENCE_ISSUE_CODES = {"VERSION_MISMATCH", "AUDIENCE_MISMATCH"}
+
+
+def _downgrade_evidence_issues(issues: list[VerificationIssue]) -> None:
+    """有可用证据时，单条 evidence 被剔除记 warning，避免 blocking 与 PASS 并存。"""
+    for index, issue in enumerate(issues):
+        if issue.code in _EVIDENCE_ISSUE_CODES and issue.severity is IssueSeverity.BLOCKING:
+            issues[index] = issue.model_copy(update={"severity": IssueSeverity.WARNING})
+
+
 class DeterministicVerifier:
     def __init__(
         self,
@@ -148,6 +158,7 @@ class DeterministicVerifier:
                     detail="未指定受众，引用卡片展示原文 audience",
                 )
             )
+            _downgrade_evidence_issues(issues)
             return ScopeResult(evidence=in_window, issues=issues)
 
         kept: list[Evidence] = []
@@ -167,6 +178,7 @@ class DeterministicVerifier:
             )
         if not kept:
             return ScopeResult(evidence=[], issues=issues, abstain_reason=OutcomeCode.UNVERIFIABLE)
+        _downgrade_evidence_issues(issues)
         return ScopeResult(evidence=kept, issues=issues)
 
     # ---------- H4/H10 + issue 汇总 ----------
@@ -203,13 +215,15 @@ class DeterministicVerifier:
         for record in validation.dropped_citations:
             claim_id = record.get("claim_id")
             code = _DROP_ISSUE_CODES.get(record.get("reason", ""), record.get("reason", "UNKNOWN"))
+            # 单条 citation 被丢弃但 claim 仍有有效 citation：记 warning，claim 可渲染；
+            # 若 claim 无任何有效 citation，MISSING_CITATION 会以 blocking 丢弃整条 claim。
             issues.append(
                 VerificationIssue(
                     code=code,
-                    severity=IssueSeverity.BLOCKING,
+                    severity=IssueSeverity.WARNING,
                     claim_id=claim_id,
                     article_id=record.get("article_id"),
-                    detail="citation 被丢弃",
+                    detail="citation 被丢弃，claim 仍以其余有效 citation 渲染",
                 )
             )
 

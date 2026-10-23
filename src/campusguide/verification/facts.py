@@ -51,30 +51,28 @@ def chinese_to_int(text: str) -> int | None:
     if (
         all(ch in _CN_DIGITS for ch in text)
         and len(text) > 1
-        and not any(ch in "十百千" for ch in text)
+        and not any(ch in "十百千万" for ch in text)
     ):
         # 年份式连写：二〇二五 -> 2025
         return int("".join(str(_CN_DIGITS[ch]) for ch in text))
     total = 0
-    current = 0
+    section = 0
+    number = 0
     for ch in text:
         if ch in _CN_DIGITS:
-            current = _CN_DIGITS[ch]
-        elif ch == "十":
-            total += (current or 1) * 10
-            current = 0
-        elif ch == "百":
-            total += (current or 1) * 100
-            current = 0
-        elif ch == "千":
-            total += (current or 1) * 1000
-            current = 0
+            number = _CN_DIGITS[ch]
+        elif ch in {"十", "百", "千"}:
+            unit = {"十": 10, "百": 100, "千": 1000}[ch]
+            section += (number or 1) * unit
+            number = 0
         elif ch == "万":
-            total += (current or 1) * 10000
-            current = 0
+            section += number
+            total += (section or 1) * 10000
+            section = 0
+            number = 0
         else:
             return None
-    return total + current
+    return total + section + number
 
 
 def int_to_chinese(value: int) -> str | None:
@@ -105,6 +103,12 @@ def int_to_chinese(value: int) -> str | None:
 # 抽取顺序即优先级：日期 -> 百分比 -> 区间 -> 金额 -> 年份 -> 期限；
 # 后续 pattern 跳过与更早命中重叠的 span。
 _DATE_RE = re.compile(r"(?P<y>\d{4})\s*[-/年.]\s*(?P<m>\d{1,2})\s*[-/月.]\s*(?P<d>\d{1,2})\s*日?")
+# 中文日期：二〇二五年九月一日（canonical 仍为 YYYY-MM-DD）
+_DATE_CN_RE = re.compile(
+    r"(?P<y>[〇零一二三四五六七八九]{4})年\s*"
+    r"(?P<m>[一二三四五六七八九十]{1,2})月\s*"
+    r"(?P<d>[一二三四五六七八九十]{1,3})日"
+)
 _PERCENT_NUM_RE = re.compile(r"(?P<n>\d+(?:\.\d+)?)\s*%")
 _PERCENT_CN_RE = re.compile(r"百分之(?P<cn>[零〇一二两三四五六七八九十百点]+)")
 _RANGE_RE = re.compile(
@@ -181,6 +185,7 @@ def extract_facts(text: str) -> list[Fact]:
             ),
         )
     )
+    take(_extract(text, _DATE_CN_RE, _cn_date_fact))
     take(
         _extract(
             text,
@@ -274,6 +279,23 @@ def extract_facts(text: str) -> list[Fact]:
     return facts
 
 
+def _cn_date_fact(match: re.Match[str]) -> _Span | None:
+    year = chinese_to_int(match.group("y"))
+    month = chinese_to_int(match.group("m"))
+    day = chinese_to_int(match.group("d"))
+    if year is None or month is None or day is None:
+        return None
+    if not (1 <= month <= 12 and 1 <= day <= 31):
+        return None
+    return _mk(
+        FactKind.DATE,
+        match.group(0),
+        f"{year:04d}-{month:02d}-{day:02d}",
+        match.start(),
+        match.end(),
+    )
+
+
 def _cn_fact(kind: FactKind, cn: str, unit: str, start: int, end: int, raw: str) -> _Span | None:
     value = chinese_to_int(cn)
     if value is None:
@@ -311,7 +333,13 @@ def _fact_patterns(fact: Fact) -> list[re.Pattern[str]]:
             chinese = int_to_chinese(int(number))
             if chinese:
                 patterns.append(re.escape(f"{chinese}{unit}"))
-                patterns.append(re.escape(f"{chinese}个{unit}"))
+                if unit not in {"%", "年"}:
+                    patterns.append(re.escape(f"{chinese}个{unit}"))
+        if int(number) == 2:
+            # “两”是 2 的常用变体：两年 / 两万元 / 两个学期
+            patterns.append(re.escape(f"两{unit}"))
+            if unit not in {"%", "年"}:
+                patterns.append(re.escape(f"两个{unit}"))
         if unit not in {"%", "年"}:
             # 引文常带量词：10个工作日
             patterns.append(re.escape(f"{number}个{unit}"))
@@ -335,6 +363,13 @@ def _fact_patterns(fact: Fact) -> list[re.Pattern[str]]:
             patterns.append(re.escape(f"{year}/{int(month)}/{int(day)}"))
             patterns.append(re.escape(f"{year}/{month}/{day}"))
             patterns.append(re.escape(f"{year}.{int(month)}.{int(day)}"))
+            # 中文日期：二〇二五年九月一日 / 2025年九月一日
+            chinese_year = "".join("〇一二三四五六七八九"[int(digit)] for digit in year)
+            chinese_month = int_to_chinese(int(month))
+            chinese_day = int_to_chinese(int(day))
+            if chinese_month and chinese_day:
+                patterns.append(re.escape(f"{chinese_year}年{chinese_month}月{chinese_day}日"))
+                patterns.append(re.escape(f"{year}年{chinese_month}月{chinese_day}日"))
     return [re.compile(pattern) for pattern in dict.fromkeys(patterns)]
 
 

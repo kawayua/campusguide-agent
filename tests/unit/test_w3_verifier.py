@@ -4,8 +4,16 @@ from __future__ import annotations
 
 from datetime import date
 
+import pytest
+from pydantic import ValidationError
+
 from campusguide.agents.advisor import CitationDraft, ClaimDraft
-from campusguide.domain.enums import ArticleStatus, Audience
+from campusguide.domain.enums import (
+    ArticleStatus,
+    Audience,
+    VerificationDecision,
+)
+from campusguide.verification.issues import IssueSeverity, VerificationIssue, VerificationResult
 from campusguide.verification.verifier import DeterministicVerifier
 from tests.w2_helpers import make_article, make_evidence
 
@@ -92,7 +100,21 @@ def test_scope_audience_mismatch_blocks_only_bad_evidence() -> None:
     )
     assert result.abstain_reason is None
     assert [item.article.article_id for item in result.evidence] == [undergrad.article_id]
-    assert any(issue.code == "AUDIENCE_MISMATCH" for issue in result.issues)
+    mismatch = [issue for issue in result.issues if issue.code == "AUDIENCE_MISMATCH"]
+    assert mismatch and mismatch[0].severity.value == "warning"
+
+
+def test_scope_dropped_repealed_evidence_is_warning_when_active_remains() -> None:
+    verifier = DeterministicVerifier()
+    active = make_article()
+    repealed = make_article(article_id="old@v2019#第一条", status=ArticleStatus.REPEALED)
+    result = verifier.check_scope(
+        [make_evidence(active, 0.9, 1), make_evidence(repealed, 0.8, 2)], None, AS_OF
+    )
+    assert result.abstain_reason is None
+    assert [item.article.article_id for item in result.evidence] == [active.article_id]
+    mismatches = [issue for issue in result.issues if issue.code == "VERSION_MISMATCH"]
+    assert mismatches and mismatches[0].severity.value == "warning"
 
 
 def test_scope_audience_all_matches_any_request() -> None:
@@ -200,6 +222,72 @@ def test_verify_cap_excess_claims_is_warning_not_partial() -> None:
     cap_issues = [issue for issue in result.issues if issue.code == "TOO_MANY_CLAIMS"]
     assert cap_issues and cap_issues[0].severity.value == "warning"
     assert result.dropped_claim_ids == []
+
+
+def test_verify_mixed_citations_warns_and_keeps_claim() -> None:
+    verifier = DeterministicVerifier()
+    article = make_article()
+    draft = ClaimDraft(
+        claim_id="c1",
+        text="申请奖学金应当学习成绩优异。",
+        kind="eligibility",
+        citations=[
+            CitationDraft(article_id=article.article_id, quote="学习成绩优异"),
+            CitationDraft(article_id=article.article_id, quote="这句话不在原文中"),
+        ],
+    )
+    result = verifier.verify([draft], [make_evidence(article)], None, AS_OF)
+
+    assert result.decision.value == "pass"
+    assert len(result.claims) == 1
+    assert len(result.claims[0].citations) == 1
+    mismatch = [issue for issue in result.issues if issue.code == "QUOTE_MISMATCH"]
+    assert mismatch and mismatch[0].severity.value == "warning"
+    assert result.dropped_claim_ids == []
+    assert not any(issue.severity.value == "blocking" for issue in result.issues)
+
+
+def test_verify_all_citations_invalid_is_unverifiable() -> None:
+    verifier = DeterministicVerifier()
+    article = make_article()
+    draft = ClaimDraft(
+        claim_id="c1",
+        text="申请奖学金应当学习成绩优异。",
+        kind="eligibility",
+        citations=[
+            CitationDraft(article_id=article.article_id, quote="这句话不在原文中"),
+            CitationDraft(article_id=article.article_id, quote="这句也不在原文中"),
+        ],
+    )
+    result = verifier.verify([draft], [make_evidence(article)], None, AS_OF)
+    assert result.decision.value == "abstain"
+    assert result.reason_code is not None
+    assert result.reason_code.value == "UNVERIFIABLE"
+    missing = [issue for issue in result.issues if issue.code == "MISSING_CITATION"]
+    assert missing and missing[0].severity.value == "blocking"
+
+
+def test_verification_result_contract_rejects_pass_with_blocking_issue() -> None:
+    with pytest.raises(ValidationError, match="PASS 不能包含 blocking issue"):
+        VerificationResult(
+            decision=VerificationDecision.PASS,
+            claims=[],
+            issues=[
+                VerificationIssue(
+                    code="NUMBER_NOT_SUPPORTED",
+                    severity=IssueSeverity.BLOCKING,
+                )
+            ],
+        )
+    with pytest.raises(ValidationError, match="PARTIAL 必须至少保留一条 claim"):
+        VerificationResult(
+            decision=VerificationDecision.PARTIAL,
+            claims=[],
+            issues=[],
+            dropped_claim_ids=["c1"],
+        )
+    with pytest.raises(ValidationError, match="ABSTAIN 必须带 reason_code"):
+        VerificationResult(decision=VerificationDecision.ABSTAIN, claims=[], issues=[])
 
 
 def test_verify_privacy_violation_drops_claim() -> None:

@@ -293,7 +293,8 @@ class QAService:
         trace_extra["claims_kept"] = len(verification.claims)
         trace_extra["verification"] = {
             "decision": verification.decision.value,
-            "issues": [issue.model_dump(mode="json") for issue in verification.issues],
+            # trace 与 QAResult.issues 一致：含 scope issue（受众/版本/混合版本）
+            "issues": [issue.model_dump(mode="json") for issue in merged_issues],
             "dropped_claim_ids": verification.dropped_claim_ids,
             "partial": verification.partial,
         }

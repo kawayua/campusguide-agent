@@ -32,6 +32,10 @@ def _canonicals(text: str) -> list[str]:
         ("一百零五", 105),
         ("八千", 8000),
         ("二〇二五", 2025),
+        ("十万", 100000),
+        ("百万", 1000000),
+        ("一万五千", 15000),
+        ("二万五千", 25000),
         ("三", 3),
     ],
 )
@@ -63,6 +67,13 @@ def test_percent_variants() -> None:
 def test_dates() -> None:
     assert _canonicals("2025年9月1日起施行") == ["2025-09-01"]
     assert _canonicals("截止2025-09-01") == ["2025-09-01"]
+    assert _canonicals("二〇二五年九月一日施行") == ["2025-09-01"]
+
+
+def test_chinese_date_coverage_cross_format() -> None:
+    assert uncovered_facts(extract_facts("2025年9月1日起"), ["二〇二五年九月一日实施"]) == []
+    assert uncovered_facts(extract_facts("二〇二五年九月一日施行"), ["2025-09-01 实施"]) == []
+    assert uncovered_facts(extract_facts("二〇二五年九月一日施行"), ["2025年9月1日 实施"]) == []
 
 
 def test_year_ignores_version_labels() -> None:
@@ -115,6 +126,12 @@ def test_coverage_cross_forms() -> None:
 def test_coverage_accepts_chinese_numeral_in_quote() -> None:
     facts = extract_facts("奖励8000元")
     assert uncovered_facts(facts, ["奖励八千元"]) == []
+
+
+def test_coverage_accepts_liang_variant_for_two() -> None:
+    assert uncovered_facts(extract_facts("连续2年"), ["连续两年"]) == []
+    assert uncovered_facts(extract_facts("奖励2万元"), ["奖励两万元"]) == []
+    assert uncovered_facts(extract_facts("2个学期"), ["两个学期"]) == []
 
 
 def test_coverage_accepts_quantifier_form() -> None:

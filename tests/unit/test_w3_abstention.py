@@ -130,7 +130,8 @@ def test_all_claims_failed_yields_unverifiable_without_answer(tmp_path: Path) ->
 
     trace = _read_traces(tmp_path / "traces")[-1]
     assert trace["verification"]["decision"] == "abstain"
-    assert trace["verification"]["issues"][0]["code"] == "NUMBER_NOT_SUPPORTED"
+    trace_codes = {issue["code"] for issue in trace["verification"]["issues"]}
+    assert "NUMBER_NOT_SUPPORTED" in trace_codes
 
 
 def test_only_repealed_probe_hits(tmp_path: Path) -> None:
@@ -207,6 +208,34 @@ def test_audience_mismatch_drops_bad_evidence_but_answers(tmp_path: Path) -> Non
     assert any(issue.code == "AUDIENCE_MISMATCH" for issue in result.issues)
     # faculty 证据不应进入 advisor 输入：只传给 advisor 的 evidence 是 scope 过滤后的
     assert all(item.article.audience != [Audience.FACULTY] for item in result.evidence)
+
+    trace = _read_traces(tmp_path / "traces")[-1]
+    trace_codes = {issue["code"] for issue in trace["verification"]["issues"]}
+    assert "AUDIENCE_MISMATCH" in trace_codes
+    assert trace_codes == {issue.code for issue in result.issues}
+
+
+def test_mixed_cohort_versions_warn_and_are_traced(tmp_path: Path) -> None:
+    v2022 = make_article(version_id="v2022", effective_from=date(2022, 9, 1))
+    v2024 = make_article(version_id="v2024", effective_from=date(2024, 9, 1))
+    retriever = FakeRetriever(
+        RetrievalResult(evidence=_evidence(v2022, v2024), queries=["培养方案"]),
+        probe_result=[],
+    )
+    service = _service(
+        retriever=retriever,
+        responses=[_claims_json([_valid_claim()])],
+        trace_dir=tmp_path / "traces",
+    )
+    result = service.ask("培养方案的课程结构是什么？")
+
+    assert result.outcome is OutcomeCode.ANSWERED
+    codes = {issue.code for issue in result.issues}
+    assert "MIXED_VERSIONS" in codes
+
+    trace = _read_traces(tmp_path / "traces")[-1]
+    trace_codes = {issue["code"] for issue in trace["verification"]["issues"]}
+    assert "MIXED_VERSIONS" in trace_codes
 
 
 def test_trace_has_no_full_article_text(tmp_path: Path) -> None:
