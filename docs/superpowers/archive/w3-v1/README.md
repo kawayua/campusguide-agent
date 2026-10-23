@@ -1,6 +1,7 @@
 # W3 v1 归档
 
-本目录保存已经回退的 W3 v1 设计与修复清单，仅用于复盘和重新设计参考。
+本目录保存已经回退的 W3 v1 设计与修复清单，仅用于复盘和重新设计参考。新的最终重建设计见
+`docs/superpowers/specs/2026-10-23-w3-citation-verification-abstention-design-v2.md`。
 
 ## 为什么归档
 
