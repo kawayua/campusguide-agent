@@ -5,7 +5,7 @@ PYTEST ?= $(UV) run pytest
 RUFF ?= $(UV) run ruff
 
 .PHONY: help init sync fetch parse index index-qdrant vector-index validate-sources \
-	check-segmentation test lint format format-check qa ask eval-w2 eval-w3 demo compose-up \
+	check-segmentation test lint format format-check qa ask eval-w2 demo compose-up \
 	compose-down clean
 
 help:
@@ -26,7 +26,6 @@ help:
 	@echo "  make qa                lint + format-check + test（本地与 CI 共用）"
 	@echo "  make ask Q='...'       单题 CLI 调试"
 	@echo "  make eval-w2           跑 20 题开发集并生成报告"
-	@echo "  make eval-w3           W3 复测：run 快照 + 支持标注 + 拒答混淆矩阵"
 	@echo "  make demo              启动 Gradio 单轮页面"
 	@echo "  make compose-up        启动 Qdrant（docker compose）"
 
@@ -58,9 +57,6 @@ ask:
 
 eval-w2:
 	$(PYTHON) scripts/eval_w2.py
-
-eval-w3:
-	$(PYTHON) scripts/eval_w3.py
 
 validate-sources:
 	$(PYTHON) scripts/validate_sources.py

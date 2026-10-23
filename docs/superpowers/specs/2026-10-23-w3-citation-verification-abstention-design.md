@@ -7,7 +7,7 @@
 | 来源 | `2026-10-19-campusguide-design.md`、W2 周记录、W2 设计 |
 | 范围 | 引文 span 定位、数字/日期覆盖、确定性硬校验、拒答判定树 v0、20 题开发集复测 |
 | 基线 | W2：claim-first + 引用 ID/quote 校验 + 20 题 dev_v0；`ac830a4`（W2 当前收口） |
-| 状态 | 已实现并完成 live 复测（收口修复 `f5347ae`）；v0 版本冲突口径见 6.2 注 |
+| 状态 | 设计已确认，待实现 |
 
 ---
 
@@ -299,11 +299,9 @@ W3 只检查本轮 Evidence：
 1. `status == active`；
 2. `effective_from <= as_of`；
 3. `effective_to is null or effective_to >= as_of`；
-4. 同一 `doc_id` 出现多个 active version 且 `effective_from` 相同（无法裁决）→ `VERSION_CONFLICT`；
+4. 同一 `doc_id` 出现多个重叠的 active version → `VERSION_CONFLICT`；
 5. 全部 Evidence 都是废止版本 → `ONLY_REPEALED`（需要检索探针，见 6.3）；
 6. 其他区间/状态不符 → `VERSION_MISMATCH`。
-
-> 实现注（W3 v0，2026-10-23）：语料中同一 `doc_id` 可能并存**生效日不同的届别版本**（如培养方案 v2022/v2024 都标 active）。W3 不把它们判为 `VERSION_CONFLICT`，而是保留并记 `MIXED_VERSIONS` warning；只有生效日相同、无法裁决的多版本才拒答。完整区间交叠判断与按届别解析留 W4。
 
 低置信日期：
 

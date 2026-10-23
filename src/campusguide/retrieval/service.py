@@ -9,7 +9,7 @@ from typing import Any
 from qdrant_client import QdrantClient
 
 from campusguide.config import RetrievalConfig
-from campusguide.domain.enums import ArticleStatus, BlockType
+from campusguide.domain.enums import BlockType
 from campusguide.domain.models import Article, Evidence, PolicyFilters
 from campusguide.retrieval.embedder import EmbeddingProvider
 from campusguide.retrieval.filters import build_qdrant_filter
@@ -87,48 +87,6 @@ class DenseRetriever:
     def warmup(self) -> None:
         """预加载 embedding 模型，避免首个请求把冷启动算进问答延迟。"""
         self._embedder.embed_query("CampusGuide 预热")
-
-    def probe_repealed(
-        self,
-        query: str,
-        *,
-        filters: PolicyFilters | None = None,
-    ) -> list[Evidence]:
-        """废止版本探针（W3 设计 6.3）。
-
-        只在主检索为空时调用，用于 ONLY_REPEALED 拒答解释；
-        不计 p50/p95，探针结果不进入 Advisor。
-        """
-        base = filters or PolicyFilters()
-        probe_filters = base.model_copy(update={"status": [ArticleStatus.REPEALED]})
-        queries = expand_query(query, self._aliases, max_variants=1)
-        if not queries:
-            return []
-        query_filter = build_qdrant_filter(probe_filters)
-        best_by_fragment: dict[tuple[str, int], Evidence] = {}
-        for retrieval_query in queries:
-            vector = self._embedder.embed_query(retrieval_query)
-            try:
-                points = self._search(vector, query_filter)
-            except RetrievalError:
-                return []
-            for point in points:
-                payload = point.payload or {}
-                try:
-                    article = article_from_payload(payload)
-                except RetrievalError:
-                    continue
-                key = (article.article_id, article.part_no)
-                score = float(point.score)
-                current = best_by_fragment.get(key)
-                if current is None or score > current.score:
-                    best_by_fragment[key] = Evidence(
-                        article=article,
-                        dense_score=score,
-                        retrieval_query=retrieval_query,
-                    )
-        ranked = sorted(best_by_fragment.values(), key=lambda item: item.score, reverse=True)
-        return [item for item in ranked if item.score >= self._min_dense_score][:3]
 
     def _search(self, vector: list[float], query_filter) -> list[Any]:
         try:

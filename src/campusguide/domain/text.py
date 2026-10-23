@@ -32,32 +32,6 @@ def normalize_text(text: str) -> str:
     return re.sub(r"\s+", "", text)
 
 
-def normalize_with_map(text: str) -> tuple[str, list[int]]:
-    """返回归一化文本和 normalized index -> original index 的映射。
-
-    与 :func:`normalize_text` 保持同一套变换（NFKC、零宽字符删除、引号/括号/
-    全角空格归一、空白删除），用于把归一化匹配映射回 ``article.text`` 原文偏移。
-
-    映射只包含保留下来字符的条目；被删除的空白不占映射位置，因此由归一化
-    span 反查原文时天然落在相邻的原文字符上。NFKC 逐字符近似：本文语料
-    （中文制度文本）下与整串 NFKC 结果一致；组合字符序列不在支持范围。
-    """
-    normalized_chars: list[str] = []
-    mapping: list[int] = []
-    for index, char in enumerate(text):
-        for piece in unicodedata.normalize("NFKC", char):
-            piece = piece.translate(_ZERO_WIDTH).translate(_QUOTE_MAP)
-            piece = piece.replace("\u00a0", " ")
-            if not piece:
-                # 零宽字符被删除：不占归一化位置，否则映射整体错位
-                continue
-            if re.fullmatch(r"\s", piece):
-                continue
-            normalized_chars.append(piece)
-            mapping.append(index)
-    return "".join(normalized_chars), mapping
-
-
 def clean_whitespace(text: str) -> str:
     """保留段落结构，清理行内多余空白与过多空行。"""
     text = text.replace("\r\n", "\n").replace("\r", "\n").replace("\u00a0", " ")

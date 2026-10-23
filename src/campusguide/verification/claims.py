@@ -11,7 +11,6 @@ from dataclasses import dataclass, field
 from campusguide.agents.advisor import ClaimDraft, normalize_kind
 from campusguide.domain.models import Citation, Claim, Evidence
 from campusguide.domain.text import normalize_text
-from campusguide.verification.quotes import locate_quote
 
 MIN_QUOTE_CHARS = 6
 MAX_CLAIMS = 5
@@ -82,7 +81,7 @@ class ClaimValidator:
                 continue
 
             citations: list[Citation] = []
-            seen_spans: set[tuple[str, int, int, int]] = set()
+            seen_spans: set[tuple[str, int, int]] = set()
             for citation_draft in draft.citations:
                 quoted = citation_draft.quote.strip()
                 normalized_quote = normalize_text(quoted)
@@ -116,25 +115,24 @@ class ClaimValidator:
                     )
                     continue
 
-                located: tuple[Evidence, int, int, str] | None = None
+                located: tuple[Evidence, int] | None = None
                 for item in candidates:
-                    hit = locate_quote(item.article.text, quoted)
-                    if hit is not None:
-                        located = (item, hit[0], hit[1], hit[2])
+                    position = item.article.text_normalized.find(normalized_quote)
+                    if position >= 0:
+                        located = (item, position)
                         break
                 if located is None:
                     result.dropped_citations.append(
                         {
                             "claim_id": claim_id,
                             "article_id": citation_draft.article_id,
-                            "reason": "QUOTE_MISMATCH",
+                            "reason": "QUOTE_NOT_LOCATABLE",
                         }
                     )
                     continue
 
-                item, span_start, span_end, match_type = located
-                # 片段身份是 (article_id, part_no)；不同 part 的同偏移 quote 不是重复引用
-                span = (item.article.article_id, item.article.part_no, span_start, span_end)
+                item, position = located
+                span = (item.article.article_id, position, position + len(normalized_quote))
                 if span in seen_spans:
                     continue
                 seen_spans.add(span)
@@ -143,9 +141,8 @@ class ClaimValidator:
                     Citation(
                         article_id=article.article_id,
                         quote=quoted,
-                        quote_start=span_start,
-                        quote_end=span_end,
-                        quote_match=match_type,
+                        quote_start=position,
+                        quote_end=position + len(normalized_quote),
                         doc_title=article.doc_title,
                         article_no=article.article_no,
                         part_no=article.part_no,

@@ -30,7 +30,6 @@ def make_article(
     effective_from: date = date(2021, 9, 1),
     effective_to: date | None = None,
     date_confidence: str = "high",
-    audience: list[Audience] | None = None,
 ) -> Article:
     return Article(
         article_id=article_id,
@@ -46,7 +45,7 @@ def make_article(
         block_type=block_type,
         text=text,
         text_normalized=normalize_text(text),
-        audience=audience if audience is not None else [Audience.UNDERGRADUATE],
+        audience=[Audience.UNDERGRADUATE],
         status=status,
         effective_from=effective_from,
         effective_to=effective_to,

@@ -184,9 +184,8 @@ class Evidence(BaseModel):
 class Citation(BaseModel):
     article_id: str
     quote: str
-    quote_start: int  # article.text 的原始字符偏移（W3 起不再使用归一化坐标）
+    quote_start: int
     quote_end: int
-    quote_match: Literal["exact", "normalized"] = "normalized"
     doc_title: str
     article_no: str
     part_no: int = 1
