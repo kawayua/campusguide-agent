@@ -7,7 +7,7 @@
 | 基线 | W4 tag `w4`；W6-A2 tag `w6a2`；P0/P1 工作树（399 tests） |
 | 范围 | 50 题冻结单轮测试集、人工标注、主结果、检索/过滤/Verifier 消融、Wilson 区间 |
 | 非目标 | W5 流程 DSL/checklist、W6 历史版本回答与语义重写、W8 部署 |
-| 状态 | 已执行三轮 remediation；remediation3（w6a2.3）质量门禁全部通过，但 p50/p95 未达标，W7 总门禁仍为未通过；A5 有效，A4/A2 为 w6a2.1 历史消融 |
+| 状态 | 已执行四轮 remediation；remediation4（w6a2.4）质量门禁全部通过，但 p50/p95 未达标，W7 总门禁仍为未通过；A5/A4/A2 均使用 w6a2.4 |
 
 ## 0. 决策摘要
 

@@ -59,12 +59,13 @@ class AdvisorResult:
     empty_claims_error: str = ""
 
 
-PROMPT_VERSION = "w6a2.3-2026-10-24"
+PROMPT_VERSION = "w6a2.4-2026-10-24"
 
 _ENUMERATION_RE = re.compile(r"哪些(?:情形|情况|条件|材料|要求|行为|档次|标准|项目)")
 _MULTI_ASPECT_RE = re.compile(
     r"(?:分别|各自)|(?:方面.{0,20}(?:和|与|及))|(?:(?:和|与|及).{0,20}方面)"
 )
+_COURSE_CREDIT_INTENT_RE = re.compile(r"课程|学分|学时")
 
 SYSTEM_PROMPT = """你是华南农业大学制度问答助手。你只能依据本轮提供的“证据片段”回答。
 必须遵守：
@@ -138,7 +139,11 @@ def build_evidence_block(evidence: list[Evidence]) -> str:
 
 def _generation_evidence(question: str, evidence: list[Evidence]) -> list[Evidence]:
     """Keep neighboring sections from displacing a plan's multi-aspect goals answer."""
-    if "培养方案" not in question or not _MULTI_ASPECT_RE.search(question):
+    if (
+        "培养方案" not in question
+        or not _MULTI_ASPECT_RE.search(question)
+        or _COURSE_CREDIT_INTENT_RE.search(question)
+    ):
         return evidence
     goal_sections = [
         item

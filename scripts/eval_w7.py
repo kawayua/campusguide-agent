@@ -173,14 +173,14 @@ def _slim_ablation(payload: dict[str, Any]) -> dict[str, Any]:
     return {**payload, "modes": modes}
 
 
-def _load_ablations() -> dict[str, Any]:
+def _load_ablations(report_paths: dict[str, Path | None] | None = None) -> dict[str, Any]:
     ablations: dict[str, Any] = {}
     for key, filename in (
         ("a5", "w7-a5-retrieval.json"),
         ("a4", "w7-a4-profile.json"),
         ("a2", "w7-a2-verifier.json"),
     ):
-        path = ROOT / "data" / "eval" / filename
+        path = (report_paths or {}).get(key) or (ROOT / "data" / "eval" / filename)
         if path.exists():
             ablations[key] = _slim_ablation(json.loads(path.read_text(encoding="utf-8")))
     return ablations
@@ -206,6 +206,7 @@ def _write_report(
     output_json: Path,
     output_md: Path,
     gates: dict[str, float] | None = None,
+    ablation_reports: dict[str, Path | None] | None = None,
 ) -> dict[str, Any]:
     support_labels = _load_labels(support_path)
     answer_labels = _load_labels(answers_path)
@@ -223,7 +224,7 @@ def _write_report(
         support_labels=support_labels,
         answer_labels=answer_labels,
         gates_config=gates,
-        ablations=_load_ablations(),
+        ablations=_load_ablations(ablation_reports),
         label_changes=_load_label_changes(run),
     )
     output_json.parent.mkdir(parents=True, exist_ok=True)
@@ -244,6 +245,9 @@ def main() -> int:
     parser.add_argument("--answer-labels", default=str(DEFAULT_ANSWERS))
     parser.add_argument("--output-json", default=str(DEFAULT_JSON))
     parser.add_argument("--output-md", default=str(DEFAULT_MD))
+    parser.add_argument("--a5-report", type=Path)
+    parser.add_argument("--a4-report", type=Path)
+    parser.add_argument("--a2-report", type=Path)
     parser.add_argument("--limit", type=int, default=None)
     parser.add_argument("--no-warmup", action="store_true")
     parser.add_argument("--report-only", action="store_true")
@@ -254,6 +258,11 @@ def main() -> int:
     run_path = Path(args.run)
     support_path = Path(args.support_labels)
     answer_path = Path(args.answer_labels)
+    ablation_reports = {
+        "a5": args.a5_report,
+        "a4": args.a4_report,
+        "a2": args.a2_report,
+    }
 
     if args.report_only:
         if not run_path.exists():
@@ -266,6 +275,7 @@ def main() -> int:
             answers_path=answer_path,
             output_json=Path(args.output_json),
             output_md=Path(args.output_md),
+            ablation_reports=ablation_reports,
         )
         print(f"W7 overall={'PASS' if report['overall'] else 'FAIL'}")
         print(f"report: {args.output_json}")
@@ -343,6 +353,7 @@ def main() -> int:
         answers_path=answer_path,
         output_json=Path(args.output_json),
         output_md=Path(args.output_md),
+        ablation_reports=ablation_reports,
     )
     print(f"W7 overall={'PASS' if report['overall'] else 'FAIL'}")
     print(f"report: {args.output_json}")

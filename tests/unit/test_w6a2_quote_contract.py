@@ -199,8 +199,8 @@ def test_valid_quote_does_not_trigger_repair() -> None:
 
 
 def test_prompt_version_and_contract_phrases() -> None:
-    # w6a2.3 focuses multi-aspect plan questions on the cultivation-goals section.
-    assert PROMPT_VERSION == "w6a2.3-2026-10-24"
+    # w6a2.4 preserves course evidence in multi-aspect cultivation-plan questions.
+    assert PROMPT_VERSION == "w6a2.4-2026-10-24"
     for phrase in ("连续子串", "跳过中间", "一学期内", "一个条件、一个后果或一个数量"):
         assert phrase in SYSTEM_PROMPT
     messages = build_messages("问题", _evidence(), None)

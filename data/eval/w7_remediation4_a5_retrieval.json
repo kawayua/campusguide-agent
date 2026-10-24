@@ -1,0 +1,3862 @@
+{
+  "schema_version": "w7-a5-v1",
+  "dataset": "test_v1.jsonl",
+  "dataset_sha256": "208cf3c5f032c039b3af985428c7bb2f3dfacdd422dcf8ae5dc24d2f393eb74a",
+  "testset_sha256": "2a8d0e1223621520e5807aaa3b2a244110f9835bb7bae6d5bc35e4ed7f7e8f18",
+  "generated_at": "2026-10-24T15:44:04+00:00",
+  "questions": 40,
+  "metadata": {
+    "git_commit": "75f10a442a89731b0b757f38d11cbca88f237555",
+    "git_dirty": true,
+    "index_version": "articles_v1@hybrid-0cb2167de3fe",
+    "vector_manifest_sha256": "17441d486b2fb788456b875665c695d9bafa2cc4a9bef1c974c91b19bd24e7a2",
+    "config_hash": "dbc53f71cc4d837231535e19c521310b1563aebbbce620eeb2c2f21b2e687c4f",
+    "embedding_model": "BAAI/bge-m3",
+    "reranker_model": "BAAI/bge-reranker-v2-m3"
+  },
+  "modes": {
+    "dense": {
+      "summary": {
+        "questions": 40,
+        "scored_questions": 40,
+        "skipped_no_expected": 0,
+        "article": {
+          "questions": 35,
+          "recall_at_8": 0.9571,
+          "mrr": 0.8241,
+          "no_hit": 1
+        },
+        "section": {
+          "questions": 5,
+          "recall_at_8": 1.0,
+          "mrr": 0.8667,
+          "no_hit": 0
+        },
+        "overall": {
+          "recall_at_8": 0.9625,
+          "mrr": 0.8294
+        },
+        "latency_ms": {
+          "p50": 35.0,
+          "p95": 80.14999999999999
+        },
+        "rerank_latency_ms": {
+          "count": 0,
+          "p50": null,
+          "p95": null
+        }
+      },
+      "elapsed_ms": 1582,
+      "rows": [
+        {
+          "qid": "test-001",
+          "question": "学院制定研究生校外导师相关岗位管理细则时，所依据的学校层面制度文件是哪两份？",
+          "category": "single_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "agri-external-supervisor-rule-2025@v2025#第一条"
+          ],
+          "retrieved_article_ids": [
+            "agri-external-second-supervisor-rule-2025@v2025#第一条",
+            "agri-external-supervisor-rule-2025@v2025#第一条",
+            "agri-external-supervisor-rule-2025@v2025#第二条",
+            "agri-external-supervisor-rule-2025@v2025#第二十六条",
+            "agri-external-supervisor-rule-2025@v2025#第二十二条",
+            "agri-external-supervisor-rule-2025@v2025#第三条",
+            "agri-external-supervisor-rule-2025@v2025#第十七条",
+            "agri-external-supervisor-rule-2025@v2025#第二十三条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 0.5,
+          "latency_ms": 44,
+          "timing": {},
+          "warnings": []
+        },
+        {
+          "qid": "test-002",
+          "question": "学院制定硕士生导师队伍建设相关细则的直接校级依据是什么，其目的又是什么？",
+          "category": "single_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "agri-master-supervisor-rule-2025@v2025#第一条"
+          ],
+          "retrieved_article_ids": [
+            "agri-master-supervisor-rule-2025@v2025#第一条",
+            "agri-external-supervisor-rule-2025@v2025#第十六条",
+            "agri-external-supervisor-rule-2025@v2025#第一条",
+            "agri-external-second-supervisor-rule-2025@v2025#第一条",
+            "agri-master-supervisor-rule-2025@v2025#第十七条",
+            "agri-phd-supervisor-rule-2025@v2025#第一条",
+            "agri-external-supervisor-rule-2025@v2025#第十七条",
+            "agri-master-supervisor-rule-2025@v2025#第二十一条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 1.0,
+          "latency_ms": 24,
+          "timing": {},
+          "warnings": []
+        },
+        {
+          "qid": "test-003",
+          "question": "学院规范博士后研究人员管理工作，在队伍发展方面要实现怎样的目标？",
+          "category": "single_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "agri-postdoc-rule-2024@v2024#第一条"
+          ],
+          "retrieved_article_ids": [
+            "agri-postdoc-rule-2024@v2024#第一条",
+            "postdoc-management@v2024#第一条",
+            "agri-postdoc-rule-2024@v2024#第五条",
+            "agri-postdoc-rule-2024@v2024#第二条",
+            "postdoc-management@v2024#第二条",
+            "postdoc-management@v2024#第四十条",
+            "agri-postdoc-rule-2024@v2024#第十六条",
+            "postdoc-management@v2024#第十二条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 1.0,
+          "latency_ms": 26,
+          "timing": {},
+          "warnings": []
+        },
+        {
+          "qid": "test-004",
+          "question": "农学院制定推免相关实施细则时，依据的实际情况和遵循的原则分别是什么？",
+          "category": "single_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "agri-postgrad-recommendation-rule-2024@v2024#第一条"
+          ],
+          "retrieved_article_ids": [
+            "agri-postgrad-recommendation-rule-2024@v2024#第九条",
+            "agri-postgrad-recommendation-rule-2024@v2024#第二条",
+            "postgraduate-recommendation@v2025#第十九条",
+            "agri-postgrad-recommendation-rule-2024@v2024#第三条",
+            "agri-postgrad-recommendation-rule-2024@v2024#第一条",
+            "agri-postgrad-recommendation-rule-2024@v2024#第十一条",
+            "agri-postgrad-recommendation-rule-2024@v2024#第七条",
+            "postgraduate-recommendation@v2025#第十五条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 0.2,
+          "latency_ms": 80,
+          "timing": {},
+          "warnings": []
+        },
+        {
+          "qid": "test-005",
+          "question": "加强和规范学校电子档案管理，需要确保电子档案具备哪些特性？",
+          "category": "single_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "archive-management@v2026#第一条"
+          ],
+          "retrieved_article_ids": [
+            "archive-management@v2026#第二条",
+            "archive-management@v2026#第十六条",
+            "archive-management@v2026#第六条",
+            "archive-management@v2026#第十七条",
+            "archive-management@v2026#第八条",
+            "archive-management@v2026#第十条",
+            "archive-management@v2026#第五条",
+            "archive-management@v2026#第四条"
+          ],
+          "recall_at_8": 0.0,
+          "reciprocal_rank": 0.0,
+          "latency_ms": 34,
+          "timing": {},
+          "warnings": []
+        },
+        {
+          "qid": "test-006",
+          "question": "学生选课结束后课程表确定，什么情况下还能调整课程安排？开学初又有何限制？",
+          "category": "single_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "class-adjustment@v2022#第二条"
+          ],
+          "retrieved_article_ids": [
+            "class-adjustment@v2022#第二条",
+            "general-education-elective@v2023#第二十条",
+            "course-selection@v2016#第十条",
+            "course-selection@v2016#第十二条",
+            "course-selection@v2016#第五条",
+            "course-selection@v2016#第二条",
+            "course-selection@v2016#第九条",
+            "general-education-elective@v2023#第九条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 1.0,
+          "latency_ms": 50,
+          "timing": {},
+          "warnings": []
+        },
+        {
+          "qid": "test-007",
+          "question": "学校设立院级奖助学金的政策依据是什么，面向哪些学生，目的是什么？",
+          "category": "single_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "college-aid@v2015#第一条"
+          ],
+          "retrieved_article_ids": [
+            "college-aid@v2015#第二条",
+            "college-aid@v2015#第一条",
+            "national-aid-undergrad@v2021#第三条",
+            "college-aid@v2015#第三条",
+            "college-aid@v2015#第六条",
+            "college-aid@v2015#第五条",
+            "national-aid-grad@v2022#第二条",
+            "national-aid-grad@v2022#第二十九条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 0.5,
+          "latency_ms": 57,
+          "timing": {},
+          "warnings": []
+        },
+        {
+          "qid": "test-008",
+          "question": "智育测评成绩如何构成？在计算平均绩点时，双学位和重修课程的成绩如何处理？",
+          "category": "single_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "comprehensive-evaluation@v2020#第六条"
+          ],
+          "retrieved_article_ids": [
+            "comprehensive-evaluation@v2020#第六条",
+            "comprehensive-evaluation@v2020#第四条",
+            "undergraduate-status-rules@v2021#第十二条",
+            "comprehensive-evaluation@v2020#第八条",
+            "comprehensive-evaluation@v2020#第五条",
+            "undergraduate-status-rules@v2021#第十八条",
+            "graduate-course-assessment@v2023#第二十五条",
+            "general-education-elective@v2023#第十六条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 1.0,
+          "latency_ms": 27,
+          "timing": {},
+          "warnings": []
+        },
+        {
+          "qid": "test-009",
+          "question": "校学位评定委员会的委员由哪些方式产生？委员人选名单通过后还需办理什么手续？",
+          "category": "single_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "degree-committee-charter@v2025#第五条"
+          ],
+          "retrieved_article_ids": [
+            "degree-committee-charter@v2025#第五条",
+            "degree-committee-charter@v2025#第七条",
+            "degree-committee-charter@v2025#第八条",
+            "master-doctor-degree-rules@v2025#第七条",
+            "master-doctor-degree-rules@v2025#第五条",
+            "degree-committee-charter@v2025#第十六条",
+            "master-doctor-degree-rules@v2025#第六条",
+            "degree-committee-charter@v2025#第四条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 1.0,
+          "latency_ms": 44,
+          "timing": {},
+          "warnings": []
+        },
+        {
+          "qid": "test-010",
+          "question": "监考员考前需要提前多久进入考场？入场后须完成哪些工作？",
+          "category": "single_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "exam-room-rules@v2022#第十四条"
+          ],
+          "retrieved_article_ids": [
+            "exam-room-rules@v2022#第七条",
+            "exam-room-rules@v2022#第二条",
+            "exam-room-rules@v2022#第十四条",
+            "exam-room-rules@v2022#第十六条",
+            "exam-room-rules@v2022#第十五条",
+            "exam-room-rules@v2022#第二十条",
+            "exam-room-rules@v2022#第十九条",
+            "exam-room-rules@v2022#第十三条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 0.3333333333333333,
+          "latency_ms": 29,
+          "timing": {},
+          "warnings": []
+        },
+        {
+          "qid": "test-011",
+          "question": "教师在哪些情况下会被认定为发生教学差错？",
+          "category": "single_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "graduate-teaching-errors@v2022#第三条"
+          ],
+          "retrieved_article_ids": [
+            "graduate-teaching-errors@v2022#第五条",
+            "graduate-teaching-errors@v2022#第三条",
+            "graduate-teaching-errors@v2022#第四条",
+            "graduate-teaching-errors@v2022#第七条",
+            "graduate-teaching-errors@v2022#第九条",
+            "graduate-teaching-errors@v2022#第八条",
+            "classroom-rules@v2018#第二十八条",
+            "graduate-teaching-errors@v2022#第六条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 0.5,
+          "latency_ms": 34,
+          "timing": {},
+          "warnings": []
+        },
+        {
+          "qid": "test-012",
+          "question": "制定研究生学位答辩及学位申请相关管理办法，主要依据了哪些法律法规和文件？",
+          "category": "single_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "graduate-thesis-defense@v2026#第一条"
+          ],
+          "retrieved_article_ids": [
+            "graduate-thesis-defense@v2026#第一条",
+            "graduate-thesis-defense@v2026#第三十四条",
+            "graduate-thesis-defense@v2026#第三条",
+            "graduate-thesis-defense@v2026#第三十七条",
+            "graduate-thesis-defense@v2026#第二十一条",
+            "graduate-thesis-defense@v2026#第三十一条",
+            "graduate-thesis-defense@v2026#第二条",
+            "graduate-thesis-defense@v2026#第六条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 1.0,
+          "latency_ms": 28,
+          "timing": {},
+          "warnings": []
+        },
+        {
+          "qid": "test-013",
+          "question": "学校困难补助办法的制定目的是什么，主要依据哪两份文件？",
+          "category": "single_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "hardship-subsidy@v2015#第一条"
+          ],
+          "retrieved_article_ids": [
+            "hardship-subsidy@v2015#第一条",
+            "hardship-subsidy@v2015#第七条",
+            "hardship-subsidy@v2015#第三条",
+            "hardship-subsidy@v2015#第六条",
+            "student-financial-aid@v2022#第二条",
+            "national-aid-undergrad@v2021#第三条",
+            "financial-hardship@v2020#第四条",
+            "student-financial-aid@v2022#第二十五条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 1.0,
+          "latency_ms": 41,
+          "timing": {},
+          "warnings": []
+        },
+        {
+          "qid": "test-014",
+          "question": "学校制定实验室安全管理办法要达到哪些目的，又依据了哪些规定？",
+          "category": "single_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "lab-safety@v2015#第一条"
+          ],
+          "retrieved_article_ids": [
+            "lab-safety@v2015#第三条",
+            "lab-safety@v2015#第一条",
+            "lab-safety@v2015#第二条",
+            "lab-safety@v2015#第二十一条",
+            "lab-safety@v2015#第二十五条",
+            "lab-safety@v2015#第二十三条",
+            "lab-safety@v2015#第四条",
+            "lab-safety@v2015#第二十二条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 0.5,
+          "latency_ms": 36,
+          "timing": {},
+          "warnings": []
+        },
+        {
+          "qid": "test-015",
+          "question": "校学位评定委员会何时召开例行会议，其决议需要满足怎样的出席和表决条件才能通过？",
+          "category": "single_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "master-doctor-degree-rules@v2025#第七条"
+          ],
+          "retrieved_article_ids": [
+            "master-doctor-degree-rules@v2025#第七条",
+            "degree-committee-charter@v2025#第十四条",
+            "degree-committee-charter@v2025#第十六条",
+            "degree-committee-charter@v2025#第十三条",
+            "degree-committee-charter@v2025#第八条",
+            "degree-committee-charter@v2025#第四条",
+            "master-doctor-degree-rules@v2025#第二十七条",
+            "master-doctor-degree-rules@v2025#第二十条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 1.0,
+          "latency_ms": 36,
+          "timing": {},
+          "warnings": []
+        },
+        {
+          "qid": "test-016",
+          "question": "学校制定优秀毕业生评选办法时，希望促进学生怎样的全面发展？又希望发挥哪类学生的示范带动作用？",
+          "category": "single_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "outstanding-graduates@v2025#第一条"
+          ],
+          "retrieved_article_ids": [
+            "outstanding-graduates@v2025#第一条",
+            "outstanding-graduates@v2025#第九条",
+            "outstanding-graduates@v2025#第二条",
+            "outstanding-graduates@v2025#第六条",
+            "outstanding-graduates@v2025#第三条",
+            "postgraduate-recommendation@v2025#第二条",
+            "outstanding-graduates@v2025#第五条",
+            "postgraduate-recommendation@v2025#第十四条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 1.0,
+          "latency_ms": 22,
+          "timing": {},
+          "warnings": []
+        },
+        {
+          "qid": "test-017",
+          "question": "研究生学位论文参加评选的时间范围和次数是如何规定的？哪些论文不能参评？",
+          "category": "single_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "outstanding-thesis-award@v2021#第三条"
+          ],
+          "retrieved_article_ids": [
+            "outstanding-thesis-award@v2021#第三条",
+            "outstanding-thesis-award@v2021#第四条",
+            "outstanding-thesis-award@v2021#第十三条",
+            "graduate-thesis-defense@v2026#第二十条",
+            "outstanding-thesis-award@v2021#第十条",
+            "agri-master-supervisor-rule-2025@v2025#第二十条",
+            "agri-phd-supervisor-rule-2025@v2025#第二十一条",
+            "graduate-thesis-defense@v2026#第十九条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 1.0,
+          "latency_ms": 34,
+          "timing": {},
+          "warnings": []
+        },
+        {
+          "qid": "test-018",
+          "question": "学校公共设施管理中，后勤管理处、教学科研基地管理处和设备资产管理处各自负责哪些工作？",
+          "category": "single_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "public-facilities@v2004#第二条"
+          ],
+          "retrieved_article_ids": [
+            "public-facilities@v2004#第二条",
+            "public-facilities@v2004#第三条",
+            "public-facilities@v2004#第六条",
+            "public-facilities@v2004#第九条",
+            "public-facilities@v2004#第十条",
+            "public-facilities@v2004#第五条",
+            "lab-safety@v2015#第八条",
+            "public-facilities@v2004#第四条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 1.0,
+          "latency_ms": 32,
+          "timing": {},
+          "warnings": []
+        },
+        {
+          "qid": "test-019",
+          "question": "学校制定学生资助相关办法时，主要依据了哪些关于资助资金的上位文件和规定？",
+          "category": "single_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "student-financial-aid@v2022#第一条"
+          ],
+          "retrieved_article_ids": [
+            "student-financial-aid@v2022#第一条",
+            "national-aid-undergrad@v2021#第二十九条",
+            "national-aid-grad@v2022#第一条",
+            "national-aid-undergrad@v2021#第一条",
+            "student-financial-aid@v2022#第九条",
+            "student-financial-aid@v2022#第八条",
+            "student-financial-aid@v2022#第六条",
+            "college-aid@v2015#第六条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 1.0,
+          "latency_ms": 23,
+          "timing": {},
+          "warnings": []
+        },
+        {
+          "qid": "test-020",
+          "question": "制定国家助学贷款相关管理细则的目的是什么，又依据了哪两个文件的要求？",
+          "category": "single_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "student-loan@v2018#第一条"
+          ],
+          "retrieved_article_ids": [
+            "student-loan@v2018#第一条",
+            "student-loan@v2018#第三条",
+            "student-loan@v2018#第十二条",
+            "student-loan@v2018#第二十九条",
+            "student-loan@v2018#第十三条",
+            "student-loan@v2018#第二十五条",
+            "student-loan@v2018#第六条",
+            "student-loan@v2018#第四条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 1.0,
+          "latency_ms": 83,
+          "timing": {},
+          "warnings": []
+        },
+        {
+          "qid": "test-021",
+          "question": "学生出现哪些情况会被给予一般预警？请分别说明旷课、请假（含旷课）和缺交作业的比例门槛。",
+          "category": "single_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "undergraduate-academic-warning@v2021#第五条"
+          ],
+          "retrieved_article_ids": [
+            "undergraduate-academic-warning@v2021#第五条",
+            "undergraduate-status-rules@v2021#第三十六条",
+            "disciplinary-rules@v2017#第十六条",
+            "undergraduate-status-rules@v2021#第三十五条",
+            "undergraduate-status-rules@v2021#第三十四条",
+            "undergraduate-status-rules@v2021#第十九条",
+            "undergraduate-academic-warning@v2021#第六条",
+            "course-study@v2022#第五条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 1.0,
+          "latency_ms": 104,
+          "timing": {},
+          "warnings": []
+        },
+        {
+          "qid": "test-022",
+          "question": "学校实施本科生导师制主要是为了什么？",
+          "category": "single_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "undergraduate-mentor@v2020#第一条"
+          ],
+          "retrieved_article_ids": [
+            "undergraduate-mentor@v2020#第一条",
+            "undergraduate-mentor@v2020#第六条",
+            "undergraduate-mentor@v2020#第八条",
+            "undergraduate-mentor@v2020#第四条",
+            "undergraduate-mentor@v2020#第二条",
+            "undergraduate-mentor@v2020#第三条",
+            "undergraduate-mentor@v2020#第九条",
+            "undergraduate-mentor@v2020#第七条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 1.0,
+          "latency_ms": 37,
+          "timing": {},
+          "warnings": []
+        },
+        {
+          "qid": "test-023",
+          "question": "学校制定辅修专业相关管理办法，主要出于哪些考虑，又依据了哪些文件精神？",
+          "category": "single_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "undergraduate-minor@v2025#第一条"
+          ],
+          "retrieved_article_ids": [
+            "undergraduate-minor@v2025#第六条",
+            "undergraduate-minor@v2025#第四条",
+            "undergraduate-minor@v2025#第二条",
+            "undergraduate-minor@v2025#第十七条",
+            "undergraduate-minor@v2025#第五条",
+            "undergraduate-minor@v2025#第九条",
+            "undergraduate-minor@v2025#第一条",
+            "undergraduate-minor@v2025#第十四条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 0.14285714285714285,
+          "latency_ms": 41,
+          "timing": {},
+          "warnings": []
+        },
+        {
+          "qid": "test-024",
+          "question": "新生保留入学资格原则上可以保留多久？因应征入伍或开展创业的又分别可以保留多长时间？",
+          "category": "single_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "undergraduate-status-rules@v2021#第五条"
+          ],
+          "retrieved_article_ids": [
+            "undergraduate-status-rules@v2021#第五条",
+            "undergraduate-status-rules@v2021#第二十四条",
+            "undergraduate-status-rules@v2021#第二十六条",
+            "undergraduate-status-rules@v2021#第二十七条",
+            "undergraduate-status-rules@v2021#第四十四条",
+            "undergraduate-status-rules@v2021#第三条",
+            "undergraduate-status-rules@v2021#第六条",
+            "undergraduate-status-rules@v2021#第三十九条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 1.0,
+          "latency_ms": 42,
+          "timing": {},
+          "warnings": []
+        },
+        {
+          "qid": "test-025",
+          "question": "什么是勤工助学活动？它在学校工作中起到哪些作用？",
+          "category": "single_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "work-study@v2019#第二条"
+          ],
+          "retrieved_article_ids": [
+            "work-study@v2019#第二条",
+            "work-study@v2019#第九条",
+            "work-study@v2019#第六条",
+            "work-study@v2019#第十四条",
+            "work-study@v2019#第三条",
+            "work-study@v2019#第七条",
+            "work-study@v2019#第十一条",
+            "work-study@v2019#第三十四条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 1.0,
+          "latency_ms": 21,
+          "timing": {},
+          "warnings": []
+        },
+        {
+          "qid": "test-026",
+          "question": "某学院制定校外第二导师选聘相关细则，其制定依据涉及哪些政策文件？申请专业学位研究生导师岗位资格者在行业实践方面还需满足哪些要求？",
+          "category": "multi_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "agri-external-second-supervisor-rule-2025@v2025#第一条",
+            "agri-external-second-supervisor-rule-2025@v2025#第四条"
+          ],
+          "retrieved_article_ids": [
+            "agri-external-second-supervisor-rule-2025@v2025#第七条",
+            "agri-external-second-supervisor-rule-2025@v2025#第六条",
+            "agri-external-second-supervisor-rule-2025@v2025#第三条",
+            "agri-master-supervisor-rule-2025@v2025#第二十二条",
+            "agri-external-second-supervisor-rule-2025@v2025#第五条",
+            "agri-external-second-supervisor-rule-2025@v2025#第一条",
+            "agri-external-supervisor-rule-2025@v2025#第二十一条",
+            "agri-external-second-supervisor-rule-2025@v2025#第二条"
+          ],
+          "recall_at_8": 0.5,
+          "reciprocal_rank": 0.16666666666666666,
+          "latency_ms": 37,
+          "timing": {},
+          "warnings": []
+        },
+        {
+          "qid": "test-027",
+          "question": "为加强博士生导师队伍建设制定的选聘细则依据哪些上级政策文件？正高职称教师申请学术学位博士生导师岗位资格，在科研项目、经费和成果方面各须达到什么要求？",
+          "category": "multi_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "agri-phd-supervisor-rule-2025@v2025#第一条",
+            "agri-phd-supervisor-rule-2025@v2025#第五条"
+          ],
+          "retrieved_article_ids": [
+            "agri-phd-supervisor-rule-2025@v2025#第五条",
+            "agri-phd-supervisor-rule-2025@v2025#第六条",
+            "agri-phd-supervisor-rule-2025@v2025#第七条",
+            "agri-phd-supervisor-rule-2025@v2025#第一条",
+            "agri-external-supervisor-rule-2025@v2025#第六条",
+            "agri-external-supervisor-rule-2025@v2025#第七条",
+            "agri-phd-supervisor-rule-2025@v2025#第八条",
+            "agri-phd-supervisor-rule-2025@v2025#第四条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 1.0,
+          "latency_ms": 40,
+          "timing": {},
+          "warnings": []
+        },
+        {
+          "qid": "test-028",
+          "question": "本科毕业生在什么条件下可被授予学士学位？学位申请人在攻读学位过程中出现哪些情形时学校不授予或撤销学位？",
+          "category": "multi_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "bachelor-degree-rules@v2025#第五条",
+            "bachelor-degree-rules@v2025#第八条"
+          ],
+          "retrieved_article_ids": [
+            "bachelor-degree-rules@v2025#第八条",
+            "master-doctor-degree-rules@v2025#第二十五条",
+            "bachelor-degree-rules@v2025#第五条",
+            "master-doctor-degree-rules@v2025#第二十八条",
+            "master-doctor-degree-rules@v2025#第十八条",
+            "undergraduate-status-rules@v2021#第五十三条",
+            "bachelor-degree-rules@v2025#第九条",
+            "master-doctor-degree-rules@v2025#第八条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 1.0,
+          "latency_ms": 34,
+          "timing": {},
+          "warnings": []
+        },
+        {
+          "qid": "test-029",
+          "question": "学校合同管理应遵循哪些原则？党政办公室在全校合同管理中承担哪些主要职责？",
+          "category": "multi_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "contract-management@v2020#第三条",
+            "contract-management@v2020#第十一条"
+          ],
+          "retrieved_article_ids": [
+            "contract-management@v2020#第十一条",
+            "contract-management@v2020#第三条",
+            "contract-management@v2020#第三十五条",
+            "contract-management@v2020#第八条",
+            "contract-management@v2020#第十二条",
+            "contract-management@v2020#第十三条",
+            "contract-management@v2020#第四条",
+            "contract-management@v2020#第三十条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 1.0,
+          "latency_ms": 21,
+          "timing": {},
+          "warnings": []
+        },
+        {
+          "qid": "test-030",
+          "question": "学校开展家庭经济困难学生认定工作依据哪些上级文件？该工作由哪个组织机构领导和监督，哪个部门具体负责本科生认定工作的组织与管理？",
+          "category": "multi_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "financial-hardship@v2020#第一条",
+            "financial-hardship@v2020#第六条"
+          ],
+          "retrieved_article_ids": [
+            "financial-hardship@v2020#第六条",
+            "financial-hardship@v2020#第七条",
+            "financial-hardship@v2020#第一条",
+            "financial-hardship@v2020#第八条",
+            "financial-hardship@v2020#第十二条",
+            "financial-hardship@v2020#第十五条",
+            "financial-hardship@v2020#第四条",
+            "financial-hardship@v2020#第十七条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 1.0,
+          "latency_ms": 31,
+          "timing": {},
+          "warnings": []
+        },
+        {
+          "qid": "test-031",
+          "question": "学校制定大学生创新创业训练计划相关管理办法的出发点是什么，该计划在实施中遵循哪些原则并要达到什么目的？",
+          "category": "multi_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "innovation-training@v2018#第一条",
+            "innovation-training@v2018#第二条"
+          ],
+          "retrieved_article_ids": [
+            "innovation-training@v2018#第二条",
+            "innovation-training@v2018#第一条",
+            "innovation-training@v2018#第十条",
+            "innovation-training@v2018#第九条",
+            "innovation-training@v2018#第六条",
+            "innovation-training@v2018#第四条",
+            "innovation-training@v2018#第三条",
+            "innovation-training@v2018#第二十二条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 1.0,
+          "latency_ms": 48,
+          "timing": {},
+          "warnings": []
+        },
+        {
+          "qid": "test-032",
+          "question": "学校公务接待的审批职责如何划分，接待活动中有哪些明确禁止的行为？",
+          "category": "multi_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "official-reception@v2017#第三条",
+            "official-reception@v2017#第九条"
+          ],
+          "retrieved_article_ids": [
+            "official-reception@v2017#第三条",
+            "official-reception@v2017#第九条",
+            "official-reception@v2017#第六条",
+            "official-reception@v2017#第十二条",
+            "official-reception@v2017#第四条",
+            "official-reception@v2017#第五条",
+            "official-reception@v2017#第十条",
+            "official-reception@v2017#第十一条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 1.0,
+          "latency_ms": 59,
+          "timing": {},
+          "warnings": []
+        },
+        {
+          "qid": "test-033",
+          "question": "学校为何在全日制专业学位研究生教育中探索专项制改革，每个专项的招生指标如何配置？",
+          "category": "multi_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "professional-degree-reform@v2022#第一条",
+            "professional-degree-reform@v2022#第二条"
+          ],
+          "retrieved_article_ids": [
+            "professional-degree-reform@v2022#第二条",
+            "professional-degree-reform@v2022#第四条",
+            "professional-degree-reform@v2022#第一条",
+            "professional-degree-reform@v2022#第六条",
+            "professional-degree-reform@v2022#第三条",
+            "professional-degree-reform@v2022#第十一条",
+            "professional-degree-reform@v2022#第九条",
+            "professional-degree-reform@v2022#第十条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 1.0,
+          "latency_ms": 49,
+          "timing": {},
+          "warnings": []
+        },
+        {
+          "qid": "test-034",
+          "question": "校督导委员会的人员与机构如何设置，担任校督导员需要满足哪些条件？",
+          "category": "multi_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "teaching-supervision@v2023#第四条",
+            "teaching-supervision@v2023#第七条"
+          ],
+          "retrieved_article_ids": [
+            "teaching-supervision@v2023#第四条",
+            "teaching-supervision@v2023#第八条",
+            "teaching-supervision@v2023#第七条",
+            "teaching-supervision@v2023#第九条",
+            "teaching-supervision@v2023#第六条",
+            "teaching-supervision@v2023#第十二条",
+            "teaching-supervision@v2023#第五条",
+            "teaching-supervision@v2023#第十三条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 1.0,
+          "latency_ms": 23,
+          "timing": {},
+          "warnings": []
+        },
+        {
+          "qid": "test-035",
+          "question": "学生申请转学需要符合哪些条件，转学的手续和备案程序是如何规定的？",
+          "category": "multi_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "undergraduate-school-transfer@v2021#第二条",
+            "undergraduate-school-transfer@v2021#第四条"
+          ],
+          "retrieved_article_ids": [
+            "undergraduate-school-transfer@v2021#第二条",
+            "undergraduate-school-transfer@v2021#第四条",
+            "undergraduate-school-transfer@v2021#第三条",
+            "undergraduate-status-rules@v2021#第二十三条",
+            "undergraduate-status-rules@v2021#第二十二条",
+            "undergraduate-status-rules@v2021#第二十一条",
+            "undergraduate-school-transfer@v2021#第五条",
+            "undergraduate-school-transfer@v2021#第一条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 1.0,
+          "latency_ms": 27,
+          "timing": {},
+          "warnings": []
+        },
+        {
+          "qid": "test-036",
+          "question": "2026 版培养方案：作物学学科在培养博士生和硕士生时，对学术研究能力与外语应用能力分别提出了哪些要求？",
+          "category": "section",
+          "block_types": [
+            "section"
+          ],
+          "expected_article_ids": [
+            "agri-grad-plan-crop-0901@v2026#一、培养目标"
+          ],
+          "retrieved_article_ids": [
+            "agri-grad-plan-crop-0901@v2026#三、应具备的基本学术能力~2",
+            "agri-grad-plan-crop-0901@v2026#三、应具备的基本学术能力",
+            "agri-grad-plan-crop-0901@v2026#一、培养目标",
+            "agri-grad-plan-crop-0901@v2026#一、应掌握的基本知识",
+            "agri-grad-plan-crop-0901@v2026#六、毕业与学位授予~2",
+            "agri-grad-plan-crop-0901@v2026#一、应掌握的基本知识及结构",
+            "agri-grad-plan-crop-0901@v2026#二、应具备的基本素质~2",
+            "agri-grad-plan-crop-0901@v2026#一、培养目标~2"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 0.3333333333333333,
+          "latency_ms": 34,
+          "timing": {},
+          "warnings": [
+            "agri-grad-plan-crop-0901@v2026#三、应具备的基本学术能力~2 的块类型为 section，按 section 口径记录",
+            "agri-grad-plan-crop-0901@v2026#三、应具备的基本学术能力 的块类型为 section，按 section 口径记录",
+            "agri-grad-plan-crop-0901@v2026#一、培养目标 的块类型为 section，按 section 口径记录",
+            "agri-grad-plan-crop-0901@v2026#一、应掌握的基本知识 的块类型为 section，按 section 口径记录",
+            "agri-grad-plan-crop-0901@v2026#六、毕业与学位授予~2 的块类型为 section，按 section 口径记录",
+            "agri-grad-plan-crop-0901@v2026#一、应掌握的基本知识及结构 的块类型为 section，按 section 口径记录",
+            "agri-grad-plan-crop-0901@v2026#二、应具备的基本素质~2 的块类型为 section，按 section 口径记录",
+            "agri-grad-plan-crop-0901@v2026#一、培养目标~2 的块类型为 section，按 section 口径记录"
+          ]
+        },
+        {
+          "qid": "test-037",
+          "question": "2026 版培养方案：农业工程学科博士生与硕士生在研究成果要求和毕业后可从事的工作方面有何规定？",
+          "category": "section",
+          "block_types": [
+            "section"
+          ],
+          "expected_article_ids": [
+            "info-grad-agri-engineering-plan@v2026#一、人才培养目标"
+          ],
+          "retrieved_article_ids": [
+            "info-grad-agri-engineering-plan@v2026#一、人才培养目标",
+            "info-grad-agri-engineering-plan@v2026#一、培养目标",
+            "info-grad-agri-engineering-plan@v2026#四、学位论文基本要求~2",
+            "info-grad-agri-engineering-plan@v2026#六、毕业与学位授予~2",
+            "info-grad-agri-engineering-plan@v2026#三、培养环节及时间安排",
+            "info-grad-agri-engineering-plan@v2026#三、获本学科博士学位应具备的基本学术能力",
+            "info-grad-agri-engineering-plan@v2026#四、学位论文基本要求"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 1.0,
+          "latency_ms": 33,
+          "timing": {},
+          "warnings": [
+            "证据预算触顶：保留 7 条，跳过 info-grad-agri-engineering-plan@v2026#二、获本学科博士学位应具备的基本素质",
+            "证据预算触顶：保留 7 条，跳过 info-grad-agri-engineering-plan@v2026#二、获本学科硕士学位应具备的基本素质",
+            "证据预算触顶：保留 7 条，跳过 info-grad-agri-engineering-plan@v2026#四、培养环节具体标准及考核要求",
+            "证据预算触顶：保留 7 条，跳过 info-grad-agri-engineering-plan@v2026#五、研究生科研成果要求",
+            "证据预算触顶：保留 7 条，跳过 info-grad-agri-engineering-plan@v2026#二、课程设置",
+            "证据预算触顶：保留 7 条，跳过 info-grad-agri-engineering-plan@v2026#五、科研成果要求",
+            "证据预算触顶：保留 7 条，跳过 info-grad-agri-engineering-plan@v2026#一、获本一级学科硕士学位应掌握的基本知识",
+            "证据预算触顶：保留 7 条，跳过 info-grad-agri-engineering-plan@v2026#六、毕业与学位授予",
+            "证据预算触顶：保留 7 条，跳过 info-grad-agri-engineering-plan@v2026#第一部分普通博士生、硕士生",
+            "证据预算触顶：保留 7 条，跳过 info-grad-agri-engineering-plan@v2026#三、获本一级学科硕士学位应具备的基本学术能力",
+            "证据预算触顶：保留 7 条，跳过 info-grad-agri-engineering-plan@v2026#二、课程设置~2",
+            "证据预算触顶：保留 7 条，跳过 info-grad-agri-engineering-plan@v2026#一、获本一级学科博士学位应掌握的基本知识及结构",
+            "info-grad-agri-engineering-plan@v2026#一、人才培养目标 的块类型为 section，按 section 口径记录",
+            "info-grad-agri-engineering-plan@v2026#一、培养目标 的块类型为 section，按 section 口径记录",
+            "info-grad-agri-engineering-plan@v2026#四、学位论文基本要求~2 的块类型为 section，按 section 口径记录",
+            "info-grad-agri-engineering-plan@v2026#六、毕业与学位授予~2 的块类型为 section，按 section 口径记录",
+            "info-grad-agri-engineering-plan@v2026#三、培养环节及时间安排 的块类型为 section，按 section 口径记录",
+            "info-grad-agri-engineering-plan@v2026#三、获本学科博士学位应具备的基本学术能力 的块类型为 section，按 section 口径记录",
+            "info-grad-agri-engineering-plan@v2026#四、学位论文基本要求 的块类型为 section，按 section 口径记录"
+          ]
+        },
+        {
+          "qid": "test-038",
+          "question": "2025 版培养方案：计算机科学与技术学科硕士生培养对外语能力、学术规范素养和就业适应性分别提出了什么要求？",
+          "category": "section",
+          "block_types": [
+            "section"
+          ],
+          "expected_article_ids": [
+            "info-grad-cs-plan@v2025-2026#一、人才培养目标"
+          ],
+          "retrieved_article_ids": [
+            "info-grad-cs-plan@v2025-2026#一、人才培养目标",
+            "info-grad-computer-tech-plan@v2025-2026#一、培养目标",
+            "info-grad-cs-plan@v2025-2026#二、获本学科硕士学位应具备的基本素质",
+            "info-grad-cs-plan@v2025-2026#四、学位论文基本要求",
+            "info-grad-cs-plan@v2025-2026#一、获本学科硕士学位应掌握的基本知识",
+            "info-grad-computer-tech-plan@v2025-2026#五、学位论文基本要求",
+            "info-grad-cs-plan@v2025-2026#二、课程设置",
+            "info-grad-software-plan@v2025-2026#一、人才培养目标"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 1.0,
+          "latency_ms": 22,
+          "timing": {},
+          "warnings": [
+            "证据预算触顶：保留 7 条，跳过 info-grad-computer-tech-plan@v2025-2026#一、获本专业学位类别硕士学位应具备的基本素质",
+            "info-grad-cs-plan@v2025-2026#一、人才培养目标 的块类型为 section，按 section 口径记录",
+            "info-grad-computer-tech-plan@v2025-2026#一、培养目标 的块类型为 section，按 section 口径记录",
+            "info-grad-cs-plan@v2025-2026#二、获本学科硕士学位应具备的基本素质 的块类型为 section，按 section 口径记录",
+            "info-grad-cs-plan@v2025-2026#四、学位论文基本要求 的块类型为 section，按 section 口径记录",
+            "info-grad-cs-plan@v2025-2026#一、获本学科硕士学位应掌握的基本知识 的块类型为 section，按 section 口径记录",
+            "info-grad-computer-tech-plan@v2025-2026#五、学位论文基本要求 的块类型为 section，按 section 口径记录",
+            "info-grad-cs-plan@v2025-2026#二、课程设置 的块类型为 section，按 section 口径记录",
+            "info-grad-software-plan@v2025-2026#一、人才培养目标 的块类型为 section，按 section 口径记录"
+          ]
+        },
+        {
+          "qid": "test-039",
+          "question": "2025 版培养方案：数学及相关学科硕士研究生在知识结构和能力方面需要达到哪些培养要求？",
+          "category": "section",
+          "block_types": [
+            "section"
+          ],
+          "expected_article_ids": [
+            "info-grad-math-plan@v2025-2026#一、人才培养目标"
+          ],
+          "retrieved_article_ids": [
+            "info-grad-math-plan@v2025-2026#一、人才培养目标",
+            "info-grad-math-plan@v2025-2026#三、获本学科硕士学位应具备的基本学术能力",
+            "info-grad-math-plan@v2025-2026#二、获本学科硕士学位应具备的基本素质",
+            "info-grad-math-plan@v2025-2026#一、获本学科硕士学位应掌握的基本知识",
+            "info-grad-math-plan@v2025-2026#六、毕业与学位授予",
+            "info-grad-math-plan@v2025-2026#二、课程设置",
+            "info-grad-math-plan@v2025-2026#四、培养环节具体标准及考核要求",
+            "info-grad-math-plan@v2025-2026#四、学位论文的基本要求"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 1.0,
+          "latency_ms": 36,
+          "timing": {},
+          "warnings": [
+            "info-grad-math-plan@v2025-2026#一、人才培养目标 的块类型为 section，按 section 口径记录",
+            "info-grad-math-plan@v2025-2026#三、获本学科硕士学位应具备的基本学术能力 的块类型为 section，按 section 口径记录",
+            "info-grad-math-plan@v2025-2026#二、获本学科硕士学位应具备的基本素质 的块类型为 section，按 section 口径记录",
+            "info-grad-math-plan@v2025-2026#一、获本学科硕士学位应掌握的基本知识 的块类型为 section，按 section 口径记录",
+            "info-grad-math-plan@v2025-2026#六、毕业与学位授予 的块类型为 section，按 section 口径记录",
+            "info-grad-math-plan@v2025-2026#二、课程设置 的块类型为 section，按 section 口径记录",
+            "info-grad-math-plan@v2025-2026#四、培养环节具体标准及考核要求 的块类型为 section，按 section 口径记录",
+            "info-grad-math-plan@v2025-2026#四、学位论文的基本要求 的块类型为 section，按 section 口径记录"
+          ]
+        },
+        {
+          "qid": "test-040",
+          "question": "2022 版培养方案：大数据管理与应用专业毕业生应具备哪些知识方法基础，又主要面向哪些应用领域开展工作？",
+          "category": "section",
+          "block_types": [
+            "section"
+          ],
+          "expected_article_ids": [
+            "info-ug-bigdata-plan@v2022#二、培养目标"
+          ],
+          "retrieved_article_ids": [
+            "info-ug-bigdata-plan@v2022#二、培养目标",
+            "info-ug-bigdata-plan@v2022#三、培养规格",
+            "info-ug-bigdata-plan@v2022#八、人才培养目标实现矩阵",
+            "info-ug-bigdata-plan@v2022#九、培养计划进程表",
+            "info-ug-bigdata-plan@v2022#五、专业核心课程",
+            "info-ug-bigdata-plan@v2022#四、主干学科",
+            "info-ug-bigdata-plan@v2022#七、课程结构及毕业要求",
+            "info-ug-bigdata-plan@v2022#一、专业名称"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 1.0,
+          "latency_ms": 39,
+          "timing": {},
+          "warnings": [
+            "info-ug-bigdata-plan@v2022#二、培养目标 的块类型为 section，按 section 口径记录",
+            "info-ug-bigdata-plan@v2022#三、培养规格 的块类型为 section，按 section 口径记录",
+            "info-ug-bigdata-plan@v2022#八、人才培养目标实现矩阵 的块类型为 section，按 section 口径记录",
+            "info-ug-bigdata-plan@v2022#九、培养计划进程表 的块类型为 section，按 section 口径记录",
+            "info-ug-bigdata-plan@v2022#五、专业核心课程 的块类型为 section，按 section 口径记录",
+            "info-ug-bigdata-plan@v2022#四、主干学科 的块类型为 section，按 section 口径记录",
+            "info-ug-bigdata-plan@v2022#七、课程结构及毕业要求 的块类型为 section，按 section 口径记录",
+            "info-ug-bigdata-plan@v2022#一、专业名称 的块类型为 section，按 section 口径记录"
+          ]
+        }
+      ]
+    },
+    "hybrid_rrf": {
+      "summary": {
+        "questions": 40,
+        "scored_questions": 40,
+        "skipped_no_expected": 0,
+        "article": {
+          "questions": 35,
+          "recall_at_8": 1.0,
+          "mrr": 0.8771,
+          "no_hit": 0
+        },
+        "section": {
+          "questions": 5,
+          "recall_at_8": 1.0,
+          "mrr": 0.7667,
+          "no_hit": 0
+        },
+        "overall": {
+          "recall_at_8": 1.0,
+          "mrr": 0.8633
+        },
+        "latency_ms": {
+          "p50": 59.0,
+          "p95": 123.04999999999994
+        },
+        "rerank_latency_ms": {
+          "count": 0,
+          "p50": null,
+          "p95": null
+        }
+      },
+      "elapsed_ms": 2807,
+      "rows": [
+        {
+          "qid": "test-001",
+          "question": "学院制定研究生校外导师相关岗位管理细则时，所依据的学校层面制度文件是哪两份？",
+          "category": "single_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "agri-external-supervisor-rule-2025@v2025#第一条"
+          ],
+          "retrieved_article_ids": [
+            "agri-external-supervisor-rule-2025@v2025#第一条",
+            "agri-external-second-supervisor-rule-2025@v2025#第一条",
+            "agri-external-supervisor-rule-2025@v2025#第二条",
+            "agri-external-supervisor-rule-2025@v2025#第二十二条",
+            "agri-external-supervisor-rule-2025@v2025#第四条",
+            "agri-external-supervisor-rule-2025@v2025#第二十三条",
+            "agri-external-supervisor-rule-2025@v2025#第三条",
+            "agri-external-supervisor-rule-2025@v2025#第二十四条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 1.0,
+          "latency_ms": 57,
+          "timing": {
+            "dense_ms": 33.55,
+            "sparse_ms": 20.55,
+            "rerank_ms": 0.0
+          },
+          "warnings": [
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤",
+            "PROFILE_UNDETERMINED: 用户未提供学院，结果保留可能限定该细目的条款",
+            "FILTERS_APPLIED: as_of=2026-10-24；version_mode=current；audience=未指定（不硬过滤）；profile=未提供"
+          ]
+        },
+        {
+          "qid": "test-002",
+          "question": "学院制定硕士生导师队伍建设相关细则的直接校级依据是什么，其目的又是什么？",
+          "category": "single_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "agri-master-supervisor-rule-2025@v2025#第一条"
+          ],
+          "retrieved_article_ids": [
+            "agri-master-supervisor-rule-2025@v2025#第一条",
+            "agri-external-supervisor-rule-2025@v2025#第一条",
+            "agri-external-second-supervisor-rule-2025@v2025#第一条",
+            "agri-phd-supervisor-rule-2025@v2025#第一条",
+            "agri-master-supervisor-rule-2025@v2025#第二十一条",
+            "agri-master-supervisor-rule-2025@v2025#第七条",
+            "agri-master-supervisor-rule-2025@v2025#第十六条",
+            "agri-postdoc-rule-2024@v2024#第一条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 1.0,
+          "latency_ms": 57,
+          "timing": {
+            "dense_ms": 43.14,
+            "sparse_ms": 11.63,
+            "rerank_ms": 0.0
+          },
+          "warnings": [
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤",
+            "PROFILE_UNDETERMINED: 用户未提供学院，结果保留可能限定该细目的条款",
+            "FILTERS_APPLIED: as_of=2026-10-24；version_mode=current；audience=未指定（不硬过滤）；profile=未提供"
+          ]
+        },
+        {
+          "qid": "test-003",
+          "question": "学院规范博士后研究人员管理工作，在队伍发展方面要实现怎样的目标？",
+          "category": "single_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "agri-postdoc-rule-2024@v2024#第一条"
+          ],
+          "retrieved_article_ids": [
+            "agri-postdoc-rule-2024@v2024#第一条",
+            "postdoc-management@v2024#第一条",
+            "agri-postdoc-rule-2024@v2024#第五条",
+            "postdoc-management@v2024#第四十条",
+            "agri-postdoc-rule-2024@v2024#第二条",
+            "postdoc-management@v2024#第十二条",
+            "agri-postdoc-rule-2024@v2024#第六条",
+            "postdoc-management@v2024#第二条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 1.0,
+          "latency_ms": 51,
+          "timing": {
+            "dense_ms": 27.49,
+            "sparse_ms": 22.72,
+            "rerank_ms": 0.0
+          },
+          "warnings": [
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤",
+            "PROFILE_UNDETERMINED: 用户未提供学院，结果保留可能限定该细目的条款",
+            "FILTERS_APPLIED: as_of=2026-10-24；version_mode=current；audience=未指定（不硬过滤）；profile=未提供"
+          ]
+        },
+        {
+          "qid": "test-004",
+          "question": "农学院制定推免相关实施细则时，依据的实际情况和遵循的原则分别是什么？",
+          "category": "single_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "agri-postgrad-recommendation-rule-2024@v2024#第一条"
+          ],
+          "retrieved_article_ids": [
+            "agri-postgrad-recommendation-rule-2024@v2024#第一条",
+            "postgraduate-recommendation@v2025#第十三条",
+            "agri-postgrad-recommendation-rule-2024@v2024#第二条",
+            "agri-postgrad-recommendation-rule-2024@v2024#第三条",
+            "postgraduate-recommendation@v2025#第十六条",
+            "postgraduate-recommendation@v2025#第十九条",
+            "postgraduate-recommendation@v2025#第五条",
+            "postgraduate-recommendation@v2025#第十七条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 1.0,
+          "latency_ms": 102,
+          "timing": {
+            "dense_ms": 66.86,
+            "sparse_ms": 32.49,
+            "rerank_ms": 0.0
+          },
+          "warnings": [
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤",
+            "PROFILE_UNDETERMINED: 用户未提供学院，结果保留可能限定该细目的条款",
+            "PROFILE_UNDETERMINED: 用户未提供年级/阶段，结果保留可能限定该细目的条款",
+            "PROFILE_UNDETERMINED: 用户未提供学籍状态，结果保留可能限定该细目的条款",
+            "FILTERS_APPLIED: as_of=2026-10-24；version_mode=current；audience=未指定（不硬过滤）；profile=未提供"
+          ]
+        },
+        {
+          "qid": "test-005",
+          "question": "加强和规范学校电子档案管理，需要确保电子档案具备哪些特性？",
+          "category": "single_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "archive-management@v2026#第一条"
+          ],
+          "retrieved_article_ids": [
+            "archive-management@v2026#第二条",
+            "archive-management@v2026#第四条",
+            "archive-management@v2026#第六条",
+            "archive-management@v2026#第九条",
+            "archive-management@v2026#第一条",
+            "archive-management@v2026#第十六条",
+            "archive-management@v2026#第十三条",
+            "archive-management@v2026#第十七条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 0.2,
+          "latency_ms": 39,
+          "timing": {
+            "dense_ms": 31.64,
+            "sparse_ms": 6.44,
+            "rerank_ms": 0.0
+          },
+          "warnings": [
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤",
+            "FILTERS_APPLIED: as_of=2026-10-24；version_mode=current；audience=未指定（不硬过滤）；profile=未提供"
+          ]
+        },
+        {
+          "qid": "test-006",
+          "question": "学生选课结束后课程表确定，什么情况下还能调整课程安排？开学初又有何限制？",
+          "category": "single_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "class-adjustment@v2022#第二条"
+          ],
+          "retrieved_article_ids": [
+            "class-adjustment@v2022#第二条",
+            "course-selection@v2016#第十条",
+            "general-education-elective@v2023#第二十条",
+            "course-selection@v2016#第九条",
+            "course-selection@v2016#第十二条",
+            "class-adjustment@v2022#第三条",
+            "course-selection@v2016#第二条",
+            "course-selection@v2016#第四条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 1.0,
+          "latency_ms": 54,
+          "timing": {
+            "dense_ms": 33.97,
+            "sparse_ms": 19.24,
+            "rerank_ms": 0.0
+          },
+          "warnings": [
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤",
+            "FILTERS_APPLIED: as_of=2026-10-24；version_mode=current；audience=未指定（不硬过滤）；profile=未提供"
+          ]
+        },
+        {
+          "qid": "test-007",
+          "question": "学校设立院级奖助学金的政策依据是什么，面向哪些学生，目的是什么？",
+          "category": "single_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "college-aid@v2015#第一条"
+          ],
+          "retrieved_article_ids": [
+            "college-aid@v2015#第二条",
+            "college-aid@v2015#第一条",
+            "college-aid@v2015#第三条",
+            "college-aid@v2015#第六条",
+            "national-aid-undergrad@v2021#第三条",
+            "college-aid@v2015#第五条",
+            "student-financial-aid@v2022#第二十七条",
+            "national-aid-grad@v2022#第二十九条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 0.5,
+          "latency_ms": 69,
+          "timing": {
+            "dense_ms": 51.91,
+            "sparse_ms": 16.44,
+            "rerank_ms": 0.0
+          },
+          "warnings": [
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤",
+            "FILTERS_APPLIED: as_of=2026-10-24；version_mode=current；audience=未指定（不硬过滤）；profile=未提供"
+          ]
+        },
+        {
+          "qid": "test-008",
+          "question": "智育测评成绩如何构成？在计算平均绩点时，双学位和重修课程的成绩如何处理？",
+          "category": "single_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "comprehensive-evaluation@v2020#第六条"
+          ],
+          "retrieved_article_ids": [
+            "comprehensive-evaluation@v2020#第六条",
+            "comprehensive-evaluation@v2020#第四条",
+            "undergraduate-status-rules@v2021#第十二条",
+            "comprehensive-evaluation@v2020#第八条",
+            "general-education-elective@v2023#第十六条",
+            "comprehensive-evaluation@v2020#第七条",
+            "undergraduate-status-rules@v2021#第十八条",
+            "comprehensive-evaluation@v2020#第五条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 1.0,
+          "latency_ms": 46,
+          "timing": {
+            "dense_ms": 30.28,
+            "sparse_ms": 15.22,
+            "rerank_ms": 0.0
+          },
+          "warnings": [
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤",
+            "FILTERS_APPLIED: as_of=2026-10-24；version_mode=current；audience=未指定（不硬过滤）；profile=未提供"
+          ]
+        },
+        {
+          "qid": "test-009",
+          "question": "校学位评定委员会的委员由哪些方式产生？委员人选名单通过后还需办理什么手续？",
+          "category": "single_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "degree-committee-charter@v2025#第五条"
+          ],
+          "retrieved_article_ids": [
+            "degree-committee-charter@v2025#第五条",
+            "degree-committee-charter@v2025#第七条",
+            "degree-committee-charter@v2025#第八条",
+            "master-doctor-degree-rules@v2025#第七条",
+            "degree-committee-charter@v2025#第十六条",
+            "master-doctor-degree-rules@v2025#第六条",
+            "master-doctor-degree-rules@v2025#第五条",
+            "degree-committee-charter@v2025#第六条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 1.0,
+          "latency_ms": 46,
+          "timing": {
+            "dense_ms": 28.45,
+            "sparse_ms": 16.7,
+            "rerank_ms": 0.0
+          },
+          "warnings": [
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤",
+            "FILTERS_APPLIED: as_of=2026-10-24；version_mode=current；audience=未指定（不硬过滤）；profile=未提供"
+          ]
+        },
+        {
+          "qid": "test-010",
+          "question": "监考员考前需要提前多久进入考场？入场后须完成哪些工作？",
+          "category": "single_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "exam-room-rules@v2022#第十四条"
+          ],
+          "retrieved_article_ids": [
+            "exam-room-rules@v2022#第七条",
+            "exam-room-rules@v2022#第十四条",
+            "exam-room-rules@v2022#第二条",
+            "exam-room-rules@v2022#第十三条",
+            "exam-room-rules@v2022#第十六条",
+            "exam-room-rules@v2022#第十五条",
+            "exam-room-rules@v2022#第二十九条",
+            "exam-room-rules@v2022#第十九条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 0.5,
+          "latency_ms": 28,
+          "timing": {
+            "dense_ms": 21.24,
+            "sparse_ms": 5.73,
+            "rerank_ms": 0.0
+          },
+          "warnings": [
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤",
+            "FILTERS_APPLIED: as_of=2026-10-24；version_mode=current；audience=未指定（不硬过滤）；profile=未提供"
+          ]
+        },
+        {
+          "qid": "test-011",
+          "question": "教师在哪些情况下会被认定为发生教学差错？",
+          "category": "single_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "graduate-teaching-errors@v2022#第三条"
+          ],
+          "retrieved_article_ids": [
+            "graduate-teaching-errors@v2022#第五条",
+            "graduate-teaching-errors@v2022#第三条",
+            "graduate-teaching-errors@v2022#第七条",
+            "graduate-teaching-errors@v2022#第六条",
+            "graduate-teaching-errors@v2022#第四条",
+            "graduate-teaching-errors@v2022#第八条",
+            "graduate-teaching-errors@v2022#第九条",
+            "graduate-course-assessment@v2023#第十八条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 0.5,
+          "latency_ms": 58,
+          "timing": {
+            "dense_ms": 35.6,
+            "sparse_ms": 21.43,
+            "rerank_ms": 0.0
+          },
+          "warnings": [
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤",
+            "FILTERS_APPLIED: as_of=2026-10-24；version_mode=current；audience=未指定（不硬过滤）；profile=未提供"
+          ]
+        },
+        {
+          "qid": "test-012",
+          "question": "制定研究生学位答辩及学位申请相关管理办法，主要依据了哪些法律法规和文件？",
+          "category": "single_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "graduate-thesis-defense@v2026#第一条"
+          ],
+          "retrieved_article_ids": [
+            "graduate-thesis-defense@v2026#第一条",
+            "graduate-thesis-defense@v2026#第三条",
+            "graduate-thesis-defense@v2026#第三十七条",
+            "graduate-thesis-defense@v2026#第二十一条",
+            "graduate-thesis-defense@v2026#第二条",
+            "graduate-thesis-defense@v2026#第三十四条",
+            "graduate-thesis-defense@v2026#第四十二条",
+            "graduate-thesis-defense@v2026#第四十一条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 1.0,
+          "latency_ms": 59,
+          "timing": {
+            "dense_ms": 31.85,
+            "sparse_ms": 24.54,
+            "rerank_ms": 0.0
+          },
+          "warnings": [
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤",
+            "PROFILE_UNDETERMINED: 用户未提供年级/阶段，结果保留可能限定该细目的条款",
+            "FILTERS_APPLIED: as_of=2026-10-24；version_mode=current；audience=未指定（不硬过滤）；profile=未提供"
+          ]
+        },
+        {
+          "qid": "test-013",
+          "question": "学校困难补助办法的制定目的是什么，主要依据哪两份文件？",
+          "category": "single_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "hardship-subsidy@v2015#第一条"
+          ],
+          "retrieved_article_ids": [
+            "hardship-subsidy@v2015#第三条",
+            "hardship-subsidy@v2015#第一条",
+            "hardship-subsidy@v2015#第六条",
+            "hardship-subsidy@v2015#第七条",
+            "student-financial-aid@v2022#第二十五条",
+            "hardship-subsidy@v2015#第四条",
+            "student-financial-aid@v2022#第二条",
+            "financial-hardship@v2020#第四条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 0.5,
+          "latency_ms": 70,
+          "timing": {
+            "dense_ms": 41.08,
+            "sparse_ms": 26.46,
+            "rerank_ms": 0.0
+          },
+          "warnings": [
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤",
+            "PROFILE_UNDETERMINED: 用户未提供学生群体，结果保留可能限定该细目的条款",
+            "FILTERS_APPLIED: as_of=2026-10-24；version_mode=current；audience=未指定（不硬过滤）；profile=未提供"
+          ]
+        },
+        {
+          "qid": "test-014",
+          "question": "学校制定实验室安全管理办法要达到哪些目的，又依据了哪些规定？",
+          "category": "single_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "lab-safety@v2015#第一条"
+          ],
+          "retrieved_article_ids": [
+            "lab-safety@v2015#第一条",
+            "lab-safety@v2015#第三条",
+            "lab-safety@v2015#第二十三条",
+            "lab-safety@v2015#第五条",
+            "lab-safety@v2015#第二十五条",
+            "lab-safety@v2015#第七条",
+            "lab-safety@v2015#第四条",
+            "lab-safety@v2015#第十四条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 1.0,
+          "latency_ms": 49,
+          "timing": {
+            "dense_ms": 31.06,
+            "sparse_ms": 16.78,
+            "rerank_ms": 0.0
+          },
+          "warnings": [
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤",
+            "FILTERS_APPLIED: as_of=2026-10-24；version_mode=current；audience=未指定（不硬过滤）；profile=未提供"
+          ]
+        },
+        {
+          "qid": "test-015",
+          "question": "校学位评定委员会何时召开例行会议，其决议需要满足怎样的出席和表决条件才能通过？",
+          "category": "single_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "master-doctor-degree-rules@v2025#第七条"
+          ],
+          "retrieved_article_ids": [
+            "master-doctor-degree-rules@v2025#第七条",
+            "degree-committee-charter@v2025#第十四条",
+            "degree-committee-charter@v2025#第十六条",
+            "graduate-thesis-defense@v2026#第三十二条",
+            "degree-committee-charter@v2025#第十三条",
+            "degree-committee-charter@v2025#第八条",
+            "degree-committee-charter@v2025#第十八条",
+            "degree-committee-charter@v2025#第七条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 1.0,
+          "latency_ms": 64,
+          "timing": {
+            "dense_ms": 44.63,
+            "sparse_ms": 17.12,
+            "rerank_ms": 0.0
+          },
+          "warnings": [
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤",
+            "PROFILE_UNDETERMINED: 用户未提供年级/阶段，结果保留可能限定该细目的条款",
+            "FILTERS_APPLIED: as_of=2026-10-24；version_mode=current；audience=未指定（不硬过滤）；profile=未提供"
+          ]
+        },
+        {
+          "qid": "test-016",
+          "question": "学校制定优秀毕业生评选办法时，希望促进学生怎样的全面发展？又希望发挥哪类学生的示范带动作用？",
+          "category": "single_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "outstanding-graduates@v2025#第一条"
+          ],
+          "retrieved_article_ids": [
+            "outstanding-graduates@v2025#第一条",
+            "outstanding-graduates@v2025#第九条",
+            "outstanding-graduates@v2025#第六条",
+            "outstanding-graduates@v2025#第八条",
+            "outstanding-graduates@v2025#第三条",
+            "outstanding-graduates@v2025#第七条",
+            "postgraduate-recommendation@v2025#第二条",
+            "outstanding-graduates@v2025#第二条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 1.0,
+          "latency_ms": 53,
+          "timing": {
+            "dense_ms": 30.03,
+            "sparse_ms": 21.33,
+            "rerank_ms": 0.0
+          },
+          "warnings": [
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤",
+            "PROFILE_UNDETERMINED: 用户未提供年级/阶段，结果保留可能限定该细目的条款",
+            "PROFILE_UNDETERMINED: 用户未提供学籍状态，结果保留可能限定该细目的条款",
+            "FILTERS_APPLIED: as_of=2026-10-24；version_mode=current；audience=未指定（不硬过滤）；profile=未提供"
+          ]
+        },
+        {
+          "qid": "test-017",
+          "question": "研究生学位论文参加评选的时间范围和次数是如何规定的？哪些论文不能参评？",
+          "category": "single_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "outstanding-thesis-award@v2021#第三条"
+          ],
+          "retrieved_article_ids": [
+            "outstanding-thesis-award@v2021#第三条",
+            "outstanding-thesis-award@v2021#第四条",
+            "outstanding-thesis-award@v2021#第十三条",
+            "graduate-thesis-defense@v2026#第二十条",
+            "outstanding-thesis-award@v2021#第十条",
+            "outstanding-thesis-award@v2021#第八条",
+            "agri-external-supervisor-rule-2025@v2025#第二十四条",
+            "outstanding-thesis-award@v2021#第六条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 1.0,
+          "latency_ms": 57,
+          "timing": {
+            "dense_ms": 37.72,
+            "sparse_ms": 17.21,
+            "rerank_ms": 0.0
+          },
+          "warnings": [
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤",
+            "PROFILE_UNDETERMINED: 用户未提供学院，结果保留可能限定该细目的条款",
+            "PROFILE_UNDETERMINED: 用户未提供年级/阶段，结果保留可能限定该细目的条款",
+            "FILTERS_APPLIED: as_of=2026-10-24；version_mode=current；audience=未指定（不硬过滤）；profile=未提供"
+          ]
+        },
+        {
+          "qid": "test-018",
+          "question": "学校公共设施管理中，后勤管理处、教学科研基地管理处和设备资产管理处各自负责哪些工作？",
+          "category": "single_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "public-facilities@v2004#第二条"
+          ],
+          "retrieved_article_ids": [
+            "public-facilities@v2004#第二条",
+            "public-facilities@v2004#第三条",
+            "public-facilities@v2004#第六条",
+            "public-facilities@v2004#第五条",
+            "public-facilities@v2004#第七条",
+            "public-facilities@v2004#第九条",
+            "public-facilities@v2004#第十条",
+            "public-facilities@v2004#第四条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 1.0,
+          "latency_ms": 83,
+          "timing": {
+            "dense_ms": 51.24,
+            "sparse_ms": 29.37,
+            "rerank_ms": 0.0
+          },
+          "warnings": [
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤",
+            "FILTERS_APPLIED: as_of=2026-10-24；version_mode=current；audience=未指定（不硬过滤）；profile=未提供"
+          ]
+        },
+        {
+          "qid": "test-019",
+          "question": "学校制定学生资助相关办法时，主要依据了哪些关于资助资金的上位文件和规定？",
+          "category": "single_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "student-financial-aid@v2022#第一条"
+          ],
+          "retrieved_article_ids": [
+            "student-financial-aid@v2022#第一条",
+            "national-aid-undergrad@v2021#第二十九条",
+            "national-aid-undergrad@v2021#第一条",
+            "national-aid-grad@v2022#第一条",
+            "student-financial-aid@v2022#第八条",
+            "student-financial-aid@v2022#第九条",
+            "student-financial-aid@v2022#第十条",
+            "national-aid-grad@v2022#第二十条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 1.0,
+          "latency_ms": 51,
+          "timing": {
+            "dense_ms": 25.49,
+            "sparse_ms": 23.84,
+            "rerank_ms": 0.0
+          },
+          "warnings": [
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤",
+            "FILTERS_APPLIED: as_of=2026-10-24；version_mode=current；audience=未指定（不硬过滤）；profile=未提供"
+          ]
+        },
+        {
+          "qid": "test-020",
+          "question": "制定国家助学贷款相关管理细则的目的是什么，又依据了哪两个文件的要求？",
+          "category": "single_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "student-loan@v2018#第一条"
+          ],
+          "retrieved_article_ids": [
+            "student-loan@v2018#第一条",
+            "student-loan@v2018#第三条",
+            "student-loan@v2018#第六条",
+            "student-loan@v2018#第十二条",
+            "student-loan@v2018#第四条",
+            "student-loan@v2018#第五条",
+            "student-loan@v2018#第十六条",
+            "student-loan@v2018#第九条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 1.0,
+          "latency_ms": 76,
+          "timing": {
+            "dense_ms": 53.42,
+            "sparse_ms": 20.56,
+            "rerank_ms": 0.0
+          },
+          "warnings": [
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤",
+            "PROFILE_UNDETERMINED: 用户未提供学生群体，结果保留可能限定该细目的条款",
+            "FILTERS_APPLIED: as_of=2026-10-24；version_mode=current；audience=未指定（不硬过滤）；profile=未提供"
+          ]
+        },
+        {
+          "qid": "test-021",
+          "question": "学生出现哪些情况会被给予一般预警？请分别说明旷课、请假（含旷课）和缺交作业的比例门槛。",
+          "category": "single_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "undergraduate-academic-warning@v2021#第五条"
+          ],
+          "retrieved_article_ids": [
+            "undergraduate-academic-warning@v2021#第五条",
+            "disciplinary-rules@v2017#第十六条",
+            "undergraduate-status-rules@v2021#第三十四条",
+            "undergraduate-status-rules@v2021#第三十六条",
+            "undergraduate-academic-warning@v2021#第六条",
+            "undergraduate-academic-warning@v2021#第八条",
+            "undergraduate-status-rules@v2021#第十九条",
+            "classroom-rules@v2018#第十七条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 1.0,
+          "latency_ms": 96,
+          "timing": {
+            "dense_ms": 59.49,
+            "sparse_ms": 33.64,
+            "rerank_ms": 0.0
+          },
+          "warnings": [
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤",
+            "FILTERS_APPLIED: as_of=2026-10-24；version_mode=current；audience=未指定（不硬过滤）；profile=未提供"
+          ]
+        },
+        {
+          "qid": "test-022",
+          "question": "学校实施本科生导师制主要是为了什么？",
+          "category": "single_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "undergraduate-mentor@v2020#第一条"
+          ],
+          "retrieved_article_ids": [
+            "undergraduate-mentor@v2020#第一条",
+            "undergraduate-mentor@v2020#第八条",
+            "undergraduate-mentor@v2020#第二条",
+            "undergraduate-mentor@v2020#第六条",
+            "undergraduate-mentor@v2020#第四条",
+            "undergraduate-mentor@v2020#第九条",
+            "undergraduate-mentor@v2020#第五条",
+            "undergraduate-mentor@v2020#第三条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 1.0,
+          "latency_ms": 36,
+          "timing": {
+            "dense_ms": 24.26,
+            "sparse_ms": 10.51,
+            "rerank_ms": 0.0
+          },
+          "warnings": [
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤",
+            "FILTERS_APPLIED: as_of=2026-10-24；version_mode=current；audience=未指定（不硬过滤）；profile=未提供"
+          ]
+        },
+        {
+          "qid": "test-023",
+          "question": "学校制定辅修专业相关管理办法，主要出于哪些考虑，又依据了哪些文件精神？",
+          "category": "single_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "undergraduate-minor@v2025#第一条"
+          ],
+          "retrieved_article_ids": [
+            "undergraduate-minor@v2025#第一条",
+            "undergraduate-minor@v2025#第五条",
+            "undergraduate-minor@v2025#第九条",
+            "undergraduate-minor@v2025#第八条",
+            "undergraduate-minor@v2025#第十五条",
+            "undergraduate-minor@v2025#第十条",
+            "undergraduate-minor@v2025#第十六条",
+            "undergraduate-minor@v2025#第六条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 1.0,
+          "latency_ms": 37,
+          "timing": {
+            "dense_ms": 30.4,
+            "sparse_ms": 5.65,
+            "rerank_ms": 0.0
+          },
+          "warnings": [
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤",
+            "FILTERS_APPLIED: as_of=2026-10-24；version_mode=current；audience=未指定（不硬过滤）；profile=未提供"
+          ]
+        },
+        {
+          "qid": "test-024",
+          "question": "新生保留入学资格原则上可以保留多久？因应征入伍或开展创业的又分别可以保留多长时间？",
+          "category": "single_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "undergraduate-status-rules@v2021#第五条"
+          ],
+          "retrieved_article_ids": [
+            "undergraduate-status-rules@v2021#第五条",
+            "undergraduate-status-rules@v2021#第二十四条",
+            "undergraduate-status-rules@v2021#第二十七条",
+            "undergraduate-status-rules@v2021#第六条",
+            "undergraduate-status-rules@v2021#第三条",
+            "postgraduate-recommendation@v2025#第九条",
+            "undergraduate-status-rules@v2021#第八条",
+            "undergraduate-status-rules@v2021#第二十八条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 1.0,
+          "latency_ms": 43,
+          "timing": {
+            "dense_ms": 36.75,
+            "sparse_ms": 5.69,
+            "rerank_ms": 0.0
+          },
+          "warnings": [
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤",
+            "PROFILE_UNDETERMINED: 用户未提供年级/阶段，结果保留可能限定该细目的条款",
+            "PROFILE_UNDETERMINED: 用户未提供学籍状态，结果保留可能限定该细目的条款",
+            "FILTERS_APPLIED: as_of=2026-10-24；version_mode=current；audience=未指定（不硬过滤）；profile=未提供"
+          ]
+        },
+        {
+          "qid": "test-025",
+          "question": "什么是勤工助学活动？它在学校工作中起到哪些作用？",
+          "category": "single_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "work-study@v2019#第二条"
+          ],
+          "retrieved_article_ids": [
+            "work-study@v2019#第九条",
+            "work-study@v2019#第二条",
+            "work-study@v2019#第十四条",
+            "work-study@v2019#第六条",
+            "work-study@v2019#第十一条",
+            "work-study@v2019#第三十四条",
+            "work-study@v2019#第十五条",
+            "work-study@v2019#第三十七条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 0.5,
+          "latency_ms": 55,
+          "timing": {
+            "dense_ms": 35.92,
+            "sparse_ms": 17.61,
+            "rerank_ms": 0.0
+          },
+          "warnings": [
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤",
+            "PROFILE_UNDETERMINED: 用户未提供学生群体，结果保留可能限定该细目的条款",
+            "FILTERS_APPLIED: as_of=2026-10-24；version_mode=current；audience=未指定（不硬过滤）；profile=未提供"
+          ]
+        },
+        {
+          "qid": "test-026",
+          "question": "某学院制定校外第二导师选聘相关细则，其制定依据涉及哪些政策文件？申请专业学位研究生导师岗位资格者在行业实践方面还需满足哪些要求？",
+          "category": "multi_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "agri-external-second-supervisor-rule-2025@v2025#第一条",
+            "agri-external-second-supervisor-rule-2025@v2025#第四条"
+          ],
+          "retrieved_article_ids": [
+            "agri-external-second-supervisor-rule-2025@v2025#第七条",
+            "agri-external-second-supervisor-rule-2025@v2025#第一条",
+            "agri-external-second-supervisor-rule-2025@v2025#第六条",
+            "agri-external-second-supervisor-rule-2025@v2025#第三条",
+            "agri-external-second-supervisor-rule-2025@v2025#第四条",
+            "agri-external-supervisor-rule-2025@v2025#第一条",
+            "agri-external-supervisor-rule-2025@v2025#第二十一条",
+            "agri-external-second-supervisor-rule-2025@v2025#第九条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 0.5,
+          "latency_ms": 48,
+          "timing": {
+            "dense_ms": 38.64,
+            "sparse_ms": 7.39,
+            "rerank_ms": 0.0
+          },
+          "warnings": [
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤",
+            "PROFILE_UNDETERMINED: 用户未提供学院，结果保留可能限定该细目的条款",
+            "FILTERS_APPLIED: as_of=2026-10-24；version_mode=current；audience=未指定（不硬过滤）；profile=未提供"
+          ]
+        },
+        {
+          "qid": "test-027",
+          "question": "为加强博士生导师队伍建设制定的选聘细则依据哪些上级政策文件？正高职称教师申请学术学位博士生导师岗位资格，在科研项目、经费和成果方面各须达到什么要求？",
+          "category": "multi_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "agri-phd-supervisor-rule-2025@v2025#第一条",
+            "agri-phd-supervisor-rule-2025@v2025#第五条"
+          ],
+          "retrieved_article_ids": [
+            "agri-phd-supervisor-rule-2025@v2025#第六条",
+            "agri-phd-supervisor-rule-2025@v2025#第五条",
+            "agri-phd-supervisor-rule-2025@v2025#第一条",
+            "agri-phd-supervisor-rule-2025@v2025#第七条",
+            "agri-external-supervisor-rule-2025@v2025#第六条",
+            "agri-phd-supervisor-rule-2025@v2025#第四条",
+            "agri-external-supervisor-rule-2025@v2025#第七条",
+            "agri-master-supervisor-rule-2025@v2025#第一条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 0.5,
+          "latency_ms": 108,
+          "timing": {
+            "dense_ms": 58.99,
+            "sparse_ms": 38.3,
+            "rerank_ms": 0.0
+          },
+          "warnings": [
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤",
+            "PROFILE_UNDETERMINED: 用户未提供学院，结果保留可能限定该细目的条款",
+            "FILTERS_APPLIED: as_of=2026-10-24；version_mode=current；audience=未指定（不硬过滤）；profile=未提供"
+          ]
+        },
+        {
+          "qid": "test-028",
+          "question": "本科毕业生在什么条件下可被授予学士学位？学位申请人在攻读学位过程中出现哪些情形时学校不授予或撤销学位？",
+          "category": "multi_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "bachelor-degree-rules@v2025#第五条",
+            "bachelor-degree-rules@v2025#第八条"
+          ],
+          "retrieved_article_ids": [
+            "bachelor-degree-rules@v2025#第八条",
+            "master-doctor-degree-rules@v2025#第二十五条",
+            "master-doctor-degree-rules@v2025#第二十八条",
+            "bachelor-degree-rules@v2025#第五条",
+            "bachelor-degree-rules@v2025#第九条",
+            "bachelor-degree-rules@v2025#第六条",
+            "master-doctor-degree-rules@v2025#第二十七条",
+            "master-doctor-degree-rules@v2025#第十二条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 1.0,
+          "latency_ms": 59,
+          "timing": {
+            "dense_ms": 44.85,
+            "sparse_ms": 12.44,
+            "rerank_ms": 0.0
+          },
+          "warnings": [
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤",
+            "PROFILE_UNDETERMINED: 用户未提供年级/阶段，结果保留可能限定该细目的条款",
+            "PROFILE_UNDETERMINED: 用户未提供学籍状态，结果保留可能限定该细目的条款",
+            "FILTERS_APPLIED: as_of=2026-10-24；version_mode=current；audience=未指定（不硬过滤）；profile=未提供"
+          ]
+        },
+        {
+          "qid": "test-029",
+          "question": "学校合同管理应遵循哪些原则？党政办公室在全校合同管理中承担哪些主要职责？",
+          "category": "multi_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "contract-management@v2020#第三条",
+            "contract-management@v2020#第十一条"
+          ],
+          "retrieved_article_ids": [
+            "contract-management@v2020#第十一条",
+            "contract-management@v2020#第十三条",
+            "contract-management@v2020#第三十五条",
+            "contract-management@v2020#第三条",
+            "contract-management@v2020#第八条",
+            "contract-management@v2020#第十二条",
+            "contract-management@v2020#第三十条",
+            "contract-management@v2020#第二十九条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 1.0,
+          "latency_ms": 44,
+          "timing": {
+            "dense_ms": 35.24,
+            "sparse_ms": 8.39,
+            "rerank_ms": 0.0
+          },
+          "warnings": [
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤",
+            "FILTERS_APPLIED: as_of=2026-10-24；version_mode=current；audience=未指定（不硬过滤）；profile=未提供"
+          ]
+        },
+        {
+          "qid": "test-030",
+          "question": "学校开展家庭经济困难学生认定工作依据哪些上级文件？该工作由哪个组织机构领导和监督，哪个部门具体负责本科生认定工作的组织与管理？",
+          "category": "multi_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "financial-hardship@v2020#第一条",
+            "financial-hardship@v2020#第六条"
+          ],
+          "retrieved_article_ids": [
+            "financial-hardship@v2020#第六条",
+            "financial-hardship@v2020#第七条",
+            "financial-hardship@v2020#第一条",
+            "financial-hardship@v2020#第八条",
+            "financial-hardship@v2020#第十二条",
+            "financial-hardship@v2020#第十五条",
+            "financial-hardship@v2020#第十一条",
+            "financial-hardship@v2020#第四条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 1.0,
+          "latency_ms": 68,
+          "timing": {
+            "dense_ms": 34.38,
+            "sparse_ms": 30.81,
+            "rerank_ms": 0.0
+          },
+          "warnings": [
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤",
+            "PROFILE_UNDETERMINED: 用户未提供学生群体，结果保留可能限定该细目的条款",
+            "FILTERS_APPLIED: as_of=2026-10-24；version_mode=current；audience=未指定（不硬过滤）；profile=未提供"
+          ]
+        },
+        {
+          "qid": "test-031",
+          "question": "学校制定大学生创新创业训练计划相关管理办法的出发点是什么，该计划在实施中遵循哪些原则并要达到什么目的？",
+          "category": "multi_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "innovation-training@v2018#第一条",
+            "innovation-training@v2018#第二条"
+          ],
+          "retrieved_article_ids": [
+            "innovation-training@v2018#第二条",
+            "innovation-training@v2018#第一条",
+            "innovation-training@v2018#第四条",
+            "innovation-training@v2018#第十条",
+            "innovation-training@v2018#第三条",
+            "innovation-training@v2018#第十八条",
+            "innovation-training@v2018#第五条",
+            "innovation-training@v2018#第十一条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 1.0,
+          "latency_ms": 73,
+          "timing": {
+            "dense_ms": 40.79,
+            "sparse_ms": 29.88,
+            "rerank_ms": 0.0
+          },
+          "warnings": [
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤",
+            "FILTERS_APPLIED: as_of=2026-10-24；version_mode=current；audience=未指定（不硬过滤）；profile=未提供"
+          ]
+        },
+        {
+          "qid": "test-032",
+          "question": "学校公务接待的审批职责如何划分，接待活动中有哪些明确禁止的行为？",
+          "category": "multi_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "official-reception@v2017#第三条",
+            "official-reception@v2017#第九条"
+          ],
+          "retrieved_article_ids": [
+            "official-reception@v2017#第三条",
+            "official-reception@v2017#第十二条",
+            "official-reception@v2017#第十条",
+            "official-reception@v2017#第六条",
+            "official-reception@v2017#第九条",
+            "official-reception@v2017#第七条",
+            "official-reception@v2017#第五条",
+            "official-reception@v2017#第四条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 1.0,
+          "latency_ms": 83,
+          "timing": {
+            "dense_ms": 54.17,
+            "sparse_ms": 25.27,
+            "rerank_ms": 0.0
+          },
+          "warnings": [
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤",
+            "FILTERS_APPLIED: as_of=2026-10-24；version_mode=current；audience=未指定（不硬过滤）；profile=未提供"
+          ]
+        },
+        {
+          "qid": "test-033",
+          "question": "学校为何在全日制专业学位研究生教育中探索专项制改革，每个专项的招生指标如何配置？",
+          "category": "multi_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "professional-degree-reform@v2022#第一条",
+            "professional-degree-reform@v2022#第二条"
+          ],
+          "retrieved_article_ids": [
+            "professional-degree-reform@v2022#第二条",
+            "professional-degree-reform@v2022#第四条",
+            "professional-degree-reform@v2022#第一条",
+            "professional-degree-reform@v2022#第九条",
+            "professional-degree-reform@v2022#第三条",
+            "professional-degree-reform@v2022#第七条",
+            "professional-degree-reform@v2022#第十二条",
+            "professional-degree-reform@v2022#第十条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 1.0,
+          "latency_ms": 73,
+          "timing": {
+            "dense_ms": 43.94,
+            "sparse_ms": 26.36,
+            "rerank_ms": 0.0
+          },
+          "warnings": [
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤",
+            "PROFILE_UNDETERMINED: 用户未提供培养类型，结果保留可能限定该细目的条款",
+            "FILTERS_APPLIED: as_of=2026-10-24；version_mode=current；audience=未指定（不硬过滤）；profile=未提供"
+          ]
+        },
+        {
+          "qid": "test-034",
+          "question": "校督导委员会的人员与机构如何设置，担任校督导员需要满足哪些条件？",
+          "category": "multi_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "teaching-supervision@v2023#第四条",
+            "teaching-supervision@v2023#第七条"
+          ],
+          "retrieved_article_ids": [
+            "teaching-supervision@v2023#第四条",
+            "teaching-supervision@v2023#第八条",
+            "teaching-supervision@v2023#第五条",
+            "teaching-supervision@v2023#第十二条",
+            "teaching-supervision@v2023#第六条",
+            "teaching-supervision@v2023#第十三条",
+            "teaching-supervision@v2023#第三条",
+            "teaching-supervision@v2023#第七条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 1.0,
+          "latency_ms": 60,
+          "timing": {
+            "dense_ms": 46.15,
+            "sparse_ms": 10.86,
+            "rerank_ms": 0.0
+          },
+          "warnings": [
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤",
+            "FILTERS_APPLIED: as_of=2026-10-24；version_mode=current；audience=未指定（不硬过滤）；profile=未提供"
+          ]
+        },
+        {
+          "qid": "test-035",
+          "question": "学生申请转学需要符合哪些条件，转学的手续和备案程序是如何规定的？",
+          "category": "multi_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "undergraduate-school-transfer@v2021#第二条",
+            "undergraduate-school-transfer@v2021#第四条"
+          ],
+          "retrieved_article_ids": [
+            "undergraduate-school-transfer@v2021#第四条",
+            "undergraduate-school-transfer@v2021#第二条",
+            "undergraduate-status-rules@v2021#第二十三条",
+            "undergraduate-school-transfer@v2021#第三条",
+            "undergraduate-status-rules@v2021#第二十一条",
+            "undergraduate-major-transfer@v2021#第三条",
+            "undergraduate-status-rules@v2021#第二十二条",
+            "undergraduate-status-rules@v2021#第八条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 1.0,
+          "latency_ms": 67,
+          "timing": {
+            "dense_ms": 42.33,
+            "sparse_ms": 22.35,
+            "rerank_ms": 0.0
+          },
+          "warnings": [
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤",
+            "FILTERS_APPLIED: as_of=2026-10-24；version_mode=current；audience=未指定（不硬过滤）；profile=未提供"
+          ]
+        },
+        {
+          "qid": "test-036",
+          "question": "2026 版培养方案：作物学学科在培养博士生和硕士生时，对学术研究能力与外语应用能力分别提出了哪些要求？",
+          "category": "section",
+          "block_types": [
+            "section"
+          ],
+          "expected_article_ids": [
+            "agri-grad-plan-crop-0901@v2026#一、培养目标"
+          ],
+          "retrieved_article_ids": [
+            "agri-grad-plan-crop-0901@v2026#三、应具备的基本学术能力~2",
+            "agri-grad-plan-crop-0901@v2026#三、应具备的基本学术能力",
+            "agri-grad-plan-crop-0901@v2026#一、培养目标",
+            "agri-grad-plan-crop-0901@v2026#四、培养环节具体标准及考核要求",
+            "agri-grad-plan-crop-0901@v2026#一、应掌握的基本知识",
+            "agri-grad-plan-crop-0901@v2026#六、毕业与学位授予~2",
+            "agri-grad-plan-crop-0901@v2026#一、应掌握的基本知识及结构",
+            "agri-grad-plan-crop-0901@v2026#一、培养目标~2"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 0.3333333333333333,
+          "latency_ms": 143,
+          "timing": {
+            "dense_ms": 74.3,
+            "sparse_ms": 64.33,
+            "rerank_ms": 0.0
+          },
+          "warnings": [
+            "TOKEN_BUDGET: 跳过 agri-grad-plan-crop-0901@v2026#二、应具备的基本素质",
+            "TOKEN_BUDGET: 跳过 agri-grad-plan-crop-0901@v2026#二、应具备的基本素质~2",
+            "TOKEN_BUDGET: 跳过 agri-grad-plan-crop-0901@v2026#二、课程设置",
+            "TOKEN_BUDGET: 跳过 agri-grad-plan-crop-0901@v2026#四、培养环节具体标准及考核要求~2",
+            "TOKEN_BUDGET: 跳过 agri-grad-plan-crop-0901@v2026#四、学位论文要求",
+            "TOKEN_BUDGET: 跳过 agri-grad-plan-crop-0901@v2026#四、学位论文要求~2",
+            "PROFILE_UNDETERMINED: 用户未提供培养类型，结果保留可能限定该细目的条款",
+            "FILTERS_APPLIED: as_of=2026-10-24；version_mode=current；audience=graduate；profile[colleges=agri; intake_year=2026]"
+          ]
+        },
+        {
+          "qid": "test-037",
+          "question": "2026 版培养方案：农业工程学科博士生与硕士生在研究成果要求和毕业后可从事的工作方面有何规定？",
+          "category": "section",
+          "block_types": [
+            "section"
+          ],
+          "expected_article_ids": [
+            "info-grad-agri-engineering-plan@v2026#一、人才培养目标"
+          ],
+          "retrieved_article_ids": [
+            "info-grad-agri-engineering-plan@v2026#一、人才培养目标",
+            "info-grad-agri-engineering-plan@v2026#四、学位论文基本要求~2",
+            "info-grad-agri-engineering-plan@v2026#二、获本学科硕士学位应具备的基本素质",
+            "info-grad-agri-engineering-plan@v2026#三、获本学科博士学位应具备的基本学术能力",
+            "info-grad-agri-engineering-plan@v2026#四、培养环节具体标准及考核要求",
+            "info-grad-agri-engineering-plan@v2026#六、毕业与学位授予",
+            "info-grad-agri-engineering-plan@v2026#一、培养目标",
+            "info-grad-agri-engineering-plan@v2026#二、获本学科博士学位应具备的基本素质"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 1.0,
+          "latency_ms": 109,
+          "timing": {
+            "dense_ms": 80.18,
+            "sparse_ms": 24.08,
+            "rerank_ms": 0.0
+          },
+          "warnings": [
+            "PROFILE_UNDETERMINED: 用户未提供培养类型，结果保留可能限定该细目的条款",
+            "FILTERS_APPLIED: as_of=2026-10-24；version_mode=current；audience=graduate_doctor；profile[colleges=info; intake_year=2026]"
+          ]
+        },
+        {
+          "qid": "test-038",
+          "question": "2025 版培养方案：计算机科学与技术学科硕士生培养对外语能力、学术规范素养和就业适应性分别提出了什么要求？",
+          "category": "section",
+          "block_types": [
+            "section"
+          ],
+          "expected_article_ids": [
+            "info-grad-cs-plan@v2025-2026#一、人才培养目标"
+          ],
+          "retrieved_article_ids": [
+            "info-grad-cs-plan@v2025-2026#一、人才培养目标",
+            "info-grad-cs-plan@v2025-2026#一、获本学科硕士学位应掌握的基本知识",
+            "info-grad-cs-plan@v2025-2026#二、获本学科硕士学位应具备的基本素质",
+            "info-grad-cs-plan@v2025-2026#四、学位论文基本要求",
+            "info-grad-cs-plan@v2025-2026#六、毕业与学位授予",
+            "info-grad-computer-tech-plan@v2025-2026#一、培养目标",
+            "info-grad-computer-tech-plan@v2025-2026#五、学位论文基本要求",
+            "info-grad-cs-plan@v2025-2026#二、主要研究方向"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 1.0,
+          "latency_ms": 122,
+          "timing": {
+            "dense_ms": 71.05,
+            "sparse_ms": 45.77,
+            "rerank_ms": 0.0
+          },
+          "warnings": [
+            "TOKEN_BUDGET: 跳过 info-grad-cs-plan@v2025-2026#二、课程设置",
+            "PROFILE_UNDETERMINED: 用户未提供培养类型，结果保留可能限定该细目的条款",
+            "FILTERS_APPLIED: as_of=2026-10-24；version_mode=current；audience=graduate_master；profile[colleges=info; intake_year=2025]"
+          ]
+        },
+        {
+          "qid": "test-039",
+          "question": "2025 版培养方案：数学及相关学科硕士研究生在知识结构和能力方面需要达到哪些培养要求？",
+          "category": "section",
+          "block_types": [
+            "section"
+          ],
+          "expected_article_ids": [
+            "info-grad-math-plan@v2025-2026#一、人才培养目标"
+          ],
+          "retrieved_article_ids": [
+            "info-grad-math-plan@v2025-2026#二、获本学科硕士学位应具备的基本素质",
+            "info-grad-math-plan@v2025-2026#一、人才培养目标",
+            "info-grad-math-plan@v2025-2026#一、获本学科硕士学位应掌握的基本知识",
+            "info-grad-math-plan@v2025-2026#三、获本学科硕士学位应具备的基本学术能力",
+            "info-grad-cs-plan@v2025-2026#四、学位论文基本要求",
+            "info-grad-math-plan@v2025-2026#六、毕业与学位授予",
+            "info-grad-math-plan@v2025-2026#四、学位论文的基本要求",
+            "info-grad-cs-plan@v2025-2026#一、获本学科硕士学位应掌握的基本知识"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 0.5,
+          "latency_ms": 176,
+          "timing": {
+            "dense_ms": 94.51,
+            "sparse_ms": 74.71,
+            "rerank_ms": 0.0
+          },
+          "warnings": [
+            "PROFILE_UNDETERMINED: 用户未提供培养类型，结果保留可能限定该细目的条款",
+            "FILTERS_APPLIED: as_of=2026-10-24；version_mode=current；audience=graduate_master；profile[colleges=info; intake_year=2025]"
+          ]
+        },
+        {
+          "qid": "test-040",
+          "question": "2022 版培养方案：大数据管理与应用专业毕业生应具备哪些知识方法基础，又主要面向哪些应用领域开展工作？",
+          "category": "section",
+          "block_types": [
+            "section"
+          ],
+          "expected_article_ids": [
+            "info-ug-bigdata-plan@v2022#二、培养目标"
+          ],
+          "retrieved_article_ids": [
+            "info-ug-bigdata-plan@v2022#二、培养目标",
+            "info-ug-bigdata-plan@v2022#三、培养规格",
+            "info-ug-bigdata-plan@v2022#八、人才培养目标实现矩阵",
+            "info-ug-bigdata-plan@v2022#九、培养计划进程表",
+            "info-ug-bigdata-plan@v2022#五、专业核心课程",
+            "info-ug-bigdata-plan@v2022#四、主干学科",
+            "info-ug-bigdata-plan@v2022#一、专业名称",
+            "info-ug-bigdata-plan@v2022#七、课程结构及毕业要求"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 1.0,
+          "latency_ms": 120,
+          "timing": {
+            "dense_ms": 70.61,
+            "sparse_ms": 44.2,
+            "rerank_ms": 0.0
+          },
+          "warnings": [
+            "FILTERS_APPLIED: as_of=2026-10-24；version_mode=current；audience=undergraduate；profile[colleges=info; majors=big-data-management; intake_year=2022]"
+          ]
+        }
+      ]
+    },
+    "hybrid_rerank": {
+      "summary": {
+        "questions": 40,
+        "scored_questions": 40,
+        "skipped_no_expected": 0,
+        "article": {
+          "questions": 35,
+          "recall_at_8": 1.0,
+          "mrr": 0.9667,
+          "no_hit": 0
+        },
+        "section": {
+          "questions": 5,
+          "recall_at_8": 1.0,
+          "mrr": 0.9,
+          "no_hit": 0
+        },
+        "overall": {
+          "recall_at_8": 1.0,
+          "mrr": 0.9583
+        },
+        "latency_ms": {
+          "p50": 870.5,
+          "p95": 1050.05
+        },
+        "rerank_latency_ms": {
+          "count": 40,
+          "p50": 820.0,
+          "p95": 910.75
+        }
+      },
+      "elapsed_ms": 32538,
+      "rows": [
+        {
+          "qid": "test-001",
+          "question": "学院制定研究生校外导师相关岗位管理细则时，所依据的学校层面制度文件是哪两份？",
+          "category": "single_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "agri-external-supervisor-rule-2025@v2025#第一条"
+          ],
+          "retrieved_article_ids": [
+            "agri-external-supervisor-rule-2025@v2025#第一条",
+            "agri-external-second-supervisor-rule-2025@v2025#第一条",
+            "agri-external-supervisor-rule-2025@v2025#第二十二条",
+            "agri-external-supervisor-rule-2025@v2025#第十六条",
+            "agri-external-supervisor-rule-2025@v2025#第二十三条",
+            "agri-external-supervisor-rule-2025@v2025#第三条",
+            "agri-external-supervisor-rule-2025@v2025#第十七条",
+            "agri-external-supervisor-rule-2025@v2025#第十三条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 1.0,
+          "latency_ms": 804,
+          "timing": {
+            "dense_ms": 41.95,
+            "sparse_ms": 16.58,
+            "rerank_ms": 743.88
+          },
+          "warnings": [
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤",
+            "PROFILE_UNDETERMINED: 用户未提供学院，结果保留可能限定该细目的条款",
+            "FILTERS_APPLIED: as_of=2026-10-24；version_mode=current；audience=未指定（不硬过滤）；profile=未提供"
+          ]
+        },
+        {
+          "qid": "test-002",
+          "question": "学院制定硕士生导师队伍建设相关细则的直接校级依据是什么，其目的又是什么？",
+          "category": "single_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "agri-master-supervisor-rule-2025@v2025#第一条"
+          ],
+          "retrieved_article_ids": [
+            "agri-master-supervisor-rule-2025@v2025#第一条",
+            "agri-master-supervisor-rule-2025@v2025#第二十一条",
+            "agri-phd-supervisor-rule-2025@v2025#第一条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 1.0,
+          "latency_ms": 775,
+          "timing": {
+            "dense_ms": 22.4,
+            "sparse_ms": 6.26,
+            "rerank_ms": 745.48
+          },
+          "warnings": [
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤",
+            "PROFILE_UNDETERMINED: 用户未提供学院，结果保留可能限定该细目的条款",
+            "FILTERS_APPLIED: as_of=2026-10-24；version_mode=current；audience=未指定（不硬过滤）；profile=未提供"
+          ]
+        },
+        {
+          "qid": "test-003",
+          "question": "学院规范博士后研究人员管理工作，在队伍发展方面要实现怎样的目标？",
+          "category": "single_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "agri-postdoc-rule-2024@v2024#第一条"
+          ],
+          "retrieved_article_ids": [
+            "agri-postdoc-rule-2024@v2024#第一条",
+            "postdoc-management@v2024#第一条",
+            "postdoc-management@v2024#第四十条",
+            "postdoc-management@v2024#第七条",
+            "agri-postdoc-rule-2024@v2024#第三条",
+            "postdoc-management@v2024#第十一条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 1.0,
+          "latency_ms": 872,
+          "timing": {
+            "dense_ms": 25.95,
+            "sparse_ms": 22.65,
+            "rerank_ms": 822.15
+          },
+          "warnings": [
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤",
+            "PROFILE_UNDETERMINED: 用户未提供学院，结果保留可能限定该细目的条款",
+            "FILTERS_APPLIED: as_of=2026-10-24；version_mode=current；audience=未指定（不硬过滤）；profile=未提供"
+          ]
+        },
+        {
+          "qid": "test-004",
+          "question": "农学院制定推免相关实施细则时，依据的实际情况和遵循的原则分别是什么？",
+          "category": "single_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "agri-postgrad-recommendation-rule-2024@v2024#第一条"
+          ],
+          "retrieved_article_ids": [
+            "agri-postgrad-recommendation-rule-2024@v2024#第一条",
+            "agri-postgrad-recommendation-rule-2024@v2024#第二条",
+            "postgraduate-recommendation@v2025#第十三条",
+            "postgraduate-recommendation@v2025#第十九条",
+            "agri-postgrad-recommendation-rule-2024@v2024#第七条",
+            "agri-postgrad-recommendation-rule-2024@v2024#第三条",
+            "agri-postgrad-recommendation-rule-2024@v2024#第九条",
+            "postgraduate-recommendation@v2025#第五条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 1.0,
+          "latency_ms": 982,
+          "timing": {
+            "dense_ms": 76.24,
+            "sparse_ms": 40.38,
+            "rerank_ms": 861.62
+          },
+          "warnings": [
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤",
+            "PROFILE_UNDETERMINED: 用户未提供学院，结果保留可能限定该细目的条款",
+            "PROFILE_UNDETERMINED: 用户未提供年级/阶段，结果保留可能限定该细目的条款",
+            "PROFILE_UNDETERMINED: 用户未提供学籍状态，结果保留可能限定该细目的条款",
+            "FILTERS_APPLIED: as_of=2026-10-24；version_mode=current；audience=未指定（不硬过滤）；profile=未提供"
+          ]
+        },
+        {
+          "qid": "test-005",
+          "question": "加强和规范学校电子档案管理，需要确保电子档案具备哪些特性？",
+          "category": "single_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "archive-management@v2026#第一条"
+          ],
+          "retrieved_article_ids": [
+            "archive-management@v2026#第一条",
+            "archive-management@v2026#第三条",
+            "archive-management@v2026#第九条",
+            "archive-management@v2026#第二条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 1.0,
+          "latency_ms": 869,
+          "timing": {
+            "dense_ms": 23.73,
+            "sparse_ms": 24.7,
+            "rerank_ms": 820.02
+          },
+          "warnings": [
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤",
+            "FILTERS_APPLIED: as_of=2026-10-24；version_mode=current；audience=未指定（不硬过滤）；profile=未提供"
+          ]
+        },
+        {
+          "qid": "test-006",
+          "question": "学生选课结束后课程表确定，什么情况下还能调整课程安排？开学初又有何限制？",
+          "category": "single_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "class-adjustment@v2022#第二条"
+          ],
+          "retrieved_article_ids": [
+            "class-adjustment@v2022#第二条",
+            "course-selection@v2016#第十条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 1.0,
+          "latency_ms": 489,
+          "timing": {
+            "dense_ms": 20.72,
+            "sparse_ms": 14.15,
+            "rerank_ms": 453.19
+          },
+          "warnings": [
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤",
+            "FILTERS_APPLIED: as_of=2026-10-24；version_mode=current；audience=未指定（不硬过滤）；profile=未提供"
+          ]
+        },
+        {
+          "qid": "test-007",
+          "question": "学校设立院级奖助学金的政策依据是什么，面向哪些学生，目的是什么？",
+          "category": "single_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "college-aid@v2015#第一条"
+          ],
+          "retrieved_article_ids": [
+            "college-aid@v2015#第一条",
+            "college-aid@v2015#第二条",
+            "college-aid@v2015#第六条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 1.0,
+          "latency_ms": 877,
+          "timing": {
+            "dense_ms": 33.19,
+            "sparse_ms": 22.77,
+            "rerank_ms": 820.16
+          },
+          "warnings": [
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤",
+            "FILTERS_APPLIED: as_of=2026-10-24；version_mode=current；audience=未指定（不硬过滤）；profile=未提供"
+          ]
+        },
+        {
+          "qid": "test-008",
+          "question": "智育测评成绩如何构成？在计算平均绩点时，双学位和重修课程的成绩如何处理？",
+          "category": "single_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "comprehensive-evaluation@v2020#第六条"
+          ],
+          "retrieved_article_ids": [
+            "comprehensive-evaluation@v2020#第六条",
+            "comprehensive-evaluation@v2020#第四条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 1.0,
+          "latency_ms": 923,
+          "timing": {
+            "dense_ms": 35.08,
+            "sparse_ms": 18.38,
+            "rerank_ms": 868.94
+          },
+          "warnings": [
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤",
+            "FILTERS_APPLIED: as_of=2026-10-24；version_mode=current；audience=未指定（不硬过滤）；profile=未提供"
+          ]
+        },
+        {
+          "qid": "test-009",
+          "question": "校学位评定委员会的委员由哪些方式产生？委员人选名单通过后还需办理什么手续？",
+          "category": "single_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "degree-committee-charter@v2025#第五条"
+          ],
+          "retrieved_article_ids": [
+            "degree-committee-charter@v2025#第五条",
+            "degree-committee-charter@v2025#第七条",
+            "degree-committee-charter@v2025#第八条",
+            "degree-committee-charter@v2025#第四条",
+            "master-doctor-degree-rules@v2025#第七条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 1.0,
+          "latency_ms": 927,
+          "timing": {
+            "dense_ms": 39.05,
+            "sparse_ms": 26.2,
+            "rerank_ms": 860.31
+          },
+          "warnings": [
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤",
+            "FILTERS_APPLIED: as_of=2026-10-24；version_mode=current；audience=未指定（不硬过滤）；profile=未提供"
+          ]
+        },
+        {
+          "qid": "test-010",
+          "question": "监考员考前需要提前多久进入考场？入场后须完成哪些工作？",
+          "category": "single_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "exam-room-rules@v2022#第十四条"
+          ],
+          "retrieved_article_ids": [
+            "exam-room-rules@v2022#第十四条",
+            "exam-room-rules@v2022#第七条",
+            "exam-room-rules@v2022#第二条",
+            "exam-room-rules@v2022#第十五条",
+            "exam-room-rules@v2022#第二十条",
+            "exam-room-rules@v2022#第十六条",
+            "exam-room-rules@v2022#第二十四条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 1.0,
+          "latency_ms": 418,
+          "timing": {
+            "dense_ms": 30.17,
+            "sparse_ms": 10.16,
+            "rerank_ms": 376.61
+          },
+          "warnings": [
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤",
+            "FILTERS_APPLIED: as_of=2026-10-24；version_mode=current；audience=未指定（不硬过滤）；profile=未提供"
+          ]
+        },
+        {
+          "qid": "test-011",
+          "question": "教师在哪些情况下会被认定为发生教学差错？",
+          "category": "single_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "graduate-teaching-errors@v2022#第三条"
+          ],
+          "retrieved_article_ids": [
+            "graduate-teaching-errors@v2022#第三条",
+            "graduate-teaching-errors@v2022#第五条",
+            "graduate-teaching-errors@v2022#第四条",
+            "graduate-teaching-errors@v2022#第七条",
+            "graduate-teaching-errors@v2022#第九条",
+            "graduate-teaching-errors@v2022#第八条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 1.0,
+          "latency_ms": 779,
+          "timing": {
+            "dense_ms": 41.29,
+            "sparse_ms": 20.08,
+            "rerank_ms": 715.84
+          },
+          "warnings": [
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤",
+            "FILTERS_APPLIED: as_of=2026-10-24；version_mode=current；audience=未指定（不硬过滤）；profile=未提供"
+          ]
+        },
+        {
+          "qid": "test-012",
+          "question": "制定研究生学位答辩及学位申请相关管理办法，主要依据了哪些法律法规和文件？",
+          "category": "single_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "graduate-thesis-defense@v2026#第一条"
+          ],
+          "retrieved_article_ids": [
+            "graduate-thesis-defense@v2026#第一条",
+            "graduate-thesis-defense@v2026#第二条",
+            "graduate-thesis-defense@v2026#第三条",
+            "graduate-thesis-defense@v2026#第六条",
+            "graduate-thesis-defense@v2026#第二十一条",
+            "graduate-thesis-defense@v2026#第三十七条",
+            "graduate-thesis-defense@v2026#第四条",
+            "graduate-thesis-defense@v2026#第三十二条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 1.0,
+          "latency_ms": 904,
+          "timing": {
+            "dense_ms": 19.79,
+            "sparse_ms": 18.79,
+            "rerank_ms": 863.79
+          },
+          "warnings": [
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤",
+            "PROFILE_UNDETERMINED: 用户未提供年级/阶段，结果保留可能限定该细目的条款",
+            "FILTERS_APPLIED: as_of=2026-10-24；version_mode=current；audience=未指定（不硬过滤）；profile=未提供"
+          ]
+        },
+        {
+          "qid": "test-013",
+          "question": "学校困难补助办法的制定目的是什么，主要依据哪两份文件？",
+          "category": "single_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "hardship-subsidy@v2015#第一条"
+          ],
+          "retrieved_article_ids": [
+            "hardship-subsidy@v2015#第一条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 1.0,
+          "latency_ms": 755,
+          "timing": {
+            "dense_ms": 35.88,
+            "sparse_ms": 25.65,
+            "rerank_ms": 693.01
+          },
+          "warnings": [
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤",
+            "PROFILE_UNDETERMINED: 用户未提供学生群体，结果保留可能限定该细目的条款",
+            "FILTERS_APPLIED: as_of=2026-10-24；version_mode=current；audience=未指定（不硬过滤）；profile=未提供"
+          ]
+        },
+        {
+          "qid": "test-014",
+          "question": "学校制定实验室安全管理办法要达到哪些目的，又依据了哪些规定？",
+          "category": "single_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "lab-safety@v2015#第一条"
+          ],
+          "retrieved_article_ids": [
+            "lab-safety@v2015#第三条",
+            "lab-safety@v2015#第一条",
+            "lab-safety@v2015#第二十二条",
+            "lab-safety@v2015#第二十一条",
+            "lab-safety@v2015#第十四条",
+            "lab-safety@v2015#第五条",
+            "lab-safety@v2015#第二十七条",
+            "lab-safety@v2015#第八条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 0.5,
+          "latency_ms": 764,
+          "timing": {
+            "dense_ms": 37.01,
+            "sparse_ms": 6.09,
+            "rerank_ms": 719.79
+          },
+          "warnings": [
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤",
+            "FILTERS_APPLIED: as_of=2026-10-24；version_mode=current；audience=未指定（不硬过滤）；profile=未提供"
+          ]
+        },
+        {
+          "qid": "test-015",
+          "question": "校学位评定委员会何时召开例行会议，其决议需要满足怎样的出席和表决条件才能通过？",
+          "category": "single_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "master-doctor-degree-rules@v2025#第七条"
+          ],
+          "retrieved_article_ids": [
+            "master-doctor-degree-rules@v2025#第七条",
+            "degree-committee-charter@v2025#第十四条",
+            "degree-committee-charter@v2025#第十六条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 1.0,
+          "latency_ms": 933,
+          "timing": {
+            "dense_ms": 38.47,
+            "sparse_ms": 20.95,
+            "rerank_ms": 872.27
+          },
+          "warnings": [
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤",
+            "FILTERS_APPLIED: as_of=2026-10-24；version_mode=current；audience=未指定（不硬过滤）；profile=未提供"
+          ]
+        },
+        {
+          "qid": "test-016",
+          "question": "学校制定优秀毕业生评选办法时，希望促进学生怎样的全面发展？又希望发挥哪类学生的示范带动作用？",
+          "category": "single_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "outstanding-graduates@v2025#第一条"
+          ],
+          "retrieved_article_ids": [
+            "outstanding-graduates@v2025#第一条",
+            "outstanding-graduates@v2025#第五条",
+            "outstanding-graduates@v2025#第七条",
+            "outstanding-graduates@v2025#第九条",
+            "outstanding-graduates@v2025#第二条",
+            "outstanding-graduates@v2025#第四条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 1.0,
+          "latency_ms": 879,
+          "timing": {
+            "dense_ms": 26.12,
+            "sparse_ms": 24.8,
+            "rerank_ms": 826.86
+          },
+          "warnings": [
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤",
+            "PROFILE_UNDETERMINED: 用户未提供年级/阶段，结果保留可能限定该细目的条款",
+            "PROFILE_UNDETERMINED: 用户未提供学籍状态，结果保留可能限定该细目的条款",
+            "FILTERS_APPLIED: as_of=2026-10-24；version_mode=current；audience=未指定（不硬过滤）；profile=未提供"
+          ]
+        },
+        {
+          "qid": "test-017",
+          "question": "研究生学位论文参加评选的时间范围和次数是如何规定的？哪些论文不能参评？",
+          "category": "single_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "outstanding-thesis-award@v2021#第三条"
+          ],
+          "retrieved_article_ids": [
+            "outstanding-thesis-award@v2021#第三条",
+            "outstanding-thesis-award@v2021#第四条",
+            "outstanding-thesis-award@v2021#第六条",
+            "outstanding-thesis-award@v2021#第八条",
+            "outstanding-thesis-award@v2021#第五条",
+            "outstanding-thesis-award@v2021#第七条",
+            "outstanding-thesis-award@v2021#第十条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 1.0,
+          "latency_ms": 764,
+          "timing": {
+            "dense_ms": 36.76,
+            "sparse_ms": 7.06,
+            "rerank_ms": 718.28
+          },
+          "warnings": [
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤",
+            "FILTERS_APPLIED: as_of=2026-10-24；version_mode=current；audience=未指定（不硬过滤）；profile=未提供"
+          ]
+        },
+        {
+          "qid": "test-018",
+          "question": "学校公共设施管理中，后勤管理处、教学科研基地管理处和设备资产管理处各自负责哪些工作？",
+          "category": "single_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "public-facilities@v2004#第二条"
+          ],
+          "retrieved_article_ids": [
+            "public-facilities@v2004#第二条",
+            "public-facilities@v2004#第三条",
+            "public-facilities@v2004#第六条",
+            "public-facilities@v2004#第五条",
+            "public-facilities@v2004#第四条",
+            "public-facilities@v2004#第九条",
+            "public-facilities@v2004#第七条",
+            "lab-safety@v2015#第八条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 1.0,
+          "latency_ms": 911,
+          "timing": {
+            "dense_ms": 18.89,
+            "sparse_ms": 13.3,
+            "rerank_ms": 877.74
+          },
+          "warnings": [
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤",
+            "FILTERS_APPLIED: as_of=2026-10-24；version_mode=current；audience=未指定（不硬过滤）；profile=未提供"
+          ]
+        },
+        {
+          "qid": "test-019",
+          "question": "学校制定学生资助相关办法时，主要依据了哪些关于资助资金的上位文件和规定？",
+          "category": "single_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "student-financial-aid@v2022#第一条"
+          ],
+          "retrieved_article_ids": [
+            "national-aid-undergrad@v2021#第二十九条",
+            "financial-hardship@v2020#第四条",
+            "student-financial-aid@v2022#第一条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 0.3333333333333333,
+          "latency_ms": 454,
+          "timing": {
+            "dense_ms": 26.14,
+            "sparse_ms": 43.32,
+            "rerank_ms": 382.43
+          },
+          "warnings": [
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤",
+            "PROFILE_UNDETERMINED: 用户未提供学生群体，结果保留可能限定该细目的条款",
+            "FILTERS_APPLIED: as_of=2026-10-24；version_mode=current；audience=未指定（不硬过滤）；profile=未提供"
+          ]
+        },
+        {
+          "qid": "test-020",
+          "question": "制定国家助学贷款相关管理细则的目的是什么，又依据了哪两个文件的要求？",
+          "category": "single_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "student-loan@v2018#第一条"
+          ],
+          "retrieved_article_ids": [
+            "student-loan@v2018#第一条",
+            "student-loan@v2018#第三条",
+            "student-loan@v2018#第五条",
+            "student-loan@v2018#第六条",
+            "student-loan@v2018#第九条",
+            "student-loan@v2018#第四条",
+            "student-loan@v2018#第八条",
+            "student-loan@v2018#第十二条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 1.0,
+          "latency_ms": 725,
+          "timing": {
+            "dense_ms": 54.03,
+            "sparse_ms": 39.3,
+            "rerank_ms": 630.02
+          },
+          "warnings": [
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤",
+            "PROFILE_UNDETERMINED: 用户未提供学生群体，结果保留可能限定该细目的条款",
+            "FILTERS_APPLIED: as_of=2026-10-24；version_mode=current；audience=未指定（不硬过滤）；profile=未提供"
+          ]
+        },
+        {
+          "qid": "test-021",
+          "question": "学生出现哪些情况会被给予一般预警？请分别说明旷课、请假（含旷课）和缺交作业的比例门槛。",
+          "category": "single_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "undergraduate-academic-warning@v2021#第五条"
+          ],
+          "retrieved_article_ids": [
+            "undergraduate-academic-warning@v2021#第五条",
+            "undergraduate-academic-warning@v2021#第六条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 1.0,
+          "latency_ms": 775,
+          "timing": {
+            "dense_ms": 58.36,
+            "sparse_ms": 25.54,
+            "rerank_ms": 689.09
+          },
+          "warnings": [
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤",
+            "FILTERS_APPLIED: as_of=2026-10-24；version_mode=current；audience=未指定（不硬过滤）；profile=未提供"
+          ]
+        },
+        {
+          "qid": "test-022",
+          "question": "学校实施本科生导师制主要是为了什么？",
+          "category": "single_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "undergraduate-mentor@v2020#第一条"
+          ],
+          "retrieved_article_ids": [
+            "undergraduate-mentor@v2020#第一条",
+            "undergraduate-mentor@v2020#第八条",
+            "undergraduate-mentor@v2020#第六条",
+            "undergraduate-mentor@v2020#第二条",
+            "undergraduate-mentor@v2020#第四条",
+            "undergraduate-mentor@v2020#第五条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 1.0,
+          "latency_ms": 524,
+          "timing": {
+            "dense_ms": 26.36,
+            "sparse_ms": 9.15,
+            "rerank_ms": 487.5
+          },
+          "warnings": [
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤",
+            "FILTERS_APPLIED: as_of=2026-10-24；version_mode=current；audience=未指定（不硬过滤）；profile=未提供"
+          ]
+        },
+        {
+          "qid": "test-023",
+          "question": "学校制定辅修专业相关管理办法，主要出于哪些考虑，又依据了哪些文件精神？",
+          "category": "single_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "undergraduate-minor@v2025#第一条"
+          ],
+          "retrieved_article_ids": [
+            "undergraduate-minor@v2025#第一条",
+            "undergraduate-minor@v2025#第五条",
+            "undergraduate-minor@v2025#第六条",
+            "undergraduate-minor@v2025#第三条",
+            "undergraduate-minor@v2025#第九条",
+            "undergraduate-minor@v2025#第二条",
+            "undergraduate-minor@v2025#第四条",
+            "undergraduate-minor@v2025#第七条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 1.0,
+          "latency_ms": 472,
+          "timing": {
+            "dense_ms": 35.86,
+            "sparse_ms": 20.49,
+            "rerank_ms": 414.32
+          },
+          "warnings": [
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤",
+            "FILTERS_APPLIED: as_of=2026-10-24；version_mode=current；audience=未指定（不硬过滤）；profile=未提供"
+          ]
+        },
+        {
+          "qid": "test-024",
+          "question": "新生保留入学资格原则上可以保留多久？因应征入伍或开展创业的又分别可以保留多长时间？",
+          "category": "single_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "undergraduate-status-rules@v2021#第五条"
+          ],
+          "retrieved_article_ids": [
+            "undergraduate-status-rules@v2021#第五条",
+            "postgraduate-recommendation@v2025#第九条",
+            "undergraduate-status-rules@v2021#第六条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 1.0,
+          "latency_ms": 727,
+          "timing": {
+            "dense_ms": 26.11,
+            "sparse_ms": 5.69,
+            "rerank_ms": 694.27
+          },
+          "warnings": [
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤",
+            "PROFILE_UNDETERMINED: 用户未提供年级/阶段，结果保留可能限定该细目的条款",
+            "PROFILE_UNDETERMINED: 用户未提供学籍状态，结果保留可能限定该细目的条款",
+            "FILTERS_APPLIED: as_of=2026-10-24；version_mode=current；audience=未指定（不硬过滤）；profile=未提供"
+          ]
+        },
+        {
+          "qid": "test-025",
+          "question": "什么是勤工助学活动？它在学校工作中起到哪些作用？",
+          "category": "single_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "work-study@v2019#第二条"
+          ],
+          "retrieved_article_ids": [
+            "work-study@v2019#第二条",
+            "work-study@v2019#第六条",
+            "work-study@v2019#第三条",
+            "work-study@v2019#第九条",
+            "work-study@v2019#第五条",
+            "work-study@v2019#第十四条",
+            "student-financial-aid@v2022#第二十二条",
+            "work-study@v2019#第十一条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 1.0,
+          "latency_ms": 676,
+          "timing": {
+            "dense_ms": 37.02,
+            "sparse_ms": 16.5,
+            "rerank_ms": 621.68
+          },
+          "warnings": [
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤",
+            "PROFILE_UNDETERMINED: 用户未提供学生群体，结果保留可能限定该细目的条款",
+            "FILTERS_APPLIED: as_of=2026-10-24；version_mode=current；audience=未指定（不硬过滤）；profile=未提供"
+          ]
+        },
+        {
+          "qid": "test-026",
+          "question": "某学院制定校外第二导师选聘相关细则，其制定依据涉及哪些政策文件？申请专业学位研究生导师岗位资格者在行业实践方面还需满足哪些要求？",
+          "category": "multi_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "agri-external-second-supervisor-rule-2025@v2025#第一条",
+            "agri-external-second-supervisor-rule-2025@v2025#第四条"
+          ],
+          "retrieved_article_ids": [
+            "agri-external-second-supervisor-rule-2025@v2025#第四条",
+            "agri-external-second-supervisor-rule-2025@v2025#第七条",
+            "agri-external-second-supervisor-rule-2025@v2025#第六条",
+            "agri-external-supervisor-rule-2025@v2025#第五条",
+            "agri-external-second-supervisor-rule-2025@v2025#第五条",
+            "agri-external-supervisor-rule-2025@v2025#第二十一条",
+            "agri-external-supervisor-rule-2025@v2025#第九条",
+            "agri-external-second-supervisor-rule-2025@v2025#第一条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 1.0,
+          "latency_ms": 910,
+          "timing": {
+            "dense_ms": 35.22,
+            "sparse_ms": 27.46,
+            "rerank_ms": 845.49
+          },
+          "warnings": [
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤",
+            "PROFILE_UNDETERMINED: 用户未提供学院，结果保留可能限定该细目的条款",
+            "FILTERS_APPLIED: as_of=2026-10-24；version_mode=current；audience=未指定（不硬过滤）；profile=未提供"
+          ]
+        },
+        {
+          "qid": "test-027",
+          "question": "为加强博士生导师队伍建设制定的选聘细则依据哪些上级政策文件？正高职称教师申请学术学位博士生导师岗位资格，在科研项目、经费和成果方面各须达到什么要求？",
+          "category": "multi_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "agri-phd-supervisor-rule-2025@v2025#第一条",
+            "agri-phd-supervisor-rule-2025@v2025#第五条"
+          ],
+          "retrieved_article_ids": [
+            "agri-phd-supervisor-rule-2025@v2025#第五条",
+            "agri-phd-supervisor-rule-2025@v2025#第六条",
+            "agri-external-supervisor-rule-2025@v2025#第六条",
+            "agri-phd-supervisor-rule-2025@v2025#第一条",
+            "agri-external-supervisor-rule-2025@v2025#第七条",
+            "agri-phd-supervisor-rule-2025@v2025#第四条",
+            "agri-phd-supervisor-rule-2025@v2025#第七条",
+            "agri-phd-supervisor-rule-2025@v2025#第二条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 1.0,
+          "latency_ms": 960,
+          "timing": {
+            "dense_ms": 25.48,
+            "sparse_ms": 28.63,
+            "rerank_ms": 904.03
+          },
+          "warnings": [
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤",
+            "PROFILE_UNDETERMINED: 用户未提供学院，结果保留可能限定该细目的条款",
+            "FILTERS_APPLIED: as_of=2026-10-24；version_mode=current；audience=未指定（不硬过滤）；profile=未提供"
+          ]
+        },
+        {
+          "qid": "test-028",
+          "question": "本科毕业生在什么条件下可被授予学士学位？学位申请人在攻读学位过程中出现哪些情形时学校不授予或撤销学位？",
+          "category": "multi_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "bachelor-degree-rules@v2025#第五条",
+            "bachelor-degree-rules@v2025#第八条"
+          ],
+          "retrieved_article_ids": [
+            "bachelor-degree-rules@v2025#第八条",
+            "master-doctor-degree-rules@v2025#第二十五条",
+            "bachelor-degree-rules@v2025#第五条",
+            "bachelor-degree-rules@v2025#第六条",
+            "bachelor-degree-rules@v2025#第九条",
+            "bachelor-degree-rules@v2025#第四条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 1.0,
+          "latency_ms": 829,
+          "timing": {
+            "dense_ms": 32.38,
+            "sparse_ms": 26.74,
+            "rerank_ms": 768.14
+          },
+          "warnings": [
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤",
+            "PROFILE_UNDETERMINED: 用户未提供年级/阶段，结果保留可能限定该细目的条款",
+            "PROFILE_UNDETERMINED: 用户未提供学籍状态，结果保留可能限定该细目的条款",
+            "FILTERS_APPLIED: as_of=2026-10-24；version_mode=current；audience=未指定（不硬过滤）；profile=未提供"
+          ]
+        },
+        {
+          "qid": "test-029",
+          "question": "学校合同管理应遵循哪些原则？党政办公室在全校合同管理中承担哪些主要职责？",
+          "category": "multi_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "contract-management@v2020#第三条",
+            "contract-management@v2020#第十一条"
+          ],
+          "retrieved_article_ids": [
+            "contract-management@v2020#第十一条",
+            "contract-management@v2020#第三条",
+            "contract-management@v2020#第三十五条",
+            "contract-management@v2020#第十五条",
+            "contract-management@v2020#第三十条",
+            "contract-management@v2020#第十三条",
+            "contract-management@v2020#第八条",
+            "contract-management@v2020#第二十九条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 1.0,
+          "latency_ms": 898,
+          "timing": {
+            "dense_ms": 34.29,
+            "sparse_ms": 5.79,
+            "rerank_ms": 857.26
+          },
+          "warnings": [
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤",
+            "FILTERS_APPLIED: as_of=2026-10-24；version_mode=current；audience=未指定（不硬过滤）；profile=未提供"
+          ]
+        },
+        {
+          "qid": "test-030",
+          "question": "学校开展家庭经济困难学生认定工作依据哪些上级文件？该工作由哪个组织机构领导和监督，哪个部门具体负责本科生认定工作的组织与管理？",
+          "category": "multi_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "financial-hardship@v2020#第一条",
+            "financial-hardship@v2020#第六条"
+          ],
+          "retrieved_article_ids": [
+            "financial-hardship@v2020#第六条",
+            "financial-hardship@v2020#第一条",
+            "financial-hardship@v2020#第七条",
+            "financial-hardship@v2020#第十二条",
+            "financial-hardship@v2020#第十一条",
+            "financial-hardship@v2020#第九条",
+            "financial-hardship@v2020#第十五条",
+            "financial-hardship@v2020#第四条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 1.0,
+          "latency_ms": 896,
+          "timing": {
+            "dense_ms": 20.14,
+            "sparse_ms": 13.67,
+            "rerank_ms": 861.19
+          },
+          "warnings": [
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤",
+            "PROFILE_UNDETERMINED: 用户未提供学生群体，结果保留可能限定该细目的条款",
+            "FILTERS_APPLIED: as_of=2026-10-24；version_mode=current；audience=未指定（不硬过滤）；profile=未提供"
+          ]
+        },
+        {
+          "qid": "test-031",
+          "question": "学校制定大学生创新创业训练计划相关管理办法的出发点是什么，该计划在实施中遵循哪些原则并要达到什么目的？",
+          "category": "multi_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "innovation-training@v2018#第一条",
+            "innovation-training@v2018#第二条"
+          ],
+          "retrieved_article_ids": [
+            "innovation-training@v2018#第二条",
+            "innovation-training@v2018#第一条",
+            "innovation-training@v2018#第三条",
+            "innovation-training@v2018#第五条",
+            "innovation-training@v2018#第四条",
+            "innovation-training@v2018#第九条",
+            "innovation-training@v2018#第八条",
+            "innovation-training@v2018#第六条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 1.0,
+          "latency_ms": 907,
+          "timing": {
+            "dense_ms": 32.38,
+            "sparse_ms": 7.81,
+            "rerank_ms": 865.62
+          },
+          "warnings": [
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤",
+            "FILTERS_APPLIED: as_of=2026-10-24；version_mode=current；audience=未指定（不硬过滤）；profile=未提供"
+          ]
+        },
+        {
+          "qid": "test-032",
+          "question": "学校公务接待的审批职责如何划分，接待活动中有哪些明确禁止的行为？",
+          "category": "multi_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "official-reception@v2017#第三条",
+            "official-reception@v2017#第九条"
+          ],
+          "retrieved_article_ids": [
+            "official-reception@v2017#第三条",
+            "official-reception@v2017#第九条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 1.0,
+          "latency_ms": 886,
+          "timing": {
+            "dense_ms": 23.64,
+            "sparse_ms": 5.85,
+            "rerank_ms": 855.75
+          },
+          "warnings": [
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤",
+            "FILTERS_APPLIED: as_of=2026-10-24；version_mode=current；audience=未指定（不硬过滤）；profile=未提供"
+          ]
+        },
+        {
+          "qid": "test-033",
+          "question": "学校为何在全日制专业学位研究生教育中探索专项制改革，每个专项的招生指标如何配置？",
+          "category": "multi_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "professional-degree-reform@v2022#第一条",
+            "professional-degree-reform@v2022#第二条"
+          ],
+          "retrieved_article_ids": [
+            "professional-degree-reform@v2022#第二条",
+            "professional-degree-reform@v2022#第一条",
+            "professional-degree-reform@v2022#第四条",
+            "professional-degree-reform@v2022#第九条",
+            "professional-degree-reform@v2022#第七条",
+            "professional-degree-reform@v2022#第十条",
+            "professional-degree-reform@v2022#第三条",
+            "professional-degree-reform@v2022#第十三条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 1.0,
+          "latency_ms": 699,
+          "timing": {
+            "dense_ms": 39.01,
+            "sparse_ms": 7.93,
+            "rerank_ms": 651.12
+          },
+          "warnings": [
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤",
+            "PROFILE_UNDETERMINED: 用户未提供培养类型，结果保留可能限定该细目的条款",
+            "FILTERS_APPLIED: as_of=2026-10-24；version_mode=current；audience=未指定（不硬过滤）；profile=未提供"
+          ]
+        },
+        {
+          "qid": "test-034",
+          "question": "校督导委员会的人员与机构如何设置，担任校督导员需要满足哪些条件？",
+          "category": "multi_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "teaching-supervision@v2023#第四条",
+            "teaching-supervision@v2023#第七条"
+          ],
+          "retrieved_article_ids": [
+            "teaching-supervision@v2023#第七条",
+            "teaching-supervision@v2023#第四条",
+            "teaching-supervision@v2023#第十二条",
+            "teaching-supervision@v2023#第八条",
+            "teaching-supervision@v2023#第十条",
+            "teaching-supervision@v2023#第十一条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 1.0,
+          "latency_ms": 802,
+          "timing": {
+            "dense_ms": 41.08,
+            "sparse_ms": 15.57,
+            "rerank_ms": 743.59
+          },
+          "warnings": [
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤",
+            "FILTERS_APPLIED: as_of=2026-10-24；version_mode=current；audience=未指定（不硬过滤）；profile=未提供"
+          ]
+        },
+        {
+          "qid": "test-035",
+          "question": "学生申请转学需要符合哪些条件，转学的手续和备案程序是如何规定的？",
+          "category": "multi_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "undergraduate-school-transfer@v2021#第二条",
+            "undergraduate-school-transfer@v2021#第四条"
+          ],
+          "retrieved_article_ids": [
+            "undergraduate-school-transfer@v2021#第二条",
+            "undergraduate-school-transfer@v2021#第四条",
+            "undergraduate-school-transfer@v2021#第三条",
+            "undergraduate-status-rules@v2021#第二十三条",
+            "undergraduate-major-transfer@v2021#第二条",
+            "undergraduate-status-rules@v2021#第二十二条",
+            "undergraduate-status-rules@v2021#第二十一条",
+            "undergraduate-school-transfer@v2021#第五条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 1.0,
+          "latency_ms": 935,
+          "timing": {
+            "dense_ms": 41.47,
+            "sparse_ms": 28.94,
+            "rerank_ms": 863.3
+          },
+          "warnings": [
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤",
+            "FILTERS_APPLIED: as_of=2026-10-24；version_mode=current；audience=未指定（不硬过滤）；profile=未提供"
+          ]
+        },
+        {
+          "qid": "test-036",
+          "question": "2026 版培养方案：作物学学科在培养博士生和硕士生时，对学术研究能力与外语应用能力分别提出了哪些要求？",
+          "category": "section",
+          "block_types": [
+            "section"
+          ],
+          "expected_article_ids": [
+            "agri-grad-plan-crop-0901@v2026#一、培养目标"
+          ],
+          "retrieved_article_ids": [
+            "agri-grad-plan-crop-0901@v2026#二、应具备的基本素质",
+            "agri-grad-plan-crop-0901@v2026#一、培养目标",
+            "agri-grad-plan-crop-0901@v2026#四、学位论文要求",
+            "agri-grad-plan-crop-0901@v2026#四、学位论文要求~2",
+            "agri-grad-plan-crop-0901@v2026#三、应具备的基本学术能力"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 0.5,
+          "latency_ms": 965,
+          "timing": {
+            "dense_ms": 58.99,
+            "sparse_ms": 21.41,
+            "rerank_ms": 881.27
+          },
+          "warnings": [
+            "TOKEN_BUDGET: 跳过 agri-grad-plan-crop-0901@v2026#三、应具备的基本学术能力~2",
+            "TOKEN_BUDGET: 跳过 agri-grad-plan-crop-0901@v2026#二、应具备的基本素质~2",
+            "TOKEN_BUDGET: 跳过 agri-grad-plan-crop-0901@v2026#四、培养环节具体标准及考核要求",
+            "PROFILE_UNDETERMINED: 用户未提供培养类型，结果保留可能限定该细目的条款",
+            "FILTERS_APPLIED: as_of=2026-10-24；version_mode=current；audience=graduate；profile[colleges=agri; intake_year=2026]"
+          ]
+        },
+        {
+          "qid": "test-037",
+          "question": "2026 版培养方案：农业工程学科博士生与硕士生在研究成果要求和毕业后可从事的工作方面有何规定？",
+          "category": "section",
+          "block_types": [
+            "section"
+          ],
+          "expected_article_ids": [
+            "info-grad-agri-engineering-plan@v2026#一、人才培养目标"
+          ],
+          "retrieved_article_ids": [
+            "info-grad-agri-engineering-plan@v2026#一、人才培养目标",
+            "info-grad-agri-engineering-plan@v2026#一、培养目标",
+            "info-grad-agri-engineering-plan@v2026#四、学位论文基本要求",
+            "info-grad-agri-engineering-plan@v2026#五、研究生科研成果要求",
+            "info-grad-agri-engineering-plan@v2026#二、获本学科博士学位应具备的基本素质",
+            "info-grad-agri-engineering-plan@v2026#六、毕业与学位授予",
+            "info-grad-agri-engineering-plan@v2026#三、获本学科博士学位应具备的基本学术能力"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 1.0,
+          "latency_ms": 1051,
+          "timing": {
+            "dense_ms": 71.04,
+            "sparse_ms": 38.12,
+            "rerank_ms": 938.61
+          },
+          "warnings": [
+            "TOKEN_BUDGET: 跳过 info-grad-agri-engineering-plan@v2026#五、科研成果要求",
+            "PROFILE_UNDETERMINED: 用户未提供培养类型，结果保留可能限定该细目的条款",
+            "FILTERS_APPLIED: as_of=2026-10-24；version_mode=current；audience=graduate_doctor；profile[colleges=info; intake_year=2026]"
+          ]
+        },
+        {
+          "qid": "test-038",
+          "question": "2025 版培养方案：计算机科学与技术学科硕士生培养对外语能力、学术规范素养和就业适应性分别提出了什么要求？",
+          "category": "section",
+          "block_types": [
+            "section"
+          ],
+          "expected_article_ids": [
+            "info-grad-cs-plan@v2025-2026#一、人才培养目标"
+          ],
+          "retrieved_article_ids": [
+            "info-grad-cs-plan@v2025-2026#一、人才培养目标",
+            "info-grad-cs-plan@v2025-2026#二、获本学科硕士学位应具备的基本素质",
+            "info-grad-cs-plan@v2025-2026#一、获本学科硕士学位应掌握的基本知识",
+            "info-grad-cs-plan@v2025-2026#三、获本学科硕士学位应具备的基本学术能力",
+            "info-grad-cs-plan@v2025-2026#四、学位论文基本要求",
+            "info-grad-computer-tech-plan@v2025-2026#一、培养目标",
+            "info-grad-computer-tech-plan@v2025-2026#五、学位论文基本要求"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 1.0,
+          "latency_ms": 1060,
+          "timing": {
+            "dense_ms": 77.09,
+            "sparse_ms": 53.47,
+            "rerank_ms": 925.43
+          },
+          "warnings": [
+            "TOKEN_BUDGET: 跳过 info-grad-computer-tech-plan@v2025-2026#四、获本专业学位类别硕士应具备的基本能力",
+            "PROFILE_UNDETERMINED: 用户未提供培养类型，结果保留可能限定该细目的条款",
+            "FILTERS_APPLIED: as_of=2026-10-24；version_mode=current；audience=graduate_master；profile[colleges=info; intake_year=2025]"
+          ]
+        },
+        {
+          "qid": "test-039",
+          "question": "2025 版培养方案：数学及相关学科硕士研究生在知识结构和能力方面需要达到哪些培养要求？",
+          "category": "section",
+          "block_types": [
+            "section"
+          ],
+          "expected_article_ids": [
+            "info-grad-math-plan@v2025-2026#一、人才培养目标"
+          ],
+          "retrieved_article_ids": [
+            "info-grad-math-plan@v2025-2026#一、人才培养目标",
+            "info-grad-math-plan@v2025-2026#三、获本学科硕士学位应具备的基本学术能力",
+            "info-grad-math-plan@v2025-2026#二、获本学科硕士学位应具备的基本素质",
+            "info-grad-math-plan@v2025-2026#一、获本学科硕士学位应掌握的基本知识",
+            "info-grad-math-plan@v2025-2026#四、学位论文的基本要求",
+            "info-grad-math-plan@v2025-2026#第二章 培养方案",
+            "info-grad-math-plan@v2025-2026#四、培养环节具体标准及考核要求",
+            "info-grad-cs-plan@v2025-2026#一、获本学科硕士学位应掌握的基本知识"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 1.0,
+          "latency_ms": 1050,
+          "timing": {
+            "dense_ms": 84.6,
+            "sparse_ms": 49.18,
+            "rerank_ms": 910.78
+          },
+          "warnings": [
+            "PROFILE_UNDETERMINED: 用户未提供培养类型，结果保留可能限定该细目的条款",
+            "FILTERS_APPLIED: as_of=2026-10-24；version_mode=current；audience=graduate_master；profile[colleges=info; intake_year=2025]"
+          ]
+        },
+        {
+          "qid": "test-040",
+          "question": "2022 版培养方案：大数据管理与应用专业毕业生应具备哪些知识方法基础，又主要面向哪些应用领域开展工作？",
+          "category": "section",
+          "block_types": [
+            "section"
+          ],
+          "expected_article_ids": [
+            "info-ug-bigdata-plan@v2022#二、培养目标"
+          ],
+          "retrieved_article_ids": [
+            "info-ug-bigdata-plan@v2022#二、培养目标",
+            "info-ug-bigdata-plan@v2022#八、人才培养目标实现矩阵",
+            "info-ug-bigdata-plan@v2022#五、专业核心课程",
+            "info-ug-bigdata-plan@v2022#四、主干学科",
+            "info-ug-bigdata-plan@v2022#六、修业年限及授予学位",
+            "info-ug-bigdata-plan@v2022#三、培养规格",
+            "info-ug-bigdata-plan@v2022#一、专业名称",
+            "info-majors-undergrad@v2026#三、信息工程系"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 1.0,
+          "latency_ms": 692,
+          "timing": {
+            "dense_ms": 95.64,
+            "sparse_ms": 34.82,
+            "rerank_ms": 557.15
+          },
+          "warnings": [
+            "FILTERS_APPLIED: as_of=2026-10-24；version_mode=current；audience=undergraduate；profile[colleges=info; majors=big-data-management; intake_year=2022]"
+          ]
+        }
+      ]
+    }
+  }
+}

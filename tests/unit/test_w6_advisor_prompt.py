@@ -92,3 +92,28 @@ def test_multi_aspect_plan_question_excludes_neighboring_sections() -> None:
     assert target.article_id in content
     assert distractor.article_id not in content
     assert "不要引入其他章节的科研成果门槛" in content
+
+
+def test_course_and_credit_questions_keep_course_sections() -> None:
+    objective = make_article(
+        article_id="plan@v2026#一、培养目标",
+        article_no="一、培养目标",
+        block_type=BlockType.SECTION,
+        text="本专业培养具有系统知识与实践能力的人才。",
+    )
+    courses = make_article(
+        article_id="plan@v2026#二、课程设置",
+        article_no="二、课程设置",
+        block_type=BlockType.SECTION,
+        text="课程设置包括必修课程和选修课程，总学分为160学分。",
+    )
+    messages = build_messages(
+        "2026 版培养方案：课程设置和学分要求分别是什么？",
+        [make_evidence(objective), make_evidence(courses)],
+        None,
+    )
+
+    content = messages[1]["content"]
+    assert objective.article_id in content
+    assert courses.article_id in content
+    assert "证据已聚焦到该方案的培养目标 section" not in content

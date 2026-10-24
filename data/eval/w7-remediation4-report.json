@@ -1,0 +1,970 @@
+{
+  "schema_version": "w7-report-v1",
+  "dataset": "test_v1.jsonl",
+  "dataset_sha256": "208cf3c5f032c039b3af985428c7bb2f3dfacdd422dcf8ae5dc24d2f393eb74a",
+  "testset_sha256": "2a8d0e1223621520e5807aaa3b2a244110f9835bb7bae6d5bc35e4ed7f7e8f18",
+  "run_sha256": "75c61f800dd49a0e717492dad1755a18b99014906d5dd8aa5abca506a9aad396",
+  "annotators": [
+    "yaukin"
+  ],
+  "metadata": {
+    "git_commit": "75f10a442a89731b0b757f38d11cbca88f237555",
+    "git_dirty": true,
+    "model": "mimo-v2.6-pro-ultraspeed",
+    "advisor_prompt_version": "w6a2.4-2026-10-24",
+    "embedding_model": "BAAI/bge-m3",
+    "vector_manifest": {
+      "path": "D:\\big-third-up\\campusguide-agent\\data\\vector_manifest.json",
+      "sha256": "17441d486b2fb788456b875665c695d9bafa2cc4a9bef1c974c91b19bd24e7a2",
+      "content_hash": "",
+      "source_content_hash": "dc14ddc5452b3a845430300bde27fd5ca85a1930d403562cd35001c65158aabe",
+      "points": 3952,
+      "device": "cuda",
+      "embedding_model": "BAAI/bge-m3"
+    },
+    "config_hash": "fa8c174a9fc5f5332fb6f762776715cf19f179de1ef0cef3b8928ed2b28c8edd",
+    "config_files": [
+      "configs/retrieval.yaml",
+      "configs/abstention.yaml",
+      "configs/aliases.yaml",
+      "configs/mcp.yaml"
+    ],
+    "warmup_ms": 0,
+    "latency_scope": "cold",
+    "limit": null,
+    "text_manifest": "D:\\big-third-up\\campusguide-agent\\data\\manifest.json"
+  },
+  "retrieval": {
+    "article": {
+      "questions": 35,
+      "recall_at_8": 1.0,
+      "mrr": 0.9667
+    },
+    "section": {
+      "questions": 5,
+      "recall_at_8": 1.0,
+      "mrr": 0.9
+    },
+    "overall": {
+      "questions": 40,
+      "recall_at_8": 1.0,
+      "mrr": 0.9583
+    }
+  },
+  "structure": {
+    "citations_total": 128,
+    "valid_citations": 128,
+    "citation_id_valid_rate": 1.0,
+    "fabricated_id_count": 0,
+    "wrong_part_count": 0,
+    "quotes_total": 128,
+    "quotes_located": 128,
+    "quote_locatable_rate": 1.0,
+    "pass_with_blocking_count": 0,
+    "ok": true
+  },
+  "support": {
+    "drafts_total": 133,
+    "drafts_excluded": 0,
+    "drafts_labeled": 133,
+    "drafts_unlabeled": 0,
+    "drafts_supported": 133,
+    "rendered_total": 133,
+    "rendered_labeled": 133,
+    "rendered_supported": 133,
+    "draft_support_rate": {
+      "successes": 133,
+      "total": 133,
+      "rate": 1.0,
+      "wilson_low": 0.9719,
+      "wilson_high": 1.0
+    },
+    "rendered_support_rate": {
+      "successes": 133,
+      "total": 133,
+      "rate": 1.0,
+      "wilson_low": 0.9719,
+      "wilson_high": 1.0
+    }
+  },
+  "answer_correctness": {
+    "total": 50,
+    "answerable_total": 40,
+    "answerable_labeled": 40,
+    "answerable_unlabeled": 0,
+    "unanswerable_total": 10,
+    "unanswerable_correct": 10,
+    "unlabeled": 0,
+    "counts": {
+      "correct": 35,
+      "partial": 5
+    },
+    "correct_rate": {
+      "successes": 35,
+      "total": 40,
+      "rate": 0.875,
+      "wilson_low": 0.7389,
+      "wilson_high": 0.9454
+    }
+  },
+  "answer_by_category": {
+    "overall": {
+      "answerable": 40,
+      "labeled": 40,
+      "correct": 35,
+      "partial": 5,
+      "incorrect": 0,
+      "correct_rate": {
+        "successes": 35,
+        "total": 40,
+        "rate": 0.875,
+        "wilson_low": 0.7389,
+        "wilson_high": 0.9454
+      }
+    },
+    "single_article": {
+      "answerable": 25,
+      "labeled": 25,
+      "correct": 24,
+      "partial": 1,
+      "incorrect": 0,
+      "correct_rate": {
+        "successes": 24,
+        "total": 25,
+        "rate": 0.96,
+        "wilson_low": 0.8046,
+        "wilson_high": 0.9929
+      }
+    },
+    "multi_article": {
+      "answerable": 10,
+      "labeled": 10,
+      "correct": 6,
+      "partial": 4,
+      "incorrect": 0,
+      "correct_rate": {
+        "successes": 6,
+        "total": 10,
+        "rate": 0.6,
+        "wilson_low": 0.3127,
+        "wilson_high": 0.8318
+      }
+    },
+    "section": {
+      "answerable": 5,
+      "labeled": 5,
+      "correct": 5,
+      "partial": 0,
+      "incorrect": 0,
+      "correct_rate": {
+        "successes": 5,
+        "total": 5,
+        "rate": 1.0,
+        "wilson_low": 0.5655,
+        "wilson_high": 1.0
+      }
+    },
+    "version_sensitive": {
+      "answerable": 5,
+      "labeled": 5,
+      "correct": 5,
+      "partial": 0,
+      "incorrect": 0,
+      "correct_rate": {
+        "successes": 5,
+        "total": 5,
+        "rate": 1.0,
+        "wilson_low": 0.5655,
+        "wilson_high": 1.0
+      }
+    }
+  },
+  "refusal": {
+    "answerable": 40,
+    "unanswerable": 10,
+    "false_refusal": {
+      "successes": 0,
+      "total": 40,
+      "rate": 0.0,
+      "wilson_low": 0.0,
+      "wilson_high": 0.0876
+    },
+    "refusal_recall": {
+      "successes": 10,
+      "total": 10,
+      "rate": 1.0,
+      "wilson_low": 0.7225,
+      "wilson_high": 1.0
+    },
+    "reason_code_accuracy": {
+      "successes": 10,
+      "total": 10,
+      "rate": 1.0,
+      "wilson_low": 0.7225,
+      "wilson_high": 1.0
+    },
+    "confusion": {
+      "answerable": {
+        "rendered": 40,
+        "abstained": 0
+      },
+      "unanswerable": {
+        "rendered": 0,
+        "abstained": 10
+      }
+    }
+  },
+  "error_attribution": {
+    "categories": {
+      "RETRIEVAL_MISS": {
+        "count": 0,
+        "qids": [],
+        "details": []
+      },
+      "WRONG_VERSION": {
+        "count": 0,
+        "qids": [],
+        "details": []
+      },
+      "WRONG_AUDIENCE": {
+        "count": 0,
+        "qids": [],
+        "details": []
+      },
+      "UNSUPPORTED_CLAIM": {
+        "count": 5,
+        "qids": [
+          "test-003",
+          "test-029",
+          "test-031",
+          "test-033",
+          "test-035"
+        ],
+        "details": [
+          "test-003: 缺 required fact「助推学校“双一流”建设」；质量数量双提升正确",
+          "test-029: 缺「合法性审查」与「合同专用章」；原则部分正确",
+          "test-031: 缺 required fact「纳入大学生人才培养方案」；出发点与原则正确",
+          "test-033: 缺 required fact「成建制培养」；连续三年配置与 15-30 个正确",
+          "test-035: 缺「下一学期开学初到我校办理报到注册」；条件与一式4份正确"
+        ]
+      },
+      "CITATION_MISMATCH": {
+        "count": 0,
+        "qids": [],
+        "details": []
+      },
+      "INCOMPLETE_FLOW": {
+        "count": 0,
+        "qids": [],
+        "details": []
+      },
+      "OVER_REFUSAL": {
+        "count": 0,
+        "qids": [],
+        "details": []
+      },
+      "UNDER_REFUSAL": {
+        "count": 0,
+        "qids": [],
+        "details": []
+      },
+      "TOOL_FAILURE": {
+        "count": 0,
+        "qids": [],
+        "details": []
+      },
+      "LATENCY": {
+        "count": 0,
+        "qids": [],
+        "details": []
+      }
+    },
+    "latency": {
+      "note": "p50/p95 未达门禁属于系统级延迟限制，不计入单题错误主因。"
+    }
+  },
+  "version_sensitive": {
+    "successes": 5,
+    "total": 5,
+    "rate": 1.0,
+    "wilson_low": 0.5655,
+    "wilson_high": 1.0,
+    "unlabeled": 0
+  },
+  "ablations": {
+    "a5": {
+      "schema_version": "w7-a5-v1",
+      "dataset": "test_v1.jsonl",
+      "dataset_sha256": "208cf3c5f032c039b3af985428c7bb2f3dfacdd422dcf8ae5dc24d2f393eb74a",
+      "testset_sha256": "2a8d0e1223621520e5807aaa3b2a244110f9835bb7bae6d5bc35e4ed7f7e8f18",
+      "generated_at": "2026-10-24T15:44:04+00:00",
+      "questions": 40,
+      "metadata": {
+        "git_commit": "75f10a442a89731b0b757f38d11cbca88f237555",
+        "git_dirty": true,
+        "index_version": "articles_v1@hybrid-0cb2167de3fe",
+        "vector_manifest_sha256": "17441d486b2fb788456b875665c695d9bafa2cc4a9bef1c974c91b19bd24e7a2",
+        "config_hash": "dbc53f71cc4d837231535e19c521310b1563aebbbce620eeb2c2f21b2e687c4f",
+        "embedding_model": "BAAI/bge-m3",
+        "reranker_model": "BAAI/bge-reranker-v2-m3"
+      },
+      "modes": {
+        "dense": {
+          "summary": {
+            "questions": 40,
+            "scored_questions": 40,
+            "skipped_no_expected": 0,
+            "article": {
+              "questions": 35,
+              "recall_at_8": 0.9571,
+              "mrr": 0.8241,
+              "no_hit": 1
+            },
+            "section": {
+              "questions": 5,
+              "recall_at_8": 1.0,
+              "mrr": 0.8667,
+              "no_hit": 0
+            },
+            "overall": {
+              "recall_at_8": 0.9625,
+              "mrr": 0.8294
+            },
+            "latency_ms": {
+              "p50": 35.0,
+              "p95": 80.14999999999999
+            },
+            "rerank_latency_ms": {
+              "count": 0,
+              "p50": null,
+              "p95": null
+            }
+          },
+          "elapsed_ms": 1582
+        },
+        "hybrid_rrf": {
+          "summary": {
+            "questions": 40,
+            "scored_questions": 40,
+            "skipped_no_expected": 0,
+            "article": {
+              "questions": 35,
+              "recall_at_8": 1.0,
+              "mrr": 0.8771,
+              "no_hit": 0
+            },
+            "section": {
+              "questions": 5,
+              "recall_at_8": 1.0,
+              "mrr": 0.7667,
+              "no_hit": 0
+            },
+            "overall": {
+              "recall_at_8": 1.0,
+              "mrr": 0.8633
+            },
+            "latency_ms": {
+              "p50": 59.0,
+              "p95": 123.04999999999994
+            },
+            "rerank_latency_ms": {
+              "count": 0,
+              "p50": null,
+              "p95": null
+            }
+          },
+          "elapsed_ms": 2807
+        },
+        "hybrid_rerank": {
+          "summary": {
+            "questions": 40,
+            "scored_questions": 40,
+            "skipped_no_expected": 0,
+            "article": {
+              "questions": 35,
+              "recall_at_8": 1.0,
+              "mrr": 0.9667,
+              "no_hit": 0
+            },
+            "section": {
+              "questions": 5,
+              "recall_at_8": 1.0,
+              "mrr": 0.9,
+              "no_hit": 0
+            },
+            "overall": {
+              "recall_at_8": 1.0,
+              "mrr": 0.9583
+            },
+            "latency_ms": {
+              "p50": 870.5,
+              "p95": 1050.05
+            },
+            "rerank_latency_ms": {
+              "count": 40,
+              "p50": 820.0,
+              "p95": 910.75
+            }
+          },
+          "elapsed_ms": 32538
+        }
+      }
+    },
+    "a4": {
+      "schema_version": "w7-a4-v1",
+      "dataset": "test_v1.jsonl",
+      "dataset_sha256": "208cf3c5f032c039b3af985428c7bb2f3dfacdd422dcf8ae5dc24d2f393eb74a",
+      "testset_sha256": "2a8d0e1223621520e5807aaa3b2a244110f9835bb7bae6d5bc35e4ed7f7e8f18",
+      "generated_at": "2026-10-24T15:53:38+00:00",
+      "profile_questions": 5,
+      "baseline_run_sha256": "75c61f800dd49a0e717492dad1755a18b99014906d5dd8aa5abca506a9aad396",
+      "a4_run_sha256": "5aa52cef69d5764012be10a28b8dc49ceca618bf10a8cc271160e524f2d8a114",
+      "baseline": {
+        "mismatch": {
+          "profile_questions": 5,
+          "questions_with_retrieved_mismatch": 0,
+          "retrieved_evidence": 35,
+          "retrieved_mismatched": 0,
+          "questions_with_cited_mismatch": 0,
+          "cited_evidence": 16,
+          "cited_mismatched": 0,
+          "details": [
+            {
+              "qid": "test-036",
+              "profile": {
+                "audience": "graduate",
+                "colleges": [
+                  "agri"
+                ],
+                "intake_year": 2026,
+                "majors": []
+              },
+              "retrieved_total": 5,
+              "retrieved_mismatched": 0,
+              "cited_total": 3,
+              "cited_mismatched": 0,
+              "retrieved_hits": [],
+              "cited_hits": []
+            },
+            {
+              "qid": "test-037",
+              "profile": {
+                "audience": "graduate_doctor",
+                "colleges": [
+                  "info"
+                ],
+                "intake_year": 2026,
+                "majors": []
+              },
+              "retrieved_total": 7,
+              "retrieved_mismatched": 0,
+              "cited_total": 4,
+              "cited_mismatched": 0,
+              "retrieved_hits": [],
+              "cited_hits": []
+            },
+            {
+              "qid": "test-038",
+              "profile": {
+                "audience": "graduate_master",
+                "colleges": [
+                  "info"
+                ],
+                "intake_year": 2025,
+                "majors": []
+              },
+              "retrieved_total": 7,
+              "retrieved_mismatched": 0,
+              "cited_total": 3,
+              "cited_mismatched": 0,
+              "retrieved_hits": [],
+              "cited_hits": []
+            },
+            {
+              "qid": "test-039",
+              "profile": {
+                "audience": "graduate_master",
+                "colleges": [
+                  "info"
+                ],
+                "intake_year": 2025,
+                "majors": []
+              },
+              "retrieved_total": 8,
+              "retrieved_mismatched": 0,
+              "cited_total": 3,
+              "cited_mismatched": 0,
+              "retrieved_hits": [],
+              "cited_hits": []
+            },
+            {
+              "qid": "test-040",
+              "profile": {
+                "audience": "undergraduate",
+                "colleges": [
+                  "info"
+                ],
+                "intake_year": 2022,
+                "majors": [
+                  "big-data-management"
+                ]
+              },
+              "retrieved_total": 8,
+              "retrieved_mismatched": 0,
+              "cited_total": 3,
+              "cited_mismatched": 0,
+              "retrieved_hits": [],
+              "cited_hits": []
+            }
+          ]
+        },
+        "refusal": {
+          "refusal_recall": {
+            "successes": 10,
+            "total": 10,
+            "rate": 1.0,
+            "wilson_low": 0.7225,
+            "wilson_high": 1.0
+          },
+          "false_refusal": {
+            "successes": 0,
+            "total": 40,
+            "rate": 0.0,
+            "wilson_low": 0.0,
+            "wilson_high": 0.0876
+          },
+          "reason_code_accuracy": {
+            "successes": 10,
+            "total": 10,
+            "rate": 1.0,
+            "wilson_low": 0.7225,
+            "wilson_high": 1.0
+          }
+        }
+      },
+      "a4": {
+        "mismatch": {
+          "profile_questions": 5,
+          "questions_with_retrieved_mismatch": 1,
+          "retrieved_evidence": 34,
+          "retrieved_mismatched": 7,
+          "questions_with_cited_mismatch": 1,
+          "cited_evidence": 18,
+          "cited_mismatched": 5,
+          "details": [
+            {
+              "qid": "test-036",
+              "profile": {
+                "audience": "graduate",
+                "colleges": [
+                  "agri"
+                ],
+                "intake_year": 2026,
+                "majors": []
+              },
+              "retrieved_total": 5,
+              "retrieved_mismatched": 0,
+              "cited_total": 3,
+              "cited_mismatched": 0,
+              "retrieved_hits": [],
+              "cited_hits": []
+            },
+            {
+              "qid": "test-037",
+              "profile": {
+                "audience": "graduate_doctor",
+                "colleges": [
+                  "info"
+                ],
+                "intake_year": 2026,
+                "majors": []
+              },
+              "retrieved_total": 7,
+              "retrieved_mismatched": 0,
+              "cited_total": 3,
+              "cited_mismatched": 0,
+              "retrieved_hits": [],
+              "cited_hits": []
+            },
+            {
+              "qid": "test-038",
+              "profile": {
+                "audience": "graduate_master",
+                "colleges": [
+                  "info"
+                ],
+                "intake_year": 2025,
+                "majors": []
+              },
+              "retrieved_total": 7,
+              "retrieved_mismatched": 0,
+              "cited_total": 3,
+              "cited_mismatched": 0,
+              "retrieved_hits": [],
+              "cited_hits": []
+            },
+            {
+              "qid": "test-039",
+              "profile": {
+                "audience": "graduate_master",
+                "colleges": [
+                  "info"
+                ],
+                "intake_year": 2025,
+                "majors": []
+              },
+              "retrieved_total": 8,
+              "retrieved_mismatched": 0,
+              "cited_total": 4,
+              "cited_mismatched": 0,
+              "retrieved_hits": [],
+              "cited_hits": []
+            },
+            {
+              "qid": "test-040",
+              "profile": {
+                "audience": "undergraduate",
+                "colleges": [
+                  "info"
+                ],
+                "intake_year": 2022,
+                "majors": [
+                  "big-data-management"
+                ]
+              },
+              "retrieved_total": 7,
+              "retrieved_mismatched": 7,
+              "cited_total": 5,
+              "cited_mismatched": 5,
+              "retrieved_hits": [
+                {
+                  "article_id": "info-ug-bigdata-plan@v2024#四、毕业要求",
+                  "reasons": [
+                    "入学年份不匹配：文档=[2024]，用户=2022"
+                  ]
+                },
+                {
+                  "article_id": "info-ug-bigdata-plan@v2024#二、培养目标",
+                  "reasons": [
+                    "入学年份不匹配：文档=[2024]，用户=2022"
+                  ]
+                },
+                {
+                  "article_id": "info-ug-bigdata-plan@v2024#九、人才培养目标实现矩阵",
+                  "reasons": [
+                    "入学年份不匹配：文档=[2024]，用户=2022"
+                  ]
+                },
+                {
+                  "article_id": "info-ug-bigdata-plan@v2024#六、专业核心课程",
+                  "reasons": [
+                    "入学年份不匹配：文档=[2024]，用户=2022"
+                  ]
+                },
+                {
+                  "article_id": "info-ug-bigdata-plan@v2024#三、培养规格",
+                  "reasons": [
+                    "入学年份不匹配：文档=[2024]，用户=2022"
+                  ]
+                },
+                {
+                  "article_id": "info-ug-bigdata-plan@v2024#十、培养计划进程表",
+                  "reasons": [
+                    "入学年份不匹配：文档=[2024]，用户=2022"
+                  ]
+                },
+                {
+                  "article_id": "info-ug-ds-plan@v2024#三、培养规格",
+                  "reasons": [
+                    "专业不匹配：文档=['data-science']，用户=['big-data-management']",
+                    "入学年份不匹配：文档=[2024]，用户=2022"
+                  ]
+                }
+              ],
+              "cited_hits": [
+                {
+                  "article_id": "info-ug-bigdata-plan@v2024#二、培养目标",
+                  "reasons": [
+                    "入学年份不匹配：文档=[2024]，用户=2022"
+                  ]
+                },
+                {
+                  "article_id": "info-ug-bigdata-plan@v2024#二、培养目标",
+                  "reasons": [
+                    "入学年份不匹配：文档=[2024]，用户=2022"
+                  ]
+                },
+                {
+                  "article_id": "info-ug-bigdata-plan@v2024#三、培养规格",
+                  "reasons": [
+                    "入学年份不匹配：文档=[2024]，用户=2022"
+                  ]
+                },
+                {
+                  "article_id": "info-ug-bigdata-plan@v2024#三、培养规格",
+                  "reasons": [
+                    "入学年份不匹配：文档=[2024]，用户=2022"
+                  ]
+                },
+                {
+                  "article_id": "info-ug-bigdata-plan@v2024#三、培养规格",
+                  "reasons": [
+                    "入学年份不匹配：文档=[2024]，用户=2022"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "refusal": {
+          "refusal_recall": {
+            "successes": 10,
+            "total": 10,
+            "rate": 1.0,
+            "wilson_low": 0.7225,
+            "wilson_high": 1.0
+          },
+          "false_refusal": {
+            "successes": 0,
+            "total": 40,
+            "rate": 0.0,
+            "wilson_low": 0.0,
+            "wilson_high": 0.0876
+          },
+          "reason_code_accuracy": {
+            "successes": 10,
+            "total": 10,
+            "rate": 1.0,
+            "wilson_low": 0.7225,
+            "wilson_high": 1.0
+          }
+        }
+      },
+      "metadata": {
+        "git_commit": "75f10a442a89731b0b757f38d11cbca88f237555",
+        "git_dirty": true,
+        "index_version": "",
+        "config_hash": "fa8c174a9fc5f5332fb6f762776715cf19f179de1ef0cef3b8928ed2b28c8edd",
+        "model": "mimo-v2.6-pro-ultraspeed",
+        "advisor_prompt_version": "w6a2.4-2026-10-24"
+      },
+      "modes": {}
+    },
+    "a2": {
+      "schema_version": "w7-a2-v1",
+      "dataset": "test_v1.jsonl",
+      "dataset_sha256": "208cf3c5f032c039b3af985428c7bb2f3dfacdd422dcf8ae5dc24d2f393eb74a",
+      "testset_sha256": "2a8d0e1223621520e5807aaa3b2a244110f9835bb7bae6d5bc35e4ed7f7e8f18",
+      "generated_at": "2026-10-24T16:25:49+00:00",
+      "baseline_run_sha256": "75c61f800dd49a0e717492dad1755a18b99014906d5dd8aa5abca506a9aad396",
+      "a2_run_sha256": "367818f7487e2bbf7ca6772df152fc0f66749a236d3ac243cb0bb65538948c3e",
+      "baseline": {
+        "support": {
+          "drafts_total": 133,
+          "drafts_excluded": 0,
+          "drafts_labeled": 133,
+          "drafts_unlabeled": 0,
+          "drafts_supported": 133,
+          "rendered_total": 133,
+          "rendered_labeled": 133,
+          "rendered_supported": 133,
+          "draft_support_rate": {
+            "successes": 133,
+            "total": 133,
+            "rate": 1.0,
+            "wilson_low": 0.9719,
+            "wilson_high": 1.0
+          },
+          "rendered_support_rate": {
+            "successes": 133,
+            "total": 133,
+            "rate": 1.0,
+            "wilson_low": 0.9719,
+            "wilson_high": 1.0
+          },
+          "supported_claims": 133,
+          "partial_claims": 0,
+          "unsupported_claims": 0,
+          "claim_support_rate": {
+            "successes": 133,
+            "total": 133,
+            "rate": 1.0,
+            "wilson_low": 0.9719,
+            "wilson_high": 1.0
+          },
+          "claim_unsupported_rate": {
+            "successes": 0,
+            "total": 133,
+            "rate": 0.0
+          }
+        },
+        "refusal": {
+          "refusal_recall": {
+            "successes": 10,
+            "total": 10,
+            "rate": 1.0,
+            "wilson_low": 0.7225,
+            "wilson_high": 1.0
+          },
+          "false_refusal": {
+            "successes": 0,
+            "total": 40,
+            "rate": 0.0,
+            "wilson_low": 0.0,
+            "wilson_high": 0.0876
+          },
+          "reason_code_accuracy": {
+            "successes": 10,
+            "total": 10,
+            "rate": 1.0,
+            "wilson_low": 0.7225,
+            "wilson_high": 1.0
+          }
+        }
+      },
+      "a2": {
+        "support": {
+          "drafts_total": 138,
+          "drafts_excluded": 0,
+          "drafts_labeled": 138,
+          "drafts_unlabeled": 0,
+          "drafts_supported": 137,
+          "rendered_total": 138,
+          "rendered_labeled": 138,
+          "rendered_supported": 137,
+          "draft_support_rate": {
+            "successes": 137,
+            "total": 138,
+            "rate": 0.9928,
+            "wilson_low": 0.9601,
+            "wilson_high": 0.9987
+          },
+          "rendered_support_rate": {
+            "successes": 137,
+            "total": 138,
+            "rate": 0.9928,
+            "wilson_low": 0.9601,
+            "wilson_high": 0.9987
+          },
+          "supported_claims": 137,
+          "partial_claims": 1,
+          "unsupported_claims": 0,
+          "claim_support_rate": {
+            "successes": 137,
+            "total": 138,
+            "rate": 0.9928,
+            "wilson_low": 0.9601,
+            "wilson_high": 0.9987
+          },
+          "claim_unsupported_rate": {
+            "successes": 0,
+            "total": 138,
+            "rate": 0.0
+          }
+        },
+        "refusal": {
+          "refusal_recall": {
+            "successes": 10,
+            "total": 10,
+            "rate": 1.0,
+            "wilson_low": 0.7225,
+            "wilson_high": 1.0
+          },
+          "false_refusal": {
+            "successes": 0,
+            "total": 40,
+            "rate": 0.0,
+            "wilson_low": 0.0,
+            "wilson_high": 0.0876
+          },
+          "reason_code_accuracy": {
+            "successes": 10,
+            "total": 10,
+            "rate": 1.0,
+            "wilson_low": 0.7225,
+            "wilson_high": 1.0
+          }
+        },
+        "structural_dropped_claims": 0
+      },
+      "metadata": {
+        "git_commit": "75f10a442a89731b0b757f38d11cbca88f237555",
+        "git_dirty": true,
+        "index_version": "",
+        "model": "mimo-v2.6-pro-ultraspeed",
+        "advisor_prompt_version": "w6a2.4-2026-10-24"
+      },
+      "modes": {}
+    }
+  },
+  "label_changes": {
+    "run_sha256": "75c61f800dd49a0e717492dad1755a18b99014906d5dd8aa5abca506a9aad396",
+    "support": {
+      "total": 133,
+      "carried": 27,
+      "changed": 106
+    },
+    "answer": {
+      "total": 50,
+      "carried": 11,
+      "changed": 39
+    },
+    "support_review": "data\\eval\\w7_remediation4_support_review.md",
+    "answer_review": "data\\eval\\w7_remediation4_answer_review.md",
+    "label": "w7_remediation4"
+  },
+  "latency_ms": {
+    "p50": 7367.5,
+    "p95": 21384.7
+  },
+  "gates": {
+    "structure": {
+      "ok": true
+    },
+    "support": {
+      "ok": true,
+      "value": 1.0,
+      "gate": 0.95,
+      "labeled": 133,
+      "unlabeled": 0
+    },
+    "answer_correct": {
+      "ok": true,
+      "value": 0.875,
+      "gate": 0.85,
+      "labeled": 40,
+      "unlabeled": 0
+    },
+    "refusal_recall": {
+      "ok": true,
+      "value": 1.0,
+      "gate": 0.9
+    },
+    "false_refusal": {
+      "ok": true,
+      "value": 0.0,
+      "gate": 0.1
+    },
+    "version_sensitive": {
+      "ok": true,
+      "value": 1.0,
+      "gate": 0.9
+    },
+    "article_recall": {
+      "ok": true,
+      "value": 1.0,
+      "gate": 0.9
+    },
+    "p50": {
+      "ok": false,
+      "value": 7367.5,
+      "gate": 6000
+    },
+    "p95": {
+      "ok": false,
+      "value": 21384.7,
+      "gate": 10000
+    }
+  },
+  "overall": false
+}

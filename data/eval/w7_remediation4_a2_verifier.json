@@ -1,0 +1,145 @@
+{
+  "schema_version": "w7-a2-v1",
+  "dataset": "test_v1.jsonl",
+  "dataset_sha256": "208cf3c5f032c039b3af985428c7bb2f3dfacdd422dcf8ae5dc24d2f393eb74a",
+  "testset_sha256": "2a8d0e1223621520e5807aaa3b2a244110f9835bb7bae6d5bc35e4ed7f7e8f18",
+  "generated_at": "2026-10-24T16:25:49+00:00",
+  "baseline_run_sha256": "75c61f800dd49a0e717492dad1755a18b99014906d5dd8aa5abca506a9aad396",
+  "a2_run_sha256": "367818f7487e2bbf7ca6772df152fc0f66749a236d3ac243cb0bb65538948c3e",
+  "baseline": {
+    "support": {
+      "drafts_total": 133,
+      "drafts_excluded": 0,
+      "drafts_labeled": 133,
+      "drafts_unlabeled": 0,
+      "drafts_supported": 133,
+      "rendered_total": 133,
+      "rendered_labeled": 133,
+      "rendered_supported": 133,
+      "draft_support_rate": {
+        "successes": 133,
+        "total": 133,
+        "rate": 1.0,
+        "wilson_low": 0.9719,
+        "wilson_high": 1.0
+      },
+      "rendered_support_rate": {
+        "successes": 133,
+        "total": 133,
+        "rate": 1.0,
+        "wilson_low": 0.9719,
+        "wilson_high": 1.0
+      },
+      "supported_claims": 133,
+      "partial_claims": 0,
+      "unsupported_claims": 0,
+      "claim_support_rate": {
+        "successes": 133,
+        "total": 133,
+        "rate": 1.0,
+        "wilson_low": 0.9719,
+        "wilson_high": 1.0
+      },
+      "claim_unsupported_rate": {
+        "successes": 0,
+        "total": 133,
+        "rate": 0.0
+      }
+    },
+    "refusal": {
+      "refusal_recall": {
+        "successes": 10,
+        "total": 10,
+        "rate": 1.0,
+        "wilson_low": 0.7225,
+        "wilson_high": 1.0
+      },
+      "false_refusal": {
+        "successes": 0,
+        "total": 40,
+        "rate": 0.0,
+        "wilson_low": 0.0,
+        "wilson_high": 0.0876
+      },
+      "reason_code_accuracy": {
+        "successes": 10,
+        "total": 10,
+        "rate": 1.0,
+        "wilson_low": 0.7225,
+        "wilson_high": 1.0
+      }
+    }
+  },
+  "a2": {
+    "support": {
+      "drafts_total": 138,
+      "drafts_excluded": 0,
+      "drafts_labeled": 138,
+      "drafts_unlabeled": 0,
+      "drafts_supported": 137,
+      "rendered_total": 138,
+      "rendered_labeled": 138,
+      "rendered_supported": 137,
+      "draft_support_rate": {
+        "successes": 137,
+        "total": 138,
+        "rate": 0.9928,
+        "wilson_low": 0.9601,
+        "wilson_high": 0.9987
+      },
+      "rendered_support_rate": {
+        "successes": 137,
+        "total": 138,
+        "rate": 0.9928,
+        "wilson_low": 0.9601,
+        "wilson_high": 0.9987
+      },
+      "supported_claims": 137,
+      "partial_claims": 1,
+      "unsupported_claims": 0,
+      "claim_support_rate": {
+        "successes": 137,
+        "total": 138,
+        "rate": 0.9928,
+        "wilson_low": 0.9601,
+        "wilson_high": 0.9987
+      },
+      "claim_unsupported_rate": {
+        "successes": 0,
+        "total": 138,
+        "rate": 0.0
+      }
+    },
+    "refusal": {
+      "refusal_recall": {
+        "successes": 10,
+        "total": 10,
+        "rate": 1.0,
+        "wilson_low": 0.7225,
+        "wilson_high": 1.0
+      },
+      "false_refusal": {
+        "successes": 0,
+        "total": 40,
+        "rate": 0.0,
+        "wilson_low": 0.0,
+        "wilson_high": 0.0876
+      },
+      "reason_code_accuracy": {
+        "successes": 10,
+        "total": 10,
+        "rate": 1.0,
+        "wilson_low": 0.7225,
+        "wilson_high": 1.0
+      }
+    },
+    "structural_dropped_claims": 0
+  },
+  "metadata": {
+    "git_commit": "75f10a442a89731b0b757f38d11cbca88f237555",
+    "git_dirty": true,
+    "index_version": "",
+    "model": "mimo-v2.6-pro-ultraspeed",
+    "advisor_prompt_version": "w6a2.4-2026-10-24"
+  }
+}

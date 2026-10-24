@@ -13,7 +13,7 @@ W1 尚无问答模块，因此**没有任何回答质量指标**。简历、READ
 |---|---|---|---|
 | 代码规范 | ruff check（E/F/I/B/UP/SIM/RUF） | `make lint` | 通过 |
 | 代码格式 | ruff format --check src tests scripts | `make format-check` | 通过 |
-| 单元、契约与集成测试 | 全离线：mock HTTP、临时目录、动态生成 PDF、内存 Qdrant、fake embedder/chat | `make test` | 434 passed（remediation3 后） |
+| 单元、契约与集成测试 | 全离线：mock HTTP、临时目录、动态生成 PDF、内存 Qdrant、fake embedder/chat | `make test` | 435 passed（remediation4 后） |
 | 索引确定性 | 同一输入重建，`content_hash` 与 JSONL 字节一致 | `pytest tests/unit/test_build_index.py` | 通过 |
 | 联系方式脱敏 | 手机号、身份证、学号、邮箱、联系人姓名 | `pytest tests/unit/test_redact.py` | 通过 |
 | 版本解析 | CURRENT / HISTORICAL / INCLUDE_REPEALED、冲突、无版本 | `pytest tests/unit/test_versioning.py` | 通过 |
@@ -38,7 +38,7 @@ CI 配置见 `.github/workflows/ci.yml`；Gitee 仓库当前以本地 `make qa` 
 
 - `ruff check .`：通过；
 - `ruff format --check src tests scripts`：通过；
-- `pytest`：434 passed（W1–W4 unit + contract + integration，无网络依赖；W1/W2 时点为 154；W3 后 295；remediation3 后 434）；
+- `pytest`：435 passed（W1–W4 unit + contract + integration，无网络依赖；W1/W2 时点为 154；W3 后 295；remediation3 后 434；remediation4 后 435）；
 - 真实语料：213 文档 / 232 版本 / 3,952 块；其中 `article` 1,366、`section` 2,586；
 - 规模构成：校级 44 文档 / 52 版本；信息学院 36 / 44；农学院 133 / 136；
 - 版本状态：`active` 222、`repealed` 10；每个文档至少有一个 `active` 版本；
@@ -328,6 +328,21 @@ W4 的已知缺口：
   已显式标注，严格同配置结论需用 w6a2.3 重跑（A2 需重标 138 条 support）；
 - 风险：`_generation_evidence` 是领域启发式，W7 section 仅 5 题；需补
   “课程/学分问题不被培养目标过滤”的负向测试，并在 dev 集验证通用性。
+
+### W7 第四轮 remediation4（w6a2.4，2026-10-25，当前主结果）
+
+采用 prompt `w6a2.4-2026-10-24`，加入“培养方案课程/学分问题保留课程 section”的负向测试，并收窄 `_generation_evidence`。冻结集主 run：`data/eval/w7_remediation4_run.json`，`run_sha256=75c61f800dd49a0e717492dad1755a18b99014906d5dd8aa5abca506a9aad396`。
+
+主结果：structure 100%；人工 support **1.000**（133/133）；answer correctness **0.875**（35/40）；version-sensitive **1.000**（5/5）；拒答召回 1.000、误拒 0.000、article Recall@8 1.000。**W7 质量门禁全部通过。** p50/p95 为 **7.37/21.38s**，高于 6/10s；正式 W7 总门禁仍未通过。
+
+消融结果（均使用 `w6a2.4`）：
+
+- A5 检索：dense-only / hybrid RRF / RRF+rerank 的 Recall@8 为 **0.9625 / 1.000 / 1.000**，MRR 为 **0.8294 / 0.8633 / 0.9583**，检索 p95 为 80 / 123 / 1,050 ms；
+- A4 profile：baseline 错配 0/5 题、0/35 证据、0/16 引用；关闭 profile 后 1/5 题、7/34 证据、5/18 引用错配，误拒率仍为 0；
+- A2 pass-through：baseline 133/133 supported；A2 为 **137/138 supported、1 partial、0 unsupported**（support 0.9928），结构性丢弃 0 条，拒答召回/误拒不变为 1.000/0.000。A2 结构门禁不适用。
+- A1 固定分块、A3 流程 DAG：N/A。
+
+报告：`data/eval/w7-remediation4-report.{json,md}`、`data/eval/w7_remediation4_a5_retrieval.md`、`data/eval/w7_remediation4_a4_profile.md`、`data/eval/w7_remediation4_a2_verifier.md`。全量离线测试 435 passed。
 
 ## W6-A2 quote 连续性与答案质量
 
