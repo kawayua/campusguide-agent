@@ -63,12 +63,23 @@ def main() -> int:
         payload = {
             "trace_id": result.trace_id,
             "outcome": result.outcome.value,
+            "decision": result.decision.value if result.decision else None,
+            "partial": result.partial,
             "answer_markdown": result.answer_markdown,
             "message": result.message,
             "warmup_ms": warmup_ms,
             "latency_scope": "cold" if args.no_warmup else "warm",
             "duration_ms": result.duration_ms,
+            "probe_ms": result.probe_ms,
+            "qa_ms": result.qa_ms,
             "queries": result.queries,
+            "issues": [issue.model_dump(mode="json", exclude_none=True) for issue in result.issues],
+            "scope_issues": [
+                issue.model_dump(mode="json", exclude_none=True) for issue in result.scope_issues
+            ],
+            "dropped_claim_ids": result.dropped_claim_ids,
+            "rendered_claim_ids": result.rendered_claim_ids,
+            "repealed_probe": result.probe,
             "citations": [
                 {
                     "article_id": citation.article_id,
@@ -91,12 +102,14 @@ def main() -> int:
         print(json.dumps(payload, ensure_ascii=False, indent=2))
         return 0
 
-    if result.answered:
+    if result.renders_answer:
         print(result.answer_markdown)
     else:
         print(f"[{result.outcome.value}] {result.message}")
     print(
         f"\n-- trace_id={result.trace_id} duration={result.duration_ms}ms "
+        f"probe={result.probe_ms}ms qa={result.qa_ms}ms "
+        f"decision={result.decision.value if result.decision else 'n/a'} "
         f"warmup={warmup_ms}ms scope={'cold' if args.no_warmup else 'warm'}"
     )
     if result.retrieval_scores:
@@ -106,6 +119,9 @@ def main() -> int:
                 f"   #{item['rank']} {item['article_id']}#part{item['part_no']} "
                 f"{item['score']:.4f} [{item['block_type']}]"
             )
+    for issue in result.issues:
+        claim = f" claim={issue.claim_id}" if issue.claim_id else ""
+        print(f"-- issue: [{issue.severity.value}/{issue.scope.value}] {issue.code}{claim}")
     for dropped in result.dropped_claims:
         print(f"-- dropped claim: {dropped}")
     for dropped in result.dropped_citations:

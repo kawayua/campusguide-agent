@@ -1,4 +1,4 @@
-"""W2 最小 Gradio 单轮页面。"""
+"""W3 单轮 Gradio 页面：引用核对与拒答/部分作答。"""
 
 from __future__ import annotations
 
@@ -71,11 +71,22 @@ def _debug_panel(result: QAResult) -> str:
     ]
     payload = {
         "outcome": result.outcome.value,
+        "decision": result.decision.value if result.decision else None,
+        "partial": result.partial,
         "trace_id": result.trace_id,
         "duration_ms": result.duration_ms,
+        "probe_ms": result.probe_ms,
+        "qa_ms": result.qa_ms,
         "queries": result.queries,
         "llm_model": result.llm_model,
         "retrieval": retrieval,
+        "rendered_claim_ids": result.rendered_claim_ids,
+        "dropped_claim_ids": result.dropped_claim_ids,
+        "issues": [issue.model_dump(mode="json", exclude_none=True) for issue in result.issues],
+        "scope_issues": [
+            issue.model_dump(mode="json", exclude_none=True) for issue in result.scope_issues
+        ],
+        "repealed_probe": result.probe,
         "dropped_claims": result.dropped_claims,
         "dropped_citations": result.dropped_citations,
         "reason": result.message,
@@ -107,7 +118,7 @@ def answer_question(question: str, audience_label: str) -> tuple[str, str, str]:
             f"```\n{type(exc).__name__}: {exc}\n```",
         )
 
-    if result.answered:
+    if result.renders_answer:
         answer = result.answer_markdown
     else:
         answer = f"**{result.outcome.value}**\n\n{result.message}"
@@ -115,10 +126,12 @@ def answer_question(question: str, audience_label: str) -> tuple[str, str, str]:
 
 
 def build_demo() -> gr.Blocks:
-    with gr.Blocks(title="CampusGuide W2 单轮问答") as demo:
+    with gr.Blocks(title="CampusGuide W3 单轮问答") as demo:
         gr.Markdown(
             "# CampusGuide 单轮制度问答\n"
-            "W2 垂直切片：只回答现行 `article` 条款；答案中的每条结论都必须能回链到本轮证据。"
+            "W3 垂直切片：只回答现行 `article` 条款；答案中的每条结论都必须通过"
+            "引用 span、数字/日期覆盖与隐私核对。未通过的 claim 会被省略，"
+            "并在部分作答时显示固定提示。"
         )
         with gr.Row():
             question = gr.Textbox(
@@ -152,7 +165,7 @@ def build_demo() -> gr.Blocks:
         )
         gr.Markdown(
             "> 演示系统不构成官方答复，具体以学校官网为准。"
-            "W2 不报告答案正确率；引用 ID 与 quote 可定位是本周硬门禁。"
+            "W3 只渲染通过确定性核对的 claim；部分作答不计入完整回答。"
         )
     return demo
 

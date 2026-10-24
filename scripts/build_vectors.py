@@ -73,7 +73,7 @@ def main() -> int:
 
     if args.qdrant_location:
         Path(args.qdrant_location).mkdir(parents=True, exist_ok=True)
-        client = QdrantClient(location=args.qdrant_location)
+        client = QdrantClient(path=args.qdrant_location)
     else:
         client = QdrantClient(
             url=args.qdrant_url or "http://localhost:6333",

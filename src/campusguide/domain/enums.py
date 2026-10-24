@@ -107,13 +107,36 @@ class ClaimKind(StrEnum):
 
 class VerificationDecision(StrEnum):
     PASS = "pass"
-    REVISE = "revise"
+    PARTIAL = "partial"
     ABSTAIN = "abstain"
-    CLARIFY = "clarify"
+
+
+class IssueScope(StrEnum):
+    CLAIM = "claim"
+    CITATION = "citation"
+    EVIDENCE = "evidence"
+
+
+class IssueSeverity(StrEnum):
+    BLOCKING = "blocking"
+    WARNING = "warning"
+
+
+class FactKind(StrEnum):
+    NUMBER = "number"
+    PERCENT = "percent"
+    DATE = "date"
+    DURATION = "duration"
+    AMOUNT = "amount"
 
 
 class OutcomeCode(StrEnum):
     ANSWERED = "ANSWERED"
+    PARTIAL_ANSWER = "PARTIAL_ANSWER"
+    UNVERIFIABLE = "UNVERIFIABLE"
+    ONLY_REPEALED = "ONLY_REPEALED"
+    VERSION_CONFLICT = "VERSION_CONFLICT"
+    VERSION_MISMATCH = "VERSION_MISMATCH"
     NO_EVIDENCE = "NO_EVIDENCE"
     HISTORICAL_NOT_SUPPORTED = "HISTORICAL_NOT_SUPPORTED"
     PRIVACY_REQUEST = "PRIVACY_REQUEST"

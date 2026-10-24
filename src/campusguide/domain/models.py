@@ -19,8 +19,13 @@ from campusguide.domain.enums import (
     BlockType,
     ClaimKind,
     DocType,
+    FactKind,
     IssuerLevel,
+    IssueScope,
+    IssueSeverity,
+    OutcomeCode,
     PolicyRelation,
+    VerificationDecision,
     VersionMode,
 )
 
@@ -211,6 +216,67 @@ class Claim(BaseModel):
         return value
 
 
+class Fact(BaseModel):
+    kind: FactKind
+    raw: str
+    canonical: str
+
+
+class VerificationIssue(BaseModel):
+    code: str
+    scope: IssueScope
+    severity: IssueSeverity
+    claim_id: str | None = None
+    article_id: str | None = None
+    part_no: int | None = None
+    detail: str = ""
+    facts: list[str] = Field(default_factory=list)
+
+
+class VerificationResult(BaseModel):
+    """一次问答的确定性核对结果。
+
+    契约（W3 v2 第 4.2 节）：
+    - PARTIAL 必须仍有可渲染 claim，且 dropped_claim_ids 非空；
+    - PASS 不得同时存在 CLAIM + BLOCKING issue；
+    - ABSTAIN 不携带任何 claim，且必须给出原因码。
+    """
+
+    decision: VerificationDecision
+    claims: list[Claim] = Field(default_factory=list)
+    issues: list[VerificationIssue] = Field(default_factory=list)
+    dropped_claim_ids: list[str] = Field(default_factory=list)
+    reason_code: OutcomeCode | None = None
+
+    @model_validator(mode="after")
+    def _validate_decision(self) -> VerificationResult:
+        blocking_claims = [
+            issue
+            for issue in self.issues
+            if issue.scope is IssueScope.CLAIM and issue.severity is IssueSeverity.BLOCKING
+        ]
+        if self.decision is VerificationDecision.PASS:
+            if blocking_claims:
+                raise ValueError("PASS 不得包含 severity=blocking 的 claim issue")
+            if self.dropped_claim_ids:
+                raise ValueError("PASS 不得包含 dropped_claim_ids")
+            if self.reason_code is not None:
+                raise ValueError("PASS 的 reason_code 必须为空")
+        elif self.decision is VerificationDecision.PARTIAL:
+            if not self.claims:
+                raise ValueError("PARTIAL 必须至少保留一个 claim")
+            if not self.dropped_claim_ids:
+                raise ValueError("PARTIAL 必须至少有一个 dropped_claim_ids")
+            if self.reason_code is not OutcomeCode.PARTIAL_ANSWER:
+                raise ValueError("PARTIAL 的 reason_code 必须是 PARTIAL_ANSWER")
+        else:
+            if self.claims:
+                raise ValueError("ABSTAIN 不得携带 claim")
+            if self.reason_code is None:
+                raise ValueError("ABSTAIN 必须给出 reason_code")
+        return self
+
+
 class SlotDefinition(BaseModel):
     name: str
     type: Literal["string", "integer", "boolean", "date", "enum"]
@@ -301,3 +367,5 @@ class PolicyFilters(BaseModel):
     version_mode: VersionMode = VersionMode.CURRENT
     doc_ids: list[str] | None = None
     flow_ids: list[str] | None = None
+    # 废止探针需要看到已过期的 repealed 版本，默认仍启用生效区间过滤。
+    ignore_effective_dates: bool = False

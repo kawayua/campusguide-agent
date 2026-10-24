@@ -1,4 +1,9 @@
-# W3 起使用。语义核对模型不可用时的策略：strict / allow_with_warning。
-on_semantic_unavailable: strict
-max_clarify_turns: 3
-max_revise_rounds: 2
+# W3 v2 确定性核对参数（语义核对/W6 配置不在此处）。
+min_quote_chars: 6
+max_claims: 5
+enable_repealed_probe: true
+
+# 评测门禁；只有人工 support 标注完成后才允许判定通过。
+support_gate: 0.85
+refusal_recall_gate: 0.80
+false_refusal_gate: 0.20

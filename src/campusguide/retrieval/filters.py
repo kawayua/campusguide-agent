@@ -39,11 +39,15 @@ def build_qdrant_filter(filters: PolicyFilters) -> Filter:
             key="block_type",
             match=MatchAny(any=[block_type.value for block_type in filters.block_types]),
         ),
-        FieldCondition(
-            key="effective_from",
-            range=DatetimeRange(lte=_end_of_day(filters.as_of)),
-        ),
     ]
+
+    if not filters.ignore_effective_dates:
+        must.append(
+            FieldCondition(
+                key="effective_from",
+                range=DatetimeRange(lte=_end_of_day(filters.as_of)),
+            )
+        )
 
     if filters.status:
         must.append(
@@ -53,17 +57,18 @@ def build_qdrant_filter(filters: PolicyFilters) -> Filter:
             )
         )
 
-    must.append(
-        Filter(
-            should=[
-                IsNullCondition(is_null={"key": "effective_to"}),
-                FieldCondition(
-                    key="effective_to",
-                    range=DatetimeRange(gte=_start_of_day(filters.as_of)),
-                ),
-            ]
+    if not filters.ignore_effective_dates:
+        must.append(
+            Filter(
+                should=[
+                    IsNullCondition(is_null={"key": "effective_to"}),
+                    FieldCondition(
+                        key="effective_to",
+                        range=DatetimeRange(gte=_start_of_day(filters.as_of)),
+                    ),
+                ]
+            )
         )
-    )
 
     if filters.audience:
         audiences = {audience.value for audience in filters.audience}

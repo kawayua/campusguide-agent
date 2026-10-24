@@ -5,8 +5,8 @@ PYTEST ?= $(UV) run pytest
 RUFF ?= $(UV) run ruff
 
 .PHONY: help init sync fetch parse index index-qdrant vector-index validate-sources \
-	check-segmentation test lint format format-check qa ask eval-w2 demo compose-up \
-	compose-down clean
+	check-segmentation test lint format format-check qa ask eval-w2 eval-w3 \
+	eval-w3-report label-w3 sheet-w3 demo compose-up compose-down clean
 
 help:
 	@echo "CampusGuide commands"
@@ -26,6 +26,10 @@ help:
 	@echo "  make qa                lint + format-check + test（本地与 CI 共用）"
 	@echo "  make ask Q='...'       单题 CLI 调试"
 	@echo "  make eval-w2           跑 20 题开发集并生成报告"
+	@echo "  make eval-w3           跑 W3 开发集，生成 run/labels 模板/报告"
+	@echo "  make eval-w3-report    复用已有 run + support labels 生成报告"
+	@echo "  make sheet-w3          生成 56 条 Markdown 标注核对表"
+	@echo "  make label-w3 ANNOTATOR=你的名字  交互式人工标注"
 	@echo "  make demo              启动 Gradio 单轮页面"
 	@echo "  make compose-up        启动 Qdrant（docker compose）"
 
@@ -57,6 +61,18 @@ ask:
 
 eval-w2:
 	$(PYTHON) scripts/eval_w2.py
+
+eval-w3:
+	$(PYTHON) scripts/eval_w3.py
+
+eval-w3-report:
+	$(PYTHON) scripts/eval_w3.py --report-only
+
+label-w3:
+	$(PYTHON) scripts/label_w3.py --annotator "$(ANNOTATOR)"
+
+sheet-w3:
+	$(PYTHON) scripts/label_w3.py --sheet
 
 validate-sources:
 	$(PYTHON) scripts/validate_sources.py

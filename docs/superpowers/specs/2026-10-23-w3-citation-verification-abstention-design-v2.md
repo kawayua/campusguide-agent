@@ -6,7 +6,7 @@
 | 日期 | 2026-10-23 |
 | 基线 | W2 实现 `ffd8bf8`（W3 v1 已回退并归档） |
 | 范围 | 引文 span、fact 覆盖、确定性硬校验、拒答判定树 v0、20 题开发集 |
-| 状态 | 设计已确认（2026-10-23）；待按测试先行实施 |
+| 状态 | 已按测试先行实施（2026-10-23）；live run 完成，人工 support 标注完成 56/56；rendered 支持率 75.0% <85%，W3 总门禁未通过；下一步 W6 |
 | 旧版本 | `docs/superpowers/archive/w3-v1/`，仅作参考，不复用代码 |
 
 ---
@@ -561,3 +561,30 @@ W3 v2 的稳定契约是：
 - fact canonicalization。
 
 后续只扩展 issue code 和检查项，不改变“未核实 claim 不进入答案”的语义。
+
+---
+
+## 16. 实施状态（2026-10-23）
+
+- 代码：`verification/{quotes,facts,privacy,scope,claims,verifier}.py`、
+  `eval/w3.py`、`scripts/eval_w3.py`；UI/CLI/trace 已接入；
+- 离线测试：154 → 295，新增 141 项（含 1 项 W6-A prompt 契约）；`ruff check` / `ruff format --check` 通过；
+- live run：`data/eval/w3_run.json`，`run_sha256=5e542b25…24442`；
+  结构门禁通过（55/55 引用 ID、0 编造、55/55 quote 可定位），
+  拒答召回 6/6 = 100%，误拒率 0/14 = 0.0%，partial 率 1/14 = 7.1%，
+  p50 3.34s / p95 9.78s，探针 p50 73.5ms（单列）；
+- support：56 条 draft claim，**56/56 人工标注**（39 supported /
+  17 partial / 0 unsupported）；draft 69.6%，rendered **75.0%**，
+  support 门禁未通过，W3 总门禁未通过；
+- run 元数据：commit `b240e4d`，dirty=True；W3 已按本轮 75.0% 判定不通过，
+  不以重跑刷分；W6 正式验收前再提交代码并重跑；
+- 详细记录见 `docs/weekly/w3.md`，报告见 `data/eval/w3-dev-report.{json,md}`。
+
+未完成项：W6 的语义蕴含/重写；本轮人工标注已确认 rendered 75.0% <85%，
+W3 不通过。不得把结构门禁通过写成 W3 完成或支持率达标。
+
+后续：W6-A 提示词收紧已在 `mimo-v2.6-pro-ultraspeed` 上通过（54/54 人工，
+53 supported / 1 partial / 0 unsupported，rendered 98.1%）。v2.6pro A/B 的
+support 为 100%，但有 2 条 quote mismatch、d012 PARTIAL、p95 45.2s、
+warmup 111s，可靠性低于 ultraspeed；默认模型已回退 ultraspeed。新 run 需要
+重新人工确认 labels。记录见 `docs/weekly/w6.md`。

@@ -13,7 +13,7 @@ W1 尚无问答模块，因此**没有任何回答质量指标**。简历、READ
 |---|---|---|---|
 | 代码规范 | ruff check（E/F/I/B/UP/SIM/RUF） | `make lint` | 通过 |
 | 代码格式 | ruff format --check src tests scripts | `make format-check` | 通过 |
-| 单元、契约与集成测试 | 全离线：mock HTTP、临时目录、动态生成 PDF、内存 Qdrant、fake embedder/chat | `make test` | 154 passed |
+| 单元、契约与集成测试 | 全离线：mock HTTP、临时目录、动态生成 PDF、内存 Qdrant、fake embedder/chat | `make test` | 295 passed（W3 后） |
 | 索引确定性 | 同一输入重建，`content_hash` 与 JSONL 字节一致 | `pytest tests/unit/test_build_index.py` | 通过 |
 | 联系方式脱敏 | 手机号、身份证、学号、邮箱、联系人姓名 | `pytest tests/unit/test_redact.py` | 通过 |
 | 版本解析 | CURRENT / HISTORICAL / INCLUDE_REPEALED、冲突、无版本 | `pytest tests/unit/test_versioning.py` | 通过 |
@@ -38,7 +38,7 @@ CI 配置见 `.github/workflows/ci.yml`；Gitee 仓库当前以本地 `make qa` 
 
 - `ruff check .`：通过；
 - `ruff format --check src tests scripts`：通过；
-- `pytest`：154 passed（unit + contract + integration，无网络依赖）；
+- `pytest`：295 passed（W1–W3 unit + contract + integration，无网络依赖；W1/W2 时点为 154）；
 - 真实语料：213 文档 / 232 版本 / 3,952 块；其中 `article` 1,366、`section` 2,586；
 - 规模构成：校级 44 文档 / 52 版本；信息学院 36 / 44；农学院 133 / 136；
 - 版本状态：`active` 222、`repealed` 10；每个文档至少有一个 `active` 版本；
@@ -76,7 +76,7 @@ W2 的目标是“引用真实”，不是答案质量。开发集 v0 只用于�
 
 开发集：`data/eval/dev_v0.jsonl`，20 题（单条款 8、多条款 4、section 2、无证据/超范围 3、历史 2、隐私 1）。报告写入 `data/eval/w2-dev-report.{json,md}`，并标注“开发集 v0，非冻结测试集”。
 
-当前状态（2026-10-22）：Qdrant 3,952 点 / 1024 维、16 个低置信版本、154 项离线测试通过；`min_dense_score=0.55` 已用 dev_v0 校准。20 题 live 评测（`mimo-v2.6-pro-ultraspeed`）结果：outcome 20/20、引用 ID 有效率 100%、编造 ID 0、part_no 错误 0、quote 可定位率 100%、article/section recall@8 100%；warm p50 3.3s，warm p95 14.7s（多轮 14.7–36.8s），未达到 10s 门禁，原因是第三方模型偶发 30–150s 延迟，而非检索/校验。bge-m3 冷启动预热单列 27.4s；UI/CLI 启动时预加载，p50/p95 均为 warm 口径。报告见 `data/eval/w2-dev-report.{json,md}`（不报告答案正确率）。
+当前状态（2026-10-22）：Qdrant 3,952 点 / 1024 维、16 个低置信版本、W2 时点 154 项离线测试通过（W3 后 295 项）；`min_dense_score=0.55` 已用 dev_v0 校准。20 题 live 评测（`mimo-v2.6-pro-ultraspeed`）结果：outcome 20/20、引用 ID 有效率 100%、编造 ID 0、part_no 错误 0、quote 可定位率 100%、article/section recall@8 100%；warm p50 3.3s，warm p95 14.7s（多轮 14.7–36.8s），未达到 10s 门禁，原因是第三方模型偶发 30–150s 延迟，而非检索/校验。bge-m3 冷启动预热单列 27.4s；UI/CLI 启动时预加载，p50/p95 均为 warm 口径。报告见 `data/eval/w2-dev-report.{json,md}`（不报告答案正确率）。
 
 **最终决策（2026-10-22）**：接受“引用门禁通过、p95 不达标”，停止端点 A/B。W2 以引用真实性为交付边界；p95 作为已知限制留给 W4/W7，不在 README、周记录或简历中声称延迟门禁通过。
 
@@ -89,6 +89,69 @@ W2 的失败关闭：
 | 全部 citation 无效 | `NO_VALID_CLAIM` |
 | Qdrant 不可达或索引与 manifest 不一致 | `INDEX_UNAVAILABLE` |
 | 历史版本 / 隐私 / 明显校外 / 空请求 | `HISTORICAL_NOT_SUPPORTED` / `PRIVACY_REQUEST` / `OUT_OF_SCOPE` / `INVALID_REQUEST` |
+
+## W3 引用核对与拒答 v0 工程质量门
+
+W3 的目标是**确定性核对**：引文 span 可映射回原文、claim 中的数字/日期/金额/期限被引用 quote 覆盖、受众/版本/隐私 scope 正确、输出只渲染通过核对的 claim。W3 仍**不评估语义支持**；语义蕴含与 LLM 重写留 W6。
+
+| 项目 | 方法 | 命令 | W3 门禁 |
+|---|---|---|---|
+| 引文原文 span | `Citation.quote_start/end` 是 `article.text` 偏移，exact/normalized 定位 | `make test` | 100% |
+| Fact 覆盖 | 数字、百分比、日期、年份、期限、金额/学分/学时；中文数字与阿拉伯数字等价 | `make test` | 未覆盖 claim 不渲染 |
+| 受众 scope | 显式受众不兼容 evidence 剔除；`Audience.ALL` 视为未指定 | `make test` | 全部剔除才拒答 |
+| 版本 scope | active/生效区间/冲突/混合版本 | `make test` | 冲突或全部失效才拒答 |
+| 输出隐私 | 手机号、身份证、学号、非 `scau.edu.cn` 邮箱 | `make test` | 命中 claim 丢弃 |
+| 废止探针 | 主检索为空时 `status=[repealed]` 无 LLM 检索 | `make eval-w3` | 命中 `ONLY_REPEALED`，耗时单列 |
+| 决策契约 | `PASS` 无 blocking；`PARTIAL` 只渲染通过 claim；`ABSTAIN` 无 claim | `make test` | 100% |
+| 结构门禁 | 引用 ID 有效率、编造 ID、part_no、quote 可定位 | `make eval-w3` | 100% / 0 / 0 / 100% |
+| 拒答召回 | 非可答题不渲染答案 | `make eval-w3` | ≥80% |
+| 误拒率 | 可答题非 ANSWERED/PARTIAL | `make eval-w3` | ≤20% |
+| 支持率 | 人工 `supported` / 已标注 rendered claim | `make eval-w3-report` | ≥85%，且必须完成人工标注 |
+| 延迟 | 端到端 p50/p95；探针单列 | `make eval-w3` | 记录，不在 W3 设硬门禁 |
+
+### 2026-10-23 live 状态
+
+- 模型 `mimo-v2.6-pro-ultraspeed`；warmup 21.2s；warm p50 3.34s、p95 9.78s；废止探针 2 次，p50 73.5ms / p95 78.45ms；
+- 结构门禁通过：55/55 引用 ID 有效、0 编造、0 part_no 错误、55/55 quote 可定位；
+- 拒答召回 6/6 = 100%；误拒率 0/14 = 0.0%；partial 率 1/14 = 7.1%；非可答题原因码 6/6 = 100%；
+- issue：`AUDIENCE_UNDETERMINED` 14 warning、`NUMBER_NOT_SUPPORTED` 4 blocking、`MIXED_VERSIONS` 2 warning；
+- **support 标注已完成 56/56（39 supported / 17 partial / 0 unsupported）；draft 支持率 69.6%，rendered 支持率 75.0%，support 门禁未通过，W3 总门禁未通过**；
+- 人工标注确认了 W3 v1 的 75.0% 结果：本轮没有 `unsupported`，17 条 partial 主要是 claim 增加条件/后果/列表展开/措辞强化，属于 W6 重写要解决的问题；
+- run 在 dirty working tree 上执行（commit `b240e4d`，dirty=True）；W3 已按本轮 75.0% 判定不通过，不以重跑刷分。W6 正式验收前再提交代码并重跑。
+
+W3 的原因码扩展为：`PARTIAL_ANSWER`、`UNVERIFIABLE`、`ONLY_REPEALED`、`VERSION_MISMATCH`、`VERSION_CONFLICT`，并保留 `NO_VALID_CLAIM`（仅模型零 claims）、`NO_EVIDENCE`、`HISTORICAL_NOT_SUPPORTED`、`PRIVACY_REQUEST`、`OUT_OF_SCOPE`、`GENERATION_FAILED`、`INDEX_UNAVAILABLE`。`PARTIAL_ANSWER` 不进入“完整回答”统计。
+
+### 人工 support 标注口径
+
+- `data/eval/dev_v0.jsonl` 20 题不变；标 `data/eval/w3_support_labels.jsonl` 中的 draft claim（本轮 56 条）；
+- 标签：`supported` / `partial` / `unsupported`；`unlabeled` 不计入分母，但必须在报告显示；
+- 必须填写 `annotator` 与 `labeled_at`；`annotator` 为空或以 `ai` 开头的记录按 unlabeled 处理，AI 预填不能作为验收；
+- 严格引文级：只判断 quote 本身能否支撑 claim，不拿条款上下文补足；
+- 只有 `labels_complete=true` 且 rendered 支持率 ≥85%，support 门禁才通过；否则 W3 不通过。
+
+报告：`data/eval/w3-dev-report.{json,md}`；run：`data/eval/w3_run.json`；标注模板：`data/eval/w3_support_labels.jsonl`。详细过程见 [W3 周记录](weekly/w3.md)。
+
+## W6-A 提示词收紧（2026-10-24）
+
+W3 的 rendered 支持率 75.0% 主要来自 claim 写过头/quote 选窄。W6-A 只收紧 Advisor 提示词（不增加 LLM 调用、不改检索/核对主路径），要求 claim 只复述 quote、quote 覆盖完整“条件 + 后果”、保留限定词、不展开列表/条号，并在输出前逐条自检。
+
+| 指标 | W6-A（ultraspeed） |
+|---|---:|
+| 人工 support | 54/54；53 supported / 1 partial / 0 unsupported |
+| draft / rendered 支持率 | 98.1% / 98.1% |
+| 结构门禁 | 51/51 引用、0 编造、0 part_no、51/51 quote 可定位 |
+| 可答题渲染 / 误拒率 | 14/14 / 0.0% |
+| 拒答召回 / partial 率 | 100% / 0.0% |
+| p50 / p95（warm） | 3.5s / 15.0s；warmup 29.5s；探针 124/132ms |
+| W6-A 总门禁 | **通过** |
+
+唯一 rendered partial 是 d004/c1（“进入教室”范围边界）。首次 1200-token 尝试有 4 个 `GENERATION_FAILED`（空返/JSON 截断）；3000 token 后 0 失败，这不是 Qdrant 问题。
+
+**模型选择**：W6-A 通过后曾切到更省钱的 `mimo-v2.6-pro` 做 A/B，并固定 `ADVISOR_MAX_TOKENS=3000`。v2.6pro 复跑（`run_sha256=0cb8656e…7537`）的 support 为 100%（53/53；rendered 51/51），但 d012 有 2 条 `QUOTE_MISMATCH`/`NO_VALID_CITATION` 被丢弃、d012 为 `PARTIAL_ANSWER`，p50 16.7s、p95 45.2s、warmup 111s；引用完整性和延迟都明显弱于 ultraspeed（0 条 quote mismatch、p95 15.0s、warmup 29.5s）。按“可靠性优先”的决策，默认模型已回退到 `mimo-v2.6-pro-ultraspeed`；v2.6pro 报告/labels 保留为 A/B 记录，不作为 W6-A 最终结果。
+
+W6-A 的最终报告以 ultraspeed 的 98.1% 为准，labels 绑定 `run_sha256=46e016d5…a127`；换模型后的新 run 必须重新人工确认。若未来重新评估 v2.6pro 的成本，应先补 quote 修复/重试（W6-B），不能直接牺牲引用完整性。
+
+报告：`data/eval/w6a-dev-report.{json,md}`（ultraspeed 最终）；A/B：`data/eval/w6a_v26pro-dev-report.{json,md}`；记录见 [W6 周记录](weekly/w6.md)。
 
 ## W7 系统效果评测（计划）
 

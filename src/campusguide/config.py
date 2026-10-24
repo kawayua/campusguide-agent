@@ -241,6 +241,17 @@ class OrganizationConfig(BaseModel):
         return self
 
 
+class AbstentionConfig(BaseModel):
+    """W3 v2 确定性核对参数与评测门禁。"""
+
+    min_quote_chars: int = 6
+    max_claims: int = 5
+    enable_repealed_probe: bool = True
+    support_gate: float = 0.85
+    refusal_recall_gate: float = 0.80
+    false_refusal_gate: float = 0.20
+
+
 class RetrievalConfig(BaseModel):
     collection: str
     alias: str
@@ -406,6 +417,13 @@ def load_retrieval_config(path: str | Path) -> RetrievalConfig:
     if not expanded.get("embedding_model"):
         expanded["embedding_model"] = os.getenv("EMBEDDING_MODEL", "BAAI/bge-m3")
     return RetrievalConfig.model_validate(expanded)
+
+
+def load_abstention_config(path: str | Path) -> AbstentionConfig:
+    raw = load_yaml(path)
+    if not isinstance(raw, dict):
+        raise ValueError("abstention.yaml 顶层必须是对象")
+    return AbstentionConfig.model_validate(raw)
 
 
 class SourceValidationReport(BaseModel):

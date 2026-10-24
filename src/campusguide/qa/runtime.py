@@ -11,7 +11,11 @@ from qdrant_client import QdrantClient
 
 from campusguide.agents.advisor import Advisor
 from campusguide.agents.providers import OpenAICompatibleChat
-from campusguide.config import RetrievalConfig, load_retrieval_config
+from campusguide.config import (
+    RetrievalConfig,
+    load_abstention_config,
+    load_retrieval_config,
+)
 from campusguide.observability.trace import TraceWriter
 from campusguide.qa.service import QAService, QASettings
 from campusguide.retrieval.embedder import BgeM3Embedder, EmbeddingProvider
@@ -22,9 +26,11 @@ from campusguide.retrieval.indexer import (
 from campusguide.retrieval.normalize import load_aliases
 from campusguide.retrieval.service import DenseRetriever
 from campusguide.verification.claims import ClaimValidator
+from campusguide.verification.verifier import Verifier
 
 ROOT = Path(__file__).resolve().parents[3]
 DEFAULT_RETRIEVAL_CONFIG = ROOT / "configs" / "retrieval.yaml"
+DEFAULT_ABSTENTION_CONFIG = ROOT / "configs" / "abstention.yaml"
 DEFAULT_ALIASES = ROOT / "configs" / "aliases.yaml"
 DEFAULT_VECTOR_MANIFEST = ROOT / "data" / "vector_manifest.json"
 DEFAULT_TEXT_MANIFEST = ROOT / "data" / "manifest.json"
@@ -38,6 +44,7 @@ class IndexUnavailableError(RuntimeError):
 @dataclass
 class RuntimePaths:
     retrieval_config: Path = DEFAULT_RETRIEVAL_CONFIG
+    abstention_config: Path = DEFAULT_ABSTENTION_CONFIG
     aliases: Path = DEFAULT_ALIASES
     vector_manifest: Path = DEFAULT_VECTOR_MANIFEST
     text_manifest: Path = DEFAULT_TEXT_MANIFEST
@@ -48,7 +55,7 @@ def create_qdrant_client() -> QdrantClient:
     location = os.getenv("QDRANT_LOCATION", "").strip()
     if location:
         Path(location).mkdir(parents=True, exist_ok=True)
-        return QdrantClient(location=location)
+        return QdrantClient(path=location)
     return QdrantClient(
         url=os.getenv("QDRANT_URL", "http://localhost:6333"),
         api_key=os.getenv("QDRANT_API_KEY") or None,
@@ -120,6 +127,7 @@ def create_qa_service(
 ) -> QAService:
     paths = paths or RuntimePaths()
     config = load_retrieval_config(paths.retrieval_config)
+    abstention = load_abstention_config(paths.abstention_config)
     if verify_index:
         verify_or_raise(
             client=client,
@@ -142,10 +150,15 @@ def create_qa_service(
         provider,
         max_tokens=int(os.getenv("ADVISOR_MAX_TOKENS", "1200")),
     )
+    settings = QASettings.from_config(config, abstention)
+    validator = ClaimValidator(
+        min_quote_chars=settings.min_quote_chars,
+        max_claims=settings.max_claims,
+    )
     return QAService(
         retriever=retriever,
         advisor=advisor,
-        settings=QASettings.from_config(config),
-        validator=ClaimValidator(),
+        settings=settings,
+        verifier=Verifier(validator),
         trace_writer=TraceWriter(paths.trace_dir),
     )
