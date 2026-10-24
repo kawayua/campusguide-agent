@@ -38,6 +38,7 @@ from campusguide.mcp.schemas import (
 from campusguide.retrieval.embedder import BgeM3Embedder
 from campusguide.retrieval.hybrid import HybridRetriever, SearchResult, VersionConflictError
 from campusguide.retrieval.normalize import load_aliases
+from campusguide.retrieval.profile_expand import ProfileLexicon
 from campusguide.retrieval.rerank import BgeReranker, RerankUnavailable
 from campusguide.retrieval.service import RetrievalError
 from campusguide.retrieval.sparse import BM25SparseEncoder
@@ -285,6 +286,8 @@ def create_service(
     )
     aliases_path = root / "configs" / "aliases.yaml"
     aliases = load_aliases(aliases_path) if aliases_path.exists() else {}
+    organization = load_organization(root / "configs" / "organization.yaml")
+    profile_lexicon = ProfileLexicon.from_organization(organization)
 
     retriever = HybridRetriever(
         client=client,
@@ -294,14 +297,15 @@ def create_service(
         config=retrieval,
         index_version=index_version,
         top_k=retrieval.recall_top_k,
+        rerank_candidates=retrieval.rerank_candidates,
         rerank_top_n=retrieval.rerank_top_n,
         max_articles=retrieval.max_articles,
         token_budget=retrieval.token_budget,
         min_rerank_score=retrieval.min_rerank_score,
         min_score_margin=retrieval.min_score_margin,
         aliases=aliases,
+        profile_lexicon=profile_lexicon,
     )
-    organization = load_organization(root / "configs" / "organization.yaml")
     registries = SearchRegistries(
         doc_ids=_load_doc_ids(root / "data" / "processed" / "documents.jsonl"),
         flow_ids=_load_flow_ids(root / "configs" / "flows"),

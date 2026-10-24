@@ -16,7 +16,7 @@ from typing import Any
 
 from qdrant_client import QdrantClient
 
-from campusguide.config import load_retrieval_config
+from campusguide.config import load_organization, load_retrieval_config
 from campusguide.domain.enums import BlockType
 from campusguide.domain.models import PolicyFilters
 from campusguide.env import load_dotenv
@@ -33,6 +33,7 @@ from campusguide.retrieval.embedder import BgeM3Embedder
 from campusguide.retrieval.hybrid import HybridRetriever
 from campusguide.retrieval.indexer import read_vector_manifest
 from campusguide.retrieval.normalize import load_aliases
+from campusguide.retrieval.profile_expand import ProfileLexicon
 from campusguide.retrieval.rerank import BgeReranker
 from campusguide.retrieval.service import DenseRetriever
 from campusguide.retrieval.sparse import BM25SparseEncoder
@@ -168,6 +169,8 @@ def main() -> int:
         sparse_path = ROOT / sparse_path
     sparse_encoder = BM25SparseEncoder.load(sparse_path)
     aliases = load_aliases(ROOT / "configs" / "aliases.yaml")
+    organization = load_organization(ROOT / "configs" / "organization.yaml")
+    profile_lexicon = ProfileLexicon.from_organization(organization)
     client = _client(args.qdrant_location)
     device = os.getenv("EMBEDDING_DEVICE", "auto")
     embedder = BgeM3Embedder(
@@ -219,6 +222,7 @@ def main() -> int:
             config=config,
             index_version=index_version,
             top_k=config.recall_top_k,
+            rerank_candidates=config.rerank_candidates,
             rerank_top_n=config.rerank_top_n,
             max_articles=config.max_articles,
             token_budget=config.token_budget,
@@ -226,6 +230,7 @@ def main() -> int:
             min_score_margin=config.min_score_margin,
             rrf_k=config.rrf_k,
             aliases=aliases,
+            profile_lexicon=profile_lexicon,
             use_rerank=use_rerank,
         )
         if use_rerank:

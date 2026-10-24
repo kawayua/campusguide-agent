@@ -13,7 +13,7 @@ W1 尚无问答模块，因此**没有任何回答质量指标**。简历、READ
 |---|---|---|---|
 | 代码规范 | ruff check（E/F/I/B/UP/SIM/RUF） | `make lint` | 通过 |
 | 代码格式 | ruff format --check src tests scripts | `make format-check` | 通过 |
-| 单元、契约与集成测试 | 全离线：mock HTTP、临时目录、动态生成 PDF、内存 Qdrant、fake embedder/chat | `make test` | 380 passed（W4 后） |
+| 单元、契约与集成测试 | 全离线：mock HTTP、临时目录、动态生成 PDF、内存 Qdrant、fake embedder/chat | `make test` | 386 passed（W4 后） |
 | 索引确定性 | 同一输入重建，`content_hash` 与 JSONL 字节一致 | `pytest tests/unit/test_build_index.py` | 通过 |
 | 联系方式脱敏 | 手机号、身份证、学号、邮箱、联系人姓名 | `pytest tests/unit/test_redact.py` | 通过 |
 | 版本解析 | CURRENT / HISTORICAL / INCLUDE_REPEALED、冲突、无版本 | `pytest tests/unit/test_versioning.py` | 通过 |
@@ -38,7 +38,7 @@ CI 配置见 `.github/workflows/ci.yml`；Gitee 仓库当前以本地 `make qa` 
 
 - `ruff check .`：通过；
 - `ruff format --check src tests scripts`：通过；
-- `pytest`：380 passed（W1–W4 unit + contract + integration，无网络依赖；W1/W2 时点为 154；W3 后 295）；
+- `pytest`：386 passed（W1–W4 unit + contract + integration，无网络依赖；W1/W2 时点为 154；W3 后 295）；
 - 真实语料：213 文档 / 232 版本 / 3,952 块；其中 `article` 1,366、`section` 2,586；
 - 规模构成：校级 44 文档 / 52 版本；信息学院 36 / 44；农学院 133 / 136；
 - 版本状态：`active` 222、`repealed` 10；每个文档至少有一个 `active` 版本；
@@ -217,6 +217,17 @@ W4 的已知缺口：
   不匹配条款”的验收，但不等于正确方案召回；
 - BM25 是词面匹配，不能处理“种子科学 → 农学”这类语义改写；
 - `min_rerank_score=0.60` 只由 20 题开发集校准，W7 冻结集需重新验证。
+
+### P0 profile-aware 检索（2026-10-24）
+
+- 从 `organization.yaml` 构建 ProfileLexicon；只有用户提供学院/专业/入学年份时，
+  才追加最多 2 个 profile 变体，未提供时行为不变；
+- `rerank_candidates=20`：RRF top 20 重排后取 8，rerank p95 约 1.06s；
+- `population_v1` 5/5：p004（2024 级种子科学）命中 `agri-ug-plan-seed-2024`，
+  p005（2024 级农学）命中 2024 版农学方案；
+- P0 检索报告：`data/eval/p0-retrieval-report.{json,md}`；Recall@8 三种模式均 1.000，
+  overall MRR dense 0.905 / RRF 0.895 / rerank 0.929；
+- W4 历史报告从 tag `w4` 保留，P0 不覆盖；全量测试 386 passed。
 
 ## W6-A2 quote 连续性与答案质量
 

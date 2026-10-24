@@ -22,6 +22,7 @@ from campusguide.config import (
     RetrievalConfig,
     load_abstention_config,
     load_mcp_config,
+    load_organization,
     load_retrieval_config,
 )
 from campusguide.env import load_dotenv
@@ -312,6 +313,7 @@ def create_hybrid_qa_service(
     from campusguide.retrieval.embedder import BgeM3Embedder
     from campusguide.retrieval.hybrid import HybridRetriever
     from campusguide.retrieval.normalize import load_aliases
+    from campusguide.retrieval.profile_expand import ProfileLexicon
     from campusguide.retrieval.rerank import BgeReranker
     from campusguide.retrieval.sparse import BM25SparseEncoder
 
@@ -339,6 +341,7 @@ def create_hybrid_qa_service(
             config.reranker_model,
             device=os.getenv("RERANKER_DEVICE", os.getenv("EMBEDDING_DEVICE", "auto")),
         )
+    organization = load_organization(ROOT / "configs" / "organization.yaml")
     retriever = HybridRetriever(
         client=client,
         embedder=embedder,
@@ -347,6 +350,7 @@ def create_hybrid_qa_service(
         config=config,
         index_version=str(manifest.get("index_version", "")),
         top_k=config.recall_top_k,
+        rerank_candidates=config.rerank_candidates,
         rerank_top_n=config.rerank_top_n,
         max_articles=config.max_articles,
         token_budget=config.token_budget,
@@ -354,6 +358,7 @@ def create_hybrid_qa_service(
         min_score_margin=config.min_score_margin,
         rrf_k=config.rrf_k,
         aliases=load_aliases(paths.aliases),
+        profile_lexicon=ProfileLexicon.from_organization(organization),
         use_rerank=use_rerank,
     )
     settings = QASettings.from_config(config, abstention)

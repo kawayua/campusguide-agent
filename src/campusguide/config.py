@@ -288,6 +288,7 @@ class RetrievalConfig(BaseModel):
     bm25_b: float = 0.75
     rrf_k: int = 60
     recall_top_k: int = 30
+    rerank_candidates: int = 20
     rerank_top_n: int = 8
     reranker_model: str = "BAAI/bge-reranker-v2-m3"
     token_budget: int = 4000

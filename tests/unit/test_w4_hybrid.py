@@ -261,6 +261,20 @@ def test_multiple_articles_of_same_document_are_both_kept() -> None:
     }
 
 
+def test_rerank_candidates_limits_shortlist() -> None:
+    client = QdrantClient(location=":memory:")
+    articles = [
+        _article("a@v2021#第一条", doc_id="a", text="奖学金申请条件。"),
+        _article("b@v2021#第一条", doc_id="b", text="奖学金评审程序。"),
+        _article("c@v2021#第一条", doc_id="c", text="奖学金发放时间。"),
+    ]
+    encoder = _build(client, articles)
+    retriever = _retriever(client, encoder, reranker=FixedReranker())
+    retriever._rerank_candidates = 1
+    result = retriever.search_articles("奖学金", rerank_top_n=3)
+    assert len(result.evidence) == 1
+
+
 def test_version_conflict_raises() -> None:
     client = QdrantClient(location=":memory:")
     articles = [

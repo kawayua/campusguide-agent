@@ -11,6 +11,8 @@ bm25_b: 0.75
 rrf_k: 60
 
 recall_top_k: 30
+# 先取 RRF top 20 做 rerank，再取 top 8；2026-10-24 与 top30 对比后启用。
+rerank_candidates: 20
 rerank_top_n: 8
 reranker_model: ${RERANKER_MODEL}
 token_budget: 4000

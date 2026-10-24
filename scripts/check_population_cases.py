@@ -1,14 +1,20 @@
-"""W4 人群错配验收：通过真实 policy-search MCP 跑 5 个 case。
+"""W4/P0 人群错配与 profile-aware 检索验收（真实 MCP）。
 
-每个 case 给出“必须不出现”的 doc_id 前缀/集合；任意命中即失败。
+数据集：`data/eval/population_v1.jsonl`。每个 case 校验：
+- forbidden_doc_ids 不得出现在返回结果；
+- require_expected=true 时，expected_doc_ids 至少命中一个。
 """
 
 from __future__ import annotations
 
+import argparse
+import hashlib
+import json
 import sys
 import time
-from dataclasses import dataclass
+from datetime import UTC, datetime
 from pathlib import Path
+from typing import Any
 
 from campusguide.config import load_mcp_config
 from campusguide.env import load_dotenv
@@ -16,85 +22,24 @@ from campusguide.mcp.client import MCPClientConfig, MCPPolicySearchClient
 from campusguide.mcp.schemas import SearchArticlesRequest
 
 ROOT = Path(__file__).resolve().parents[1]
+DEFAULT_DATASET = ROOT / "data" / "eval" / "population_v1.jsonl"
+DEFAULT_OUTPUT = ROOT / "data" / "eval" / "w4-population-report.json"
 
 
-@dataclass(frozen=True)
-class Case:
-    name: str
-    query: str
-    filters: dict
-    forbidden_doc_ids: set[str]
-    required_doc_ids: set[str] = frozenset()
+def load_cases(path: Path) -> list[dict[str, Any]]:
+    cases: list[dict[str, Any]] = []
+    with path.open("r", encoding="utf-8") as handle:
+        for line_no, line in enumerate(handle, start=1):
+            if not line.strip():
+                continue
+            try:
+                cases.append(json.loads(line))
+            except json.JSONDecodeError as exc:
+                raise ValueError(f"{path}:{line_no} 不是合法 JSON") from exc
+    return cases
 
 
-CASES = [
-    Case(
-        name="1 undergraduate asks graduate-only scholarship",
-        query="研究生国家奖学金申请条件",
-        filters={"audience": ["undergraduate"], "as_of": "2026-10-24"},
-        forbidden_doc_ids={"national-aid-grad", "academic-misconduct"},
-    ),
-    Case(
-        name="2 graduate asks undergraduate course rule",
-        query="本科生课程考核与成绩管理办法",
-        filters={"audience": ["graduate"], "as_of": "2026-10-24"},
-        forbidden_doc_ids={"course-study", "general-education-elective"},
-    ),
-    Case(
-        name="3 agri student asks info-college plan",
-        query="计算机科学与技术专业人才培养方案",
-        filters={
-            "audience": ["undergraduate"],
-            "as_of": "2026-10-24",
-            "profile": {"colleges": ["agri"]},
-        },
-        forbidden_doc_ids={
-            "info-ug-cs-plan",
-            "info-ug-se-plan",
-            "info-ug-ds-plan",
-            "info-ug-math-plan",
-        },
-    ),
-    Case(
-        name="4 non-agronomy major asks agronomy plan",
-        query="农学专业培养方案",
-        filters={
-            "audience": ["undergraduate"],
-            "as_of": "2026-10-24",
-            "profile": {"colleges": ["agri"], "majors": ["seed-science"]},
-        },
-        forbidden_doc_ids={
-            "agri-ug-plan-agronomy-2024",
-            "agri-ug-plan-new-agronomy-2024",
-            "agri-ug-plan-agronomy-dingying-2024",
-        },
-        required_doc_ids={"agri-ug-plan-seed-2024"},
-    ),
-    Case(
-        name="5 2024 cohort asks 2022-only plan",
-        query="农学专业 2022 版培养方案",
-        filters={
-            "audience": ["undergraduate"],
-            "as_of": "2026-10-24",
-            "profile": {
-                "colleges": ["agri"],
-                "majors": ["agronomy"],
-                "intake_year": 2024,
-            },
-        },
-        forbidden_doc_ids={
-            "agri-ug-plan-2022",
-            "agri-ug-plan-new-agronomy-2022",
-        },
-        required_doc_ids={
-            "agri-ug-plan-agronomy-2024",
-            "agri-ug-plan-new-agronomy-2024",
-        },
-    ),
-]
-
-
-def _config(server) -> MCPClientConfig:
+def _client_config(server) -> MCPClientConfig:
     command = list(server.command)
     if command and command[0] in {"python", "python3"}:
         command[0] = sys.executable
@@ -107,42 +52,98 @@ def _config(server) -> MCPClientConfig:
     )
 
 
+def _run_case(
+    client: MCPPolicySearchClient,
+    case: dict[str, Any],
+) -> dict[str, Any]:
+    started = time.perf_counter()
+    response = client.search_articles(
+        SearchArticlesRequest(
+            query=case["query"],
+            filters=case.get("filters") or {},
+            top_k=30,
+            rerank_top_n=8,
+        )
+    )
+    latency_ms = int((time.perf_counter() - started) * 1000)
+    docs = sorted({hit.article.doc_id for hit in response.data.articles})
+    forbidden = sorted(set(docs) & set(case.get("forbidden_doc_ids") or []))
+    expected_hits = sorted(set(docs) & set(case.get("expected_doc_ids") or []))
+    required = bool(case.get("require_expected"))
+    passed = not forbidden and (bool(expected_hits) if required else True)
+    return {
+        "id": case["id"],
+        "name": case["name"],
+        "query": case["query"],
+        "filters": case.get("filters") or {},
+        "returned_doc_ids": docs,
+        "forbidden_hits": forbidden,
+        "expected_hits": expected_hits,
+        "require_expected": required,
+        "passed": passed,
+        "latency_ms": latency_ms,
+        "index_version": response.data.index_version,
+        "warnings": response.data.warnings,
+    }
+
+
 def main() -> int:
     load_dotenv(ROOT / ".env")
-    config = load_mcp_config(ROOT / "configs" / "mcp.yaml")
-    client = MCPPolicySearchClient(_config(config.search_server))
-    failures: list[str] = []
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--dataset", default=str(DEFAULT_DATASET))
+    parser.add_argument("--output", default=str(DEFAULT_OUTPUT))
+    args = parser.parse_args()
+
+    dataset_path = Path(args.dataset)
+    cases = load_cases(dataset_path)
+    mcp_config = load_mcp_config(ROOT / "configs" / "mcp.yaml")
+    client = MCPPolicySearchClient(_client_config(mcp_config.search_server))
+    rows: list[dict[str, Any]] = []
+    ready_ms = 0
     try:
         started = time.perf_counter()
         client.start()
-        print(f"policy-search ready in {int((time.perf_counter() - started) * 1000)}ms")
-        for case in CASES:
-            response = client.search_articles(
-                SearchArticlesRequest(
-                    query=case.query,
-                    filters=case.filters,
-                    top_k=30,
-                    rerank_top_n=8,
-                )
-            )
-            doc_ids = [hit.article.doc_id for hit in response.data.articles]
-            unique = sorted(set(doc_ids))
-            forbidden = sorted(set(unique) & case.forbidden_doc_ids)
-            quality_hits = sorted(case.required_doc_ids & set(unique))
-            # 设计验收只看“不返回不匹配条款”；required 仅作为检索质量观测。
-            passed = not forbidden
+        ready_ms = int((time.perf_counter() - started) * 1000)
+        print(f"policy-search ready in {ready_ms}ms")
+        for case in cases:
+            row = _run_case(client, case)
+            rows.append(row)
+            status = "PASS" if row["passed"] else "FAIL"
             print(
-                f"[{'PASS' if passed else 'FAIL'}] {case.name}\n"
-                f"   docs={unique}\n"
-                f"   forbidden={forbidden or '-'} quality_hits={quality_hits or '-'}"
+                f"[{status}] {row['id']} {row['name']}\n"
+                f"   docs={row['returned_doc_ids']}\n"
+                f"   forbidden={row['forbidden_hits'] or '-'} "
+                f"expected_hits={row['expected_hits'] or '-'}"
             )
-            if not passed:
-                failures.append(case.name)
     finally:
         client.close()
-    total = len(CASES)
-    print(f"\npopulation cases: {total - len(failures)}/{total}")
-    return 0 if not failures else 1
+
+    passed = sum(1 for row in rows if row["passed"])
+    report = {
+        "schema_version": "population-v1",
+        "generated_at": datetime.now(UTC).isoformat(timespec="seconds"),
+        "dataset": dataset_path.name,
+        "dataset_sha256": hashlib.sha256(dataset_path.read_bytes()).hexdigest(),
+        "index_version": rows[0]["index_version"] if rows else "",
+        "ready_ms": ready_ms,
+        "cases": rows,
+        "summary": {
+            "total": len(rows),
+            "passed": passed,
+            "failed": len(rows) - passed,
+            "forbidden_hits": sum(len(row["forbidden_hits"]) for row in rows),
+            "expected_hit_cases": sum(1 for row in rows if row["expected_hits"]),
+        },
+    }
+    output_path = Path(args.output)
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    output_path.write_text(
+        json.dumps(report, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
+    print(f"\npopulation cases: {passed}/{len(rows)}")
+    print(f"report: {output_path}")
+    return 0 if passed == len(rows) else 1
 
 
 if __name__ == "__main__":

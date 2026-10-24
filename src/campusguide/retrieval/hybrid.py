@@ -34,6 +34,7 @@ from campusguide.retrieval.filters import (
     profile_undetermined_warnings,
 )
 from campusguide.retrieval.normalize import expand_query
+from campusguide.retrieval.profile_expand import ProfileLexicon
 from campusguide.retrieval.rerank import Reranker
 from campusguide.retrieval.service import RetrievalError, article_from_payload
 from campusguide.retrieval.sparse import SparseEncoder, tokenize
@@ -116,6 +117,7 @@ class HybridRetriever:
         config: RetrievalConfig,
         index_version: str = "",
         top_k: int = 30,
+        rerank_candidates: int = 20,
         rerank_top_n: int = 8,
         max_articles: int = 8,
         max_chars_per_evidence: int = 800,
@@ -124,9 +126,12 @@ class HybridRetriever:
         min_score_margin: float | None = None,
         rrf_k: int = 60,
         aliases: dict[str, list[str]] | None = None,
+        profile_lexicon: ProfileLexicon | None = None,
         max_query_variants: int = 2,
         use_rerank: bool = True,
     ) -> None:
+        if not 1 <= rerank_candidates <= 50:
+            raise ValueError("rerank_candidates 必须在 1..50")
         self._client = client
         self._embedder = embedder
         self._sparse = sparse_encoder
@@ -134,6 +139,7 @@ class HybridRetriever:
         self._config = config
         self._index_version = index_version
         self._top_k = top_k
+        self._rerank_candidates = rerank_candidates
         self._rerank_top_n = rerank_top_n
         self._max_articles = max_articles
         self._max_chars_per_evidence = max_chars_per_evidence
@@ -146,12 +152,28 @@ class HybridRetriever:
         )
         self._rrf_k = rrf_k
         self._aliases = aliases or {}
+        self._profile_lexicon = profile_lexicon or ProfileLexicon({}, {})
         self._max_query_variants = max_query_variants
         self._use_rerank = use_rerank
 
     @property
     def index_version(self) -> str:
         return self._index_version
+
+    def _expand_queries(self, query: str, filters: PolicyFilters) -> list[str]:
+        base = expand_query(query, self._aliases, max_variants=self._max_query_variants)
+        if not base:
+            return []
+        profile_variants = self._profile_lexicon.query_variants(
+            query,
+            filters.profile,
+            max_variants=self._max_query_variants,
+        )
+        combined: list[str] = []
+        for candidate in [base[0], *profile_variants, *base[1:]]:
+            if candidate not in combined:
+                combined.append(candidate)
+        return combined[: self._max_query_variants]
 
     def warmup(self) -> None:
         self._embedder.embed_query("CampusGuide 预热")
@@ -331,7 +353,7 @@ class HybridRetriever:
         if not 1 <= rerank_top_n <= 20:
             raise ValueError("rerank_top_n 必须在 1..20")
 
-        queries = expand_query(query, self._aliases, max_variants=self._max_query_variants)
+        queries = self._expand_queries(query, filters)
         applied = filter_explanations(filters)
         if not queries:
             return SearchResult(
@@ -377,7 +399,8 @@ class HybridRetriever:
         aggregated, version_warnings = self._aggregate_and_check_versions(candidates, filters)
         warnings.extend(version_warnings)
         aggregated.sort(key=lambda item: item.rrf_score, reverse=True)
-        shortlist = aggregated[:top_k]
+        candidate_limit = min(top_k, self._rerank_candidates) if self._use_rerank else top_k
+        shortlist = aggregated[:candidate_limit]
 
         rerank_ms = 0.0
         if self._use_rerank and shortlist:
