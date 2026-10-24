@@ -108,6 +108,78 @@
       "wilson_high": 0.8581
     }
   },
+  "answer_by_category": {
+    "overall": {
+      "answerable": 40,
+      "labeled": 40,
+      "correct": 30,
+      "partial": 8,
+      "incorrect": 2,
+      "correct_rate": {
+        "successes": 30,
+        "total": 40,
+        "rate": 0.75,
+        "wilson_low": 0.5981,
+        "wilson_high": 0.8581
+      }
+    },
+    "single_article": {
+      "answerable": 25,
+      "labeled": 25,
+      "correct": 23,
+      "partial": 1,
+      "incorrect": 1,
+      "correct_rate": {
+        "successes": 23,
+        "total": 25,
+        "rate": 0.92,
+        "wilson_low": 0.7503,
+        "wilson_high": 0.9778
+      }
+    },
+    "multi_article": {
+      "answerable": 10,
+      "labeled": 10,
+      "correct": 6,
+      "partial": 4,
+      "incorrect": 0,
+      "correct_rate": {
+        "successes": 6,
+        "total": 10,
+        "rate": 0.6,
+        "wilson_low": 0.3127,
+        "wilson_high": 0.8318
+      }
+    },
+    "section": {
+      "answerable": 5,
+      "labeled": 5,
+      "correct": 1,
+      "partial": 3,
+      "incorrect": 1,
+      "correct_rate": {
+        "successes": 1,
+        "total": 5,
+        "rate": 0.2,
+        "wilson_low": 0.0362,
+        "wilson_high": 0.6245
+      }
+    },
+    "version_sensitive": {
+      "answerable": 5,
+      "labeled": 5,
+      "correct": 1,
+      "partial": 3,
+      "incorrect": 1,
+      "correct_rate": {
+        "successes": 1,
+        "total": 5,
+        "rate": 0.2,
+        "wilson_low": 0.0362,
+        "wilson_high": 0.6245
+      }
+    }
+  },
   "refusal": {
     "answerable": 40,
     "unanswerable": 10,
@@ -131,6 +203,95 @@
       "rate": 1.0,
       "wilson_low": 0.7225,
       "wilson_high": 1.0
+    },
+    "confusion": {
+      "answerable": {
+        "rendered": 40,
+        "abstained": 0
+      },
+      "unanswerable": {
+        "rendered": 0,
+        "abstained": 10
+      }
+    }
+  },
+  "error_attribution": {
+    "categories": {
+      "RETRIEVAL_MISS": {
+        "count": 0,
+        "qids": [],
+        "details": []
+      },
+      "WRONG_VERSION": {
+        "count": 0,
+        "qids": [],
+        "details": []
+      },
+      "WRONG_AUDIENCE": {
+        "count": 0,
+        "qids": [],
+        "details": []
+      },
+      "UNSUPPORTED_CLAIM": {
+        "count": 10,
+        "qids": [
+          "test-003",
+          "test-007",
+          "test-029",
+          "test-031",
+          "test-033",
+          "test-035",
+          "test-036",
+          "test-037",
+          "test-038",
+          "test-039"
+        ],
+        "details": [
+          "test-003: 缺 required fact「助推学校“双一流”建设」，后备军/蓄水池作用亦未写入结论",
+          "test-007: 缺「国发〔2007〕13号」与「完善学校奖助学体系」；目的答成第二条「发挥学院主动性」，非 gold 第一条目的",
+          "test-029: 缺 required fact「合同专用章」；原则与合法性审查正确",
+          "test-031: 缺 required fact「纳入大学生人才培养方案」；原则与出发点正确",
+          "test-033: 缺 required fact「成建制培养」；连续三年配置与 15-30 个正确",
+          "test-035: 缺 required fact「下一学期开学初到我校办理报到注册手续」；一式4份等正确",
+          "test-036: 缺 required fact「创新性研究成果」；外语与硕士生学术研究能力正确",
+          "test-037: 缺「被同行认可的创新性成果」；就业去向正确，但研究成果答成第五条论文条款",
+          "test-038: 缺「严格遵守科学技术研究学术规范」精确表述；答的是二、基本素质学术道德，非一、培养目标原文",
+          "test-039: 3 个 required facts 均未覆盖；命中的是「基本知识/基本学术能力」章节，非 gold「一、人才培养目标」"
+        ]
+      },
+      "CITATION_MISMATCH": {
+        "count": 0,
+        "qids": [],
+        "details": []
+      },
+      "INCOMPLETE_FLOW": {
+        "count": 0,
+        "qids": [],
+        "details": []
+      },
+      "OVER_REFUSAL": {
+        "count": 0,
+        "qids": [],
+        "details": []
+      },
+      "UNDER_REFUSAL": {
+        "count": 0,
+        "qids": [],
+        "details": []
+      },
+      "TOOL_FAILURE": {
+        "count": 0,
+        "qids": [],
+        "details": []
+      },
+      "LATENCY": {
+        "count": 0,
+        "qids": [],
+        "details": []
+      }
+    },
+    "latency": {
+      "note": "p50/p95 未达门禁属于系统级延迟限制，不计入单题错误主因。"
     }
   },
   "version_sensitive": {
@@ -140,6 +301,126 @@
     "wilson_low": 0.0362,
     "wilson_high": 0.6245,
     "unlabeled": 0
+  },
+  "ablations": {
+    "a5": {
+      "schema_version": "w7-a5-v1",
+      "dataset": "test_v1.jsonl",
+      "dataset_sha256": "208cf3c5f032c039b3af985428c7bb2f3dfacdd422dcf8ae5dc24d2f393eb74a",
+      "testset_sha256": "2a8d0e1223621520e5807aaa3b2a244110f9835bb7bae6d5bc35e4ed7f7e8f18",
+      "generated_at": "2026-10-24T13:05:46+00:00",
+      "questions": 40,
+      "metadata": {
+        "git_commit": "3a68f6dd8efc60b793ea49021fccb79a0100e82f",
+        "git_dirty": true,
+        "index_version": "articles_v1@hybrid-0cb2167de3fe",
+        "vector_manifest_sha256": "17441d486b2fb788456b875665c695d9bafa2cc4a9bef1c974c91b19bd24e7a2",
+        "config_hash": "dbc53f71cc4d837231535e19c521310b1563aebbbce620eeb2c2f21b2e687c4f",
+        "embedding_model": "BAAI/bge-m3",
+        "reranker_model": "BAAI/bge-reranker-v2-m3"
+      },
+      "modes": {
+        "dense": {
+          "summary": {
+            "questions": 40,
+            "scored_questions": 40,
+            "skipped_no_expected": 0,
+            "article": {
+              "questions": 35,
+              "recall_at_8": 0.9571,
+              "mrr": 0.8241,
+              "no_hit": 1
+            },
+            "section": {
+              "questions": 5,
+              "recall_at_8": 1.0,
+              "mrr": 0.8667,
+              "no_hit": 0
+            },
+            "overall": {
+              "recall_at_8": 0.9625,
+              "mrr": 0.8294
+            },
+            "latency_ms": {
+              "p50": 96.5,
+              "p95": 248.25
+            },
+            "rerank_latency_ms": {
+              "count": 0,
+              "p50": null,
+              "p95": null
+            }
+          },
+          "elapsed_ms": 4883
+        },
+        "hybrid_rrf": {
+          "summary": {
+            "questions": 40,
+            "scored_questions": 40,
+            "skipped_no_expected": 0,
+            "article": {
+              "questions": 35,
+              "recall_at_8": 1.0,
+              "mrr": 0.8771,
+              "no_hit": 0
+            },
+            "section": {
+              "questions": 5,
+              "recall_at_8": 1.0,
+              "mrr": 0.7667,
+              "no_hit": 0
+            },
+            "overall": {
+              "recall_at_8": 1.0,
+              "mrr": 0.8633
+            },
+            "latency_ms": {
+              "p50": 169.0,
+              "p95": 412.3999999999999
+            },
+            "rerank_latency_ms": {
+              "count": 0,
+              "p50": null,
+              "p95": null
+            }
+          },
+          "elapsed_ms": 7758
+        },
+        "hybrid_rerank": {
+          "summary": {
+            "questions": 40,
+            "scored_questions": 40,
+            "skipped_no_expected": 0,
+            "article": {
+              "questions": 35,
+              "recall_at_8": 1.0,
+              "mrr": 0.9667,
+              "no_hit": 0
+            },
+            "section": {
+              "questions": 5,
+              "recall_at_8": 1.0,
+              "mrr": 0.9,
+              "no_hit": 0
+            },
+            "overall": {
+              "recall_at_8": 1.0,
+              "mrr": 0.9583
+            },
+            "latency_ms": {
+              "p50": 1177.0,
+              "p95": 1365.3999999999999
+            },
+            "rerank_latency_ms": {
+              "count": 40,
+              "p50": 971.5,
+              "p95": 1067.8999999999999
+            }
+          },
+          "elapsed_ms": 44753
+        }
+      }
+    }
   },
   "latency_ms": {
     "p50": 8875.5,
@@ -182,6 +463,11 @@
       "ok": true,
       "value": 1.0,
       "gate": 0.9
+    },
+    "p50": {
+      "ok": false,
+      "value": 8875.5,
+      "gate": 6000
     },
     "p95": {
       "ok": false,

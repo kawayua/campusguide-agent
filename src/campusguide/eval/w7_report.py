@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from collections import Counter
 from typing import Any
 
 from campusguide.eval.w3 import percentile
@@ -13,6 +14,128 @@ from campusguide.eval.w7 import (
     support_summary,
 )
 
+ANSWER_CATEGORIES = ("single_article", "multi_article", "section")
+ERROR_CATEGORIES = (
+    "RETRIEVAL_MISS",
+    "WRONG_VERSION",
+    "WRONG_AUDIENCE",
+    "UNSUPPORTED_CLAIM",
+    "CITATION_MISMATCH",
+    "INCOMPLETE_FLOW",
+    "OVER_REFUSAL",
+    "UNDER_REFUSAL",
+    "TOOL_FAILURE",
+    "LATENCY",
+)
+
+
+def _category_stats(items: list[dict[str, Any]]) -> dict[str, Any]:
+    counts = Counter(str(item.get("label") or "unlabeled") for item in items)
+    labeled = sum(counts[key] for key in ("correct", "partial", "incorrect"))
+    return {
+        "answerable": len(items),
+        "labeled": labeled,
+        "correct": counts.get("correct", 0),
+        "partial": counts.get("partial", 0),
+        "incorrect": counts.get("incorrect", 0),
+        "correct_rate": _rate(counts.get("correct", 0), labeled),
+    }
+
+
+def answer_by_category(
+    rows: list[dict[str, Any]],
+    answer_labels: list[dict[str, Any]],
+) -> dict[str, Any]:
+    """按 single/multi/section 和 version-sensitive 拆分 answer correctness。"""
+    labels = [item for item in answer_labels if not item.get("should_abstain")]
+    result: dict[str, Any] = {"overall": _category_stats(labels)}
+    for category in ANSWER_CATEGORIES:
+        result[category] = _category_stats(
+            [item for item in labels if item.get("category") == category]
+        )
+    version_qids = {str(row.get("qid")) for row in rows if row.get("version_sensitive")}
+    result["version_sensitive"] = _category_stats(
+        [item for item in labels if str(item.get("qid")) in version_qids]
+    )
+    return result
+
+
+def confusion_matrix(rows: list[dict[str, Any]]) -> dict[str, dict[str, int]]:
+    rendered = {"ANSWERED", "PARTIAL_ANSWER"}
+    answerable = [row for row in rows if not row.get("should_abstain")]
+    unanswerable = [row for row in rows if row.get("should_abstain")]
+    return {
+        "answerable": {
+            "rendered": sum(1 for row in answerable if row.get("outcome") in rendered),
+            "abstained": sum(1 for row in answerable if row.get("outcome") not in rendered),
+        },
+        "unanswerable": {
+            "rendered": sum(1 for row in unanswerable if row.get("outcome") in rendered),
+            "abstained": sum(1 for row in unanswerable if row.get("outcome") not in rendered),
+        },
+    }
+
+
+def _version_of(article_id: Any) -> str:
+    text = str(article_id or "")
+    if "@v" not in text:
+        return ""
+    return text.rsplit("@v", 1)[1].split("#", 1)[0]
+
+
+def error_attribution(
+    rows: list[dict[str, Any]],
+    answer_labels: list[dict[str, Any]],
+) -> dict[str, Any]:
+    """按设计 12.7 给每个失败题唯一主因；LATENCY 作为系统级限制单列。"""
+    by_qid = {str(item.get("qid")): item for item in answer_labels}
+    categories: dict[str, dict[str, Any]] = {
+        name: {"count": 0, "qids": [], "details": []} for name in ERROR_CATEGORIES
+    }
+    for row in rows:
+        qid = str(row.get("qid"))
+        label = by_qid.get(qid) or {}
+        label_value = str(label.get("label") or "unlabeled")
+        if label_value in {"correct", "unanswerable_correct", "unlabeled"}:
+            continue
+        outcome = str(row.get("outcome") or "")
+        expected = set(row.get("expected_article_ids") or [])
+        evidence = {item.get("article_id") for item in row.get("evidence") or []}
+        structure = row.get("structure") or {}
+        if outcome == "GENERATION_FAILED":
+            cause = "TOOL_FAILURE"
+        elif expected and not (expected & evidence):
+            cause = "RETRIEVAL_MISS"
+        elif structure and not structure.get("ok", True):
+            cause = "CITATION_MISMATCH"
+        elif row.get("should_abstain"):
+            cause = "UNDER_REFUSAL"
+        elif outcome not in {"ANSWERED", "PARTIAL_ANSWER"}:
+            cause = "OVER_REFUSAL"
+        elif row.get("version_sensitive"):
+            gold_versions = {_version_of(item) for item in expected if _version_of(item)}
+            cited_versions = {
+                _version_of(item.get("article_id")) for item in row.get("citations") or []
+            }
+            cited_versions.discard("")
+            if gold_versions and cited_versions and not (gold_versions & cited_versions):
+                cause = "WRONG_VERSION"
+            else:
+                cause = "UNSUPPORTED_CLAIM"
+        else:
+            cause = "UNSUPPORTED_CLAIM"
+        categories[cause]["count"] += 1
+        categories[cause]["qids"].append(qid)
+        note = str(label.get("note") or "").strip()
+        if note:
+            categories[cause]["details"].append(f"{qid}: {note}")
+    return {
+        "categories": categories,
+        "latency": {
+            "note": "p50/p95 未达门禁属于系统级延迟限制，不计入单题错误主因。",
+        },
+    }
+
 
 def build_w7_report(
     run: dict[str, Any],
@@ -20,6 +143,7 @@ def build_w7_report(
     support_labels: list[dict[str, Any]] | None,
     answer_labels: list[dict[str, Any]] | None,
     gates_config: dict[str, float] | None = None,
+    ablations: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     gates_config = gates_config or {
         "support": 0.95,
@@ -28,6 +152,7 @@ def build_w7_report(
         "false_refusal": 0.10,
         "version_sensitive": 0.90,
         "article_recall": 0.90,
+        "p50_ms": 6_000,
         "p95_ms": 10_000,
     }
     rows = run.get("rows") or []
@@ -36,6 +161,9 @@ def build_w7_report(
     support = support_summary(support_labels or [])
     answer = answer_summary(answer_labels or [])
     structure = (run.get("summary") or {}).get("structure") or {}
+    category_breakdown = answer_by_category(rows, answer_labels or [])
+    confusion = confusion_matrix(rows)
+    errors = error_attribution(rows, answer_labels or [])
 
     answer_by_qid = {str(item.get("qid")): item.get("label") for item in (answer_labels or [])}
     version_rows = [row for row in rows if row.get("version_sensitive")]
@@ -111,6 +239,11 @@ def build_w7_report(
             "value": retrieval["article"]["recall_at_8"],
             "gate": gates_config["article_recall"],
         },
+        "p50": {
+            "ok": p50 <= gates_config["p50_ms"],
+            "value": round(p50, 1),
+            "gate": gates_config["p50_ms"],
+        },
         "p95": {
             "ok": p95 <= gates_config["p95_ms"],
             "value": round(p95, 1),
@@ -137,8 +270,11 @@ def build_w7_report(
         "structure": structure,
         "support": support,
         "answer_correctness": answer,
-        "refusal": refusal,
+        "answer_by_category": category_breakdown,
+        "refusal": {**refusal, "confusion": confusion},
+        "error_attribution": errors,
         "version_sensitive": version,
+        "ablations": ablations or {},
         "latency_ms": {"p50": round(p50, 1), "p95": round(p95, 1)},
         "gates": gates,
         "overall": overall,
@@ -176,6 +312,7 @@ def render_w7_markdown(report: dict[str, Any]) -> str:
         "false_refusal": "误拒率",
         "version_sensitive": "版本敏感题正确率",
         "article_recall": "article Recall@8",
+        "p50": "p50 延迟",
         "p95": "p95 延迟",
     }
     for key, item in report["gates"].items():
@@ -186,7 +323,7 @@ def render_w7_markdown(report: dict[str, Any]) -> str:
             labeled = item.get("labeled", 0)
             total = labeled + item.get("unlabeled", 0)
             value_text = f"待标注（已标 {labeled}/{total}）"
-        elif key == "p95":
+        elif key in {"p50", "p95"}:
             value_text = f"{value:.0f} ms" if value is not None else "n/a"
         else:
             value_text = fmt(value)
@@ -222,6 +359,39 @@ def render_w7_markdown(report: dict[str, Any]) -> str:
             f"| answer correctness | {fmt(report['answer_correctness']['correct_rate']['rate'])} |",
             f"| version-sensitive | {fmt(report['version_sensitive']['rate'])} |",
             f"| p50 / p95 | {report['latency_ms']['p50']:.1f} / {report['latency_ms']['p95']:.1f} ms |",
+            "",
+            "## 分类正确率",
+            "",
+            "| 类别 | correct/可答 | partial | incorrect | 正确率 |",
+            "|---|---:|---:|---:|---:|",
+        ]
+    )
+    category_labels = {
+        "overall": "Overall",
+        "single_article": "single_article",
+        "multi_article": "multi_article",
+        "section": "section",
+        "version_sensitive": "version_sensitive",
+    }
+    for key, label in category_labels.items():
+        item = report["answer_by_category"][key]
+        lines.append(
+            f"| {label} | {item['correct']}/{item['answerable']} | {item['partial']} | "
+            f"{item['incorrect']} | {fmt(item['correct_rate']['rate'])} |"
+        )
+    lines.extend(
+        [
+            "",
+            "## 拒答混淆矩阵",
+            "",
+            "| 实际 \\ 系统 | 渲染答案 | 明确拒答 |",
+            "|---|---:|---:|",
+            f"| 可回答（{report['refusal']['answerable']}） | "
+            f"{report['refusal']['confusion']['answerable']['rendered']} | "
+            f"{report['refusal']['confusion']['answerable']['abstained']} |",
+            f"| 不可回答（{report['refusal']['unanswerable']}） | "
+            f"{report['refusal']['confusion']['unanswerable']['rendered']} | "
+            f"{report['refusal']['confusion']['unanswerable']['abstained']} |",
             "",
         ]
     )
@@ -267,11 +437,80 @@ def render_w7_markdown(report: dict[str, Any]) -> str:
             f"{counts.get('partial', 0)} / incorrect {counts.get('incorrect', 0)}；"
             f"不可答题 {answer['unanswerable_correct']}/{answer['unanswerable_total']} 判断正确。",
             "",
+            "## 错误归因（设计 12.7）",
+            "",
+            "| 主因 | 数量 | 题号 |",
+            "|---|---:|---|",
+        ]
+    )
+    error_categories = report["error_attribution"]["categories"]
+    for name, item in error_categories.items():
+        if item["count"]:
+            lines.append(f"| {name} | {item['count']} | {', '.join(item['qids'])} |")
+    zero_categories = [name for name, item in error_categories.items() if not item["count"]]
+    lines.append("")
+    lines.append(
+        f"- 其余类别为 0：{', '.join(zero_categories)}；INCOMPLETE_FLOW 为 N/A（W5 未实现）。"
+    )
+    for name, item in error_categories.items():
+        if not item["count"]:
+            continue
+        lines.append("")
+        lines.append(f"### {name}")
+        for detail in item["details"]:
+            lines.append(f"- {detail}")
+    lines.extend(
+        [
+            "",
+            f"- 延迟：{report['error_attribution']['latency']['note']}",
+            "",
+            "## 消融",
+            "",
+        ]
+    )
+    ablations = report.get("ablations") or {}
+    a5 = ablations.get("a5") or {}
+    if a5:
+        lines.extend(
+            [
+                "### A5 检索",
+                "",
+                "| 模式 | overall Recall@8 | overall MRR | article MRR | section MRR | p95 |",
+                "|---|---:|---:|---:|---:|---:|",
+            ]
+        )
+        for mode, payload in (a5.get("modes") or {}).items():
+            summary = payload.get("summary") or {}
+            overall = summary.get("overall") or {}
+            article = summary.get("article") or {}
+            section = summary.get("section") or {}
+            latency = summary.get("latency_ms") or {}
+            lines.append(
+                f"| `{mode}` | {fmt(overall.get('recall_at_8'))} | "
+                f"{fmt(overall.get('mrr'))} | {fmt(article.get('mrr'))} | "
+                f"{fmt(section.get('mrr'))} | {latency.get('p95', 0):.1f} ms |"
+            )
+    else:
+        lines.append("- A5 检索消融未纳入。")
+    lines.extend(
+        [
+            "",
+            "- A4 profile 过滤、A2 Verifier 消融待跑；A1 固定分块、A3 流程 DAG 为 N/A。",
+            "",
             "## 限制",
             "",
             "- 50 题冻结集只作方向性证据；比例指标给 Wilson 95% 区间。",
             "- A1 固定分块、A3 流程 DAG 未执行（缺少相应实现），报告标 N/A。",
             "- support 与 answer correctness 必须是人工标注；AI 预标注不计入。",
+            f"- 单标注人：{', '.join(report.get('annotators') or []) or '未标注'}；"
+            "未执行 20% 第二人复核/隔天盲审，按设计披露。",
+            "- 人工修改处数（改事实/改条件/删无依据句/补引用）未分项记录，标 N/A。",
+            "- token/成本：当前 run row 未落盘 token，且无统一单价配置，标 N/A。",
+            "- remediation2 对 32 条 support、11 题 answer 完全一致项沿用第一轮标签；"
+            "设计原要求旧 run 标签不复用，此为记录在案的偏差。",
+            f"- p50/p95 实际为 {report['latency_ms']['p50']:.0f}/"
+            f"{report['latency_ms']['p95']:.0f} ms，未达 6s/10s；"
+            "按设计记录实际值，不删题、不改门禁。",
             "",
         ]
     )

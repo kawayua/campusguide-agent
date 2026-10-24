@@ -13,7 +13,7 @@ W1 尚无问答模块，因此**没有任何回答质量指标**。简历、READ
 |---|---|---|---|
 | 代码规范 | ruff check（E/F/I/B/UP/SIM/RUF） | `make lint` | 通过 |
 | 代码格式 | ruff format --check src tests scripts | `make format-check` | 通过 |
-| 单元、契约与集成测试 | 全离线：mock HTTP、临时目录、动态生成 PDF、内存 Qdrant、fake embedder/chat | `make test` | 426 passed（remediation2 后） |
+| 单元、契约与集成测试 | 全离线：mock HTTP、临时目录、动态生成 PDF、内存 Qdrant、fake embedder/chat | `make test` | 427 passed（A5 后） |
 | 索引确定性 | 同一输入重建，`content_hash` 与 JSONL 字节一致 | `pytest tests/unit/test_build_index.py` | 通过 |
 | 联系方式脱敏 | 手机号、身份证、学号、邮箱、联系人姓名 | `pytest tests/unit/test_redact.py` | 通过 |
 | 版本解析 | CURRENT / HISTORICAL / INCLUDE_REPEALED、冲突、无版本 | `pytest tests/unit/test_versioning.py` | 通过 |
@@ -38,7 +38,7 @@ CI 配置见 `.github/workflows/ci.yml`；Gitee 仓库当前以本地 `make qa` 
 
 - `ruff check .`：通过；
 - `ruff format --check src tests scripts`：通过；
-- `pytest`：426 passed（W1–W4 unit + contract + integration，无网络依赖；W1/W2 时点为 154；W3 后 295；remediation2 后 426）；
+- `pytest`：427 passed（W1–W4 unit + contract + integration，无网络依赖；W1/W2 时点为 154；W3 后 295；A5 后 427）；
 - 真实语料：213 文档 / 232 版本 / 3,952 块；其中 `article` 1,366、`section` 2,586；
 - 规模构成：校级 44 文档 / 52 版本；信息学院 36 / 44；农学院 133 / 136；
 - 版本状态：`active` 222、`repealed` 10；每个文档至少有一个 `active` 版本；
@@ -286,6 +286,13 @@ W4 的已知缺口：
 - 只重标 changed：support 32/136 沿用、104 重标；answer 11/50 沿用、
   39 重标；最终 labels 无 unlabeled；报告
   `data/eval/w7-remediation2-report.{json,md}`；
+- 报告补齐：分类正确率、p50 门禁（8.9s，未通过）、拒答混淆矩阵、
+  12.7 十类错误归因（10 题均为 UNSUPPORTED_CLAIM）、单标注披露、
+  人工修改处数/token 成本 N/A、旧标签沿用偏差说明；
+- A5 检索消融（`data/eval/w7-a5-retrieval.{json,md}`）：dense-only
+  Recall@8 0.963 / MRR 0.829；hybrid RRF **1.000 / 0.863**；
+  RRF+rerank **1.000 / 0.958**，section MRR 0.900；检索 p95
+  0.25/0.41/1.37s；A4/A2 待跑，A1/A3 N/A；
 - 结论：support/structure/检索/拒答通过，answer/version/p95 未通过，
   **W7 总门禁未通过**；下一轮应使用 dev 集验证“培养目标”section 的
   检索与生成，不继续在冻结测试集上调参。

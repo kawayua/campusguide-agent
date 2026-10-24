@@ -6,7 +6,7 @@ RUFF ?= $(UV) run ruff
 
 .PHONY: help init sync fetch parse index index-qdrant vector-index vector-index-dense validate-sources \
 	check-segmentation test lint format format-check qa ask eval-w2 eval-w3 eval-w3-hybrid eval-w4 \
-	eval-w6a2 eval-w6a2-report freeze-w7 eval-w7 eval-w7-report draft-w7 mcp-smoke population-check e2e-section eval-w3-report label-w3 sheet-w3 \
+	eval-w6a2 eval-w6a2-report freeze-w7 eval-w7 eval-w7-report eval-w7-a5 draft-w7 mcp-smoke population-check e2e-section eval-w3-report label-w3 sheet-w3 \
 	label-w6a2 sheet-w6a2 demo compose-up compose-down clean
 
 help:
@@ -26,6 +26,7 @@ help:
 	@echo "  make freeze-w7         校验并冻结 W7 50 题测试集"
 	@echo "  make eval-w7           跑 W7 冻结测试集并生成报告"
 	@echo "  make eval-w7-report    人工标注后复用 W7 run 生成报告"
+	@echo "  make eval-w7-a5        W7 A5 检索消融（dense/RRF/rerank）"
 	@echo "  make eval-w4           dense vs hybrid RRF vs hybrid+rerank 检索对比"
 	@echo "  make eval-w6a2         W6-A2 quote 契约 20 题回归（独立 run）"
 	@echo "  make eval-w6a2-report  人工标注后复用 W6-A2 run 生成报告"
@@ -88,6 +89,9 @@ eval-w7:
 
 eval-w7-report:
 	$(PYTHON) scripts/eval_w7.py --report-only
+
+eval-w7-a5:
+	$(PYTHON) scripts/eval_w7_a5.py
 
 population-check:
 	$(PYTHON) scripts/check_population_cases.py

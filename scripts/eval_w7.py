@@ -164,6 +164,28 @@ def _answer_labels(
     return carry_answer_labels(rows, existing)
 
 
+def _slim_ablation(payload: dict[str, Any]) -> dict[str, Any]:
+    """主报告只嵌入消融摘要，逐题 rows 保留在独立消融报告里。"""
+    modes = {
+        name: {key: value for key, value in item.items() if key != "rows"}
+        for name, item in (payload.get("modes") or {}).items()
+    }
+    return {**payload, "modes": modes}
+
+
+def _load_ablations() -> dict[str, Any]:
+    ablations: dict[str, Any] = {}
+    for key, filename in (
+        ("a5", "w7-a5-retrieval.json"),
+        ("a4", "w7-a4-profile.json"),
+        ("a2", "w7-a2-verifier.json"),
+    ):
+        path = ROOT / "data" / "eval" / filename
+        if path.exists():
+            ablations[key] = _slim_ablation(json.loads(path.read_text(encoding="utf-8")))
+    return ablations
+
+
 def _write_report(
     *,
     run: dict[str, Any],
@@ -189,6 +211,7 @@ def _write_report(
         support_labels=support_labels,
         answer_labels=answer_labels,
         gates_config=gates,
+        ablations=_load_ablations(),
     )
     output_json.parent.mkdir(parents=True, exist_ok=True)
     output_json.write_text(

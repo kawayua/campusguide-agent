@@ -72,28 +72,75 @@ def test_w7_report_summarizes_and_renders() -> None:
         {"question_id": "t1", "claim_id": "c2", "kept": False, "label": "partial"},
     ]
     answers = [
-        {"qid": "t1", "label": "correct"},
-        {"qid": "t2", "label": "incorrect"},
-        {"qid": "t3", "label": "unanswerable_correct", "should_abstain": True},
-        {"qid": "t4", "label": "incorrect", "should_abstain": True},
+        {"qid": "t1", "category": "single_article", "label": "correct"},
+        {"qid": "t2", "category": "section", "label": "incorrect"},
+        {
+            "qid": "t3",
+            "category": "out_of_scope",
+            "label": "unanswerable_correct",
+            "should_abstain": True,
+        },
+        {
+            "qid": "t4",
+            "category": "privacy",
+            "label": "incorrect",
+            "should_abstain": True,
+        },
     ]
     report = build_w7_report(_run(), support_labels=support, answer_labels=answers)
     assert report["retrieval"]["article"]["recall_at_8"] == 1.0
     assert report["retrieval"]["section"]["recall_at_8"] == 0.0
     assert report["refusal"]["refusal_recall"]["rate"] == 0.5
     assert report["refusal"]["false_refusal"]["rate"] == 0.5
+    assert report["refusal"]["confusion"]["answerable"] == {"rendered": 1, "abstained": 1}
+    assert report["refusal"]["confusion"]["unanswerable"] == {"rendered": 1, "abstained": 1}
     assert report["support"]["rendered_support_rate"]["rate"] == 1.0
     assert report["answer_correctness"]["correct_rate"]["rate"] == 0.5
+    assert report["answer_by_category"]["single_article"]["correct"] == 1
+    assert report["answer_by_category"]["section"]["incorrect"] == 1
+    assert report["answer_by_category"]["version_sensitive"]["correct"] == 1
     assert report["version_sensitive"]["rate"] == 1.0
+    assert report["gates"]["p50"]["ok"] is True
+    assert report["error_attribution"]["categories"]["RETRIEVAL_MISS"]["qids"] == ["t2"]
+    assert report["error_attribution"]["categories"]["UNDER_REFUSAL"]["qids"] == ["t4"]
     assert report["overall"] is False
 
     markdown = render_w7_markdown(report)
     assert "CampusGuide W7" in markdown
     assert "article Recall@8" in markdown
     assert "标注：tester" in markdown
+    assert "分类正确率" in markdown
+    assert "拒答混淆矩阵" in markdown
+    assert "错误归因" in markdown
+    assert "p50 延迟" in markdown
+    assert "## 消融" in markdown
     assert "Wilson 95%" in markdown
     assert "| rendered support | 1/1 | 1.000 | 0.206–1.000 |" in markdown
     assert "correct 1 / partial 0 / incorrect 1" in markdown
+
+
+def test_report_renders_a5_ablation_table() -> None:
+    a5 = {
+        "modes": {
+            "dense": {
+                "summary": {
+                    "overall": {"recall_at_8": 0.9, "mrr": 0.8},
+                    "article": {"mrr": 0.8},
+                    "section": {"mrr": 0.7},
+                    "latency_ms": {"p95": 120.0},
+                }
+            }
+        }
+    }
+    report = build_w7_report(
+        _run(),
+        support_labels=[],
+        answer_labels=[],
+        ablations={"a5": a5},
+    )
+    markdown = render_w7_markdown(report)
+    assert "### A5 检索" in markdown
+    assert "| `dense` | 0.900 | 0.800 | 0.800 | 0.700 | 120.0 ms |" in markdown
 
 
 def test_report_without_labels_does_not_pass() -> None:
