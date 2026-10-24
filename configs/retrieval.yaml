@@ -5,14 +5,20 @@ embedding_model: ${EMBEDDING_MODEL}
 dense_vector_name: dense
 dense_vector_size: 1024
 sparse_vector_name: sparse
+sparse_mode: bm25
+bm25_k1: 1.2
+bm25_b: 0.75
+rrf_k: 60
 
 recall_top_k: 30
 rerank_top_n: 8
+reranker_model: ${RERANKER_MODEL}
 token_budget: 4000
 max_articles: 8
 
-# 以下阈值必须用 20 题开发集校准，不要直接用于生产结论。
-min_rerank_score: 0.30
+# 以下阈值用 20 题 dev_v0 校准（2026-10-24）：
+# 可答题 top rerank 最低 0.725；非可答题最高 0.523；取 0.60 + 0.03 margin。
+min_rerank_score: 0.60
 min_score_margin: 0.03
 
 # W2 dense-only 检索参数

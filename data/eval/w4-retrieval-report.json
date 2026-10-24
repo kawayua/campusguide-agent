@@ -1,0 +1,1870 @@
+{
+  "schema_version": "w4-retrieval-v1",
+  "dataset": "dev_v0.jsonl",
+  "dataset_sha256": "e144b800133353517a78350dd089ac1ccd39805ec1b3b61b6dd72ad70d15c356",
+  "generated_at": "2026-10-24T05:35:00+00:00",
+  "metadata": {
+    "git_commit": "018ce43e54efbccf9b4be043053afcb0ed650bf4",
+    "git_dirty": true,
+    "index_version": "articles_v1@hybrid-0cb2167de3fe",
+    "vector_manifest_sha256": "17441d486b2fb788456b875665c695d9bafa2cc4a9bef1c974c91b19bd24e7a2",
+    "config_hash": "bd54a093c8ba4883780902eb2be5415e67d965e73adf9874fe300fa39d5fa1f8"
+  },
+  "modes": {
+    "dense": {
+      "summary": {
+        "questions": 20,
+        "scored_questions": 14,
+        "skipped_no_expected": 6,
+        "article": {
+          "questions": 12,
+          "recall_at_8": 1.0,
+          "mrr": 1.0,
+          "no_hit": 0
+        },
+        "section": {
+          "questions": 2,
+          "recall_at_8": 1.0,
+          "mrr": 0.3333,
+          "no_hit": 0
+        },
+        "overall": {
+          "recall_at_8": 1.0,
+          "mrr": 0.9048
+        },
+        "latency_ms": {
+          "p50": 131.5,
+          "p95": 359.00000000000006
+        },
+        "rerank_latency_ms": {
+          "count": 0,
+          "p50": null,
+          "p95": null
+        }
+      },
+      "elapsed_ms": 3441,
+      "rows": [
+        {
+          "id": "d001",
+          "question": "申请国家奖学金需要满足哪些条件？",
+          "category": "single_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "national-aid-undergrad@v2021#第九条"
+          ],
+          "retrieved_article_ids": [
+            "national-aid-undergrad@v2021#第九条",
+            "national-aid-undergrad@v2021#第八条",
+            "national-aid-grad@v2022#第七条",
+            "national-aid-grad@v2022#第六条",
+            "national-aid-undergrad@v2021#第十条",
+            "national-aid-grad@v2022#第八条",
+            "national-aid-grad@v2022#第九条",
+            "student-loan@v2018#第九条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 1.0,
+          "latency_ms": 137,
+          "timing": {},
+          "warnings": []
+        },
+        {
+          "id": "d002",
+          "question": "国家奖学金的奖励标准是多少？",
+          "category": "single_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "national-aid-undergrad@v2021#第七条"
+          ],
+          "retrieved_article_ids": [
+            "national-aid-undergrad@v2021#第七条",
+            "national-aid-grad@v2022#第五条",
+            "student-financial-aid@v2022#第十一条",
+            "student-financial-aid@v2022#第十二条",
+            "comprehensive-evaluation@v2020#第十二条",
+            "national-aid-undergrad@v2021#第十一条",
+            "national-aid-undergrad@v2021#第九条",
+            "national-aid-undergrad@v2021#第三条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 1.0,
+          "latency_ms": 144,
+          "timing": {},
+          "warnings": []
+        },
+        {
+          "id": "d003",
+          "question": "本科生每学期选课学分的下限和上限分别是多少？",
+          "category": "single_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "course-selection@v2016#第六条"
+          ],
+          "retrieved_article_ids": [
+            "course-selection@v2016#第六条",
+            "dual-bachelor-degree@v2025#第七条",
+            "general-education-elective@v2023#第八条",
+            "student-loan@v2018#第十条",
+            "dual-bachelor-degree@v2025#第八条",
+            "course-selection@v2016#第五条",
+            "undergraduate-status-rules@v2021#第十九条",
+            "course-selection@v2016#第十二条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 1.0,
+          "latency_ms": 137,
+          "timing": {},
+          "warnings": []
+        },
+        {
+          "id": "d004",
+          "question": "学生进入教室对着装有什么要求？",
+          "category": "single_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "classroom-rules@v2018#第十八条"
+          ],
+          "retrieved_article_ids": [
+            "classroom-rules@v2018#第十八条",
+            "classroom-rules@v2018#第二十四条",
+            "classroom-rules@v2018#第二十三条",
+            "exam-room-rules@v2022#第十四条",
+            "classroom-rules@v2018#第十七条",
+            "exam-room-rules@v2022#第十九条",
+            "classroom-rules@v2018#第十九条",
+            "classroom-rules@v2018#第二十条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 1.0,
+          "latency_ms": 116,
+          "timing": {},
+          "warnings": []
+        },
+        {
+          "id": "d005",
+          "question": "哪些情形会被给予开除学籍处分？",
+          "category": "single_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "disciplinary-rules@v2017#第八条"
+          ],
+          "retrieved_article_ids": [
+            "disciplinary-rules@v2017#第八条",
+            "disciplinary-rules@v2017#第二十二条",
+            "disciplinary-rules@v2017#第七条",
+            "disciplinary-rules@v2017#第二十七条",
+            "disciplinary-rules@v2017#第四条",
+            "disciplinary-rules@v2017#第十六条",
+            "undergraduate-status-rules@v2021#第四十条",
+            "undergraduate-status-rules@v2021#第三十八条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 1.0,
+          "latency_ms": 416,
+          "timing": {},
+          "warnings": []
+        },
+        {
+          "id": "d006",
+          "question": "本科学生一学期累计旷课多少学时会被给予纪律处分？",
+          "category": "single_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "disciplinary-rules@v2017#第十六条"
+          ],
+          "retrieved_article_ids": [
+            "disciplinary-rules@v2017#第十六条",
+            "undergraduate-status-rules@v2021#第三十六条",
+            "undergraduate-status-rules@v2021#第三十五条",
+            "undergraduate-academic-warning@v2021#第五条",
+            "course-study@v2022#第五条",
+            "undergraduate-status-rules@v2021#第三十四条",
+            "disciplinary-rules@v2017#第二十四条",
+            "disciplinary-rules@v2017#第八条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 1.0,
+          "latency_ms": 356,
+          "timing": {},
+          "warnings": []
+        },
+        {
+          "id": "d007",
+          "question": "微专业一般由多少门课程组成，总学分和培养周期是多少？",
+          "category": "single_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "micro-major@v2024#第五条"
+          ],
+          "retrieved_article_ids": [
+            "micro-major@v2024#第五条",
+            "micro-major@v2024#第二条",
+            "micro-major@v2024#第十四条",
+            "micro-major@v2024#第十一条",
+            "micro-major@v2024#第十三条",
+            "dual-bachelor-degree@v2025#第七条",
+            "micro-major@v2024#第九条",
+            "undergraduate-minor@v2025#第五条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 1.0,
+          "latency_ms": 99,
+          "timing": {},
+          "warnings": []
+        },
+        {
+          "id": "d008",
+          "question": "申请国家励志奖学金需要满足哪些条件？",
+          "category": "single_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "national-aid-undergrad@v2021#第十条"
+          ],
+          "retrieved_article_ids": [
+            "national-aid-undergrad@v2021#第十条",
+            "national-aid-undergrad@v2021#第八条",
+            "national-aid-undergrad@v2021#第九条",
+            "student-financial-aid@v2022#第十二条",
+            "national-aid-undergrad@v2021#第十四条",
+            "national-aid-grad@v2022#第六条",
+            "national-aid-grad@v2022#第七条",
+            "national-aid-undergrad@v2021#第十一条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 1.0,
+          "latency_ms": 126,
+          "timing": {},
+          "warnings": []
+        },
+        {
+          "id": "d009",
+          "question": "申请国家奖学金需要满足哪些条件？奖励标准是多少？",
+          "category": "multi_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "national-aid-undergrad@v2021#第七条",
+            "national-aid-undergrad@v2021#第九条"
+          ],
+          "retrieved_article_ids": [
+            "national-aid-undergrad@v2021#第九条",
+            "national-aid-undergrad@v2021#第八条",
+            "national-aid-undergrad@v2021#第七条",
+            "national-aid-grad@v2022#第七条",
+            "national-aid-undergrad@v2021#第十条",
+            "national-aid-grad@v2022#第六条",
+            "national-aid-grad@v2022#第五条",
+            "national-aid-grad@v2022#第八条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 1.0,
+          "latency_ms": 171,
+          "timing": {},
+          "warnings": []
+        },
+        {
+          "id": "d010",
+          "question": "学生违纪处分有哪些种类？处分期限一般多久？",
+          "category": "multi_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "disciplinary-rules@v2017#第四条",
+            "disciplinary-rules@v2017#第二十四条"
+          ],
+          "retrieved_article_ids": [
+            "disciplinary-rules@v2017#第二十四条",
+            "undergraduate-status-rules@v2021#第三十九条",
+            "disciplinary-rules@v2017#第四条",
+            "disciplinary-rules@v2017#第二十一条",
+            "disciplinary-rules@v2017#第七条",
+            "disciplinary-rules@v2017#第二十二条",
+            "disciplinary-rules@v2017#第六条",
+            "disciplinary-rules@v2017#第十六条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 1.0,
+          "latency_ms": 258,
+          "timing": {},
+          "warnings": []
+        },
+        {
+          "id": "d011",
+          "question": "本科生申请转专业需要满足哪些基本条件？哪些情形不允许转专业？",
+          "category": "multi_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "undergraduate-major-transfer@v2021#第二条",
+            "undergraduate-major-transfer@v2021#第五条"
+          ],
+          "retrieved_article_ids": [
+            "undergraduate-major-transfer@v2021#第五条",
+            "undergraduate-status-rules@v2021#第二十一条",
+            "undergraduate-major-transfer@v2021#第二条",
+            "undergraduate-major-transfer@v2021#第三条",
+            "undergraduate-status-rules@v2021#第二十二条",
+            "undergraduate-school-transfer@v2021#第二条",
+            "undergraduate-major-transfer@v2021#第四条",
+            "undergraduate-status-rules@v2021#第二十三条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 1.0,
+          "latency_ms": 351,
+          "timing": {},
+          "warnings": []
+        },
+        {
+          "id": "d012",
+          "question": "推免生需要满足哪些基本条件和学业要求？",
+          "category": "multi_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "postgraduate-recommendation@v2025#第十条",
+            "postgraduate-recommendation@v2025#第十一条"
+          ],
+          "retrieved_article_ids": [
+            "postgraduate-recommendation@v2025#第十条",
+            "postgraduate-recommendation@v2025#第十一条",
+            "postgraduate-recommendation@v2025#第十八条",
+            "postgraduate-recommendation@v2025#第十六条",
+            "postgraduate-recommendation@v2025#第十七条",
+            "postgraduate-recommendation@v2025#第三条",
+            "agri-postgrad-recommendation-rule-2024@v2024#第七条",
+            "agri-postgrad-recommendation-rule-2024@v2024#第八条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 1.0,
+          "latency_ms": 241,
+          "timing": {},
+          "warnings": []
+        },
+        {
+          "id": "d013",
+          "question": "数学与应用数学专业 2024 版培养方案的培养目标是什么？",
+          "category": "section",
+          "block_types": [
+            "section"
+          ],
+          "expected_article_ids": [
+            "info-ug-math-plan@v2024#二、培养目标"
+          ],
+          "retrieved_article_ids": [
+            "info-ug-math-plan@v2022#九、培养计划进程表",
+            "info-ug-math-plan@v2022#二、培养目标",
+            "info-ug-math-plan@v2024#九、人才培养目标实现矩阵",
+            "info-ug-math-plan@v2022#八、人才培养目标实现矩阵",
+            "info-ug-math-plan@v2024#十、培养计划进程表",
+            "info-ug-math-plan@v2024#二、培养目标"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 0.16666666666666666,
+          "latency_ms": 112,
+          "timing": {},
+          "warnings": [
+            "证据预算触顶：保留 6 条，跳过 info-ug-math-plan@v2024#三、培养规格",
+            "证据预算触顶：保留 6 条，跳过 info-ug-math-plan@v2022#七、课程结构及毕业要求",
+            "证据预算触顶：保留 6 条，跳过 info-ug-bigdata-plan@v2022#九、培养计划进程表",
+            "info-ug-math-plan@v2022#九、培养计划进程表 的块类型为 section，按 section 口径记录",
+            "info-ug-math-plan@v2022#二、培养目标 的块类型为 section，按 section 口径记录",
+            "info-ug-math-plan@v2024#九、人才培养目标实现矩阵 的块类型为 section，按 section 口径记录",
+            "info-ug-math-plan@v2022#八、人才培养目标实现矩阵 的块类型为 section，按 section 口径记录",
+            "info-ug-math-plan@v2024#十、培养计划进程表 的块类型为 section，按 section 口径记录",
+            "info-ug-math-plan@v2024#二、培养目标 的块类型为 section，按 section 口径记录"
+          ]
+        },
+        {
+          "id": "d014",
+          "question": "数学与应用数学专业 2024 版培养方案的专业核心课程有哪些？",
+          "category": "section",
+          "block_types": [
+            "section"
+          ],
+          "expected_article_ids": [
+            "info-ug-math-plan@v2024#六、专业核心课程"
+          ],
+          "retrieved_article_ids": [
+            "info-ug-math-plan@v2022#五、专业核心课程",
+            "info-ug-math-plan@v2024#六、专业核心课程",
+            "info-ug-math-plan@v2024#十、培养计划进程表",
+            "info-ug-math-plan@v2022#九、培养计划进程表",
+            "info-ug-math-plan@v2024#五、主干学科",
+            "info-ug-math-plan@v2024#九、人才培养目标实现矩阵"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 0.5,
+          "latency_ms": 103,
+          "timing": {},
+          "warnings": [
+            "info-ug-math-plan@v2022#五、专业核心课程 的块类型为 section，按 section 口径记录",
+            "info-ug-math-plan@v2024#六、专业核心课程 的块类型为 section，按 section 口径记录",
+            "info-ug-math-plan@v2024#十、培养计划进程表 的块类型为 section，按 section 口径记录",
+            "info-ug-math-plan@v2022#九、培养计划进程表 的块类型为 section，按 section 口径记录",
+            "info-ug-math-plan@v2024#五、主干学科 的块类型为 section，按 section 口径记录",
+            "info-ug-math-plan@v2024#九、人才培养目标实现矩阵 的块类型为 section，按 section 口径记录"
+          ]
+        },
+        {
+          "id": "d015",
+          "question": "学校附近哪家奶茶店最好喝？",
+          "category": "no_evidence",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [],
+          "retrieved_article_ids": [
+            "classroom-rules@v2018#第十八条",
+            "student-loan@v2018#第二条",
+            "lab-safety@v2015#第十九条",
+            "student-loan@v2018#第六条",
+            "public-facilities@v2004#第一条",
+            "classroom-rules@v2018#第二十三条",
+            "student-loan@v2018#第七条",
+            "student-loan@v2018#第八条"
+          ],
+          "recall_at_8": null,
+          "reciprocal_rank": null,
+          "latency_ms": 76,
+          "timing": {},
+          "warnings": []
+        },
+        {
+          "id": "d016",
+          "question": "隔壁学校的奖学金政策是什么？",
+          "category": "out_of_scope",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [],
+          "retrieved_article_ids": [
+            "college-aid@v2015#第五条",
+            "student-financial-aid@v2022#第二十七条",
+            "national-aid-grad@v2022#第二十七条",
+            "national-aid-undergrad@v2021#第十一条",
+            "comprehensive-evaluation@v2020#第十二条",
+            "national-aid-undergrad@v2021#第三条",
+            "national-aid-grad@v2022#第十四条",
+            "national-aid-undergrad@v2021#第十五条"
+          ],
+          "recall_at_8": null,
+          "reciprocal_rank": null,
+          "latency_ms": 126,
+          "timing": {},
+          "warnings": []
+        },
+        {
+          "id": "d017",
+          "question": "华南农业大学对火星殖民有什么规定？",
+          "category": "no_evidence",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [],
+          "retrieved_article_ids": [
+            "postdoc-management@v2024#第四十五条",
+            "contract-management@v2020#第十条",
+            "national-aid-grad@v2022#第二十七条",
+            "postdoc-management@v2024#第十五条",
+            "innovation-training@v2018#第六条",
+            "contract-management@v2020#第六条",
+            "master-doctor-degree-rules@v2025#第八条",
+            "postgraduate-recommendation@v2025#第一条"
+          ],
+          "recall_at_8": null,
+          "reciprocal_rank": null,
+          "latency_ms": 64,
+          "timing": {},
+          "warnings": []
+        },
+        {
+          "id": "d018",
+          "question": "2020 年版本的国家奖学金办法是怎么规定的？",
+          "category": "historical",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [],
+          "retrieved_article_ids": [
+            "national-aid-undergrad@v2021#第三条",
+            "national-aid-grad@v2022#第十四条",
+            "national-aid-undergrad@v2021#第十一条",
+            "national-aid-undergrad@v2021#第七条",
+            "national-aid-grad@v2022#第二条",
+            "national-aid-grad@v2022#第三十条",
+            "national-aid-grad@v2022#第五条",
+            "national-aid-undergrad@v2021#第十五条"
+          ],
+          "recall_at_8": null,
+          "reciprocal_rank": null,
+          "latency_ms": 98,
+          "timing": {},
+          "warnings": []
+        },
+        {
+          "id": "d019",
+          "question": "去年的转专业政策是什么？",
+          "category": "historical",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [],
+          "retrieved_article_ids": [
+            "undergraduate-status-rules@v2021#第二十一条",
+            "undergraduate-major-transfer@v2021#第三条",
+            "undergraduate-major-transfer@v2021#第五条",
+            "undergraduate-status-rules@v2021#第二十二条",
+            "undergraduate-status-rules@v2021#第二十三条",
+            "undergraduate-major-transfer@v2021#第二条",
+            "undergraduate-major-transfer@v2021#第六条",
+            "undergraduate-major-transfer@v2021#第四条"
+          ],
+          "recall_at_8": null,
+          "reciprocal_rank": null,
+          "latency_ms": 227,
+          "timing": {},
+          "warnings": []
+        },
+        {
+          "id": "d020",
+          "question": "帮我查一下我的学号和成绩排名",
+          "category": "privacy",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [],
+          "retrieved_article_ids": [
+            "undergraduate-status-rules@v2021#第十二条",
+            "undergraduate-status-rules@v2021#第十一条",
+            "graduate-course-assessment@v2023#第二十条",
+            "undergraduate-status-rules@v2021#第九条",
+            "undergraduate-status-rules@v2021#第十九条",
+            "undergraduate-status-rules@v2021#第十五条",
+            "undergraduate-status-rules@v2021#第十三条",
+            "undergraduate-status-rules@v2021#第四十九条"
+          ],
+          "recall_at_8": null,
+          "reciprocal_rank": null,
+          "latency_ms": 72,
+          "timing": {},
+          "warnings": []
+        }
+      ]
+    },
+    "hybrid_rrf": {
+      "summary": {
+        "questions": 20,
+        "scored_questions": 14,
+        "skipped_no_expected": 6,
+        "article": {
+          "questions": 12,
+          "recall_at_8": 1.0,
+          "mrr": 0.8222,
+          "no_hit": 0
+        },
+        "section": {
+          "questions": 2,
+          "recall_at_8": 1.0,
+          "mrr": 1.0,
+          "no_hit": 0
+        },
+        "overall": {
+          "recall_at_8": 1.0,
+          "mrr": 0.8476
+        },
+        "latency_ms": {
+          "p50": 214.0,
+          "p95": 637.2
+        },
+        "rerank_latency_ms": {
+          "count": 0,
+          "p50": null,
+          "p95": null
+        }
+      },
+      "elapsed_ms": 5787,
+      "rows": [
+        {
+          "id": "d001",
+          "question": "申请国家奖学金需要满足哪些条件？",
+          "category": "single_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "national-aid-undergrad@v2021#第九条"
+          ],
+          "retrieved_article_ids": [
+            "national-aid-grad@v2022#第七条",
+            "national-aid-undergrad@v2021#第八条",
+            "national-aid-undergrad@v2021#第十条",
+            "national-aid-grad@v2022#第六条",
+            "national-aid-undergrad@v2021#第九条",
+            "national-aid-grad@v2022#第九条",
+            "national-aid-grad@v2022#第十二条",
+            "national-aid-undergrad@v2021#第十四条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 0.2,
+          "latency_ms": 73,
+          "timing": {
+            "dense_ms": 56.44,
+            "sparse_ms": 13.12,
+            "rerank_ms": 0.0
+          },
+          "warnings": [
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤"
+          ]
+        },
+        {
+          "id": "d002",
+          "question": "国家奖学金的奖励标准是多少？",
+          "category": "single_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "national-aid-undergrad@v2021#第七条"
+          ],
+          "retrieved_article_ids": [
+            "national-aid-undergrad@v2021#第七条",
+            "national-aid-grad@v2022#第五条",
+            "student-financial-aid@v2022#第十一条",
+            "student-financial-aid@v2022#第十二条",
+            "national-aid-undergrad@v2021#第十一条",
+            "national-aid-undergrad@v2021#第十条",
+            "national-aid-undergrad@v2021#第二十条",
+            "national-aid-undergrad@v2021#第三条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 1.0,
+          "latency_ms": 105,
+          "timing": {
+            "dense_ms": 83.34,
+            "sparse_ms": 14.76,
+            "rerank_ms": 0.0
+          },
+          "warnings": [
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤"
+          ]
+        },
+        {
+          "id": "d003",
+          "question": "本科生每学期选课学分的下限和上限分别是多少？",
+          "category": "single_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "course-selection@v2016#第六条"
+          ],
+          "retrieved_article_ids": [
+            "course-selection@v2016#第六条",
+            "general-education-elective@v2023#第八条",
+            "undergraduate-status-rules@v2021#第十九条",
+            "student-loan@v2018#第十条",
+            "general-education-elective@v2023#第十八条",
+            "course-selection@v2016#第十三条",
+            "general-education-elective@v2023#第十一条",
+            "course-selection@v2016#第四条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 1.0,
+          "latency_ms": 83,
+          "timing": {
+            "dense_ms": 65.84,
+            "sparse_ms": 14.59,
+            "rerank_ms": 0.0
+          },
+          "warnings": [
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤",
+            "PROFILE_UNDETERMINED: 用户未提供学生群体，结果保留可能限定该细目的条款"
+          ]
+        },
+        {
+          "id": "d004",
+          "question": "学生进入教室对着装有什么要求？",
+          "category": "single_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "classroom-rules@v2018#第十八条"
+          ],
+          "retrieved_article_ids": [
+            "classroom-rules@v2018#第十八条",
+            "classroom-rules@v2018#第二十四条",
+            "classroom-rules@v2018#第二十三条",
+            "classroom-rules@v2018#第二十五条",
+            "exam-room-rules@v2022#第十四条",
+            "lab-safety@v2015#第十一条",
+            "lab-safety@v2015#第二十二条",
+            "exam-room-rules@v2022#第二十九条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 1.0,
+          "latency_ms": 105,
+          "timing": {
+            "dense_ms": 52.96,
+            "sparse_ms": 49.74,
+            "rerank_ms": 0.0
+          },
+          "warnings": [
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤"
+          ]
+        },
+        {
+          "id": "d005",
+          "question": "哪些情形会被给予开除学籍处分？",
+          "category": "single_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "disciplinary-rules@v2017#第八条"
+          ],
+          "retrieved_article_ids": [
+            "disciplinary-rules@v2017#第八条",
+            "disciplinary-rules@v2017#第二十七条",
+            "disciplinary-rules@v2017#第四条",
+            "disciplinary-rules@v2017#第二十四条",
+            "disciplinary-rules@v2017#第二十二条",
+            "undergraduate-status-rules@v2021#第三十九条",
+            "disciplinary-rules@v2017#第二十六条",
+            "undergraduate-status-rules@v2021#第四十条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 1.0,
+          "latency_ms": 601,
+          "timing": {
+            "dense_ms": 448.47,
+            "sparse_ms": 135.44,
+            "rerank_ms": 0.0
+          },
+          "warnings": [
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤"
+          ]
+        },
+        {
+          "id": "d006",
+          "question": "本科学生一学期累计旷课多少学时会被给予纪律处分？",
+          "category": "single_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "disciplinary-rules@v2017#第十六条"
+          ],
+          "retrieved_article_ids": [
+            "disciplinary-rules@v2017#第十六条",
+            "undergraduate-status-rules@v2021#第三十五条",
+            "undergraduate-academic-warning@v2021#第五条",
+            "undergraduate-status-rules@v2021#第十九条",
+            "undergraduate-status-rules@v2021#第三十六条",
+            "disciplinary-rules@v2017#第二十四条",
+            "undergraduate-status-rules@v2021#第三十九条",
+            "undergraduate-status-rules@v2021#第三十八条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 1.0,
+          "latency_ms": 590,
+          "timing": {
+            "dense_ms": 493.52,
+            "sparse_ms": 86.03,
+            "rerank_ms": 0.0
+          },
+          "warnings": [
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤"
+          ]
+        },
+        {
+          "id": "d007",
+          "question": "微专业一般由多少门课程组成，总学分和培养周期是多少？",
+          "category": "single_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "micro-major@v2024#第五条"
+          ],
+          "retrieved_article_ids": [
+            "micro-major@v2024#第五条",
+            "micro-major@v2024#第十四条",
+            "micro-major@v2024#第二条",
+            "micro-major@v2024#第七条",
+            "dual-bachelor-degree@v2025#第七条",
+            "micro-major@v2024#第十一条",
+            "micro-major@v2024#第十三条",
+            "course-selection@v2016#第六条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 1.0,
+          "latency_ms": 108,
+          "timing": {
+            "dense_ms": 89.89,
+            "sparse_ms": 14.26,
+            "rerank_ms": 0.0
+          },
+          "warnings": [
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤"
+          ]
+        },
+        {
+          "id": "d008",
+          "question": "申请国家励志奖学金需要满足哪些条件？",
+          "category": "single_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "national-aid-undergrad@v2021#第十条"
+          ],
+          "retrieved_article_ids": [
+            "national-aid-undergrad@v2021#第十条",
+            "national-aid-undergrad@v2021#第八条",
+            "national-aid-undergrad@v2021#第十四条",
+            "national-aid-undergrad@v2021#第十一条",
+            "national-aid-undergrad@v2021#第七条",
+            "national-aid-undergrad@v2021#第三条",
+            "national-aid-grad@v2022#第七条",
+            "student-financial-aid@v2022#第十二条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 1.0,
+          "latency_ms": 223,
+          "timing": {
+            "dense_ms": 145.77,
+            "sparse_ms": 72.02,
+            "rerank_ms": 0.0
+          },
+          "warnings": [
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤"
+          ]
+        },
+        {
+          "id": "d009",
+          "question": "申请国家奖学金需要满足哪些条件？奖励标准是多少？",
+          "category": "multi_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "national-aid-undergrad@v2021#第七条",
+            "national-aid-undergrad@v2021#第九条"
+          ],
+          "retrieved_article_ids": [
+            "national-aid-undergrad@v2021#第八条",
+            "national-aid-undergrad@v2021#第十条",
+            "national-aid-undergrad@v2021#第七条",
+            "national-aid-grad@v2022#第六条",
+            "national-aid-grad@v2022#第七条",
+            "national-aid-undergrad@v2021#第九条",
+            "national-aid-grad@v2022#第五条",
+            "national-aid-undergrad@v2021#第十一条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 0.3333333333333333,
+          "latency_ms": 201,
+          "timing": {
+            "dense_ms": 139.18,
+            "sparse_ms": 48.75,
+            "rerank_ms": 0.0
+          },
+          "warnings": [
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤"
+          ]
+        },
+        {
+          "id": "d010",
+          "question": "学生违纪处分有哪些种类？处分期限一般多久？",
+          "category": "multi_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "disciplinary-rules@v2017#第四条",
+            "disciplinary-rules@v2017#第二十四条"
+          ],
+          "retrieved_article_ids": [
+            "disciplinary-rules@v2017#第二十四条",
+            "undergraduate-status-rules@v2021#第三十九条",
+            "disciplinary-rules@v2017#第四条",
+            "disciplinary-rules@v2017#第二十三条",
+            "disciplinary-rules@v2017#第三条",
+            "disciplinary-rules@v2017#第二十一条",
+            "disciplinary-rules@v2017#第二十五条",
+            "disciplinary-rules@v2017#第五条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 1.0,
+          "latency_ms": 485,
+          "timing": {
+            "dense_ms": 350.32,
+            "sparse_ms": 115.63,
+            "rerank_ms": 0.0
+          },
+          "warnings": [
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤"
+          ]
+        },
+        {
+          "id": "d011",
+          "question": "本科生申请转专业需要满足哪些基本条件？哪些情形不允许转专业？",
+          "category": "multi_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "undergraduate-major-transfer@v2021#第二条",
+            "undergraduate-major-transfer@v2021#第五条"
+          ],
+          "retrieved_article_ids": [
+            "undergraduate-major-transfer@v2021#第五条",
+            "undergraduate-status-rules@v2021#第二十一条",
+            "undergraduate-major-transfer@v2021#第十三条",
+            "undergraduate-major-transfer@v2021#第二条",
+            "undergraduate-school-transfer@v2021#第二条",
+            "undergraduate-status-rules@v2021#第二十二条",
+            "agri-phd-supervisor-rule-2025@v2025#第二十四条",
+            "agri-master-supervisor-rule-2025@v2025#第二十四条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 1.0,
+          "latency_ms": 502,
+          "timing": {
+            "dense_ms": 356.11,
+            "sparse_ms": 131.12,
+            "rerank_ms": 0.0
+          },
+          "warnings": [
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤",
+            "PROFILE_UNDETERMINED: 用户未提供学院，结果保留可能限定该细目的条款"
+          ]
+        },
+        {
+          "id": "d012",
+          "question": "推免生需要满足哪些基本条件和学业要求？",
+          "category": "multi_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "postgraduate-recommendation@v2025#第十条",
+            "postgraduate-recommendation@v2025#第十一条"
+          ],
+          "retrieved_article_ids": [
+            "agri-postgrad-recommendation-rule-2024@v2024#第七条",
+            "agri-postgrad-recommendation-rule-2024@v2024#第八条",
+            "postgraduate-recommendation@v2025#第十条",
+            "postgraduate-recommendation@v2025#第十一条",
+            "agri-postgrad-recommendation-rule-2024@v2024#第六条",
+            "agri-postgrad-recommendation-rule-2024@v2024#第五条",
+            "agri-postgrad-recommendation-rule-2024@v2024#第九条",
+            "postgraduate-recommendation@v2025#第十六条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 0.3333333333333333,
+          "latency_ms": 717,
+          "timing": {
+            "dense_ms": 523.11,
+            "sparse_ms": 168.66,
+            "rerank_ms": 0.0
+          },
+          "warnings": [
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤",
+            "PROFILE_UNDETERMINED: 用户未提供学院，结果保留可能限定该细目的条款",
+            "PROFILE_UNDETERMINED: 用户未提供年级/阶段，结果保留可能限定该细目的条款",
+            "PROFILE_UNDETERMINED: 用户未提供学籍状态，结果保留可能限定该细目的条款"
+          ]
+        },
+        {
+          "id": "d013",
+          "question": "数学与应用数学专业 2024 版培养方案的培养目标是什么？",
+          "category": "section",
+          "block_types": [
+            "section"
+          ],
+          "expected_article_ids": [
+            "info-ug-math-plan@v2024#二、培养目标"
+          ],
+          "retrieved_article_ids": [
+            "info-ug-math-plan@v2024#二、培养目标",
+            "info-ug-math-plan@v2024#九、人才培养目标实现矩阵",
+            "info-ug-math-plan@v2024#三、培养规格",
+            "info-ug-math-plan@v2024#十、培养计划进程表",
+            "agri-teacher-382368@v20240819#段落10",
+            "info-ug-math-plan@v2024#一、专业名称（中英文）；专业代码",
+            "info-ug-math-plan@v2024#七、学制及授予学位",
+            "info-ug-math-plan@v2024#六、专业核心课程"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 1.0,
+          "latency_ms": 140,
+          "timing": {
+            "dense_ms": 109.79,
+            "sparse_ms": 24.23,
+            "rerank_ms": 0.0
+          },
+          "warnings": [
+            "MULTIPLE_VERSIONS: info-ug-math-plan 返回 2 个届别版本，按最新生效日保留",
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤",
+            "PROFILE_UNDETERMINED: 用户未提供学院，结果保留可能限定该细目的条款",
+            "PROFILE_UNDETERMINED: 用户未提供专业，结果保留可能限定该细目的条款",
+            "PROFILE_UNDETERMINED: 用户未提供入学年份，结果保留可能限定该细目的条款"
+          ]
+        },
+        {
+          "id": "d014",
+          "question": "数学与应用数学专业 2024 版培养方案的专业核心课程有哪些？",
+          "category": "section",
+          "block_types": [
+            "section"
+          ],
+          "expected_article_ids": [
+            "info-ug-math-plan@v2024#六、专业核心课程"
+          ],
+          "retrieved_article_ids": [
+            "info-ug-math-plan@v2024#六、专业核心课程",
+            "info-ug-math-plan@v2024#十、培养计划进程表",
+            "info-ug-math-plan@v2024#五、主干学科",
+            "info-ug-ics-plan@v2022#五、专业核心课程",
+            "info-ug-bigdata-plan@v2024#六、专业核心课程",
+            "info-ug-imis-plan@v2024#六、专业核心课程",
+            "info-ug-se-plan@v2022#五、专业核心课程",
+            "info-ug-stat-plan@v2024#六、专业核心课程"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 1.0,
+          "latency_ms": 147,
+          "timing": {
+            "dense_ms": 108.57,
+            "sparse_ms": 28.12,
+            "rerank_ms": 0.0
+          },
+          "warnings": [
+            "MULTIPLE_VERSIONS: info-ug-math-plan 返回 2 个届别版本，按最新生效日保留",
+            "MULTIPLE_VERSIONS: info-ug-bigdata-plan 返回 2 个届别版本，按最新生效日保留",
+            "MULTIPLE_VERSIONS: info-ug-imis-plan 返回 2 个届别版本，按最新生效日保留",
+            "MULTIPLE_VERSIONS: info-ug-stat-plan 返回 2 个届别版本，按最新生效日保留",
+            "MULTIPLE_VERSIONS: info-ug-cs-plan 返回 2 个届别版本，按最新生效日保留",
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤",
+            "PROFILE_UNDETERMINED: 用户未提供学院，结果保留可能限定该细目的条款",
+            "PROFILE_UNDETERMINED: 用户未提供专业，结果保留可能限定该细目的条款",
+            "PROFILE_UNDETERMINED: 用户未提供入学年份，结果保留可能限定该细目的条款"
+          ]
+        },
+        {
+          "id": "d015",
+          "question": "学校附近哪家奶茶店最好喝？",
+          "category": "no_evidence",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [],
+          "retrieved_article_ids": [
+            "national-aid-grad@v2022#第二十七条",
+            "classroom-rules@v2018#第十八条",
+            "exam-room-rules@v2022#第三十一条",
+            "student-loan@v2018#第二条",
+            "official-reception@v2017#第六条",
+            "student-loan@v2018#第四条",
+            "lab-safety@v2015#第十九条",
+            "student-loan@v2018#第六条"
+          ],
+          "recall_at_8": null,
+          "reciprocal_rank": null,
+          "latency_ms": 239,
+          "timing": {
+            "dense_ms": 135.92,
+            "sparse_ms": 83.08,
+            "rerank_ms": 0.0
+          },
+          "warnings": [
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤",
+            "PROFILE_UNDETERMINED: 用户未提供学生群体，结果保留可能限定该细目的条款"
+          ]
+        },
+        {
+          "id": "d016",
+          "question": "隔壁学校的奖学金政策是什么？",
+          "category": "out_of_scope",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [],
+          "retrieved_article_ids": [
+            "student-financial-aid@v2022#第二十七条",
+            "national-aid-undergrad@v2021#第二十条",
+            "national-aid-grad@v2022#第十八条",
+            "national-aid-undergrad@v2021#第十一条",
+            "national-aid-undergrad@v2021#第三条",
+            "comprehensive-evaluation@v2020#第十一条",
+            "national-aid-grad@v2022#第十四条",
+            "national-aid-undergrad@v2021#第七条"
+          ],
+          "recall_at_8": null,
+          "reciprocal_rank": null,
+          "latency_ms": 246,
+          "timing": {
+            "dense_ms": 200.26,
+            "sparse_ms": 32.47,
+            "rerank_ms": 0.0
+          },
+          "warnings": [
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤"
+          ]
+        },
+        {
+          "id": "d017",
+          "question": "华南农业大学对火星殖民有什么规定？",
+          "category": "no_evidence",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [],
+          "retrieved_article_ids": [
+            "course-selection@v2016#第一条",
+            "course-selection@v2016#第三条",
+            "postdoc-management@v2024#第四十五条",
+            "degree-committee-charter@v2025#第一条",
+            "contract-management@v2020#第十条",
+            "master-doctor-degree-rules@v2025#第二十六条",
+            "national-aid-grad@v2022#第二十七条",
+            "disciplinary-rules@v2017#第十九条"
+          ],
+          "recall_at_8": null,
+          "reciprocal_rank": null,
+          "latency_ms": 150,
+          "timing": {
+            "dense_ms": 113.68,
+            "sparse_ms": 27.75,
+            "rerank_ms": 0.0
+          },
+          "warnings": [
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤"
+          ]
+        },
+        {
+          "id": "d018",
+          "question": "2020 年版本的国家奖学金办法是怎么规定的？",
+          "category": "historical",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [],
+          "retrieved_article_ids": [
+            "national-aid-undergrad@v2021#第三条",
+            "national-aid-grad@v2022#第二条",
+            "national-aid-undergrad@v2021#第十一条",
+            "national-aid-undergrad@v2021#第七条",
+            "national-aid-grad@v2022#第三十条",
+            "national-aid-undergrad@v2021#第十八条",
+            "national-aid-undergrad@v2021#第八条",
+            "national-aid-undergrad@v2021#第二十条"
+          ],
+          "recall_at_8": null,
+          "reciprocal_rank": null,
+          "latency_ms": 217,
+          "timing": {
+            "dense_ms": 173.79,
+            "sparse_ms": 36.08,
+            "rerank_ms": 0.0
+          },
+          "warnings": [
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤"
+          ]
+        },
+        {
+          "id": "d019",
+          "question": "去年的转专业政策是什么？",
+          "category": "historical",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [],
+          "retrieved_article_ids": [
+            "undergraduate-major-transfer@v2021#第十三条",
+            "course-selection@v2016#第九条",
+            "undergraduate-major-transfer@v2021#第三条",
+            "undergraduate-status-rules@v2021#第二十一条",
+            "undergraduate-major-transfer@v2021#第五条",
+            "undergraduate-major-transfer@v2021#第十条",
+            "undergraduate-major-transfer@v2021#第七条",
+            "undergraduate-status-rules@v2021#第二十二条"
+          ],
+          "recall_at_8": null,
+          "reciprocal_rank": null,
+          "latency_ms": 633,
+          "timing": {
+            "dense_ms": 477.34,
+            "sparse_ms": 132.12,
+            "rerank_ms": 0.0
+          },
+          "warnings": [
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤"
+          ]
+        },
+        {
+          "id": "d020",
+          "question": "帮我查一下我的学号和成绩排名",
+          "category": "privacy",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [],
+          "retrieved_article_ids": [
+            "graduate-course-assessment@v2023#第二十条",
+            "undergraduate-status-rules@v2021#第十二条",
+            "undergraduate-status-rules@v2021#第九条",
+            "graduate-course-assessment@v2023#第二十二条",
+            "national-aid-undergrad@v2021#第九条",
+            "undergraduate-status-rules@v2021#第十一条",
+            "postgraduate-recommendation@v2025#第十六条",
+            "college-aid@v2015#第五条"
+          ],
+          "recall_at_8": null,
+          "reciprocal_rank": null,
+          "latency_ms": 211,
+          "timing": {
+            "dense_ms": 123.69,
+            "sparse_ms": 80.64,
+            "rerank_ms": 0.0
+          },
+          "warnings": [
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤",
+            "PROFILE_UNDETERMINED: 用户未提供年级/阶段，结果保留可能限定该细目的条款",
+            "PROFILE_UNDETERMINED: 用户未提供学籍状态，结果保留可能限定该细目的条款"
+          ]
+        }
+      ]
+    },
+    "hybrid_rerank": {
+      "summary": {
+        "questions": 20,
+        "scored_questions": 14,
+        "skipped_no_expected": 6,
+        "article": {
+          "questions": 12,
+          "recall_at_8": 1.0,
+          "mrr": 0.9583,
+          "no_hit": 0
+        },
+        "section": {
+          "questions": 2,
+          "recall_at_8": 1.0,
+          "mrr": 0.75,
+          "no_hit": 0
+        },
+        "overall": {
+          "recall_at_8": 1.0,
+          "mrr": 0.9286
+        },
+        "latency_ms": {
+          "p50": 1325.5,
+          "p95": 1677.3500000000001
+        },
+        "rerank_latency_ms": {
+          "count": 20,
+          "p50": 1038.0,
+          "p95": 1474.45
+        }
+      },
+      "elapsed_ms": 26968,
+      "rows": [
+        {
+          "id": "d001",
+          "question": "申请国家奖学金需要满足哪些条件？",
+          "category": "single_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "national-aid-undergrad@v2021#第九条"
+          ],
+          "retrieved_article_ids": [
+            "national-aid-undergrad@v2021#第九条",
+            "national-aid-grad@v2022#第七条",
+            "national-aid-undergrad@v2021#第八条",
+            "national-aid-grad@v2022#第六条",
+            "national-aid-undergrad@v2021#第十条",
+            "national-aid-grad@v2022#第八条",
+            "national-aid-grad@v2022#第九条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 1.0,
+          "latency_ms": 1722,
+          "timing": {
+            "dense_ms": 165.67,
+            "sparse_ms": 28.87,
+            "rerank_ms": 1521.78
+          },
+          "warnings": [
+            "TOKEN_BUDGET: 跳过 national-aid-grad@v2022#第十四条",
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤"
+          ]
+        },
+        {
+          "id": "d002",
+          "question": "国家奖学金的奖励标准是多少？",
+          "category": "single_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "national-aid-undergrad@v2021#第七条"
+          ],
+          "retrieved_article_ids": [
+            "national-aid-grad@v2022#第五条",
+            "national-aid-undergrad@v2021#第七条",
+            "student-financial-aid@v2022#第十一条",
+            "national-aid-undergrad@v2021#第九条",
+            "national-aid-grad@v2022#第七条",
+            "national-aid-undergrad@v2021#第十一条",
+            "student-financial-aid@v2022#第十二条",
+            "national-aid-grad@v2022#第六条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 0.5,
+          "latency_ms": 1121,
+          "timing": {
+            "dense_ms": 69.53,
+            "sparse_ms": 12.08,
+            "rerank_ms": 1033.82
+          },
+          "warnings": [
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤"
+          ]
+        },
+        {
+          "id": "d003",
+          "question": "本科生每学期选课学分的下限和上限分别是多少？",
+          "category": "single_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "course-selection@v2016#第六条"
+          ],
+          "retrieved_article_ids": [
+            "course-selection@v2016#第六条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 1.0,
+          "latency_ms": 1164,
+          "timing": {
+            "dense_ms": 119.4,
+            "sparse_ms": 19.39,
+            "rerank_ms": 1022.91
+          },
+          "warnings": [
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤"
+          ]
+        },
+        {
+          "id": "d004",
+          "question": "学生进入教室对着装有什么要求？",
+          "category": "single_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "classroom-rules@v2018#第十八条"
+          ],
+          "retrieved_article_ids": [
+            "classroom-rules@v2018#第十八条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 1.0,
+          "latency_ms": 1332,
+          "timing": {
+            "dense_ms": 151.16,
+            "sparse_ms": 80.52,
+            "rerank_ms": 1086.61
+          },
+          "warnings": [
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤"
+          ]
+        },
+        {
+          "id": "d005",
+          "question": "哪些情形会被给予开除学籍处分？",
+          "category": "single_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "disciplinary-rules@v2017#第八条"
+          ],
+          "retrieved_article_ids": [
+            "disciplinary-rules@v2017#第八条",
+            "disciplinary-rules@v2017#第十条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 1.0,
+          "latency_ms": 1627,
+          "timing": {
+            "dense_ms": 438.86,
+            "sparse_ms": 136.58,
+            "rerank_ms": 1037.03
+          },
+          "warnings": [
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤"
+          ]
+        },
+        {
+          "id": "d006",
+          "question": "本科学生一学期累计旷课多少学时会被给予纪律处分？",
+          "category": "single_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "disciplinary-rules@v2017#第十六条"
+          ],
+          "retrieved_article_ids": [
+            "disciplinary-rules@v2017#第十六条",
+            "undergraduate-status-rules@v2021#第三十六条",
+            "undergraduate-status-rules@v2021#第三十五条",
+            "course-study@v2022#第五条",
+            "undergraduate-academic-warning@v2021#第五条",
+            "general-education-elective@v2023#第十四条",
+            "undergraduate-status-rules@v2021#第十四条",
+            "undergraduate-status-rules@v2021#第十九条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 1.0,
+          "latency_ms": 1675,
+          "timing": {
+            "dense_ms": 478.67,
+            "sparse_ms": 160.21,
+            "rerank_ms": 1021.22
+          },
+          "warnings": [
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤"
+          ]
+        },
+        {
+          "id": "d007",
+          "question": "微专业一般由多少门课程组成，总学分和培养周期是多少？",
+          "category": "single_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "micro-major@v2024#第五条"
+          ],
+          "retrieved_article_ids": [
+            "micro-major@v2024#第五条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 1.0,
+          "latency_ms": 974,
+          "timing": {
+            "dense_ms": 78.15,
+            "sparse_ms": 28.32,
+            "rerank_ms": 864.97
+          },
+          "warnings": [
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤"
+          ]
+        },
+        {
+          "id": "d008",
+          "question": "申请国家励志奖学金需要满足哪些条件？",
+          "category": "single_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "national-aid-undergrad@v2021#第十条"
+          ],
+          "retrieved_article_ids": [
+            "national-aid-undergrad@v2021#第十条",
+            "national-aid-undergrad@v2021#第八条",
+            "national-aid-undergrad@v2021#第九条",
+            "national-aid-grad@v2022#第七条",
+            "national-aid-grad@v2022#第六条",
+            "national-aid-undergrad@v2021#第七条",
+            "national-aid-undergrad@v2021#第十一条",
+            "financial-hardship@v2020#第十四条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 1.0,
+          "latency_ms": 1332,
+          "timing": {
+            "dense_ms": 194.3,
+            "sparse_ms": 79.35,
+            "rerank_ms": 1050.4
+          },
+          "warnings": [
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤",
+            "PROFILE_UNDETERMINED: 用户未提供学生群体，结果保留可能限定该细目的条款"
+          ]
+        },
+        {
+          "id": "d009",
+          "question": "申请国家奖学金需要满足哪些条件？奖励标准是多少？",
+          "category": "multi_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "national-aid-undergrad@v2021#第七条",
+            "national-aid-undergrad@v2021#第九条"
+          ],
+          "retrieved_article_ids": [
+            "national-aid-undergrad@v2021#第九条",
+            "national-aid-grad@v2022#第七条",
+            "national-aid-grad@v2022#第六条",
+            "national-aid-undergrad@v2021#第八条",
+            "national-aid-grad@v2022#第八条",
+            "national-aid-undergrad@v2021#第十条",
+            "national-aid-grad@v2022#第九条",
+            "national-aid-undergrad@v2021#第七条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 1.0,
+          "latency_ms": 1144,
+          "timing": {
+            "dense_ms": 101.98,
+            "sparse_ms": 16.88,
+            "rerank_ms": 1020.98
+          },
+          "warnings": [
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤"
+          ]
+        },
+        {
+          "id": "d010",
+          "question": "学生违纪处分有哪些种类？处分期限一般多久？",
+          "category": "multi_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "disciplinary-rules@v2017#第四条",
+            "disciplinary-rules@v2017#第二十四条"
+          ],
+          "retrieved_article_ids": [
+            "disciplinary-rules@v2017#第二十四条",
+            "disciplinary-rules@v2017#第四条",
+            "undergraduate-status-rules@v2021#第三十九条",
+            "disciplinary-rules@v2017#第十六条",
+            "disciplinary-rules@v2017#第八条",
+            "disciplinary-rules@v2017#第七条",
+            "disciplinary-rules@v2017#第十一条",
+            "disciplinary-rules@v2017#第十条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 1.0,
+          "latency_ms": 1547,
+          "timing": {
+            "dense_ms": 372.35,
+            "sparse_ms": 134.74,
+            "rerank_ms": 1022.5
+          },
+          "warnings": [
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤"
+          ]
+        },
+        {
+          "id": "d011",
+          "question": "本科生申请转专业需要满足哪些基本条件？哪些情形不允许转专业？",
+          "category": "multi_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "undergraduate-major-transfer@v2021#第二条",
+            "undergraduate-major-transfer@v2021#第五条"
+          ],
+          "retrieved_article_ids": [
+            "undergraduate-major-transfer@v2021#第二条",
+            "undergraduate-major-transfer@v2021#第五条",
+            "undergraduate-status-rules@v2021#第二十一条",
+            "undergraduate-school-transfer@v2021#第二条",
+            "undergraduate-status-rules@v2021#第二十二条",
+            "undergraduate-major-transfer@v2021#第三条",
+            "undergraduate-major-transfer@v2021#第四条",
+            "undergraduate-major-transfer@v2021#第十三条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 1.0,
+          "latency_ms": 1575,
+          "timing": {
+            "dense_ms": 361.8,
+            "sparse_ms": 162.05,
+            "rerank_ms": 1039.71
+          },
+          "warnings": [
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤"
+          ]
+        },
+        {
+          "id": "d012",
+          "question": "推免生需要满足哪些基本条件和学业要求？",
+          "category": "multi_article",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [
+            "postgraduate-recommendation@v2025#第十条",
+            "postgraduate-recommendation@v2025#第十一条"
+          ],
+          "retrieved_article_ids": [
+            "postgraduate-recommendation@v2025#第十条",
+            "postgraduate-recommendation@v2025#第十一条",
+            "agri-postgrad-recommendation-rule-2024@v2024#第七条",
+            "agri-postgrad-recommendation-rule-2024@v2024#第八条",
+            "agri-postgrad-recommendation-rule-2024@v2024#第六条",
+            "postgraduate-recommendation@v2025#第十八条",
+            "postgraduate-recommendation@v2025#第十三条",
+            "postgraduate-recommendation@v2025#第十四条"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 1.0,
+          "latency_ms": 1675,
+          "timing": {
+            "dense_ms": 455.81,
+            "sparse_ms": 138.23,
+            "rerank_ms": 1066.4
+          },
+          "warnings": [
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤",
+            "PROFILE_UNDETERMINED: 用户未提供学院，结果保留可能限定该细目的条款",
+            "PROFILE_UNDETERMINED: 用户未提供年级/阶段，结果保留可能限定该细目的条款",
+            "PROFILE_UNDETERMINED: 用户未提供学籍状态，结果保留可能限定该细目的条款"
+          ]
+        },
+        {
+          "id": "d013",
+          "question": "数学与应用数学专业 2024 版培养方案的培养目标是什么？",
+          "category": "section",
+          "block_types": [
+            "section"
+          ],
+          "expected_article_ids": [
+            "info-ug-math-plan@v2024#二、培养目标"
+          ],
+          "retrieved_article_ids": [
+            "info-ug-math-plan@v2024#三、培养规格",
+            "info-ug-math-plan@v2024#二、培养目标",
+            "info-ug-math-plan@v2024#九、人才培养目标实现矩阵",
+            "info-ug-math-plan@v2024#十、培养计划进程表",
+            "info-ug-math-plan@v2024#五、主干学科",
+            "info-ug-math-plan@v2024#七、学制及授予学位",
+            "info-majors-undergrad@v2026#一、数学系",
+            "info-ug-math-plan@v2024#六、专业核心课程"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 0.5,
+          "latency_ms": 1074,
+          "timing": {
+            "dense_ms": 249.69,
+            "sparse_ms": 77.14,
+            "rerank_ms": 737.31
+          },
+          "warnings": [
+            "MULTIPLE_VERSIONS: info-ug-math-plan 返回 2 个届别版本，按最新生效日保留",
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤",
+            "PROFILE_UNDETERMINED: 用户未提供学院，结果保留可能限定该细目的条款",
+            "PROFILE_UNDETERMINED: 用户未提供专业，结果保留可能限定该细目的条款",
+            "PROFILE_UNDETERMINED: 用户未提供入学年份，结果保留可能限定该细目的条款"
+          ]
+        },
+        {
+          "id": "d014",
+          "question": "数学与应用数学专业 2024 版培养方案的专业核心课程有哪些？",
+          "category": "section",
+          "block_types": [
+            "section"
+          ],
+          "expected_article_ids": [
+            "info-ug-math-plan@v2024#六、专业核心课程"
+          ],
+          "retrieved_article_ids": [
+            "info-ug-math-plan@v2024#六、专业核心课程",
+            "info-ug-math-plan@v2024#十、培养计划进程表",
+            "info-ug-math-plan@v2024#五、主干学科",
+            "info-ug-math-plan@v2024#九、人才培养目标实现矩阵",
+            "info-ug-stat-plan@v2024#十一、培养计划进程表",
+            "info-ug-stat-plan@v2024#六、专业核心课程",
+            "info-ug-imis-plan@v2024#十、培养计划进程表",
+            "info-ug-ics-plan@v2022#五、专业核心课程"
+          ],
+          "recall_at_8": 1.0,
+          "reciprocal_rank": 1.0,
+          "latency_ms": 1129,
+          "timing": {
+            "dense_ms": 64.52,
+            "sparse_ms": 14.38,
+            "rerank_ms": 1046.19
+          },
+          "warnings": [
+            "MULTIPLE_VERSIONS: info-ug-math-plan 返回 2 个届别版本，按最新生效日保留",
+            "MULTIPLE_VERSIONS: info-ug-bigdata-plan 返回 2 个届别版本，按最新生效日保留",
+            "MULTIPLE_VERSIONS: info-ug-imis-plan 返回 2 个届别版本，按最新生效日保留",
+            "MULTIPLE_VERSIONS: info-ug-stat-plan 返回 2 个届别版本，按最新生效日保留",
+            "MULTIPLE_VERSIONS: info-ug-cs-plan 返回 2 个届别版本，按最新生效日保留",
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤",
+            "PROFILE_UNDETERMINED: 用户未提供学院，结果保留可能限定该细目的条款",
+            "PROFILE_UNDETERMINED: 用户未提供专业，结果保留可能限定该细目的条款",
+            "PROFILE_UNDETERMINED: 用户未提供入学年份，结果保留可能限定该细目的条款"
+          ]
+        },
+        {
+          "id": "d015",
+          "question": "学校附近哪家奶茶店最好喝？",
+          "category": "no_evidence",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [],
+          "retrieved_article_ids": [],
+          "recall_at_8": null,
+          "reciprocal_rank": null,
+          "latency_ms": 1319,
+          "timing": {
+            "dense_ms": 72.21,
+            "sparse_ms": 14.31,
+            "rerank_ms": 1229.69
+          },
+          "warnings": [
+            "RERANK_BELOW_MARGIN: top=0.5015 < 0.6300",
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤"
+          ]
+        },
+        {
+          "id": "d016",
+          "question": "隔壁学校的奖学金政策是什么？",
+          "category": "out_of_scope",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [],
+          "retrieved_article_ids": [],
+          "recall_at_8": null,
+          "reciprocal_rank": null,
+          "latency_ms": 1344,
+          "timing": {
+            "dense_ms": 60.14,
+            "sparse_ms": 16.21,
+            "rerank_ms": 1263.93
+          },
+          "warnings": [
+            "RERANK_BELOW_MARGIN: top=0.5022 < 0.6300",
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤"
+          ]
+        },
+        {
+          "id": "d017",
+          "question": "华南农业大学对火星殖民有什么规定？",
+          "category": "no_evidence",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [],
+          "retrieved_article_ids": [],
+          "recall_at_8": null,
+          "reciprocal_rank": null,
+          "latency_ms": 1121,
+          "timing": {
+            "dense_ms": 146.88,
+            "sparse_ms": 22.02,
+            "rerank_ms": 942.82
+          },
+          "warnings": [
+            "RERANK_BELOW_MARGIN: top=0.5226 < 0.6300",
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤"
+          ]
+        },
+        {
+          "id": "d018",
+          "question": "2020 年版本的国家奖学金办法是怎么规定的？",
+          "category": "historical",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [],
+          "retrieved_article_ids": [],
+          "recall_at_8": null,
+          "reciprocal_rank": null,
+          "latency_ms": 1257,
+          "timing": {
+            "dense_ms": 54.08,
+            "sparse_ms": 9.97,
+            "rerank_ms": 1190.13
+          },
+          "warnings": [
+            "RERANK_BELOW_MARGIN: top=0.5743 < 0.6300",
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤"
+          ]
+        },
+        {
+          "id": "d019",
+          "question": "去年的转专业政策是什么？",
+          "category": "historical",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [],
+          "retrieved_article_ids": [],
+          "recall_at_8": null,
+          "reciprocal_rank": null,
+          "latency_ms": 1254,
+          "timing": {
+            "dense_ms": 212.56,
+            "sparse_ms": 38.17,
+            "rerank_ms": 996.61
+          },
+          "warnings": [
+            "RERANK_BELOW_MARGIN: top=0.5956 < 0.6300",
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤"
+          ]
+        },
+        {
+          "id": "d020",
+          "question": "帮我查一下我的学号和成绩排名",
+          "category": "privacy",
+          "block_types": [
+            "article"
+          ],
+          "expected_article_ids": [],
+          "retrieved_article_ids": [],
+          "recall_at_8": null,
+          "reciprocal_rank": null,
+          "latency_ms": 1571,
+          "timing": {
+            "dense_ms": 71.45,
+            "sparse_ms": 20.67,
+            "rerank_ms": 1472.12
+          },
+          "warnings": [
+            "RERANK_BELOW_MARGIN: top=0.5060 < 0.6300",
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤"
+          ]
+        }
+      ]
+    }
+  }
+}

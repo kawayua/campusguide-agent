@@ -32,6 +32,7 @@ data/handoff/*
 !data/handoff/.gitkeep
 data/manifest.json
 data/vector_manifest.json
+data/sparse_vocab.json
 data/traces/
 data/qdrant_storage/
 data/qdrant_local/

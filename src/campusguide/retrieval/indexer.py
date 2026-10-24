@@ -1,11 +1,12 @@
 """articles.jsonl -> Qdrant 向量点与 vector_manifest。
 
-W2 只写 dense 向量；collection 保留 W1 的 sparse 配置，W4 再补 sparse。
-点 ID 使用 UUID5，保证同一 ``article_id + part_no`` 重复构建幂等。
+W4 同时写入 dense 与 BM25 sparse 向量。collection 使用命名向量，
+点 ID 仍用 UUID5，保证同一 ``article_id + part_no`` 重复构建幂等。
 """
 
 from __future__ import annotations
 
+import hashlib
 import json
 import uuid
 from collections import Counter
@@ -21,8 +22,9 @@ from campusguide.config import RetrievalConfig
 from campusguide.domain.models import Article
 from campusguide.ingest.build_index import init_qdrant_collection
 from campusguide.retrieval.embedder import EmbeddingProvider
+from campusguide.retrieval.sparse import SparseEncoder
 
-VECTOR_MANIFEST_SCHEMA_VERSION = "1.0"
+VECTOR_MANIFEST_SCHEMA_VERSION = "1.1"
 POINT_NAMESPACE = "campusguide"
 
 
@@ -74,6 +76,16 @@ def article_payload(article: Article) -> dict[str, Any]:
         "audience": [audience.value for audience in article.audience],
         "audience_colleges": list(detail.colleges) if detail else [],
         "audience_majors": list(detail.majors) if detail else [],
+        "audience_intake_years": list(detail.intake_years) if detail else [],
+        "audience_intake_from": detail.intake_from if detail else None,
+        "audience_graduating_years": list(detail.graduating_years) if detail else [],
+        "audience_stages": [stage.value for stage in detail.stages] if detail else [],
+        "audience_program_types": (
+            [program_type.value for program_type in detail.program_types] if detail else []
+        ),
+        "audience_groups": [group.value for group in detail.groups] if detail else [],
+        "audience_status": [status.value for status in detail.status] if detail else [],
+        "audience_cycle": detail.cycle if detail else None,
         "status": article.status.value,
         "effective_from": _rfc3339(article.effective_from),
         "effective_to": _rfc3339(article.effective_to),
@@ -85,6 +97,22 @@ def article_payload(article: Article) -> dict[str, Any]:
         "flow_ids": list(article.flow_ids),
         "source_sha256": article.source_sha256,
     }
+
+
+def make_index_version(
+    *,
+    collection: str,
+    embedding_mode: str,
+    source_content_hash: str | None,
+    sparse_version: str | None,
+) -> str:
+    """稳定、可比较的索引版本号；应用启动时用于校验 server 与本地一致。"""
+    digest = hashlib.sha256()
+    digest.update(collection.encode("utf-8"))
+    digest.update(embedding_mode.encode("utf-8"))
+    digest.update((source_content_hash or "").encode("utf-8"))
+    digest.update((sparse_version or "").encode("utf-8"))
+    return f"{collection}@{embedding_mode}-{digest.hexdigest()[:12]}"
 
 
 def load_articles(path: str | Path) -> list[Article]:
@@ -107,11 +135,13 @@ def build_vector_index(
     articles: Sequence[Article],
     embedder: EmbeddingProvider,
     retrieval: RetrievalConfig,
+    sparse_encoder: SparseEncoder | None = None,
+    source_content_hash: str | None = None,
     batch_size: int = 16,
     recreate: bool = False,
     progress: Callable[[int, int], None] | None = None,
 ) -> dict[str, Any]:
-    """写入 dense 向量并返回 vector manifest 内容（不落盘）。"""
+    """写入 dense（+sparse）向量并返回 vector manifest 内容（不落盘）。"""
     indexable = [article for article in articles if article.is_indexable]
     if not indexable:
         raise VectorIndexError("没有可索引块，拒绝构建空向量集合")
@@ -135,21 +165,40 @@ def build_vector_index(
             f"{embedder.dimension} 不一致，请用 --recreate 重建"
         )
 
+    if sparse_encoder is not None:
+        info = client.get_collection(retrieval.collection)
+        sparse_config = getattr(info.config.params, "sparse_vectors", None) or {}
+        if retrieval.sparse_vector_name not in sparse_config:
+            raise VectorIndexError(
+                f"collection 缺少 sparse 向量 {retrieval.sparse_vector_name!r}；"
+                "W4 重建必须使用 --recreate"
+            )
+
     total = len(indexable)
     written = 0
     for start in range(0, total, batch_size):
         batch = indexable[start : start + batch_size]
-        vectors = embedder.embed_documents([embedding_text(article) for article in batch])
+        texts = [embedding_text(article) for article in batch]
+        vectors = embedder.embed_documents(texts)
         if len(vectors) != len(batch):
             raise VectorIndexError("embedding 返回数量与输入块数不一致")
-        points = [
-            PointStruct(
-                id=point_id(article.article_id, article.part_no),
-                vector={retrieval.dense_vector_name: vector},
-                payload=article_payload(article),
+        sparse_vectors = (
+            sparse_encoder.encode_documents(texts) if sparse_encoder is not None else None
+        )
+        if sparse_vectors is not None and len(sparse_vectors) != len(batch):
+            raise VectorIndexError("sparse encoder 返回数量与输入块数不一致")
+        points = []
+        for offset, (article, vector) in enumerate(zip(batch, vectors, strict=True)):
+            point_vector: dict[str, Any] = {retrieval.dense_vector_name: vector}
+            if sparse_vectors is not None:
+                point_vector[retrieval.sparse_vector_name] = sparse_vectors[offset]
+            points.append(
+                PointStruct(
+                    id=point_id(article.article_id, article.part_no),
+                    vector=point_vector,
+                    payload=article_payload(article),
+                )
             )
-            for article, vector in zip(batch, vectors, strict=True)
-        ]
         client.upsert(
             collection_name=retrieval.collection,
             points=points,
@@ -160,13 +209,32 @@ def build_vector_index(
             progress(written, total)
 
     counts = Counter(article.block_type.value for article in indexable)
+    embedding_mode = "hybrid" if sparse_encoder is not None else "dense-only"
+    sparse_info: dict[str, Any] = {"enabled": sparse_encoder is not None}
+    if sparse_encoder is not None:
+        sparse_index = getattr(sparse_encoder, "index", None)
+        sparse_info.update(
+            {
+                "vector_name": retrieval.sparse_vector_name,
+                "mode": "bm25",
+                "version": sparse_encoder.version,
+                "k1": getattr(sparse_index, "k1", None),
+                "b": getattr(sparse_index, "b", None),
+                "doc_count": getattr(sparse_index, "doc_count", None),
+                "avg_doc_len": getattr(sparse_index, "avg_doc_len", None),
+                "idf_hash": getattr(sparse_index, "idf_hash", None),
+                "tokenizer_version": getattr(sparse_index, "tokenizer_version", None),
+            }
+        )
     manifest = {
         "schema_version": VECTOR_MANIFEST_SCHEMA_VERSION,
         "collection": retrieval.collection,
         "alias": retrieval.alias,
+        "embedding_mode": embedding_mode,
         "embedding_model": embedder.model_name,
         "dimension": embedder.dimension,
         "dense_vector_name": retrieval.dense_vector_name,
+        "sparse": sparse_info,
         "points": written,
         "block_types": dict(sorted(counts.items())),
         "device": embedder.device,
@@ -174,6 +242,12 @@ def build_vector_index(
         "embedding_text": "标题/章节/位置/正文",
         "warnings": warnings,
     }
+    manifest["index_version"] = make_index_version(
+        collection=retrieval.collection,
+        embedding_mode=embedding_mode,
+        source_content_hash=source_content_hash,
+        sparse_version=sparse_encoder.version if sparse_encoder is not None else None,
+    )
     return manifest
 
 
@@ -245,5 +319,12 @@ def verify_vector_manifest(
         expected_size = int(manifest.get("dimension", 0))
         if actual_size != expected_size:
             problems.append(f"维度不一致：manifest={expected_size}, qdrant={actual_size}")
+
+    sparse_info = manifest.get("sparse") or {}
+    if sparse_info.get("enabled"):
+        sparse_vectors = getattr(info.config.params, "sparse_vectors", None) or {}
+        sparse_name = sparse_info.get("vector_name", "sparse")
+        if sparse_name not in sparse_vectors:
+            problems.append(f"collection 缺少 sparse 向量：{sparse_name}")
 
     return problems

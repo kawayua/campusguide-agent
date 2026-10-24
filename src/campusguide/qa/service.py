@@ -1,13 +1,15 @@
-"""W3 单轮问答线性编排。
+"""W4 单轮问答线性编排。
 
-guard -> retrieval -> （空结果）废止探针 -> scope -> advisor
+guard -> MCP search -> （空结果）废止探针 -> scope -> advisor
       -> deterministic verifier -> finalize -> trace
 
-W3 不修改 W2 的检索/生成主路径，只在其后增加 scope 与 claim 核对层。
+W3 的核对逻辑不变；W4 只把检索换成 ``SearchClient``（生产为 policy-search
+MCP，测试为 fake/legacy adapter），并增加 profile 与 index_version 校验。
 """
 
 from __future__ import annotations
 
+import contextlib
 import time
 import uuid
 from dataclasses import dataclass, field
@@ -25,12 +27,24 @@ from campusguide.domain.enums import (
     VerificationDecision,
 )
 from campusguide.domain.models import (
+    Article,
+    ArticlePublic,
     Citation,
     Claim,
     Evidence,
     PolicyFilters,
     VerificationIssue,
     VerificationResult,
+)
+from campusguide.domain.profiles import UserProfile
+from campusguide.mcp.client import SearchClient, SearchResponse
+from campusguide.mcp.schemas import (
+    ErrorCode,
+    SearchArticlesData,
+    SearchHit,
+    ToolError,
+    policy_filters_from_request,
+    search_request_from_filters,
 )
 from campusguide.observability.redact import redact_sensitive
 from campusguide.observability.trace import TraceWriter
@@ -42,7 +56,6 @@ from campusguide.qa.finalize import (
 )
 from campusguide.qa.guard import MAX_QUERY_CHARS, check_guard
 from campusguide.retrieval.normalize import normalize_query
-from campusguide.retrieval.service import DenseRetriever, RetrievalError
 from campusguide.verification.claims import ClaimValidator
 from campusguide.verification.scope import ScopeResult, apply_scope
 from campusguide.verification.verifier import Verifier, VerifyReport
@@ -72,13 +85,99 @@ _MESSAGES = {
     OutcomeCode.INDEX_UNAVAILABLE: (
         "向量索引不可用（Qdrant 未启动或索引未构建）。请先启动 Qdrant 并运行 build_vectors.py。"
     ),
+    OutcomeCode.TOOL_UNAVAILABLE: (
+        "检索工具不可用（MCP server 未启动、超时或重排模型不可用）。系统不会在无检索证据时作答。"
+    ),
 }
+
+
+class _RetrieverSearchClient:
+    """测试/离线兼容：把旧 ``DenseRetriever`` 包装成 SearchClient。
+
+    生产路径不使用该类；QAService 本身仍只依赖 SearchClient 协议。
+    """
+
+    def __init__(self, retriever: Any) -> None:
+        self._retriever = retriever
+
+    def warmup(self) -> None:
+        warmup = getattr(self._retriever, "warmup", None)
+        if warmup is not None:
+            warmup()
+
+    def search_articles(
+        self,
+        request: Any,
+        *,
+        timeout: float | None = None,
+    ) -> SearchResponse:
+        from campusguide.retrieval.service import RetrievalError
+
+        filters = policy_filters_from_request(request)
+        try:
+            result: Any = self._retriever.retrieve(
+                request.query,
+                filters=filters,
+            )
+        except RetrievalError as exc:
+            raise ToolError(ErrorCode.INDEX_UNAVAILABLE, str(exc)) from exc
+        hits = [
+            SearchHit(
+                article_id=item.article.article_id,
+                part_no=item.article.part_no,
+                block_type=item.article.block_type.value,
+                article=ArticlePublic.from_article(item.article),
+                dense_score=item.dense_score,
+                sparse_score=item.sparse_score,
+                rrf_score=item.rrf_score,
+                rerank_score=item.rerank_score,
+                matched_spans=list(item.matched_spans),
+                retrieval_query=item.retrieval_query,
+                rank=item.rank,
+            )
+            for item in result.evidence
+        ]
+        data = SearchArticlesData(
+            query=request.query,
+            queries=list(result.queries),
+            articles=hits,
+            index_version="",
+            candidates=result.candidates,
+            warnings=list(result.notes),
+        )
+        return SearchResponse(data=data, server="legacy-retriever", latency_ms=0)
+
+    def get_article(self, article_id: str, part_no: int | None = None) -> Any:
+        raise NotImplementedError("legacy retriever 不支持 get_article")
+
+
+def _evidence_from_hits(data: SearchArticlesData) -> list[Evidence]:
+    evidence: list[Evidence] = []
+    for hit in data.articles:
+        evidence.append(
+            Evidence(
+                article=_article_from_public(hit.article),
+                dense_score=hit.dense_score,
+                sparse_score=hit.sparse_score,
+                rrf_score=hit.rrf_score,
+                rerank_score=hit.rerank_score,
+                matched_spans=list(hit.matched_spans),
+                retrieval_query=hit.retrieval_query,
+                rank=hit.rank,
+            )
+        )
+    return evidence
+
+
+def _article_from_public(public: ArticlePublic) -> Article:
+    return Article.model_validate(public.model_dump())
 
 
 @dataclass
 class QASettings:
     max_query_chars: int = MAX_QUERY_CHARS
-    top_k: int = 20
+    top_k: int = 30
+    rerank_top_n: int = 8
     max_evidence: int = 8
     max_chars_per_evidence: int = 800
     min_dense_score: float = 0.55
@@ -87,6 +186,7 @@ class QASettings:
     min_quote_chars: int = 6
     max_claims: int = 5
     enable_repealed_probe: bool = True
+    expected_index_version: str = ""
 
     @classmethod
     def from_config(
@@ -100,8 +200,9 @@ class QASettings:
             else [BlockType.ARTICLE]
         )
         return cls(
-            top_k=config.query_top_k,
-            max_evidence=config.max_evidence,
+            top_k=config.recall_top_k,
+            rerank_top_n=config.rerank_top_n,
+            max_evidence=config.max_articles,
             max_chars_per_evidence=config.max_chars_per_evidence,
             min_dense_score=config.min_dense_score,
             token_budget=config.token_budget,
@@ -136,6 +237,11 @@ class QAResult:
     probe: dict[str, Any] = field(default_factory=dict)
     drafts: list[dict[str, Any]] = field(default_factory=list)
     rendered_claim_ids: list[str] = field(default_factory=list)
+    index_version: str = ""
+    mcp: dict[str, Any] = field(default_factory=dict)
+    retrieval_timing: dict[str, float] = field(default_factory=dict)
+    retrieval_warnings: list[str] = field(default_factory=list)
+    version_metadata: dict[str, Any] = field(default_factory=dict)
 
     @property
     def answered(self) -> bool:
@@ -178,15 +284,21 @@ class QAService:
     def __init__(
         self,
         *,
-        retriever: DenseRetriever,
+        search_client: SearchClient | None = None,
+        retriever: Any | None = None,
         advisor: Advisor,
         settings: QASettings | None = None,
         validator: ClaimValidator | None = None,
         verifier: Verifier | None = None,
         trace_writer: TraceWriter | None = None,
+        meta_client: Any | None = None,
         today: date | None = None,
     ) -> None:
-        self._retriever = retriever
+        if search_client is None:
+            if retriever is None:
+                raise ValueError("必须提供 search_client（生产）或 retriever（测试/离线）")
+            search_client = _RetrieverSearchClient(retriever)
+        self._search_client = search_client
         self._advisor = advisor
         self._settings = settings or QASettings()
         if verifier is None:
@@ -198,16 +310,31 @@ class QAService:
         self._verifier = verifier
         self._trace_writer = trace_writer
         self._today = today
+        self.meta_client = meta_client
 
     def warmup(self) -> None:
-        """预加载检索模型；不产生 trace，也不调用 LLM。"""
-        self._retriever.warmup()
+        """预加载检索模型 / 启动 MCP server；不产生 trace，也不调用 LLM。"""
+        warmup = getattr(self._search_client, "warmup", None)
+        if callable(warmup):
+            warmup()
+        else:
+            start = getattr(self._search_client, "start", None)
+            if callable(start):
+                start()
+
+    def close(self) -> None:
+        for client in (self._search_client, self.meta_client):
+            close = getattr(client, "close", None)
+            if callable(close):
+                with contextlib.suppress(Exception):
+                    close()
 
     def ask(
         self,
         question: str,
         *,
         audience: Audience | None = None,
+        profile: UserProfile | None = None,
         session_id: str | None = None,
         block_types: list[BlockType] | None = None,
     ) -> QAResult:
@@ -221,10 +348,15 @@ class QAService:
             block_types=list(block_types or self._settings.block_types),
             as_of=self._today or date.today(),
             audience=[retrieval_audience] if retrieval_audience else None,
+            profile=profile,
         )
         trace_extra: dict[str, Any] = {
             "normalized_query": redact_sensitive(normalized),
             "filters": filters.model_dump(mode="json"),
+            "index_version": self._settings.expected_index_version,
+            "mcp": {},
+            "retrieval_timing": {},
+            "retrieval_warnings": [],
             "repealed_probe": {"hit": False, "latency_ms": 0, "article_ids": []},
         }
 
@@ -244,9 +376,44 @@ class QAService:
             )
 
         try:
-            retrieval = self._retriever.retrieve(question, filters=filters)
-        except RetrievalError as exc:
-            trace_extra["error"] = str(exc)[:300]
+            response = self._search(question, filters)
+        except ToolError as exc:
+            trace_extra["error"] = exc.message[:300]
+            trace_extra["mcp"] = {
+                "error_code": exc.code.value,
+                "retryable": exc.retryable,
+                "details": exc.details,
+            }
+            outcome = self._outcome_for_tool_error(exc)
+            return self._finish_abstain(
+                trace_id=trace_id,
+                session_id=session_id,
+                started=started,
+                started_at=started_at,
+                question=question,
+                trace_extra=trace_extra,
+                outcome=outcome,
+                message=_MESSAGES.get(outcome, DISCLAIMER),
+                issues=[],
+                scope_issues=[],
+            )
+
+        data = response.data
+        trace_extra["mcp"] = {
+            "server": response.server,
+            "tool": response.tool,
+            "latency_ms": response.latency_ms,
+            "retries": response.retries,
+            "error_code": response.error_code,
+        }
+        trace_extra["index_version"] = data.index_version
+        trace_extra["retrieval_timing"] = dict(data.timing)
+        trace_extra["retrieval_warnings"] = list(data.warnings)
+        expected = self._settings.expected_index_version
+        if expected and data.index_version != expected:
+            trace_extra["error"] = (
+                f"index_version 不一致：server={data.index_version!r}, local={expected!r}"
+            )
             return self._finish_abstain(
                 trace_id=trace_id,
                 session_id=session_id,
@@ -260,20 +427,24 @@ class QAService:
                 scope_issues=[],
             )
 
-        evidence = retrieval.evidence
-        trace_extra["queries"] = [redact_sensitive(query) for query in retrieval.queries]
+        evidence = _evidence_from_hits(data)
+        trace_extra["queries"] = [redact_sensitive(query) for query in data.queries]
         trace_extra["retrieval"] = [
             {
                 "article_id": item.article.article_id,
                 "part_no": item.article.part_no,
                 "score": round(item.score, 4),
+                "dense_score": item.dense_score,
+                "sparse_score": item.sparse_score,
+                "rrf_score": item.rrf_score,
+                "rerank_score": item.rerank_score,
                 "block_type": item.article.block_type.value,
                 "rank": item.rank,
                 "retrieval_query": redact_sensitive(item.retrieval_query),
             }
             for item in evidence
         ]
-        trace_extra["candidates"] = retrieval.candidates
+        trace_extra["candidates"] = data.candidates
 
         if not evidence:
             probe = self._probe(question, filters)
@@ -290,7 +461,7 @@ class QAService:
                 message=_MESSAGES[outcome],
                 issues=[],
                 scope_issues=[],
-                queries=retrieval.queries,
+                queries=data.queries,
                 probe_ms=probe["latency_ms"],
             )
 
@@ -312,8 +483,10 @@ class QAService:
                 message=_MESSAGES.get(outcome, DISCLAIMER),
                 issues=scope.issues,
                 scope_issues=scope.issues,
-                queries=retrieval.queries,
+                queries=data.queries,
             )
+
+        trace_extra["version_metadata"] = self._version_metadata(scope.evidence)
 
         try:
             advisor_result = self._advisor.generate(question, scope.evidence, audience)
@@ -330,7 +503,7 @@ class QAService:
                 message=_MESSAGES[OutcomeCode.GENERATION_FAILED],
                 issues=scope.issues,
                 scope_issues=scope.issues,
-                queries=retrieval.queries,
+                queries=data.queries,
                 evidence=scope.evidence,
             )
 
@@ -362,7 +535,7 @@ class QAService:
                     trace_id=trace_id,
                     outcome=outcome,
                     evidence=scope.evidence,
-                    queries=retrieval.queries,
+                    queries=data.queries,
                     dropped_claims=trace_extra["dropped_claims"],
                     dropped_citations=trace_extra["dropped_citations"],
                     message=_MESSAGES.get(outcome, DISCLAIMER),
@@ -398,7 +571,7 @@ class QAService:
                 claims=verification.claims,
                 citations=finished.citations,
                 evidence=scope.evidence,
-                queries=retrieval.queries,
+                queries=data.queries,
                 dropped_claims=trace_extra["dropped_claims"],
                 dropped_citations=trace_extra["dropped_citations"],
                 message=PARTIAL_NOTICE if partial else "",
@@ -414,6 +587,64 @@ class QAService:
             ),
         )
 
+    def _version_metadata(self, evidence: list[Evidence]) -> dict[str, Any]:
+        """通过 policy-meta 读取最新版本的元数据，只进入 trace，不参与核对。"""
+        if self.meta_client is None or not evidence:
+            return {}
+        doc_ids = list(dict.fromkeys(item.article.doc_id for item in evidence))[:3]
+        metadata: dict[str, Any] = {}
+        for doc_id in doc_ids:
+            try:
+                versions = self.meta_client.get_document_versions(doc_id)
+            except ToolError as exc:
+                metadata[doc_id] = {"error_code": exc.code.value}
+                continue
+            except Exception as exc:
+                metadata[doc_id] = {"error": type(exc).__name__}
+                continue
+            items = versions.get("versions") or []
+            metadata[doc_id] = {
+                "version_count": len(items),
+                "versions": [
+                    {
+                        "version_id": item.get("version_id"),
+                        "status": item.get("status"),
+                        "effective_from": item.get("effective_from"),
+                        "effective_to": item.get("effective_to"),
+                        "date_confidence": item.get("date_confidence"),
+                    }
+                    for item in items
+                ],
+            }
+        return metadata
+
+    def _search(
+        self,
+        question: str,
+        filters: PolicyFilters,
+        *,
+        rerank_top_n: int | None = None,
+    ) -> SearchResponse:
+        request = search_request_from_filters(
+            question,
+            filters,
+            top_k=self._settings.top_k,
+            rerank_top_n=(
+                rerank_top_n if rerank_top_n is not None else self._settings.rerank_top_n
+            ),
+        )
+        return self._search_client.search_articles(request)
+
+    @staticmethod
+    def _outcome_for_tool_error(exc: ToolError) -> OutcomeCode:
+        if exc.code is ErrorCode.CONFLICT:
+            return OutcomeCode.VERSION_CONFLICT
+        if exc.code is ErrorCode.INDEX_UNAVAILABLE:
+            return OutcomeCode.INDEX_UNAVAILABLE
+        if exc.code in {ErrorCode.INVALID_FILTER, ErrorCode.INVALID_ARGUMENT}:
+            return OutcomeCode.INVALID_REQUEST
+        return OutcomeCode.TOOL_UNAVAILABLE
+
     def _probe(self, question: str, filters: PolicyFilters) -> dict[str, Any]:
         if not self._settings.enable_repealed_probe:
             return {"hit": False, "latency_ms": 0, "article_ids": []}
@@ -425,20 +656,21 @@ class QAService:
         )
         started = time.perf_counter()
         try:
-            probe = self._retriever.retrieve(question, filters=probe_filters)
-        except RetrievalError as exc:
+            response = self._search(question, probe_filters, rerank_top_n=1)
+        except ToolError as exc:
             return {
                 "hit": False,
                 "latency_ms": int((time.perf_counter() - started) * 1000),
-                "error": str(exc)[:300],
+                "error": exc.message[:300],
+                "error_code": exc.code.value,
                 "article_ids": [],
             }
-        article_ids = [item.article.article_id for item in probe.evidence[:5]]
+        article_ids = [hit.article_id for hit in response.data.articles[:5]]
         return {
-            "hit": bool(probe.evidence),
+            "hit": bool(response.data.articles),
             "latency_ms": int((time.perf_counter() - started) * 1000),
             "article_ids": article_ids,
-            "count": len(probe.evidence),
+            "count": len(response.data.articles),
         }
 
     @staticmethod
@@ -517,6 +749,17 @@ class QAService:
         result.duration_ms = int((time.perf_counter() - started) * 1000)
         if not result.probe:
             result.probe = dict(trace_extra.get("repealed_probe", {}))
+        result.index_version = result.index_version or str(trace_extra.get("index_version", ""))
+        result.mcp = result.mcp or dict(trace_extra.get("mcp") or {})
+        result.retrieval_timing = result.retrieval_timing or dict(
+            trace_extra.get("retrieval_timing") or {}
+        )
+        result.retrieval_warnings = result.retrieval_warnings or list(
+            trace_extra.get("retrieval_warnings") or []
+        )
+        result.version_metadata = result.version_metadata or dict(
+            trace_extra.get("version_metadata") or {}
+        )
         payload = {
             "trace_id": trace_id,
             "session_id": session_id,

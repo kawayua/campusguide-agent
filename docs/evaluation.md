@@ -13,7 +13,7 @@ W1 尚无问答模块，因此**没有任何回答质量指标**。简历、READ
 |---|---|---|---|
 | 代码规范 | ruff check（E/F/I/B/UP/SIM/RUF） | `make lint` | 通过 |
 | 代码格式 | ruff format --check src tests scripts | `make format-check` | 通过 |
-| 单元、契约与集成测试 | 全离线：mock HTTP、临时目录、动态生成 PDF、内存 Qdrant、fake embedder/chat | `make test` | 295 passed（W3 后） |
+| 单元、契约与集成测试 | 全离线：mock HTTP、临时目录、动态生成 PDF、内存 Qdrant、fake embedder/chat | `make test` | 367 passed（W4 后） |
 | 索引确定性 | 同一输入重建，`content_hash` 与 JSONL 字节一致 | `pytest tests/unit/test_build_index.py` | 通过 |
 | 联系方式脱敏 | 手机号、身份证、学号、邮箱、联系人姓名 | `pytest tests/unit/test_redact.py` | 通过 |
 | 版本解析 | CURRENT / HISTORICAL / INCLUDE_REPEALED、冲突、无版本 | `pytest tests/unit/test_versioning.py` | 通过 |
@@ -38,7 +38,7 @@ CI 配置见 `.github/workflows/ci.yml`；Gitee 仓库当前以本地 `make qa` 
 
 - `ruff check .`：通过；
 - `ruff format --check src tests scripts`：通过；
-- `pytest`：295 passed（W1–W3 unit + contract + integration，无网络依赖；W1/W2 时点为 154）；
+- `pytest`：367 passed（W1–W4 unit + contract + integration，无网络依赖；W1/W2 时点为 154；W3 后 295）；
 - 真实语料：213 文档 / 232 版本 / 3,952 块；其中 `article` 1,366、`section` 2,586；
 - 规模构成：校级 44 文档 / 52 版本；信息学院 36 / 44；农学院 133 / 136；
 - 版本状态：`active` 222、`repealed` 10；每个文档至少有一个 `active` 版本；
@@ -175,6 +175,48 @@ W6-A 的最终报告以 ultraspeed 的 98.1% 为准，labels 绑定 `run_sha256=
 - 20 题开发集：只用于提示词与阈值调参；
 - 50 题冻结测试集：W7 冻结后不再修改，报告固定 hash；
 - 12 条红队用例：超范围、隐私、废止版本、版本冲突、人群错配等。
+
+## W4 MCP 与混合检索工程质量门
+
+W4 的目标是**工具层协议化与可解释的混合召回**，不是答案质量。检索指标只统计
+有 `expected_article_ids` 的 14 题；非可答题不计入 Recall/MRR。
+
+| 项目 | 方法 | 命令 | W4 状态 |
+|---|---|---|---|
+| 索引 | `articles_v1` dense 1024 + BM25 sparse，点数与 manifest 一致 | `make vector-index` | 3,952 点，`index_version=articles_v1@hybrid-0cb2167de3fe` |
+| MCP 工具 | policy-search / policy-meta 只读工具与错误信封 | `make mcp-smoke` | 通过 |
+| 契约测试 | 每工具正常/空/非法/不存在/降级；stdio 生命周期 | `make test` | 通过 |
+| 人群错配 | 5 个 case 通过真实 MCP 调用 | `make population-check` | 5/5 不返回不匹配条款 |
+| 检索（article） | Recall@8 / MRR，dense vs RRF vs rerank | `make eval-w4` | 见下表 |
+| 检索（section） | 同上，section 子集单列 | `make eval-w4` | 见下表 |
+| W3 结构门禁 | 引用 ID 100%、quote 100%、0 编造/part 错误 | `make eval-w3` | 通过 |
+| 拒答召回 / 误拒 | 非可答题不渲染 / 可答题不被拒 | `make eval-w3` | 100% / 0.0% |
+| support | 重新人工标注；旧 labels 不因 run 变化复用 | `make eval-w3` | 未标注，不声称通过 |
+| 延迟 | 检索层 p50/p95；rerank 单列 | `make eval-w4` | rerank p95 约 1.5s；不设 W4 硬门禁 |
+
+### 2026-10-24 dev_v0 检索 A/B/C
+
+| 模式 | article Recall@8 | article MRR | section Recall@8 | section MRR | overall Recall@8 | overall MRR |
+|---|---:|---:|---:|---:|---:|---:|
+| dense-only | 1.000 | 1.000 | 1.000 | 0.333 | 1.000 | 0.905 |
+| dense+sparse RRF | 1.000 | 0.822 | 1.000 | 1.000 | 1.000 | 0.848 |
+| RRF + bge-reranker-v2-m3 | 1.000 | 0.958 | 1.000 | 0.750 | 1.000 | 0.929 |
+
+延迟（warm）：dense p95 359 ms；RRF p95 637 ms；rerank p95 1,677 ms，
+rerank 本身 p50/p95 1,038/1,475 ms。结论是 Recall@8 不降、rerank 提升
+overall MRR，但 RRF 单独使用会降低 article MRR，且 rerank 带来约 1s 成本。
+阈值 0.60 由 dev_v0 校准（可答题 top ≥0.725，非可答题 top ≤0.523），不是冻结结论。
+
+W3 回归（hybrid+rerank，threshold=0.60）：结构 100%、拒答召回 100%、
+误拒 0.0%、原因码 100%、partial 14.3%；d005/d006 的 PARTIAL 来自模型把
+“引导句+非相邻分项”拼成 quote，不是检索漏条款。support 需要重新人工标注。
+
+W4 的已知缺口：
+
+- case 4/5 过滤后目标培养方案未进入 top 8，返回一般教务条款；满足“不返回
+  不匹配条款”的验收，但不等于正确方案召回；
+- BM25 是词面匹配，不能处理“种子科学 → 农学”这类语义改写；
+- `min_rerank_score=0.60` 只由 20 题开发集校准，W7 冻结集需重新验证。
 
 ## 失败归因模板
 

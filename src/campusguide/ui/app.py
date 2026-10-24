@@ -1,4 +1,4 @@
-"""W3 单轮 Gradio 页面：引用核对与拒答/部分作答。"""
+"""W4 单轮 Gradio 页面：MCP 混合检索 + W3 引用核对/拒答。"""
 
 from __future__ import annotations
 
@@ -9,10 +9,12 @@ from typing import Any
 
 import gradio as gr
 
-from campusguide.domain.enums import Audience
+from campusguide.config import load_organization
+from campusguide.domain.enums import Audience, AudienceStage
+from campusguide.domain.profiles import UserProfile
 from campusguide.env import load_dotenv
 from campusguide.qa.finalize import LOW_DATE_NOTICE, citation_label
-from campusguide.qa.runtime import create_qa_service, create_qdrant_client
+from campusguide.qa.runtime import ROOT, create_mcp_qa_service
 from campusguide.qa.service import QAResult, QAService
 
 AUDIENCES = {
@@ -21,8 +23,31 @@ AUDIENCES = {
     "研究生": Audience.GRADUATE,
     "教师": Audience.FACULTY,
 }
+STAGES = {
+    "未指定": None,
+    "大一": AudienceStage.YEAR1,
+    "大二": AudienceStage.YEAR2,
+    "大三": AudienceStage.YEAR3,
+    "大四": AudienceStage.YEAR4,
+    "最后一年": AudienceStage.FINAL_YEAR,
+}
 
 _state: dict[str, Any] = {"service": None, "error": None}
+
+
+def _organization_choices() -> tuple[list[tuple[str, str]], list[tuple[str, str]]]:
+    try:
+        organization = load_organization(ROOT / "configs" / "organization.yaml")
+    except Exception:
+        return [("未指定", "")], [("未指定", "")]
+    colleges = [("未指定", "")] + [
+        (f"{college.name}（{college.college_id}）", college.college_id)
+        for college in organization.colleges
+    ]
+    majors = [("未指定", "")] + [
+        (f"{major.name}（{major.major_id}）", major.major_id) for major in organization.majors
+    ]
+    return colleges, majors
 
 
 def _get_service() -> QAService:
@@ -31,9 +56,8 @@ def _get_service() -> QAService:
     if _state["error"] is not None:
         raise RuntimeError(_state["error"])
     try:
-        client = create_qdrant_client()
-        service = create_qa_service(client=client)
-        # 启动时预加载 bge-m3，避免首个提问承担 10s+ 的冷启动。
+        # 启动时拉起 policy-search/policy-meta；模型加载在 server 内完成。
+        service = create_mcp_qa_service()
         service.warmup()
         _state["service"] = service
     except Exception as exc:
@@ -65,7 +89,10 @@ def _debug_panel(result: QAResult) -> str:
             "article_id": item.get("article_id"),
             "part_no": item.get("part_no"),
             "block_type": item.get("block_type"),
-            "score": item.get("score"),
+            "dense": item.get("dense_score"),
+            "sparse": item.get("sparse_score"),
+            "rrf": item.get("rrf_score"),
+            "rerank": item.get("rerank_score"),
         }
         for item in result.retrieval_scores
     ]
@@ -78,6 +105,11 @@ def _debug_panel(result: QAResult) -> str:
         "probe_ms": result.probe_ms,
         "qa_ms": result.qa_ms,
         "queries": result.queries,
+        "index_version": result.index_version,
+        "mcp": result.mcp,
+        "retrieval_timing": result.retrieval_timing,
+        "retrieval_warnings": result.retrieval_warnings,
+        "version_metadata": result.version_metadata,
         "llm_model": result.llm_model,
         "retrieval": retrieval,
         "rendered_claim_ids": result.rendered_claim_ids,
@@ -94,7 +126,14 @@ def _debug_panel(result: QAResult) -> str:
     return "```json\n" + json.dumps(payload, ensure_ascii=False, indent=2) + "\n```"
 
 
-def answer_question(question: str, audience_label: str) -> tuple[str, str, str]:
+def answer_question(
+    question: str,
+    audience_label: str,
+    college: str,
+    major: str,
+    intake_year: float | int | None,
+    stage_label: str,
+) -> tuple[str, str, str]:
     question = (question or "").strip()
     if not question:
         return "请输入问题。", "_无引用卡片_", '```json\n{"outcome": "INVALID_REQUEST"}\n```'
@@ -109,8 +148,18 @@ def answer_question(question: str, audience_label: str) -> tuple[str, str, str]:
         return message, "_无引用卡片_", f"```\n{exc}\n```"
 
     audience = AUDIENCES.get(audience_label)
+    profile = UserProfile(
+        colleges=[college] if college else [],
+        majors=[major] if major else [],
+        intake_year=int(intake_year) if intake_year else None,
+        stage=STAGES.get(stage_label),
+    )
     try:
-        result = service.ask(question, audience=audience)
+        result = service.ask(
+            question,
+            audience=audience,
+            profile=profile if not profile.is_empty else None,
+        )
     except Exception as exc:
         return (
             f"**请求失败**\n\n`{type(exc).__name__}: {exc}`",
@@ -126,12 +175,12 @@ def answer_question(question: str, audience_label: str) -> tuple[str, str, str]:
 
 
 def build_demo() -> gr.Blocks:
-    with gr.Blocks(title="CampusGuide W3 单轮问答") as demo:
+    college_choices, major_choices = _organization_choices()
+    with gr.Blocks(title="CampusGuide W4 单轮问答") as demo:
         gr.Markdown(
             "# CampusGuide 单轮制度问答\n"
-            "W3 垂直切片：只回答现行 `article` 条款；答案中的每条结论都必须通过"
-            "引用 span、数字/日期覆盖与隐私核对。未通过的 claim 会被省略，"
-            "并在部分作答时显示固定提示。"
+            "W4：检索经 `policy-search` MCP（bge-m3 dense + BM25 sparse + RRF + "
+            "bge-reranker），答案仍由 W3 确定性核对；未通过的 claim 会被省略。"
         )
         with gr.Row():
             question = gr.Textbox(
@@ -146,6 +195,14 @@ def build_demo() -> gr.Blocks:
                 label="受众",
                 scale=1,
             )
+        with (
+            gr.Accordion("可选：人群信息（用于提前过滤不适用的条款）", open=False),
+            gr.Row(),
+        ):
+            college = gr.Dropdown(choices=college_choices, value="", label="学院")
+            major = gr.Dropdown(choices=major_choices, value="", label="专业")
+            intake_year = gr.Number(label="入学年份", precision=0)
+            stage = gr.Dropdown(choices=list(STAGES), value="未指定", label="阶段")
         submit = gr.Button("提问", variant="primary")
         with gr.Row():
             with gr.Column(scale=3):
@@ -153,19 +210,13 @@ def build_demo() -> gr.Blocks:
                 citations = gr.Markdown(label="引用卡片")
             with gr.Column(scale=2), gr.Accordion("调试面板", open=False):
                 debug = gr.Markdown()
-        submit.click(
-            answer_question,
-            inputs=[question, audience],
-            outputs=[answer, citations, debug],
-        )
-        question.submit(
-            answer_question,
-            inputs=[question, audience],
-            outputs=[answer, citations, debug],
-        )
+        inputs = [question, audience, college, major, intake_year, stage]
+        outputs = [answer, citations, debug]
+        submit.click(answer_question, inputs=inputs, outputs=outputs)
+        question.submit(answer_question, inputs=inputs, outputs=outputs)
         gr.Markdown(
             "> 演示系统不构成官方答复，具体以学校官网为准。"
-            "W3 只渲染通过确定性核对的 claim；部分作答不计入完整回答。"
+            "W4 只渲染通过确定性核对的 claim；部分作答不计入完整回答。"
         )
     return demo
 

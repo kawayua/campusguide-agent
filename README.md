@@ -2,7 +2,9 @@
 
 面向高校公开制度文档的**条款级**问答与办事指引 Agent（个人作品集项目）。
 
-当前目标院校：**华南农业大学**。当前进度：W1 数据与索引地基、W2 单轮问答垂直切片、W3 引用核对与拒答 v0 已实现；语料 213 份文档 / 232 个版本 / 3,952 个可检索块（含两份 2020 级扫描件 OCR）。W3 在 W3 v2 代码上跑完 20 题 dev_v0：55/55 引用 ID 有效、0 编造、0 part_no 错误、55/55 quote 可定位；拒答召回 100%、误拒率 0.0%、partial 率 7.1%；warm p50 3.34s、p95 9.78s，废止探针 p50 73.5ms（单列）。**support 标注已完成 56/56（39 supported / 17 partial / 0 unsupported）；draft 支持率 69.6%，rendered 支持率 75.0%，低于 85%，support 门禁未通过，W3 总门禁未通过**；W6-A 提示词收紧已通过（见下）。W2 的 p95 未达 10s 已明确接受，详见 [W2 周记录](docs/weekly/w2.md)；W3 状态见 [W3 周记录](docs/weekly/w3.md)。
+当前目标院校：**华南农业大学**。当前进度：W1 数据与索引地基、W2 单轮问答垂直切片、W3 引用核对与拒答 v0、W4 MCP 工具层与混合检索已实现；语料 213 份文档 / 232 个版本 / 3,952 个可检索块（含两份 2020 级扫描件 OCR）。W3 在 W3 v2 代码上跑完 20 题 dev_v0：55/55 引用 ID 有效、0 编造、0 part_no 错误、55/55 quote 可定位；拒答召回 100%、误拒率 0.0%、partial 率 7.1%；warm p50 3.34s、p95 9.78s，废止探针 p50 73.5ms（单列）。**support 标注已完成 56/56（39 supported / 17 partial / 0 unsupported）；draft 支持率 69.6%，rendered 支持率 75.0%，低于 85%，support 门禁未通过，W3 总门禁未通过**；W6-A 提示词收紧已通过（见下）。W2 的 p95 未达 10s 已明确接受，详见 [W2 周记录](docs/weekly/w2.md)；W3 状态见 [W3 周记录](docs/weekly/w3.md)。
+
+W4 已实现 `policy-search` / `policy-meta` 两个只读 FastMCP server、BM25 sparse + bge-m3 dense 的 RRF 混合召回、bge-reranker-v2-m3 重排，以及受众/时间过滤。`articles_v1` 已重建为 3,952 点 hybrid 索引。dev_v0 20 题检索层：Recall@8 在 dense-only / RRF / RRF+rerank 三种模式均为 **1.000**；MRR 分别为 **0.905 / 0.848 / 0.929**。5/5 人群错配 case 通过 MCP 实跑，不返回不匹配条款。W3 回归（同一 20 题、W6-A prompt、hybrid+rerank）：结构 100%、拒答召回 100%、误拒率 0.0%、原因码 100%，partial 率 14.3%；support 未重新人工标注，不能声称通过。详见 [W4 周记录](docs/weekly/w4.md)。
 
 W2 只证明“引用真实、可定位”：答案由 claim-first 生成，正文只由通过校验的 claims 渲染，引用 ID 必须来自本轮检索证据，quote 必须能在原文中定位。W2 **不声称答案质量**。
 
@@ -49,6 +51,19 @@ W2 **不做**：多轮、MCP、sparse/rerank、语义蕴含校验、历史版本
 
 W3 **不做**：语义蕴含判断、LLM 重写/重试、多轮追问、MCP/sparse/rerank、完整历史版本解析、流程事实核对 H9、50 题冻结测试集。W3 也不把 AI 预标注当人工验收。详细边界见 [W3 v2 设计](docs/superpowers/specs/2026-10-23-w3-citation-verification-abstention-design-v2.md)。
 
+## W4 能做什么
+
+- 应用通过 stdio 调用两个只读 MCP server：`policy-search`（检索/取条款）与 `policy-meta`（文档/版本/解析），QAService 不再直接访问 Qdrant；
+- bge-m3 dense + BM25 风格 sparse（中文单字+双字）各取 top 30，RRF(k=60) 融合，按 `(article_id, part_no)` 去重、按 article 聚合；
+- bge-reranker-v2-m3 重排，`min_rerank_score=0.60` + margin 0.03 + token budget 截断；reranker 不可用时失败关闭；
+- 受众/时间过滤：角色、学院、专业、入学年份、阶段、培养类型、群体、学籍状态、学年 cycle、`as_of`；未知用户字段保留并给出 warning，只排除明确 mismatch；
+- `search_articles` 返回 dense/sparse/RRF/rerank 分数、`index_version`、`applied_filters` 与 warnings；`get_article` 不返回 `text_raw_ref`；
+- `policy-meta` 提供 `get_document_versions` / `get_document` / `resolve_version` / `list_documents`；W4 不注册 flow/calendar 工具，客户端缺失工具时返回 `NOT_IMPLEMENTED` 并说明 W5 提供；
+- MCP 超时/不可用/索引错误映射为明确拒答；QAService 校验 server 与本地 vector manifest 的 `index_version` 一致；
+- `make eval-w4` 对比 dense-only vs hybrid RRF vs hybrid+rerank；`make population-check` 通过 MCP 跑 5 个人群错配 case。
+
+W4 **不做**：W5 流程 DSL/日历、W6 语义蕴含与历史回答、W7 冻结 50 题；W4 不宣称答案质量提升。BM25 仍是词面匹配，case 4/5 暴露的“语义改写召回”缺口留 W6/W7。详细边界见 [W4 设计](docs/superpowers/specs/2026-10-24-w4-mcp-hybrid-retrieval-design.md)。
+
 ## 快速开始
 
 ```bash
@@ -64,28 +79,41 @@ make check-segmentation   # 生成 20 条人工抽检清单
 make qa                   # ruff check + format check + 全量离线测试
 ```
 
-W2/W3 单轮问答：
+W2/W3/W4 单轮问答：
 
 ```bash
 cp .env.example .env      # 填 LLM_BASE_URL / LLM_API_KEY / ADVISOR_MODEL
-make init-w2              # torch + sentence-transformers + gradio
-make compose-up           # 启动 Qdrant（默认 http://localhost:6333）
-make index                # 文本索引（W2 需重新生成以带上 date_confidence）
-make vector-index         # bge-m3 -> Qdrant dense 1024 + data/vector_manifest.json
+make init                # 基础依赖（含 FastMCP）
+make init-w2             # torch + sentence-transformers + gradio
+make compose-up          # 启动 Qdrant（默认 http://localhost:6333）
+make index               # 文本索引（W2 需重新生成以带上 date_confidence）
+make vector-index        # W4：bge-m3 dense + BM25 sparse，重建 3,952 点
+make mcp-smoke           # 启动两个 MCP server，调用 search/get/meta
 make ask Q='申请国家奖学金需要满足哪些条件？'
-make eval-w2              # 20 题开发集，输出 data/eval/w2-dev-report.{json,md}
-make eval-w3              # W3：run + 人工标注模板 + 报告（不会自动标注）
-make sheet-w3             # 生成 data/eval/w3_support_review.md 核对表
-make label-w3 ANNOTATOR=yaukin  # 交互式人工标注 56 条 draft claim
-make eval-w3-report       # 人工标注后复用 run 生成报告
-make demo                 # Gradio 单轮页面（默认 127.0.0.1:7860）
+make eval-w2             # 20 题开发集，输出 data/eval/w2-dev-report.{json,md}
+make eval-w3             # W3 dense 基线：run + 人工标注模板 + 报告
+make eval-w3-hybrid      # W4 回归：hybrid 检索 + 独立 run
+make eval-w4             # 检索层 A/B/C：dense vs RRF vs RRF+rerank
+make population-check    # 5 个人群错配 case（真实 MCP + 真实索引）
+make sheet-w3            # 生成 data/eval/w3_support_review.md 核对表
+make label-w3 ANNOTATOR=yaukin  # 交互式人工标注 draft claim
+make eval-w3-report      # 人工标注后复用 run 生成报告
+make demo                # Gradio 单轮页面（默认 127.0.0.1:7860）
 ```
+
+`make vector-index` 会 `--recreate` 重建 hybrid 索引；只需 dense 时用
+`make vector-index-dense`。`make eval-w3` 保持 W3 dense 基线；
+`make eval-w3-hybrid` 用 W4 hybrid 检索跑回归并写入独立 run。
 
 `make eval-w3` 会写 `data/eval/w3_run.json`、`data/eval/w3_support_labels.jsonl`
 和 `data/eval/w3-dev-report.{json,md}`。报告在 `annotator` 为空或以 `ai`
 开头时按 `unlabeled` 处理，不会声称 support 门禁通过。
 
-首次加载 `BAAI/bge-m3` 需要下载约 2 GB 权重；国内网络可先设置 `HF_ENDPOINT=https://hf-mirror.com`。CPU 可运行但索引较慢；有 NVIDIA GPU 时可安装对应 CUDA wheel，并在 `data/vector_manifest.json` 的 `device` 字段确认实际设备。Docker Hub 直连不稳定时，可先从镜像站拉取同一固定 tag 再重命名，例如：
+首次加载 `BAAI/bge-m3` 约 2 GB、`BAAI/bge-reranker-v2-m3` 约 2.2 GB；
+国内网络可先设置 `HF_ENDPOINT=https://hf-mirror.com`，并建议设置
+`HF_HUB_DISABLE_XET=1`（部分镜像的 Xet 下载会 401）。MCP server 冷启动
+需要加载两个模型，约 30–60s；该时间不计入每轮问答 p95。Docker Hub 直连
+不稳定时，可先从镜像站拉取同一固定 tag 再重命名：
 
 ```bash
 docker pull docker.m.daocloud.io/qdrant/qdrant:v1.19.1
@@ -112,13 +140,16 @@ python -m uv run pytest
 python -m uv run ruff check .
 python -m uv run ruff format --check src tests scripts
 
-# W2 等价命令
+# W2–W4 等价命令
 python -m uv sync --group w2
 python -m uv run python scripts/build_vectors.py
 python -m uv run python scripts/ask.py "申请国家奖学金需要满足哪些条件？"
 python -m uv run python scripts/eval_w2.py
 python -m uv run python scripts/eval_w3.py
 python -m uv run python scripts/eval_w3.py --report-only
+python -m uv run python scripts/eval_w4.py
+python -m uv run python scripts/mcp_smoke.py
+python -m uv run python scripts/check_population_cases.py
 python -m uv run python -m campusguide.ui.app
 ```
 
@@ -142,15 +173,15 @@ W1 验收目标：文档版本 ≥ 50 个、制度本体 ≥ 30 个；20 条 `ar
 ```text
 configs/            来源清单、模型/检索/拒答配置、流程骨架
 data/               本地语料与生成物（incoming/raw/snapshots/processed 不入库）
-scripts/            fetch / parse / index / build_vectors / ask / eval_w2 / eval_w3 / validate / 抽检 CLI
+scripts/            fetch / parse / index / build_vectors / ask / eval_w2 / eval_w3 / eval_w4 / mcp_smoke / population-check / validate / 抽检 CLI
 src/campusguide/    domain / ingest / retrieval / verification / qa / flows / agents / mcp / eval / ui
 tests/              unit / contract / integration / redteam（全部离线）
-docs/               数据来源、评测与质量门、周记录（W1/W2/W3）
+docs/               数据来源、评测与质量门、周记录（W1/W2/W3/W4）
 ```
 
 ## 质量门
 
-`make qa`（等价于 `scripts/qa.sh`）执行 `ruff check`、`ruff format --check src tests scripts` 与全量 pytest。所有测试使用 mock HTTP、临时目录、内存 Qdrant 和 fake embedder/chat，不访问学校站点或模型服务。当前测试覆盖抓取、解析、切分、脱敏、版本解析、索引确定性、Qdrant 集合骨架、本地 HTML 端到端管线、W2 的别名/过滤/向量点/dense 检索/claim quote 校验/finalize/guard/trace，以及 W3 的原文 span、中文 fact 覆盖、scope、隐私、废止探针、PASS/PARTIAL/ABSTAIN 决策、run hash 与 support/拒答指标。全量离线测试 **295 passed**（W1/W2 时点 154；W3 标注工具与 W6-A 提示词/prefill 新增 8 项）。
+`make qa`（等价于 `scripts/qa.sh`）执行 `ruff check`、`ruff format --check src tests scripts` 与全量 pytest。所有测试使用 mock HTTP、临时目录、内存 Qdrant 和 fake embedder/chat，不访问学校站点或模型服务。当前测试覆盖抓取、解析、切分、脱敏、版本解析、索引确定性、Qdrant 集合骨架、本地 HTML 端到端管线、W2 的别名/过滤/向量点/dense 检索/claim quote 校验/finalize/guard/trace，W3 的原文 span、中文 fact 覆盖、scope、隐私、废止探针、PASS/PARTIAL/ABSTAIN 决策、run hash 与 support/拒答指标，以及 W4 的 BM25 sparse、RRF/rerank、受众细目过滤、MCP 契约/stdio client、5 个人群错配 case。全量离线测试 **367 passed**（W1/W2 时点 154；W3 后 295；W4 新增 72）。
 
 W2 的指标口径：
 
@@ -180,7 +211,7 @@ W3 的指标口径：
 
 W3 不把 AI 预标注当人工验收。`data/eval/w3_support_labels.jsonl` 已由 `yaukin` 完成 56 条人工标注（39 supported / 17 partial / 0 unsupported）；`annotator` 为空或以 `ai` 开头的记录仍按 `unlabeled` 处理。当前 live run 在 dirty working tree 上执行（commit `b240e4d`，dirty=True）；W3 已按本轮 75.0% 判定不通过，不以重跑刷分。W6-A 提示词收紧已在 ultraspeed 上通过：54/54 人工标注（53 supported / 1 partial / 0 unsupported），rendered **98.1%**，结构/拒答/误拒门禁通过；唯一 partial 是 d004/c1。v2.6pro A/B 的 support 为 100%（53/53；rendered 51/51），但有 2 条 quote mismatch、d012 PARTIAL、p95 45.2s、warmup 111s，可靠性低于 ultraspeed；默认模型已回退到 `mimo-v2.6-pro-ultraspeed`（`ADVISOR_MAX_TOKENS=3000`）。W6-A 最终报告仍为 ultraspeed 的 98.1%；v2.6pro 报告保留为 A/B 记录。报告见 `data/eval/w6a-dev-report.md`。
 
-W1 的验收状态、实测数字和遗留风险记录在 [docs/weekly/w1.md](docs/weekly/w1.md)；W2/W3 分别在 [W2 周记录](docs/weekly/w2.md)、[W3 周记录](docs/weekly/w3.md)；工程质量门与 W7 效果评测的边界见 [docs/evaluation.md](docs/evaluation.md)。GitHub Actions 工作流位于 `.github/workflows/ci.yml`；Gitee 仓库可使用本地 `make qa`。
+W1 的验收状态、实测数字和遗留风险记录在 [docs/weekly/w1.md](docs/weekly/w1.md)；W2/W3/W4 分别在 [W2 周记录](docs/weekly/w2.md)、[W3 周记录](docs/weekly/w3.md)、[W4 周记录](docs/weekly/w4.md)；工程质量门与 W7 效果评测的边界见 [docs/evaluation.md](docs/evaluation.md)。GitHub Actions 工作流位于 `.github/workflows/ci.yml`；Gitee 仓库可使用本地 `make qa`。
 
 ## 合规
 
@@ -192,4 +223,4 @@ W1 的验收状态、实测数字和遗留风险记录在 [docs/weekly/w1.md](do
 
 ## 计划
 
-总体设计见 [docs/superpowers/specs/2026-10-19-campusguide-design.md](docs/superpowers/specs/2026-10-19-campusguide-design.md)，实施计划见 [docs/superpowers/plans/2026-10-19-campusguide-implementation-plan.md](docs/superpowers/plans/2026-10-19-campusguide-implementation-plan.md)。周记录：[W1](docs/weekly/w1.md)、[W2](docs/weekly/w2.md)、[W3](docs/weekly/w3.md)、[W6](docs/weekly/w6.md)。W2 设计见 [docs/superpowers/specs/2026-10-22-w2-single-turn-qa-design.md](docs/superpowers/specs/2026-10-22-w2-single-turn-qa-design.md)；W3 设计见 [docs/superpowers/specs/2026-10-23-w3-citation-verification-abstention-design-v2.md](docs/superpowers/specs/2026-10-23-w3-citation-verification-abstention-design-v2.md)；W4 设计见 [docs/superpowers/specs/2026-10-24-w4-mcp-hybrid-retrieval-design.md](docs/superpowers/specs/2026-10-24-w4-mcp-hybrid-retrieval-design.md)；W6-A 记录见 [W6 周记录](docs/weekly/w6.md)。
+总体设计见 [docs/superpowers/specs/2026-10-19-campusguide-design.md](docs/superpowers/specs/2026-10-19-campusguide-design.md)，实施计划见 [docs/superpowers/plans/2026-10-19-campusguide-implementation-plan.md](docs/superpowers/plans/2026-10-19-campusguide-implementation-plan.md)。周记录：[W1](docs/weekly/w1.md)、[W2](docs/weekly/w2.md)、[W3](docs/weekly/w3.md)、[W4](docs/weekly/w4.md)、[W6](docs/weekly/w6.md)。W2 设计见 [docs/superpowers/specs/2026-10-22-w2-single-turn-qa-design.md](docs/superpowers/specs/2026-10-22-w2-single-turn-qa-design.md)；W3 设计见 [docs/superpowers/specs/2026-10-23-w3-citation-verification-abstention-design-v2.md](docs/superpowers/specs/2026-10-23-w3-citation-verification-abstention-design-v2.md)；W4 设计见 [docs/superpowers/specs/2026-10-24-w4-mcp-hybrid-retrieval-design.md](docs/superpowers/specs/2026-10-24-w4-mcp-hybrid-retrieval-design.md)；W6-A 记录见 [W6 周记录](docs/weekly/w6.md)。

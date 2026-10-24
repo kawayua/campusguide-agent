@@ -1,0 +1,11 @@
+# W4 MCP 进程配置。command 中的 python 会替换为当前解释器。
+search_server:
+  command: [python, -m, campusguide.mcp.policy_search_server]
+  timeout_seconds: 30
+  retries: 1
+  startup_timeout_seconds: 300
+meta_server:
+  command: [python, -m, campusguide.mcp.policy_meta_server]
+  timeout_seconds: 10
+  retries: 0
+  startup_timeout_seconds: 60

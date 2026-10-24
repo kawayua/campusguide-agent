@@ -28,6 +28,7 @@ from campusguide.domain.enums import (
     VerificationDecision,
     VersionMode,
 )
+from campusguide.domain.profiles import UserProfile
 
 DateConfidence = Literal["high", "low"]
 
@@ -167,6 +168,7 @@ class Evidence(BaseModel):
     matched_spans: list[tuple[int, int]] = Field(default_factory=list)
     dense_score: float | None = None
     sparse_score: float | None = None
+    rrf_score: float | None = None
     rerank_score: float | None = None
     retrieval_query: str = ""
     rank: int = 0
@@ -179,6 +181,8 @@ class Evidence(BaseModel):
     def score(self) -> float:
         if self.rerank_score is not None:
             return self.rerank_score
+        if self.rrf_score is not None:
+            return self.rrf_score
         if self.dense_score is not None:
             return self.dense_score
         if self.sparse_score is not None:
@@ -367,5 +371,6 @@ class PolicyFilters(BaseModel):
     version_mode: VersionMode = VersionMode.CURRENT
     doc_ids: list[str] | None = None
     flow_ids: list[str] | None = None
+    profile: UserProfile | None = None
     # 废止探针需要看到已过期的 repealed 版本，默认仍启用生效区间过滤。
     ignore_effective_dates: bool = False

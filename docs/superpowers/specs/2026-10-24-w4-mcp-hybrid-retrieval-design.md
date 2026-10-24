@@ -7,7 +7,7 @@
 | 基线 | W3 有条件通过：`f23d417`；W2/W3 代码与 295 项测试 |
 | 范围 | FastMCP 两个只读 server、受众/时间过滤、BM25+dense 混合召回、bge-reranker、contract tests |
 | 非目标 | W5 流程 DSL、W6 语义核对/重写、W7 冻结测试集 |
-| 状态 | 设计待确认 |
+| 状态 | 已实现（2026-10-24）；验收与实测见 `docs/weekly/w4.md` |
 
 ---
 

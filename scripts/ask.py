@@ -8,9 +8,10 @@ import sys
 import time
 from pathlib import Path
 
-from campusguide.domain.enums import Audience
+from campusguide.domain.enums import Audience, AudienceStage
+from campusguide.domain.profiles import UserProfile
 from campusguide.env import load_dotenv
-from campusguide.qa.runtime import create_qa_service, create_qdrant_client
+from campusguide.qa.runtime import create_mcp_qa_service
 
 ROOT = Path(__file__).resolve().parents[1]
 AUDIENCE_MAP = {
@@ -25,11 +26,15 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("question", nargs="?", help="单轮问题")
     parser.add_argument("--audience", choices=sorted(AUDIENCE_MAP), default=None)
+    parser.add_argument("--college", action="append", default=[], help="学院 ID，可重复")
+    parser.add_argument("--major", action="append", default=[], help="专业 ID，可重复")
+    parser.add_argument("--intake-year", type=int, default=None)
+    parser.add_argument("--stage", choices=[item.value for item in AudienceStage], default=None)
     parser.add_argument("--json", action="store_true", help="输出机器可读 JSON")
     parser.add_argument(
         "--no-warmup",
         action="store_true",
-        help="不预加载 embedding 模型，用于测量冷启动首问延迟",
+        help="不等待检索模型加载，用于测量冷启动首问延迟",
     )
     args = parser.parse_args()
     question = args.question or input("问题：").strip()
@@ -37,9 +42,14 @@ def main() -> int:
         print("error: 问题为空", file=sys.stderr)
         return 2
 
+    profile = UserProfile(
+        colleges=args.college,
+        majors=args.major,
+        intake_year=args.intake_year,
+        stage=AudienceStage(args.stage) if args.stage else None,
+    )
     try:
-        client = create_qdrant_client()
-        service = create_qa_service(client=client)
+        service = create_mcp_qa_service(start=not args.no_warmup)
     except Exception as exc:
         print(
             f"error: 服务未就绪（{type(exc).__name__}）：{exc}\n"
@@ -54,10 +64,14 @@ def main() -> int:
         service.warmup()
         warmup_ms = int((time.perf_counter() - warmup_started) * 1000)
         print(f"-- warmup={warmup_ms}ms", file=sys.stderr)
-    result = service.ask(
-        question,
-        audience=AUDIENCE_MAP.get(args.audience) if args.audience else None,
-    )
+    try:
+        result = service.ask(
+            question,
+            audience=AUDIENCE_MAP.get(args.audience) if args.audience else None,
+            profile=profile if not profile.is_empty else None,
+        )
+    finally:
+        service.close()
 
     if args.json:
         payload = {
@@ -73,6 +87,11 @@ def main() -> int:
             "probe_ms": result.probe_ms,
             "qa_ms": result.qa_ms,
             "queries": result.queries,
+            "index_version": result.index_version,
+            "mcp": result.mcp,
+            "retrieval_timing": result.retrieval_timing,
+            "retrieval_warnings": result.retrieval_warnings,
+            "version_metadata": result.version_metadata,
             "issues": [issue.model_dump(mode="json", exclude_none=True) for issue in result.issues],
             "scope_issues": [
                 issue.model_dump(mode="json", exclude_none=True) for issue in result.scope_issues

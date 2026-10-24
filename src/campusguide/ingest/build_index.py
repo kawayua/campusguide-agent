@@ -57,12 +57,23 @@ PAYLOAD_KEYWORD_FIELDS = (
     "audience",
     "audience_colleges",
     "audience_majors",
+    "audience_stages",
+    "audience_program_types",
+    "audience_groups",
+    "audience_status",
+    "audience_cycle",
     "status",
     "date_confidence",
     "flow_ids",
 )
 PAYLOAD_DATETIME_FIELDS = ("effective_from", "effective_to")
-PAYLOAD_INTEGER_FIELDS = ("article_index", "part_no")
+PAYLOAD_INTEGER_FIELDS = (
+    "article_index",
+    "part_no",
+    "audience_intake_years",
+    "audience_intake_from",
+    "audience_graduating_years",
+)
 
 
 class BuildError(RuntimeError):

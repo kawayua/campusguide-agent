@@ -781,6 +781,7 @@ def render_markdown(report: dict[str, Any]) -> str:
     latency_scope = metadata.get("latency_scope", "warm")
     vector_manifest = metadata.get("vector_manifest") or {}
     prompt_version = str(metadata.get("advisor_prompt_version") or "")
+    retrieval_mode = str(metadata.get("retrieval_mode") or "")
     title = (
         "CampusGuide W6-A 开发集报告"
         if prompt_version.startswith("w6")
@@ -801,6 +802,7 @@ def render_markdown(report: dict[str, Any]) -> str:
         f"- prompt：{metadata.get('advisor_prompt_version', 'n/a')}"
         f"（max_tokens={metadata.get('advisor_max_tokens', 'n/a')}）",
         f"- 向量 manifest：`{vector_manifest.get('sha256', 'n/a')}`",
+        f"- 检索：{retrieval_mode or 'dense（旧口径）'}",
         f"- config hash：`{metadata.get('config_hash', 'n/a')}`",
         f"- 延迟口径：{metadata.get('latency_scope', 'n/a')}"
         f"（warmup {metadata.get('warmup_ms', 0)} ms；探针耗时单列）",
@@ -1036,6 +1038,10 @@ def row_from_result(item: dict[str, Any], result: QAResult) -> dict[str, Any]:
                 "article_id": evidence.article.article_id,
                 "part_no": evidence.article.part_no,
                 "score": round(evidence.score, 4),
+                "dense_score": evidence.dense_score,
+                "sparse_score": evidence.sparse_score,
+                "rrf_score": evidence.rrf_score,
+                "rerank_score": evidence.rerank_score,
                 "rank": evidence.rank,
                 "block_type": evidence.article.block_type.value,
             }
@@ -1043,6 +1049,10 @@ def row_from_result(item: dict[str, Any], result: QAResult) -> dict[str, Any]:
         ],
         "retrieval": result.retrieval_scores,
         "queries": result.queries,
+        "index_version": result.index_version,
+        "retrieval_timing": result.retrieval_timing,
+        "retrieval_warnings": result.retrieval_warnings,
+        "mcp": result.mcp,
         "probe": result.probe,
         "probe_ms": result.probe_ms,
         "qa_ms": result.qa_ms,

@@ -42,7 +42,12 @@ from campusguide.eval.w3 import (
     verify_run_hash,
     write_labels,
 )
-from campusguide.qa.runtime import RuntimePaths, create_qa_service, create_qdrant_client
+from campusguide.qa.runtime import (
+    RuntimePaths,
+    create_hybrid_qa_service,
+    create_qa_service,
+    create_qdrant_client,
+)
 
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_DEV = ROOT / "data" / "eval" / "dev_v0.jsonl"
@@ -76,6 +81,7 @@ def _metadata(
     warmup_ms: int,
     latency_scope: str,
     vector_manifest_path: Path = ROOT / "data" / "vector_manifest.json",
+    retrieval_mode: str = "hybrid",
 ) -> dict[str, Any]:
     retrieval = load_retrieval_config(ROOT / "configs" / "retrieval.yaml")
     manifest = vector_manifest_info(vector_manifest_path)
@@ -90,6 +96,7 @@ def _metadata(
         "advisor_prompt_version": PROMPT_VERSION,
         "advisor_max_tokens": int(os.getenv("ADVISOR_MAX_TOKENS", "1200")),
         "embedding_model": retrieval.embedding_model,
+        "retrieval_mode": retrieval_mode,
         "vector_manifest": manifest,
         "config_hash": hash_configs(CONFIG_FILES),
         "config_files": [path.relative_to(ROOT).as_posix() for path in CONFIG_FILES],
@@ -105,6 +112,7 @@ def _run_live(
     qdrant_location: str | None = None,
     vector_manifest: Path = ROOT / "data" / "vector_manifest.json",
     text_manifest: Path = ROOT / "data" / "manifest.json",
+    retrieval_mode: str = "hybrid",
 ) -> tuple[list[dict[str, Any]], dict[str, Any]]:
     load_dotenv(ROOT / ".env")
     if qdrant_location:
@@ -116,7 +124,12 @@ def _run_live(
         vector_manifest=vector_manifest,
         text_manifest=text_manifest,
     )
-    service = create_qa_service(client=client, paths=paths)
+    if retrieval_mode == "hybrid":
+        service = create_hybrid_qa_service(client=client, paths=paths)
+    elif retrieval_mode == "dense":
+        service = create_qa_service(client=client, paths=paths)
+    else:
+        raise ValueError(f"未知 retrieval_mode：{retrieval_mode}")
     warmup_ms = 0
     if not no_warmup:
         started = time.perf_counter()
@@ -141,7 +154,9 @@ def _run_live(
         warmup_ms=warmup_ms,
         latency_scope="cold" if no_warmup else "warm",
         vector_manifest_path=vector_manifest,
+        retrieval_mode=retrieval_mode,
     )
+    service.close()
     return rows, metadata
 
 
@@ -287,6 +302,12 @@ def main() -> int:
         default=str(ROOT / "data" / "manifest.json"),
     )
     parser.add_argument(
+        "--retrieval",
+        choices=["hybrid", "dense"],
+        default="dense",
+        help="dense=W2/W3 基线；hybrid=W4 混合检索回归",
+    )
+    parser.add_argument(
         "--no-warmup",
         action="store_true",
         help="不预加载 embedding；记录 latency_scope=cold",
@@ -344,6 +365,7 @@ def main() -> int:
             qdrant_location=args.qdrant_location,
             vector_manifest=Path(args.vector_manifest),
             text_manifest=Path(args.text_manifest),
+            retrieval_mode=args.retrieval,
         )
     except Exception as exc:
         print(

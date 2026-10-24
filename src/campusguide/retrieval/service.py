@@ -9,6 +9,7 @@ from typing import Any
 from qdrant_client import QdrantClient
 
 from campusguide.config import RetrievalConfig
+from campusguide.domain.audience import AudienceDetail
 from campusguide.domain.enums import BlockType
 from campusguide.domain.models import Article, Evidence, PolicyFilters
 from campusguide.retrieval.embedder import EmbeddingProvider
@@ -43,15 +44,44 @@ def _as_date(value: Any) -> date | None:
         raise RetrievalError(f"payload 日期不合法：{value!r}") from exc
 
 
+AUDIENCE_DETAIL_PAYLOAD_FIELDS = {
+    "audience_colleges": "colleges",
+    "audience_majors": "majors",
+    "audience_intake_years": "intake_years",
+    "audience_intake_from": "intake_from",
+    "audience_graduating_years": "graduating_years",
+    "audience_stages": "stages",
+    "audience_program_types": "program_types",
+    "audience_groups": "groups",
+    "audience_status": "status",
+    "audience_cycle": "cycle",
+}
+
+
+def audience_detail_from_payload(payload: dict[str, Any]) -> AudienceDetail | None:
+    data: dict[str, Any] = {}
+    for payload_key, detail_key in AUDIENCE_DETAIL_PAYLOAD_FIELDS.items():
+        value = payload.get(payload_key)
+        if value not in (None, "", []):
+            data[detail_key] = value
+    if not data:
+        return None
+    try:
+        detail = AudienceDetail.model_validate(data)
+    except Exception as exc:
+        raise RetrievalError(f"Qdrant payload 的受众细目不合法：{exc}") from exc
+    return None if detail.is_empty else detail
+
+
 def article_from_payload(payload: dict[str, Any]) -> Article:
     """从 Qdrant payload 还原最小 Article；不依赖本地 JSONL。"""
     data = dict(payload)
-    data.pop("audience_colleges", None)
-    data.pop("audience_majors", None)
+    for key in AUDIENCE_DETAIL_PAYLOAD_FIELDS:
+        data.pop(key, None)
     data["effective_from"] = _as_date(data.get("effective_from"))
     data["effective_to"] = _as_date(data.get("effective_to"))
     data["published_at"] = _as_date(data.get("published_at"))
-    data["audience_detail"] = None
+    data["audience_detail"] = audience_detail_from_payload(payload)
     try:
         return Article.model_validate(data)
     except Exception as exc:

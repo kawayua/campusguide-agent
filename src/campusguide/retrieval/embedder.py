@@ -90,7 +90,7 @@ class BgeM3Embedder:
         self._model_name = model_name
         self._max_seq_length = max_seq_length
         self._batch_size = batch_size
-        self._requested_device = device
+        self._requested_device = device or "auto"
         self._model = None
         self._device = "cpu"
         self._dimension = 0

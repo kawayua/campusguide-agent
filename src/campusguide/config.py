@@ -252,6 +252,30 @@ class AbstentionConfig(BaseModel):
     false_refusal_gate: float = 0.20
 
 
+class MCPServerConfig(BaseModel):
+    command: list[str] = Field(
+        default_factory=lambda: ["python", "-m", "campusguide.mcp.policy_search_server"]
+    )
+    timeout_seconds: float = 30.0
+    retries: int = 1
+    startup_timeout_seconds: float = 300.0
+
+
+class MCPConfig(BaseModel):
+    search_server: MCPServerConfig = Field(
+        default_factory=lambda: MCPServerConfig(
+            command=["python", "-m", "campusguide.mcp.policy_search_server"]
+        )
+    )
+    meta_server: MCPServerConfig = Field(
+        default_factory=lambda: MCPServerConfig(
+            command=["python", "-m", "campusguide.mcp.policy_meta_server"],
+            timeout_seconds=10.0,
+            retries=0,
+        )
+    )
+
+
 class RetrievalConfig(BaseModel):
     collection: str
     alias: str
@@ -259,8 +283,13 @@ class RetrievalConfig(BaseModel):
     dense_vector_name: str = "dense"
     dense_vector_size: int = 1024
     sparse_vector_name: str = "sparse"
+    sparse_mode: str = "bm25"
+    bm25_k1: float = 1.2
+    bm25_b: float = 0.75
+    rrf_k: int = 60
     recall_top_k: int = 30
     rerank_top_n: int = 8
+    reranker_model: str = "BAAI/bge-reranker-v2-m3"
     token_budget: int = 4000
     max_articles: int = 8
     min_rerank_score: float = 0.30
@@ -424,6 +453,13 @@ def load_abstention_config(path: str | Path) -> AbstentionConfig:
     if not isinstance(raw, dict):
         raise ValueError("abstention.yaml 顶层必须是对象")
     return AbstentionConfig.model_validate(raw)
+
+
+def load_mcp_config(path: str | Path) -> MCPConfig:
+    raw = load_yaml(path)
+    if not isinstance(raw, dict):
+        raise ValueError("mcp.yaml 顶层必须是对象")
+    return MCPConfig.model_validate(expand_env(raw))
 
 
 class SourceValidationReport(BaseModel):
