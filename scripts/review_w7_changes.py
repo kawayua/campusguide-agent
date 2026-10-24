@@ -32,6 +32,7 @@ def main() -> int:
     parser.add_argument("--support-review", required=True)
     parser.add_argument("--answer-review", required=True)
     parser.add_argument("--summary", required=True)
+    parser.add_argument("--label", default="remediation2")
     args = parser.parse_args()
 
     support_path = Path(args.support_labels)
@@ -53,7 +54,7 @@ def main() -> int:
         render_label_sheet(
             changed_support,
             questions,
-            title="W7 remediation2 changed claims（只含本轮新增/变化 claim）",
+            title=f"W7 {args.label} changed claims（只含本轮新增/变化 claim）",
             allow_excluded=True,
         ),
     )
@@ -61,7 +62,7 @@ def main() -> int:
         Path(args.answer_review),
         render_answer_review(
             changed_answers,
-            title="W7 remediation2 changed answers（只含本轮变化题目）",
+            title=f"W7 {args.label} changed answers（只含本轮变化题目）",
         ),
     )
 

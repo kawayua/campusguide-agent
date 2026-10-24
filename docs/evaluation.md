@@ -13,7 +13,7 @@ W1 尚无问答模块，因此**没有任何回答质量指标**。简历、READ
 |---|---|---|---|
 | 代码规范 | ruff check（E/F/I/B/UP/SIM/RUF） | `make lint` | 通过 |
 | 代码格式 | ruff format --check src tests scripts | `make format-check` | 通过 |
-| 单元、契约与集成测试 | 全离线：mock HTTP、临时目录、动态生成 PDF、内存 Qdrant、fake embedder/chat | `make test` | 432 passed（A2 后） |
+| 单元、契约与集成测试 | 全离线：mock HTTP、临时目录、动态生成 PDF、内存 Qdrant、fake embedder/chat | `make test` | 434 passed（remediation3 后） |
 | 索引确定性 | 同一输入重建，`content_hash` 与 JSONL 字节一致 | `pytest tests/unit/test_build_index.py` | 通过 |
 | 联系方式脱敏 | 手机号、身份证、学号、邮箱、联系人姓名 | `pytest tests/unit/test_redact.py` | 通过 |
 | 版本解析 | CURRENT / HISTORICAL / INCLUDE_REPEALED、冲突、无版本 | `pytest tests/unit/test_versioning.py` | 通过 |
@@ -38,7 +38,7 @@ CI 配置见 `.github/workflows/ci.yml`；Gitee 仓库当前以本地 `make qa` 
 
 - `ruff check .`：通过；
 - `ruff format --check src tests scripts`：通过；
-- `pytest`：432 passed（W1–W4 unit + contract + integration，无网络依赖；W1/W2 时点为 154；W3 后 295；A2 后 432）；
+- `pytest`：434 passed（W1–W4 unit + contract + integration，无网络依赖；W1/W2 时点为 154；W3 后 295；remediation3 后 434）；
 - 真实语料：213 文档 / 232 版本 / 3,952 块；其中 `article` 1,366、`section` 2,586；
 - 规模构成：校级 44 文档 / 52 版本；信息学院 36 / 44；农学院 133 / 136；
 - 版本状态：`active` 222、`repealed` 10；每个文档至少有一个 `active` 版本；
@@ -307,6 +307,27 @@ W4 的已知缺口：
 - 结论：support/structure/检索/拒答通过，answer/version/p95 未通过，
   **W7 总门禁未通过**；下一轮应使用 dev 集验证“培养目标”section 的
   检索与生成，不继续在冻结测试集上调参。
+
+### W7 第三轮 remediation3（2026-10-24，质量门禁通过）
+
+- prompt `w6a2.3-2026-10-24`：新增 `_generation_evidence`，对“培养方案 +
+  多方面”问题只把含“培养目标”的 section 交给生成层；并增加多方面逐项
+  作答约束；
+- run `6b9be808…7b14`：结构 100%、support **1.000**（135/135，2 条
+  excluded）、answer **0.875**（35/40）、version-sensitive **1.000**
+  （5/5）、拒答召回 1.000、误拒 0.025、article Recall@8 1.000、
+  section MRR 0.900；
+- p50/p95 为 **12,478 / 31,544 ms**，未达 6s/10s；因此
+  **质量门禁全绿，但 W7 总门禁仍为未通过**；
+- answer 失败：test-003/029/033/035 partial（各缺 required fact），
+  test-001 incorrect/OVER_REFUSAL（端点空输出）；
+- changed-only：support 沿用 28、重标 109；answer 沿用 12、重标 38；
+  review 与 labels 一致；报告
+  `data/eval/w7-remediation3-report.{json,md}`；
+- A5 检索消融同索引/配置，可保留；**A4/A2 为 w6a2.1 历史结果**，报告
+  已显式标注，严格同配置结论需用 w6a2.3 重跑（A2 需重标 138 条 support）；
+- 风险：`_generation_evidence` 是领域启发式，W7 section 仅 5 题；需补
+  “课程/学分问题不被培养目标过滤”的负向测试，并在 dev 集验证通用性。
 
 ## W6-A2 quote 连续性与答案质量
 

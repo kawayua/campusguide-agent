@@ -59,9 +59,12 @@ class AdvisorResult:
     empty_claims_error: str = ""
 
 
-PROMPT_VERSION = "w6a2.1-2026-10-24"
+PROMPT_VERSION = "w6a2.3-2026-10-24"
 
 _ENUMERATION_RE = re.compile(r"哪些(?:情形|情况|条件|材料|要求|行为|档次|标准|项目)")
+_MULTI_ASPECT_RE = re.compile(
+    r"(?:分别|各自)|(?:方面.{0,20}(?:和|与|及))|(?:(?:和|与|及).{0,20}方面)"
+)
 
 SYSTEM_PROMPT = """你是华南农业大学制度问答助手。你只能依据本轮提供的“证据片段”回答。
 必须遵守：
@@ -133,6 +136,18 @@ def build_evidence_block(evidence: list[Evidence]) -> str:
     return "\n\n".join(blocks)
 
 
+def _generation_evidence(question: str, evidence: list[Evidence]) -> list[Evidence]:
+    """Keep neighboring sections from displacing a plan's multi-aspect goals answer."""
+    if "培养方案" not in question or not _MULTI_ASPECT_RE.search(question):
+        return evidence
+    goal_sections = [
+        item
+        for item in evidence
+        if item.article.block_type is BlockType.SECTION and "培养目标" in item.article.article_no
+    ]
+    return goal_sections or evidence
+
+
 def _subquestions(question: str) -> list[str]:
     return [part.strip() for part in re.findall(r"[^？?]+[？?]", question)]
 
@@ -153,6 +168,7 @@ def build_messages(
     evidence: list[Evidence],
     audience: Audience | None,
 ) -> list[dict[str, str]]:
+    generation_evidence = _generation_evidence(question, evidence)
     parts = [
         f"受众：{_audience_label(audience)}",
         f"问题：{question}",
@@ -172,7 +188,7 @@ def build_messages(
     parts.extend(
         [
             "",
-            f"证据片段：\n{build_evidence_block(evidence)}",
+            f"证据片段：\n{build_evidence_block(generation_evidence)}",
             "",
             "请先为每条 claim 选择完整的 citation.quote，再写 claim；"
             "quote 必须是同一证据正文中的连续子串；不得用省略号、不得跳过中间分项，"
@@ -187,6 +203,17 @@ def build_messages(
             "问题要求“哪些”具体情形/条件/材料/要求时，必须逐项覆盖证据中的"
             "（一）（二）……各分项；每个分项单独成 claim，不得只复述引导句，"
             "也不得只写“有下列情形之一”。"
+        )
+    if _MULTI_ASPECT_RE.search(question):
+        parts.append(
+            "问题明确询问多个方面或对象时，先识别每个方面/对象并逐项作答，"
+            "每项至少一条 claim；只回答问题点名的内容，不要用相邻章节的其他要求替代，"
+            "也不要补充问题未询问的条件。"
+        )
+    if generation_evidence is not evidence:
+        parts.append(
+            "本题询问培养方案的多个方面；证据已聚焦到该方案的培养目标 section，"
+            "请按问题中的对象和方面逐项回答，不要引入其他章节的科研成果门槛或基本素质要求。"
         )
     if _JOB_INTENT_RE.search(question) and any(
         item.article.block_type is BlockType.SECTION

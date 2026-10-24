@@ -1,0 +1,15 @@
+{
+  "run_sha256": "6b9be80811af1287dec87c6da7d6455a7551eceb9c62fb243fce0323bfaa7b14",
+  "support": {
+    "total": 137,
+    "carried": 28,
+    "changed": 109
+  },
+  "answer": {
+    "total": 50,
+    "carried": 12,
+    "changed": 38
+  },
+  "support_review": "data\\eval\\w7_remediation3_support_review.md",
+  "answer_review": "data\\eval\\w7_remediation3_answer_review.md"
+}

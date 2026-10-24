@@ -186,6 +186,18 @@ def _load_ablations() -> dict[str, Any]:
     return ablations
 
 
+def _load_label_changes(run: dict[str, Any]) -> dict[str, Any]:
+    for path in sorted((ROOT / "data" / "eval").glob("*_changes.json")):
+        try:
+            payload = json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            continue
+        if payload.get("run_sha256") == run.get("run_sha256"):
+            payload["label"] = path.stem.removesuffix("_changes")
+            return payload
+    return {}
+
+
 def _write_report(
     *,
     run: dict[str, Any],
@@ -212,6 +224,7 @@ def _write_report(
         answer_labels=answer_labels,
         gates_config=gates,
         ablations=_load_ablations(),
+        label_changes=_load_label_changes(run),
     )
     output_json.parent.mkdir(parents=True, exist_ok=True)
     output_json.write_text(

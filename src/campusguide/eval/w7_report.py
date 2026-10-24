@@ -144,6 +144,7 @@ def build_w7_report(
     answer_labels: list[dict[str, Any]] | None,
     gates_config: dict[str, float] | None = None,
     ablations: dict[str, Any] | None = None,
+    label_changes: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     gates_config = gates_config or {
         "support": 0.95,
@@ -275,6 +276,7 @@ def build_w7_report(
         "error_attribution": errors,
         "version_sensitive": version,
         "ablations": ablations or {},
+        "label_changes": label_changes or {},
         "latency_ms": {"p50": round(p50, 1), "p95": round(p95, 1)},
         "gates": gates,
         "overall": overall,
@@ -555,6 +557,33 @@ def render_w7_markdown(report: dict[str, Any]) -> str:
             lines.append(f"- A2 support 仍有 {unlabeled} 条未标注；该表仅基于已标注子集。")
     else:
         lines.extend(["", "- A2 Verifier 消融未纳入。"])
+    main_prompt = metadata.get("advisor_prompt_version")
+    stale_ablations = {}
+    for key in ("a4", "a2"):
+        payload = ablations.get(key) or {}
+        prompt = (payload.get("metadata") or {}).get("advisor_prompt_version")
+        if prompt and main_prompt and prompt != main_prompt:
+            stale_ablations[key] = prompt
+    if stale_ablations:
+        parts = [f"{key}={prompt}" for key, prompt in stale_ablations.items()]
+        lines.append("")
+        lines.append(
+            f"- 注意：{', '.join(parts)}，与主结果 prompt `{main_prompt}` 不同；"
+            "这些消融是历史结果，未随本轮 prompt 重跑。A5 为检索层消融，"
+            "同索引/配置，不受 prompt 影响。"
+        )
+    label_changes = report.get("label_changes") or {}
+    support_changes = label_changes.get("support") or {}
+    answer_changes = label_changes.get("answer") or {}
+    if support_changes or answer_changes:
+        label_note = (
+            f"- {label_changes.get('label', '本轮')} 对 "
+            f"{support_changes.get('carried', 0)} 条 support、"
+            f"{answer_changes.get('carried', 0)} 题 answer 完全一致项沿用上一轮标签；"
+            "设计原要求旧 run 标签不复用，此为记录在案的偏差。"
+        )
+    else:
+        label_note = "- 本轮未记录 changed-label 沿用统计。"
     lines.extend(
         [
             "",
@@ -569,8 +598,7 @@ def render_w7_markdown(report: dict[str, Any]) -> str:
             "未执行 20% 第二人复核/隔天盲审，按设计披露。",
             "- 人工修改处数（改事实/改条件/删无依据句/补引用）未分项记录，标 N/A。",
             "- token/成本：当前 run row 未落盘 token，且无统一单价配置，标 N/A。",
-            "- remediation2 对 32 条 support、11 题 answer 完全一致项沿用第一轮标签；"
-            "设计原要求旧 run 标签不复用，此为记录在案的偏差。",
+            label_note,
             f"- p50/p95 实际为 {report['latency_ms']['p50']:.0f}/"
             f"{report['latency_ms']['p95']:.0f} ms，未达 6s/10s；"
             "按设计记录实际值，不删题、不改门禁。",

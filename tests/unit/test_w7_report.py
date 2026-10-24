@@ -145,6 +145,7 @@ def test_report_renders_a5_ablation_table() -> None:
 
 def test_report_renders_a4_and_a2_ablations() -> None:
     a4 = {
+        "metadata": {"advisor_prompt_version": "w6a2.1-2026-10-24"},
         "baseline": {
             "mismatch": {
                 "profile_questions": 5,
@@ -165,6 +166,7 @@ def test_report_renders_a4_and_a2_ablations() -> None:
         },
     }
     a2 = {
+        "metadata": {"advisor_prompt_version": "w6a2.1-2026-10-24"},
         "baseline": {
             "support": {
                 "supported_claims": 133,
@@ -188,11 +190,18 @@ def test_report_renders_a4_and_a2_ablations() -> None:
             "refusal": {"false_refusal": {"rate": 0.05}},
         },
     }
+    run = _run()
+    run["metadata"] = {"advisor_prompt_version": "w6a2.3-2026-10-24"}
     report = build_w7_report(
-        _run(),
+        run,
         support_labels=[],
         answer_labels=[],
         ablations={"a4": a4, "a2": a2},
+        label_changes={
+            "label": "w7_remediation3",
+            "support": {"carried": 28, "changed": 109},
+            "answer": {"carried": 12, "changed": 38},
+        },
     )
     markdown = render_w7_markdown(report)
     assert "### A4 profile 过滤" in markdown
@@ -200,6 +209,8 @@ def test_report_renders_a4_and_a2_ablations() -> None:
     assert "### A2 Verifier" in markdown
     assert "| A2（无 Verifier） | 100/120（共 130） | 0.833 | 0.100 | 0.050 |" in markdown
     assert "A2 support 仍有 10 条未标注" in markdown
+    assert "a4=w6a2.1-2026-10-24, a2=w6a2.1-2026-10-24" in markdown
+    assert "w7_remediation3 对 28 条 support、12 题 answer" in markdown
 
 
 def test_report_without_labels_does_not_pass() -> None:
