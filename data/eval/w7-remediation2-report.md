@@ -109,7 +109,23 @@
 | `hybrid_rrf` | 1.000 | 0.863 | 0.877 | 0.767 | 412.4 ms |
 | `hybrid_rerank` | 1.000 | 0.958 | 0.967 | 0.900 | 1365.4 ms |
 
-- A4 profile 过滤、A2 Verifier 消融待跑；A1 固定分块、A3 流程 DAG 为 N/A。
+### A4 profile 过滤
+
+| 变体 | 有 retrieved 错配的题 | retrieved 错配/总数 | 误拒率 |
+|---|---:|---:|---:|
+| baseline（有 profile） | 0/5 | 0/35 | 0.000 |
+| A4（无 profile 元数据） | 1/5 | 7/34 | 0.000 |
+
+### A2 Verifier
+
+| 变体 | supported/已标 | support rate | unsupported rate | 误拒率 |
+|---|---:|---:|---:|---:|
+| baseline（有 Verifier） | 133/135（共 136） | 0.985 | 0.000 | 0.000 |
+| A2（无 Verifier） | 0/0（共 138） | n/a | n/a | 0.000 |
+
+- A2 support 仍有 138 条未标注；该表仅基于已标注子集。
+
+- A1 固定分块、A3 流程 DAG 为 N/A。
 
 ## 限制
 

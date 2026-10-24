@@ -229,6 +229,7 @@ def _assemble_service(
     settings: QASettings,
     paths: RuntimePaths,
     meta_client=None,
+    verifier: Any | None = None,
 ) -> QAService:
     validator = ClaimValidator(
         min_quote_chars=settings.min_quote_chars,
@@ -239,7 +240,7 @@ def _assemble_service(
         meta_client=meta_client,
         advisor=advisor,
         settings=settings,
-        verifier=Verifier(validator),
+        verifier=verifier or Verifier(validator),
         trace_writer=TraceWriter(paths.trace_dir),
     )
 
@@ -262,6 +263,7 @@ def create_mcp_qa_service(
     paths: RuntimePaths | None = None,
     provider=None,
     start: bool = True,
+    verifier: Any | None = None,
 ) -> QAService:
     """生产入口：启动 policy-search/policy-meta stdio server 并装配 QAService。"""
     from campusguide.qa.search_clients import UnavailableSearchClient
@@ -295,6 +297,7 @@ def create_mcp_qa_service(
         advisor=_advisor(provider),
         settings=settings,
         paths=paths,
+        verifier=verifier,
     )
 
 
@@ -307,6 +310,7 @@ def create_hybrid_qa_service(
     provider=None,
     verify_index: bool = True,
     use_rerank: bool = True,
+    verifier: Any | None = None,
 ) -> QAService:
     """W4 评测入口：进程内 HybridRetriever + 同一 SearchClient 契约。"""
     from campusguide.qa.search_clients import LocalHybridSearchClient
@@ -369,4 +373,5 @@ def create_hybrid_qa_service(
         advisor=_advisor(provider),
         settings=settings,
         paths=paths,
+        verifier=verifier,
     )

@@ -339,6 +339,7 @@ class QAService:
         session_id: str | None = None,
         block_types: list[BlockType] | None = None,
         as_of: date | None = None,
+        use_profile_metadata: bool = True,
     ) -> QAResult:
         started = time.perf_counter()
         trace_id = str(uuid.uuid4())
@@ -350,7 +351,7 @@ class QAService:
             block_types=list(block_types or self._settings.block_types),
             as_of=as_of or self._today or date.today(),
             audience=[retrieval_audience] if retrieval_audience else None,
-            profile=profile,
+            profile=profile if use_profile_metadata else None,
         )
         trace_extra: dict[str, Any] = {
             "normalized_query": redact_sensitive(normalized),

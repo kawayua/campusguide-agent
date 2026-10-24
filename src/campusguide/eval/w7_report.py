@@ -492,10 +492,73 @@ def render_w7_markdown(report: dict[str, Any]) -> str:
             )
     else:
         lines.append("- A5 检索消融未纳入。")
+    a4 = ablations.get("a4") or {}
+    if a4:
+        baseline = a4.get("baseline") or {}
+        no_profile = a4.get("a4") or {}
+        lines.extend(
+            [
+                "",
+                "### A4 profile 过滤",
+                "",
+                "| 变体 | 有 retrieved 错配的题 | retrieved 错配/总数 | 误拒率 |",
+                "|---|---:|---:|---:|",
+            ]
+        )
+        for name, payload in (
+            ("baseline（有 profile）", baseline),
+            ("A4（无 profile 元数据）", no_profile),
+        ):
+            mismatch = payload.get("mismatch") or {}
+            refusal = payload.get("refusal") or {}
+            false_refusal = (refusal.get("false_refusal") or {}).get("rate")
+            lines.append(
+                f"| {name} | {mismatch.get('questions_with_retrieved_mismatch', 0)}/"
+                f"{mismatch.get('profile_questions', 0)} | "
+                f"{mismatch.get('retrieved_mismatched', 0)}/"
+                f"{mismatch.get('retrieved_evidence', 0)} | "
+                f"{fmt(false_refusal)} |"
+            )
+    else:
+        lines.extend(["", "- A4 profile 过滤消融未纳入。"])
+    a2 = ablations.get("a2") or {}
+    if a2:
+        baseline = a2.get("baseline") or {}
+        no_verifier = a2.get("a2") or {}
+        lines.extend(
+            [
+                "",
+                "### A2 Verifier",
+                "",
+                "| 变体 | supported/已标 | support rate | unsupported rate | 误拒率 |",
+                "|---|---:|---:|---:|---:|",
+            ]
+        )
+        for name, payload in (
+            ("baseline（有 Verifier）", baseline),
+            ("A2（无 Verifier）", no_verifier),
+        ):
+            support = payload.get("support") or {}
+            refusal = payload.get("refusal") or {}
+            support_rate = (support.get("claim_support_rate") or {}).get("rate")
+            unsupported_rate = (support.get("claim_unsupported_rate") or {}).get("rate")
+            false_refusal = (refusal.get("false_refusal") or {}).get("rate")
+            lines.append(
+                f"| {name} | {support.get('supported_claims', 0)}/"
+                f"{support.get('drafts_labeled', 0)}（共 {support.get('drafts_total', 0)}） | "
+                f"{fmt(support_rate)} | "
+                f"{fmt(unsupported_rate)} | {fmt(false_refusal)} |"
+            )
+        unlabeled = (no_verifier.get("support") or {}).get("drafts_unlabeled", 0)
+        if unlabeled:
+            lines.append("")
+            lines.append(f"- A2 support 仍有 {unlabeled} 条未标注；该表仅基于已标注子集。")
+    else:
+        lines.extend(["", "- A2 Verifier 消融未纳入。"])
     lines.extend(
         [
             "",
-            "- A4 profile 过滤、A2 Verifier 消融待跑；A1 固定分块、A3 流程 DAG 为 N/A。",
+            "- A1 固定分块、A3 流程 DAG 为 N/A。",
             "",
             "## 限制",
             "",

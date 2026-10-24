@@ -182,6 +182,16 @@ def test_profile_is_forwarded_to_mcp_request(tmp_path: Path) -> None:
     assert request.filters.profile.intake_year == 2024
 
 
+def test_profile_metadata_can_be_disabled_for_a4(tmp_path: Path) -> None:
+    from campusguide.domain.profiles import UserProfile
+
+    client = FakeSearchClient(lambda request: _response())
+    service = _service(client, trace_dir=tmp_path)
+    profile = UserProfile(colleges=["agri"], majors=["agronomy"], intake_year=2024)
+    service.ask("培养方案", profile=profile, use_profile_metadata=False)
+    assert client.requests[0].filters.profile is None
+
+
 def test_quote_repair_is_visible_in_trace(tmp_path: Path) -> None:
     from campusguide.agents.providers import FakeChatProvider
 

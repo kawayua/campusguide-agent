@@ -13,7 +13,7 @@ W1 尚无问答模块，因此**没有任何回答质量指标**。简历、READ
 |---|---|---|---|
 | 代码规范 | ruff check（E/F/I/B/UP/SIM/RUF） | `make lint` | 通过 |
 | 代码格式 | ruff format --check src tests scripts | `make format-check` | 通过 |
-| 单元、契约与集成测试 | 全离线：mock HTTP、临时目录、动态生成 PDF、内存 Qdrant、fake embedder/chat | `make test` | 427 passed（A5 后） |
+| 单元、契约与集成测试 | 全离线：mock HTTP、临时目录、动态生成 PDF、内存 Qdrant、fake embedder/chat | `make test` | 432 passed（A2 后） |
 | 索引确定性 | 同一输入重建，`content_hash` 与 JSONL 字节一致 | `pytest tests/unit/test_build_index.py` | 通过 |
 | 联系方式脱敏 | 手机号、身份证、学号、邮箱、联系人姓名 | `pytest tests/unit/test_redact.py` | 通过 |
 | 版本解析 | CURRENT / HISTORICAL / INCLUDE_REPEALED、冲突、无版本 | `pytest tests/unit/test_versioning.py` | 通过 |
@@ -38,7 +38,7 @@ CI 配置见 `.github/workflows/ci.yml`；Gitee 仓库当前以本地 `make qa` 
 
 - `ruff check .`：通过；
 - `ruff format --check src tests scripts`：通过；
-- `pytest`：427 passed（W1–W4 unit + contract + integration，无网络依赖；W1/W2 时点为 154；W3 后 295；A5 后 427）；
+- `pytest`：432 passed（W1–W4 unit + contract + integration，无网络依赖；W1/W2 时点为 154；W3 后 295；A2 后 432）；
 - 真实语料：213 文档 / 232 版本 / 3,952 块；其中 `article` 1,366、`section` 2,586；
 - 规模构成：校级 44 文档 / 52 版本；信息学院 36 / 44；农学院 133 / 136；
 - 版本状态：`active` 222、`repealed` 10；每个文档至少有一个 `active` 版本；
@@ -292,7 +292,16 @@ W4 的已知缺口：
 - A5 检索消融（`data/eval/w7-a5-retrieval.{json,md}`）：dense-only
   Recall@8 0.963 / MRR 0.829；hybrid RRF **1.000 / 0.863**；
   RRF+rerank **1.000 / 0.958**，section MRR 0.900；检索 p95
-  0.25/0.41/1.37s；A4/A2 待跑，A1/A3 N/A；
+  0.25/0.41/1.37s；
+- A4 profile 消融（`data/eval/w7-a4-profile.{json,md}`）：profile 题 5 道；
+  baseline retrieved 错配 0/5 题（0/35 证据），关闭 profile 元数据后
+  1/5 题（7/34 证据、4/20 cited）错配，唯一命中是 test-040 的 2024 级
+  方案；拒答召回/误拒不变 1.000/0.000；
+- A2 Verifier（`data/eval/w7-a2-verifier.{json,md}`）：eval-only
+  pass-through，关闭 W3 核验，跑 50 题；拒答召回 1.000/误拒 0.000、
+  结构门禁不适用；共 138 条待人工标注 claim，support 尚待全量标注；
+  核对表 `data/eval/w7_a2_support_review.md`；
+- A1/A3 N/A；
 - 结论：support/structure/检索/拒答通过，answer/version/p95 未通过，
   **W7 总门禁未通过**；下一轮应使用 dev 集验证“培养目标”section 的
   检索与生成，不继续在冻结测试集上调参。

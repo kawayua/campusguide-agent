@@ -143,6 +143,65 @@ def test_report_renders_a5_ablation_table() -> None:
     assert "| `dense` | 0.900 | 0.800 | 0.800 | 0.700 | 120.0 ms |" in markdown
 
 
+def test_report_renders_a4_and_a2_ablations() -> None:
+    a4 = {
+        "baseline": {
+            "mismatch": {
+                "profile_questions": 5,
+                "questions_with_retrieved_mismatch": 0,
+                "retrieved_evidence": 20,
+                "retrieved_mismatched": 0,
+            },
+            "refusal": {"false_refusal": {"rate": 0.0}},
+        },
+        "a4": {
+            "mismatch": {
+                "profile_questions": 5,
+                "questions_with_retrieved_mismatch": 2,
+                "retrieved_evidence": 20,
+                "retrieved_mismatched": 3,
+            },
+            "refusal": {"false_refusal": {"rate": 0.1}},
+        },
+    }
+    a2 = {
+        "baseline": {
+            "support": {
+                "supported_claims": 133,
+                "drafts_labeled": 135,
+                "drafts_total": 136,
+                "claim_support_rate": {"rate": 0.985},
+                "claim_unsupported_rate": {"rate": 0.0},
+                "drafts_unlabeled": 0,
+            },
+            "refusal": {"false_refusal": {"rate": 0.0}},
+        },
+        "a2": {
+            "support": {
+                "supported_claims": 100,
+                "drafts_labeled": 120,
+                "drafts_total": 130,
+                "claim_support_rate": {"rate": 0.833},
+                "claim_unsupported_rate": {"rate": 0.1},
+                "drafts_unlabeled": 10,
+            },
+            "refusal": {"false_refusal": {"rate": 0.05}},
+        },
+    }
+    report = build_w7_report(
+        _run(),
+        support_labels=[],
+        answer_labels=[],
+        ablations={"a4": a4, "a2": a2},
+    )
+    markdown = render_w7_markdown(report)
+    assert "### A4 profile 过滤" in markdown
+    assert "| baseline（有 profile） | 0/5 | 0/20 | 0.000 |" in markdown
+    assert "### A2 Verifier" in markdown
+    assert "| A2（无 Verifier） | 100/120（共 130） | 0.833 | 0.100 | 0.050 |" in markdown
+    assert "A2 support 仍有 10 条未标注" in markdown
+
+
 def test_report_without_labels_does_not_pass() -> None:
     report = build_w7_report(_run(), support_labels=[], answer_labels=[])
     assert report["overall"] is False

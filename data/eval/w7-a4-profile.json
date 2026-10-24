@@ -1,0 +1,333 @@
+{
+  "schema_version": "w7-a4-v1",
+  "dataset": "test_v1.jsonl",
+  "dataset_sha256": "208cf3c5f032c039b3af985428c7bb2f3dfacdd422dcf8ae5dc24d2f393eb74a",
+  "testset_sha256": "2a8d0e1223621520e5807aaa3b2a244110f9835bb7bae6d5bc35e4ed7f7e8f18",
+  "generated_at": "2026-10-24T13:34:05+00:00",
+  "profile_questions": 5,
+  "baseline_run_sha256": "23b384f155560320f5cb32c836cd2c965190bd4746c9f9dc17f423e81ffa264a",
+  "a4_run_sha256": "70f52008476c1bee1fafca155312ddca9b6bfe8645ef6ff446b579aea192930d",
+  "baseline": {
+    "mismatch": {
+      "profile_questions": 5,
+      "questions_with_retrieved_mismatch": 0,
+      "retrieved_evidence": 35,
+      "retrieved_mismatched": 0,
+      "questions_with_cited_mismatch": 0,
+      "cited_evidence": 15,
+      "cited_mismatched": 0,
+      "details": [
+        {
+          "qid": "test-036",
+          "profile": {
+            "audience": "graduate",
+            "colleges": [
+              "agri"
+            ],
+            "intake_year": 2026,
+            "majors": []
+          },
+          "retrieved_total": 5,
+          "retrieved_mismatched": 0,
+          "cited_total": 3,
+          "cited_mismatched": 0,
+          "retrieved_hits": [],
+          "cited_hits": []
+        },
+        {
+          "qid": "test-037",
+          "profile": {
+            "audience": "graduate_doctor",
+            "colleges": [
+              "info"
+            ],
+            "intake_year": 2026,
+            "majors": []
+          },
+          "retrieved_total": 7,
+          "retrieved_mismatched": 0,
+          "cited_total": 3,
+          "cited_mismatched": 0,
+          "retrieved_hits": [],
+          "cited_hits": []
+        },
+        {
+          "qid": "test-038",
+          "profile": {
+            "audience": "graduate_master",
+            "colleges": [
+              "info"
+            ],
+            "intake_year": 2025,
+            "majors": []
+          },
+          "retrieved_total": 7,
+          "retrieved_mismatched": 0,
+          "cited_total": 3,
+          "cited_mismatched": 0,
+          "retrieved_hits": [],
+          "cited_hits": []
+        },
+        {
+          "qid": "test-039",
+          "profile": {
+            "audience": "graduate_master",
+            "colleges": [
+              "info"
+            ],
+            "intake_year": 2025,
+            "majors": []
+          },
+          "retrieved_total": 8,
+          "retrieved_mismatched": 0,
+          "cited_total": 3,
+          "cited_mismatched": 0,
+          "retrieved_hits": [],
+          "cited_hits": []
+        },
+        {
+          "qid": "test-040",
+          "profile": {
+            "audience": "undergraduate",
+            "colleges": [
+              "info"
+            ],
+            "intake_year": 2022,
+            "majors": [
+              "big-data-management"
+            ]
+          },
+          "retrieved_total": 8,
+          "retrieved_mismatched": 0,
+          "cited_total": 3,
+          "cited_mismatched": 0,
+          "retrieved_hits": [],
+          "cited_hits": []
+        }
+      ]
+    },
+    "refusal": {
+      "refusal_recall": {
+        "successes": 10,
+        "total": 10,
+        "rate": 1.0,
+        "wilson_low": 0.7225,
+        "wilson_high": 1.0
+      },
+      "false_refusal": {
+        "successes": 0,
+        "total": 40,
+        "rate": 0.0,
+        "wilson_low": 0.0,
+        "wilson_high": 0.0876
+      },
+      "reason_code_accuracy": {
+        "successes": 10,
+        "total": 10,
+        "rate": 1.0,
+        "wilson_low": 0.7225,
+        "wilson_high": 1.0
+      }
+    }
+  },
+  "a4": {
+    "mismatch": {
+      "profile_questions": 5,
+      "questions_with_retrieved_mismatch": 1,
+      "retrieved_evidence": 34,
+      "retrieved_mismatched": 7,
+      "questions_with_cited_mismatch": 1,
+      "cited_evidence": 20,
+      "cited_mismatched": 4,
+      "details": [
+        {
+          "qid": "test-036",
+          "profile": {
+            "audience": "graduate",
+            "colleges": [
+              "agri"
+            ],
+            "intake_year": 2026,
+            "majors": []
+          },
+          "retrieved_total": 5,
+          "retrieved_mismatched": 0,
+          "cited_total": 5,
+          "cited_mismatched": 0,
+          "retrieved_hits": [],
+          "cited_hits": []
+        },
+        {
+          "qid": "test-037",
+          "profile": {
+            "audience": "graduate_doctor",
+            "colleges": [
+              "info"
+            ],
+            "intake_year": 2026,
+            "majors": []
+          },
+          "retrieved_total": 7,
+          "retrieved_mismatched": 0,
+          "cited_total": 3,
+          "cited_mismatched": 0,
+          "retrieved_hits": [],
+          "cited_hits": []
+        },
+        {
+          "qid": "test-038",
+          "profile": {
+            "audience": "graduate_master",
+            "colleges": [
+              "info"
+            ],
+            "intake_year": 2025,
+            "majors": []
+          },
+          "retrieved_total": 7,
+          "retrieved_mismatched": 0,
+          "cited_total": 5,
+          "cited_mismatched": 0,
+          "retrieved_hits": [],
+          "cited_hits": []
+        },
+        {
+          "qid": "test-039",
+          "profile": {
+            "audience": "graduate_master",
+            "colleges": [
+              "info"
+            ],
+            "intake_year": 2025,
+            "majors": []
+          },
+          "retrieved_total": 8,
+          "retrieved_mismatched": 0,
+          "cited_total": 3,
+          "cited_mismatched": 0,
+          "retrieved_hits": [],
+          "cited_hits": []
+        },
+        {
+          "qid": "test-040",
+          "profile": {
+            "audience": "undergraduate",
+            "colleges": [
+              "info"
+            ],
+            "intake_year": 2022,
+            "majors": [
+              "big-data-management"
+            ]
+          },
+          "retrieved_total": 7,
+          "retrieved_mismatched": 7,
+          "cited_total": 4,
+          "cited_mismatched": 4,
+          "retrieved_hits": [
+            {
+              "article_id": "info-ug-bigdata-plan@v2024#四、毕业要求",
+              "reasons": [
+                "入学年份不匹配：文档=[2024]，用户=2022"
+              ]
+            },
+            {
+              "article_id": "info-ug-bigdata-plan@v2024#二、培养目标",
+              "reasons": [
+                "入学年份不匹配：文档=[2024]，用户=2022"
+              ]
+            },
+            {
+              "article_id": "info-ug-bigdata-plan@v2024#九、人才培养目标实现矩阵",
+              "reasons": [
+                "入学年份不匹配：文档=[2024]，用户=2022"
+              ]
+            },
+            {
+              "article_id": "info-ug-bigdata-plan@v2024#六、专业核心课程",
+              "reasons": [
+                "入学年份不匹配：文档=[2024]，用户=2022"
+              ]
+            },
+            {
+              "article_id": "info-ug-bigdata-plan@v2024#三、培养规格",
+              "reasons": [
+                "入学年份不匹配：文档=[2024]，用户=2022"
+              ]
+            },
+            {
+              "article_id": "info-ug-bigdata-plan@v2024#十、培养计划进程表",
+              "reasons": [
+                "入学年份不匹配：文档=[2024]，用户=2022"
+              ]
+            },
+            {
+              "article_id": "info-ug-ds-plan@v2024#三、培养规格",
+              "reasons": [
+                "专业不匹配：文档=['data-science']，用户=['big-data-management']",
+                "入学年份不匹配：文档=[2024]，用户=2022"
+              ]
+            }
+          ],
+          "cited_hits": [
+            {
+              "article_id": "info-ug-bigdata-plan@v2024#三、培养规格",
+              "reasons": [
+                "入学年份不匹配：文档=[2024]，用户=2022"
+              ]
+            },
+            {
+              "article_id": "info-ug-bigdata-plan@v2024#二、培养目标",
+              "reasons": [
+                "入学年份不匹配：文档=[2024]，用户=2022"
+              ]
+            },
+            {
+              "article_id": "info-ug-bigdata-plan@v2024#二、培养目标",
+              "reasons": [
+                "入学年份不匹配：文档=[2024]，用户=2022"
+              ]
+            },
+            {
+              "article_id": "info-ug-bigdata-plan@v2024#三、培养规格",
+              "reasons": [
+                "入学年份不匹配：文档=[2024]，用户=2022"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "refusal": {
+      "refusal_recall": {
+        "successes": 10,
+        "total": 10,
+        "rate": 1.0,
+        "wilson_low": 0.7225,
+        "wilson_high": 1.0
+      },
+      "false_refusal": {
+        "successes": 0,
+        "total": 40,
+        "rate": 0.0,
+        "wilson_low": 0.0,
+        "wilson_high": 0.0876
+      },
+      "reason_code_accuracy": {
+        "successes": 10,
+        "total": 10,
+        "rate": 1.0,
+        "wilson_low": 0.7225,
+        "wilson_high": 1.0
+      }
+    }
+  },
+  "metadata": {
+    "git_commit": "bd28d63b835aa863f820feee546b327a8fd633f0",
+    "git_dirty": true,
+    "index_version": "",
+    "config_hash": "fa8c174a9fc5f5332fb6f762776715cf19f179de1ef0cef3b8928ed2b28c8edd",
+    "model": "mimo-v2.6-pro-ultraspeed",
+    "advisor_prompt_version": "w6a2.1-2026-10-24"
+  }
+}
