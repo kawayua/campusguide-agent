@@ -2,10 +2,10 @@
   "schema_version": "w4-retrieval-v1",
   "dataset": "dev_v0.jsonl",
   "dataset_sha256": "e144b800133353517a78350dd089ac1ccd39805ec1b3b61b6dd72ad70d15c356",
-  "generated_at": "2026-10-24T05:35:00+00:00",
+  "generated_at": "2026-10-24T06:20:58+00:00",
   "metadata": {
-    "git_commit": "018ce43e54efbccf9b4be043053afcb0ed650bf4",
-    "git_dirty": true,
+    "git_commit": "26afddfba1fc6c35f40a4791c3995d591ee49374",
+    "git_dirty": false,
     "index_version": "articles_v1@hybrid-0cb2167de3fe",
     "vector_manifest_sha256": "17441d486b2fb788456b875665c695d9bafa2cc4a9bef1c974c91b19bd24e7a2",
     "config_hash": "bd54a093c8ba4883780902eb2be5415e67d965e73adf9874fe300fa39d5fa1f8"
@@ -33,8 +33,8 @@
           "mrr": 0.9048
         },
         "latency_ms": {
-          "p50": 131.5,
-          "p95": 359.00000000000006
+          "p50": 44.5,
+          "p95": 139.10000000000002
         },
         "rerank_latency_ms": {
           "count": 0,
@@ -42,7 +42,7 @@
           "p95": null
         }
       },
-      "elapsed_ms": 3441,
+      "elapsed_ms": 1387,
       "rows": [
         {
           "id": "d001",
@@ -66,7 +66,7 @@
           ],
           "recall_at_8": 1.0,
           "reciprocal_rank": 1.0,
-          "latency_ms": 137,
+          "latency_ms": 42,
           "timing": {},
           "warnings": []
         },
@@ -92,7 +92,7 @@
           ],
           "recall_at_8": 1.0,
           "reciprocal_rank": 1.0,
-          "latency_ms": 144,
+          "latency_ms": 49,
           "timing": {},
           "warnings": []
         },
@@ -118,7 +118,7 @@
           ],
           "recall_at_8": 1.0,
           "reciprocal_rank": 1.0,
-          "latency_ms": 137,
+          "latency_ms": 40,
           "timing": {},
           "warnings": []
         },
@@ -144,7 +144,7 @@
           ],
           "recall_at_8": 1.0,
           "reciprocal_rank": 1.0,
-          "latency_ms": 116,
+          "latency_ms": 44,
           "timing": {},
           "warnings": []
         },
@@ -170,7 +170,7 @@
           ],
           "recall_at_8": 1.0,
           "reciprocal_rank": 1.0,
-          "latency_ms": 416,
+          "latency_ms": 160,
           "timing": {},
           "warnings": []
         },
@@ -196,7 +196,7 @@
           ],
           "recall_at_8": 1.0,
           "reciprocal_rank": 1.0,
-          "latency_ms": 356,
+          "latency_ms": 120,
           "timing": {},
           "warnings": []
         },
@@ -222,7 +222,7 @@
           ],
           "recall_at_8": 1.0,
           "reciprocal_rank": 1.0,
-          "latency_ms": 99,
+          "latency_ms": 29,
           "timing": {},
           "warnings": []
         },
@@ -248,7 +248,7 @@
           ],
           "recall_at_8": 1.0,
           "reciprocal_rank": 1.0,
-          "latency_ms": 126,
+          "latency_ms": 40,
           "timing": {},
           "warnings": []
         },
@@ -275,7 +275,7 @@
           ],
           "recall_at_8": 1.0,
           "reciprocal_rank": 1.0,
-          "latency_ms": 171,
+          "latency_ms": 44,
           "timing": {},
           "warnings": []
         },
@@ -302,7 +302,7 @@
           ],
           "recall_at_8": 1.0,
           "reciprocal_rank": 1.0,
-          "latency_ms": 258,
+          "latency_ms": 104,
           "timing": {},
           "warnings": []
         },
@@ -329,7 +329,7 @@
           ],
           "recall_at_8": 1.0,
           "reciprocal_rank": 1.0,
-          "latency_ms": 351,
+          "latency_ms": 138,
           "timing": {},
           "warnings": []
         },
@@ -356,7 +356,7 @@
           ],
           "recall_at_8": 1.0,
           "reciprocal_rank": 1.0,
-          "latency_ms": 241,
+          "latency_ms": 130,
           "timing": {},
           "warnings": []
         },
@@ -380,7 +380,7 @@
           ],
           "recall_at_8": 1.0,
           "reciprocal_rank": 0.16666666666666666,
-          "latency_ms": 112,
+          "latency_ms": 77,
           "timing": {},
           "warnings": [
             "证据预算触顶：保留 6 条，跳过 info-ug-math-plan@v2024#三、培养规格",
@@ -414,7 +414,7 @@
           ],
           "recall_at_8": 1.0,
           "reciprocal_rank": 0.5,
-          "latency_ms": 103,
+          "latency_ms": 50,
           "timing": {},
           "warnings": [
             "info-ug-math-plan@v2022#五、专业核心课程 的块类型为 section，按 section 口径记录",
@@ -445,7 +445,7 @@
           ],
           "recall_at_8": null,
           "reciprocal_rank": null,
-          "latency_ms": 76,
+          "latency_ms": 38,
           "timing": {},
           "warnings": []
         },
@@ -469,7 +469,7 @@
           ],
           "recall_at_8": null,
           "reciprocal_rank": null,
-          "latency_ms": 126,
+          "latency_ms": 27,
           "timing": {},
           "warnings": []
         },
@@ -493,7 +493,7 @@
           ],
           "recall_at_8": null,
           "reciprocal_rank": null,
-          "latency_ms": 64,
+          "latency_ms": 42,
           "timing": {},
           "warnings": []
         },
@@ -517,7 +517,7 @@
           ],
           "recall_at_8": null,
           "reciprocal_rank": null,
-          "latency_ms": 98,
+          "latency_ms": 42,
           "timing": {},
           "warnings": []
         },
@@ -541,7 +541,7 @@
           ],
           "recall_at_8": null,
           "reciprocal_rank": null,
-          "latency_ms": 227,
+          "latency_ms": 116,
           "timing": {},
           "warnings": []
         },
@@ -565,7 +565,7 @@
           ],
           "recall_at_8": null,
           "reciprocal_rank": null,
-          "latency_ms": 72,
+          "latency_ms": 45,
           "timing": {},
           "warnings": []
         }
@@ -593,8 +593,8 @@
           "mrr": 0.8476
         },
         "latency_ms": {
-          "p50": 214.0,
-          "p95": 637.2
+          "p50": 80.0,
+          "p95": 224.90000000000003
         },
         "rerank_latency_ms": {
           "count": 0,
@@ -602,7 +602,7 @@
           "p95": null
         }
       },
-      "elapsed_ms": 5787,
+      "elapsed_ms": 2278,
       "rows": [
         {
           "id": "d001",
@@ -626,14 +626,15 @@
           ],
           "recall_at_8": 1.0,
           "reciprocal_rank": 0.2,
-          "latency_ms": 73,
+          "latency_ms": 88,
           "timing": {
-            "dense_ms": 56.44,
-            "sparse_ms": 13.12,
+            "dense_ms": 45.83,
+            "sparse_ms": 41.06,
             "rerank_ms": 0.0
           },
           "warnings": [
-            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤"
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤",
+            "FILTERS_APPLIED: as_of=2026-10-24；version_mode=current；audience=未指定（不硬过滤）；profile=未提供"
           ]
         },
         {
@@ -658,14 +659,15 @@
           ],
           "recall_at_8": 1.0,
           "reciprocal_rank": 1.0,
-          "latency_ms": 105,
+          "latency_ms": 76,
           "timing": {
-            "dense_ms": 83.34,
-            "sparse_ms": 14.76,
+            "dense_ms": 29.64,
+            "sparse_ms": 44.71,
             "rerank_ms": 0.0
           },
           "warnings": [
-            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤"
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤",
+            "FILTERS_APPLIED: as_of=2026-10-24；version_mode=current；audience=未指定（不硬过滤）；profile=未提供"
           ]
         },
         {
@@ -690,15 +692,16 @@
           ],
           "recall_at_8": 1.0,
           "reciprocal_rank": 1.0,
-          "latency_ms": 83,
+          "latency_ms": 63,
           "timing": {
-            "dense_ms": 65.84,
-            "sparse_ms": 14.59,
+            "dense_ms": 40.18,
+            "sparse_ms": 22.49,
             "rerank_ms": 0.0
           },
           "warnings": [
             "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤",
-            "PROFILE_UNDETERMINED: 用户未提供学生群体，结果保留可能限定该细目的条款"
+            "PROFILE_UNDETERMINED: 用户未提供学生群体，结果保留可能限定该细目的条款",
+            "FILTERS_APPLIED: as_of=2026-10-24；version_mode=current；audience=未指定（不硬过滤）；profile=未提供"
           ]
         },
         {
@@ -723,14 +726,15 @@
           ],
           "recall_at_8": 1.0,
           "reciprocal_rank": 1.0,
-          "latency_ms": 105,
+          "latency_ms": 51,
           "timing": {
-            "dense_ms": 52.96,
-            "sparse_ms": 49.74,
+            "dense_ms": 33.27,
+            "sparse_ms": 17.17,
             "rerank_ms": 0.0
           },
           "warnings": [
-            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤"
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤",
+            "FILTERS_APPLIED: as_of=2026-10-24；version_mode=current；audience=未指定（不硬过滤）；profile=未提供"
           ]
         },
         {
@@ -755,14 +759,15 @@
           ],
           "recall_at_8": 1.0,
           "reciprocal_rank": 1.0,
-          "latency_ms": 601,
+          "latency_ms": 218,
           "timing": {
-            "dense_ms": 448.47,
-            "sparse_ms": 135.44,
+            "dense_ms": 146.06,
+            "sparse_ms": 70.17,
             "rerank_ms": 0.0
           },
           "warnings": [
-            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤"
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤",
+            "FILTERS_APPLIED: as_of=2026-10-24；version_mode=current；audience=未指定（不硬过滤）；profile=未提供"
           ]
         },
         {
@@ -787,14 +792,15 @@
           ],
           "recall_at_8": 1.0,
           "reciprocal_rank": 1.0,
-          "latency_ms": 590,
+          "latency_ms": 280,
           "timing": {
-            "dense_ms": 493.52,
-            "sparse_ms": 86.03,
+            "dense_ms": 160.9,
+            "sparse_ms": 116.83,
             "rerank_ms": 0.0
           },
           "warnings": [
-            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤"
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤",
+            "FILTERS_APPLIED: as_of=2026-10-24；version_mode=current；audience=未指定（不硬过滤）；profile=未提供"
           ]
         },
         {
@@ -819,14 +825,15 @@
           ],
           "recall_at_8": 1.0,
           "reciprocal_rank": 1.0,
-          "latency_ms": 108,
+          "latency_ms": 68,
           "timing": {
-            "dense_ms": 89.89,
-            "sparse_ms": 14.26,
+            "dense_ms": 51.47,
+            "sparse_ms": 15.2,
             "rerank_ms": 0.0
           },
           "warnings": [
-            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤"
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤",
+            "FILTERS_APPLIED: as_of=2026-10-24；version_mode=current；audience=未指定（不硬过滤）；profile=未提供"
           ]
         },
         {
@@ -851,14 +858,15 @@
           ],
           "recall_at_8": 1.0,
           "reciprocal_rank": 1.0,
-          "latency_ms": 223,
+          "latency_ms": 97,
           "timing": {
-            "dense_ms": 145.77,
-            "sparse_ms": 72.02,
+            "dense_ms": 59.27,
+            "sparse_ms": 37.12,
             "rerank_ms": 0.0
           },
           "warnings": [
-            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤"
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤",
+            "FILTERS_APPLIED: as_of=2026-10-24；version_mode=current；audience=未指定（不硬过滤）；profile=未提供"
           ]
         },
         {
@@ -884,14 +892,15 @@
           ],
           "recall_at_8": 1.0,
           "reciprocal_rank": 0.3333333333333333,
-          "latency_ms": 201,
+          "latency_ms": 69,
           "timing": {
-            "dense_ms": 139.18,
-            "sparse_ms": 48.75,
+            "dense_ms": 54.31,
+            "sparse_ms": 14.07,
             "rerank_ms": 0.0
           },
           "warnings": [
-            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤"
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤",
+            "FILTERS_APPLIED: as_of=2026-10-24；version_mode=current；audience=未指定（不硬过滤）；profile=未提供"
           ]
         },
         {
@@ -917,14 +926,15 @@
           ],
           "recall_at_8": 1.0,
           "reciprocal_rank": 1.0,
-          "latency_ms": 485,
+          "latency_ms": 222,
           "timing": {
-            "dense_ms": 350.32,
-            "sparse_ms": 115.63,
+            "dense_ms": 139.22,
+            "sparse_ms": 78.31,
             "rerank_ms": 0.0
           },
           "warnings": [
-            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤"
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤",
+            "FILTERS_APPLIED: as_of=2026-10-24；version_mode=current；audience=未指定（不硬过滤）；profile=未提供"
           ]
         },
         {
@@ -950,15 +960,16 @@
           ],
           "recall_at_8": 1.0,
           "reciprocal_rank": 1.0,
-          "latency_ms": 502,
+          "latency_ms": 173,
           "timing": {
-            "dense_ms": 356.11,
-            "sparse_ms": 131.12,
+            "dense_ms": 99.86,
+            "sparse_ms": 71.28,
             "rerank_ms": 0.0
           },
           "warnings": [
             "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤",
-            "PROFILE_UNDETERMINED: 用户未提供学院，结果保留可能限定该细目的条款"
+            "PROFILE_UNDETERMINED: 用户未提供学院，结果保留可能限定该细目的条款",
+            "FILTERS_APPLIED: as_of=2026-10-24；version_mode=current；audience=未指定（不硬过滤）；profile=未提供"
           ]
         },
         {
@@ -984,17 +995,18 @@
           ],
           "recall_at_8": 1.0,
           "reciprocal_rank": 0.3333333333333333,
-          "latency_ms": 717,
+          "latency_ms": 183,
           "timing": {
-            "dense_ms": 523.11,
-            "sparse_ms": 168.66,
+            "dense_ms": 113.8,
+            "sparse_ms": 66.8,
             "rerank_ms": 0.0
           },
           "warnings": [
             "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤",
             "PROFILE_UNDETERMINED: 用户未提供学院，结果保留可能限定该细目的条款",
             "PROFILE_UNDETERMINED: 用户未提供年级/阶段，结果保留可能限定该细目的条款",
-            "PROFILE_UNDETERMINED: 用户未提供学籍状态，结果保留可能限定该细目的条款"
+            "PROFILE_UNDETERMINED: 用户未提供学籍状态，结果保留可能限定该细目的条款",
+            "FILTERS_APPLIED: as_of=2026-10-24；version_mode=current；audience=未指定（不硬过滤）；profile=未提供"
           ]
         },
         {
@@ -1019,10 +1031,10 @@
           ],
           "recall_at_8": 1.0,
           "reciprocal_rank": 1.0,
-          "latency_ms": 140,
+          "latency_ms": 56,
           "timing": {
-            "dense_ms": 109.79,
-            "sparse_ms": 24.23,
+            "dense_ms": 30.35,
+            "sparse_ms": 24.1,
             "rerank_ms": 0.0
           },
           "warnings": [
@@ -1030,7 +1042,8 @@
             "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤",
             "PROFILE_UNDETERMINED: 用户未提供学院，结果保留可能限定该细目的条款",
             "PROFILE_UNDETERMINED: 用户未提供专业，结果保留可能限定该细目的条款",
-            "PROFILE_UNDETERMINED: 用户未提供入学年份，结果保留可能限定该细目的条款"
+            "PROFILE_UNDETERMINED: 用户未提供入学年份，结果保留可能限定该细目的条款",
+            "FILTERS_APPLIED: as_of=2026-10-24；version_mode=current；audience=未指定（不硬过滤）；profile=未提供"
           ]
         },
         {
@@ -1055,10 +1068,10 @@
           ],
           "recall_at_8": 1.0,
           "reciprocal_rank": 1.0,
-          "latency_ms": 147,
+          "latency_ms": 69,
           "timing": {
-            "dense_ms": 108.57,
-            "sparse_ms": 28.12,
+            "dense_ms": 44.68,
+            "sparse_ms": 22.67,
             "rerank_ms": 0.0
           },
           "warnings": [
@@ -1070,7 +1083,8 @@
             "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤",
             "PROFILE_UNDETERMINED: 用户未提供学院，结果保留可能限定该细目的条款",
             "PROFILE_UNDETERMINED: 用户未提供专业，结果保留可能限定该细目的条款",
-            "PROFILE_UNDETERMINED: 用户未提供入学年份，结果保留可能限定该细目的条款"
+            "PROFILE_UNDETERMINED: 用户未提供入学年份，结果保留可能限定该细目的条款",
+            "FILTERS_APPLIED: as_of=2026-10-24；version_mode=current；audience=未指定（不硬过滤）；profile=未提供"
           ]
         },
         {
@@ -1093,15 +1107,16 @@
           ],
           "recall_at_8": null,
           "reciprocal_rank": null,
-          "latency_ms": 239,
+          "latency_ms": 85,
           "timing": {
-            "dense_ms": 135.92,
-            "sparse_ms": 83.08,
+            "dense_ms": 55.02,
+            "sparse_ms": 27.76,
             "rerank_ms": 0.0
           },
           "warnings": [
             "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤",
-            "PROFILE_UNDETERMINED: 用户未提供学生群体，结果保留可能限定该细目的条款"
+            "PROFILE_UNDETERMINED: 用户未提供学生群体，结果保留可能限定该细目的条款",
+            "FILTERS_APPLIED: as_of=2026-10-24；version_mode=current；audience=未指定（不硬过滤）；profile=未提供"
           ]
         },
         {
@@ -1124,14 +1139,15 @@
           ],
           "recall_at_8": null,
           "reciprocal_rank": null,
-          "latency_ms": 246,
+          "latency_ms": 58,
           "timing": {
-            "dense_ms": 200.26,
-            "sparse_ms": 32.47,
+            "dense_ms": 45.92,
+            "sparse_ms": 11.41,
             "rerank_ms": 0.0
           },
           "warnings": [
-            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤"
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤",
+            "FILTERS_APPLIED: as_of=2026-10-24；version_mode=current；audience=未指定（不硬过滤）；profile=未提供"
           ]
         },
         {
@@ -1154,14 +1170,15 @@
           ],
           "recall_at_8": null,
           "reciprocal_rank": null,
-          "latency_ms": 150,
+          "latency_ms": 37,
           "timing": {
-            "dense_ms": 113.68,
-            "sparse_ms": 27.75,
+            "dense_ms": 25.0,
+            "sparse_ms": 11.54,
             "rerank_ms": 0.0
           },
           "warnings": [
-            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤"
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤",
+            "FILTERS_APPLIED: as_of=2026-10-24；version_mode=current；audience=未指定（不硬过滤）；profile=未提供"
           ]
         },
         {
@@ -1184,14 +1201,15 @@
           ],
           "recall_at_8": null,
           "reciprocal_rank": null,
-          "latency_ms": 217,
+          "latency_ms": 71,
           "timing": {
-            "dense_ms": 173.79,
-            "sparse_ms": 36.08,
+            "dense_ms": 32.62,
+            "sparse_ms": 38.07,
             "rerank_ms": 0.0
           },
           "warnings": [
-            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤"
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤",
+            "FILTERS_APPLIED: as_of=2026-10-24；version_mode=current；audience=未指定（不硬过滤）；profile=未提供"
           ]
         },
         {
@@ -1214,14 +1232,15 @@
           ],
           "recall_at_8": null,
           "reciprocal_rank": null,
-          "latency_ms": 633,
+          "latency_ms": 218,
           "timing": {
-            "dense_ms": 477.34,
-            "sparse_ms": 132.12,
+            "dense_ms": 149.71,
+            "sparse_ms": 65.91,
             "rerank_ms": 0.0
           },
           "warnings": [
-            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤"
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤",
+            "FILTERS_APPLIED: as_of=2026-10-24；version_mode=current；audience=未指定（不硬过滤）；profile=未提供"
           ]
         },
         {
@@ -1244,16 +1263,17 @@
           ],
           "recall_at_8": null,
           "reciprocal_rank": null,
-          "latency_ms": 211,
+          "latency_ms": 84,
           "timing": {
-            "dense_ms": 123.69,
-            "sparse_ms": 80.64,
+            "dense_ms": 55.33,
+            "sparse_ms": 27.9,
             "rerank_ms": 0.0
           },
           "warnings": [
             "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤",
             "PROFILE_UNDETERMINED: 用户未提供年级/阶段，结果保留可能限定该细目的条款",
-            "PROFILE_UNDETERMINED: 用户未提供学籍状态，结果保留可能限定该细目的条款"
+            "PROFILE_UNDETERMINED: 用户未提供学籍状态，结果保留可能限定该细目的条款",
+            "FILTERS_APPLIED: as_of=2026-10-24；version_mode=current；audience=未指定（不硬过滤）；profile=未提供"
           ]
         }
       ]
@@ -1280,16 +1300,16 @@
           "mrr": 0.9286
         },
         "latency_ms": {
-          "p50": 1325.5,
-          "p95": 1677.3500000000001
+          "p50": 1224.0,
+          "p95": 1367.25
         },
         "rerank_latency_ms": {
           "count": 20,
-          "p50": 1038.0,
-          "p95": 1474.45
+          "p50": 1072.5,
+          "p95": 1196.35
         }
       },
-      "elapsed_ms": 26968,
+      "elapsed_ms": 23640,
       "rows": [
         {
           "id": "d001",
@@ -1312,15 +1332,16 @@
           ],
           "recall_at_8": 1.0,
           "reciprocal_rank": 1.0,
-          "latency_ms": 1722,
+          "latency_ms": 1265,
           "timing": {
-            "dense_ms": 165.67,
-            "sparse_ms": 28.87,
-            "rerank_ms": 1521.78
+            "dense_ms": 65.49,
+            "sparse_ms": 36.8,
+            "rerank_ms": 1161.32
           },
           "warnings": [
             "TOKEN_BUDGET: 跳过 national-aid-grad@v2022#第十四条",
-            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤"
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤",
+            "FILTERS_APPLIED: as_of=2026-10-24；version_mode=current；audience=未指定（不硬过滤）；profile=未提供"
           ]
         },
         {
@@ -1345,14 +1366,15 @@
           ],
           "recall_at_8": 1.0,
           "reciprocal_rank": 0.5,
-          "latency_ms": 1121,
+          "latency_ms": 1142,
           "timing": {
-            "dense_ms": 69.53,
-            "sparse_ms": 12.08,
-            "rerank_ms": 1033.82
+            "dense_ms": 34.99,
+            "sparse_ms": 41.65,
+            "rerank_ms": 1064.9
           },
           "warnings": [
-            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤"
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤",
+            "FILTERS_APPLIED: as_of=2026-10-24；version_mode=current；audience=未指定（不硬过滤）；profile=未提供"
           ]
         },
         {
@@ -1370,14 +1392,15 @@
           ],
           "recall_at_8": 1.0,
           "reciprocal_rank": 1.0,
-          "latency_ms": 1164,
+          "latency_ms": 1124,
           "timing": {
-            "dense_ms": 119.4,
-            "sparse_ms": 19.39,
-            "rerank_ms": 1022.91
+            "dense_ms": 36.71,
+            "sparse_ms": 9.67,
+            "rerank_ms": 1076.49
           },
           "warnings": [
-            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤"
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤",
+            "FILTERS_APPLIED: as_of=2026-10-24；version_mode=current；audience=未指定（不硬过滤）；profile=未提供"
           ]
         },
         {
@@ -1395,14 +1418,15 @@
           ],
           "recall_at_8": 1.0,
           "reciprocal_rank": 1.0,
-          "latency_ms": 1332,
+          "latency_ms": 1086,
           "timing": {
-            "dense_ms": 151.16,
-            "sparse_ms": 80.52,
-            "rerank_ms": 1086.61
+            "dense_ms": 48.47,
+            "sparse_ms": 32.23,
+            "rerank_ms": 1004.55
           },
           "warnings": [
-            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤"
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤",
+            "FILTERS_APPLIED: as_of=2026-10-24；version_mode=current；audience=未指定（不硬过滤）；profile=未提供"
           ]
         },
         {
@@ -1421,14 +1445,15 @@
           ],
           "recall_at_8": 1.0,
           "reciprocal_rank": 1.0,
-          "latency_ms": 1627,
+          "latency_ms": 1208,
           "timing": {
-            "dense_ms": 438.86,
-            "sparse_ms": 136.58,
-            "rerank_ms": 1037.03
+            "dense_ms": 117.58,
+            "sparse_ms": 55.81,
+            "rerank_ms": 1033.06
           },
           "warnings": [
-            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤"
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤",
+            "FILTERS_APPLIED: as_of=2026-10-24；version_mode=current；audience=未指定（不硬过滤）；profile=未提供"
           ]
         },
         {
@@ -1453,14 +1478,15 @@
           ],
           "recall_at_8": 1.0,
           "reciprocal_rank": 1.0,
-          "latency_ms": 1675,
+          "latency_ms": 1324,
           "timing": {
-            "dense_ms": 478.67,
-            "sparse_ms": 160.21,
-            "rerank_ms": 1021.22
+            "dense_ms": 142.92,
+            "sparse_ms": 128.21,
+            "rerank_ms": 1048.57
           },
           "warnings": [
-            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤"
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤",
+            "FILTERS_APPLIED: as_of=2026-10-24；version_mode=current；audience=未指定（不硬过滤）；profile=未提供"
           ]
         },
         {
@@ -1478,14 +1504,15 @@
           ],
           "recall_at_8": 1.0,
           "reciprocal_rank": 1.0,
-          "latency_ms": 974,
+          "latency_ms": 964,
           "timing": {
-            "dense_ms": 78.15,
-            "sparse_ms": 28.32,
-            "rerank_ms": 864.97
+            "dense_ms": 25.92,
+            "sparse_ms": 31.12,
+            "rerank_ms": 905.78
           },
           "warnings": [
-            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤"
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤",
+            "FILTERS_APPLIED: as_of=2026-10-24；version_mode=current；audience=未指定（不硬过滤）；profile=未提供"
           ]
         },
         {
@@ -1510,15 +1537,16 @@
           ],
           "recall_at_8": 1.0,
           "reciprocal_rank": 1.0,
-          "latency_ms": 1332,
+          "latency_ms": 1124,
           "timing": {
-            "dense_ms": 194.3,
-            "sparse_ms": 79.35,
-            "rerank_ms": 1050.4
+            "dense_ms": 31.32,
+            "sparse_ms": 20.87,
+            "rerank_ms": 1071.44
           },
           "warnings": [
             "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤",
-            "PROFILE_UNDETERMINED: 用户未提供学生群体，结果保留可能限定该细目的条款"
+            "PROFILE_UNDETERMINED: 用户未提供学生群体，结果保留可能限定该细目的条款",
+            "FILTERS_APPLIED: as_of=2026-10-24；version_mode=current；audience=未指定（不硬过滤）；profile=未提供"
           ]
         },
         {
@@ -1544,14 +1572,15 @@
           ],
           "recall_at_8": 1.0,
           "reciprocal_rank": 1.0,
-          "latency_ms": 1144,
+          "latency_ms": 1127,
           "timing": {
-            "dense_ms": 101.98,
-            "sparse_ms": 16.88,
-            "rerank_ms": 1020.98
+            "dense_ms": 29.59,
+            "sparse_ms": 10.53,
+            "rerank_ms": 1085.84
           },
           "warnings": [
-            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤"
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤",
+            "FILTERS_APPLIED: as_of=2026-10-24；version_mode=current；audience=未指定（不硬过滤）；profile=未提供"
           ]
         },
         {
@@ -1577,14 +1606,15 @@
           ],
           "recall_at_8": 1.0,
           "reciprocal_rank": 1.0,
-          "latency_ms": 1547,
+          "latency_ms": 1285,
           "timing": {
-            "dense_ms": 372.35,
-            "sparse_ms": 134.74,
-            "rerank_ms": 1022.5
+            "dense_ms": 133.81,
+            "sparse_ms": 105.06,
+            "rerank_ms": 1043.66
           },
           "warnings": [
-            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤"
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤",
+            "FILTERS_APPLIED: as_of=2026-10-24；version_mode=current；audience=未指定（不硬过滤）；profile=未提供"
           ]
         },
         {
@@ -1610,14 +1640,15 @@
           ],
           "recall_at_8": 1.0,
           "reciprocal_rank": 1.0,
-          "latency_ms": 1575,
+          "latency_ms": 1255,
           "timing": {
-            "dense_ms": 361.8,
-            "sparse_ms": 162.05,
-            "rerank_ms": 1039.71
+            "dense_ms": 121.84,
+            "sparse_ms": 41.97,
+            "rerank_ms": 1088.4
           },
           "warnings": [
-            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤"
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤",
+            "FILTERS_APPLIED: as_of=2026-10-24；version_mode=current；audience=未指定（不硬过滤）；profile=未提供"
           ]
         },
         {
@@ -1643,17 +1674,18 @@
           ],
           "recall_at_8": 1.0,
           "reciprocal_rank": 1.0,
-          "latency_ms": 1675,
+          "latency_ms": 1344,
           "timing": {
-            "dense_ms": 455.81,
-            "sparse_ms": 138.23,
-            "rerank_ms": 1066.4
+            "dense_ms": 115.81,
+            "sparse_ms": 110.02,
+            "rerank_ms": 1115.51
           },
           "warnings": [
             "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤",
             "PROFILE_UNDETERMINED: 用户未提供学院，结果保留可能限定该细目的条款",
             "PROFILE_UNDETERMINED: 用户未提供年级/阶段，结果保留可能限定该细目的条款",
-            "PROFILE_UNDETERMINED: 用户未提供学籍状态，结果保留可能限定该细目的条款"
+            "PROFILE_UNDETERMINED: 用户未提供学籍状态，结果保留可能限定该细目的条款",
+            "FILTERS_APPLIED: as_of=2026-10-24；version_mode=current；audience=未指定（不硬过滤）；profile=未提供"
           ]
         },
         {
@@ -1678,18 +1710,19 @@
           ],
           "recall_at_8": 1.0,
           "reciprocal_rank": 0.5,
-          "latency_ms": 1074,
+          "latency_ms": 824,
           "timing": {
-            "dense_ms": 249.69,
-            "sparse_ms": 77.14,
-            "rerank_ms": 737.31
+            "dense_ms": 43.35,
+            "sparse_ms": 39.85,
+            "rerank_ms": 739.19
           },
           "warnings": [
             "MULTIPLE_VERSIONS: info-ug-math-plan 返回 2 个届别版本，按最新生效日保留",
             "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤",
             "PROFILE_UNDETERMINED: 用户未提供学院，结果保留可能限定该细目的条款",
             "PROFILE_UNDETERMINED: 用户未提供专业，结果保留可能限定该细目的条款",
-            "PROFILE_UNDETERMINED: 用户未提供入学年份，结果保留可能限定该细目的条款"
+            "PROFILE_UNDETERMINED: 用户未提供入学年份，结果保留可能限定该细目的条款",
+            "FILTERS_APPLIED: as_of=2026-10-24；version_mode=current；audience=未指定（不硬过滤）；profile=未提供"
           ]
         },
         {
@@ -1714,11 +1747,11 @@
           ],
           "recall_at_8": 1.0,
           "reciprocal_rank": 1.0,
-          "latency_ms": 1129,
+          "latency_ms": 999,
           "timing": {
-            "dense_ms": 64.52,
-            "sparse_ms": 14.38,
-            "rerank_ms": 1046.19
+            "dense_ms": 24.38,
+            "sparse_ms": 15.07,
+            "rerank_ms": 957.77
           },
           "warnings": [
             "MULTIPLE_VERSIONS: info-ug-math-plan 返回 2 个届别版本，按最新生效日保留",
@@ -1729,7 +1762,8 @@
             "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤",
             "PROFILE_UNDETERMINED: 用户未提供学院，结果保留可能限定该细目的条款",
             "PROFILE_UNDETERMINED: 用户未提供专业，结果保留可能限定该细目的条款",
-            "PROFILE_UNDETERMINED: 用户未提供入学年份，结果保留可能限定该细目的条款"
+            "PROFILE_UNDETERMINED: 用户未提供入学年份，结果保留可能限定该细目的条款",
+            "FILTERS_APPLIED: as_of=2026-10-24；version_mode=current；audience=未指定（不硬过滤）；profile=未提供"
           ]
         },
         {
@@ -1743,15 +1777,16 @@
           "retrieved_article_ids": [],
           "recall_at_8": null,
           "reciprocal_rank": null,
-          "latency_ms": 1319,
+          "latency_ms": 1309,
           "timing": {
-            "dense_ms": 72.21,
-            "sparse_ms": 14.31,
-            "rerank_ms": 1229.69
+            "dense_ms": 70.05,
+            "sparse_ms": 13.79,
+            "rerank_ms": 1222.29
           },
           "warnings": [
             "RERANK_BELOW_MARGIN: top=0.5015 < 0.6300",
-            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤"
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤",
+            "FILTERS_APPLIED: as_of=2026-10-24；version_mode=current；audience=未指定（不硬过滤）；profile=未提供"
           ]
         },
         {
@@ -1765,15 +1800,16 @@
           "retrieved_article_ids": [],
           "recall_at_8": null,
           "reciprocal_rank": null,
-          "latency_ms": 1344,
+          "latency_ms": 1267,
           "timing": {
-            "dense_ms": 60.14,
-            "sparse_ms": 16.21,
-            "rerank_ms": 1263.93
+            "dense_ms": 56.31,
+            "sparse_ms": 11.28,
+            "rerank_ms": 1195.68
           },
           "warnings": [
             "RERANK_BELOW_MARGIN: top=0.5022 < 0.6300",
-            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤"
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤",
+            "FILTERS_APPLIED: as_of=2026-10-24；version_mode=current；audience=未指定（不硬过滤）；profile=未提供"
           ]
         },
         {
@@ -1787,15 +1823,16 @@
           "retrieved_article_ids": [],
           "recall_at_8": null,
           "reciprocal_rank": null,
-          "latency_ms": 1121,
+          "latency_ms": 968,
           "timing": {
-            "dense_ms": 146.88,
-            "sparse_ms": 22.02,
-            "rerank_ms": 942.82
+            "dense_ms": 103.91,
+            "sparse_ms": 18.03,
+            "rerank_ms": 843.26
           },
           "warnings": [
             "RERANK_BELOW_MARGIN: top=0.5226 < 0.6300",
-            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤"
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤",
+            "FILTERS_APPLIED: as_of=2026-10-24；version_mode=current；audience=未指定（不硬过滤）；profile=未提供"
           ]
         },
         {
@@ -1809,15 +1846,16 @@
           "retrieved_article_ids": [],
           "recall_at_8": null,
           "reciprocal_rank": null,
-          "latency_ms": 1257,
+          "latency_ms": 1240,
           "timing": {
-            "dense_ms": 54.08,
-            "sparse_ms": 9.97,
-            "rerank_ms": 1190.13
+            "dense_ms": 105.15,
+            "sparse_ms": 26.69,
+            "rerank_ms": 1106.03
           },
           "warnings": [
             "RERANK_BELOW_MARGIN: top=0.5743 < 0.6300",
-            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤"
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤",
+            "FILTERS_APPLIED: as_of=2026-10-24；version_mode=current；audience=未指定（不硬过滤）；profile=未提供"
           ]
         },
         {
@@ -1831,15 +1869,16 @@
           "retrieved_article_ids": [],
           "recall_at_8": null,
           "reciprocal_rank": null,
-          "latency_ms": 1254,
+          "latency_ms": 1410,
           "timing": {
-            "dense_ms": 212.56,
-            "sparse_ms": 38.17,
-            "rerank_ms": 996.61
+            "dense_ms": 258.99,
+            "sparse_ms": 65.04,
+            "rerank_ms": 1074.71
           },
           "warnings": [
             "RERANK_BELOW_MARGIN: top=0.5956 < 0.6300",
-            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤"
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤",
+            "FILTERS_APPLIED: as_of=2026-10-24；version_mode=current；audience=未指定（不硬过滤）；profile=未提供"
           ]
         },
         {
@@ -1853,15 +1892,16 @@
           "retrieved_article_ids": [],
           "recall_at_8": null,
           "reciprocal_rank": null,
-          "latency_ms": 1571,
+          "latency_ms": 1365,
           "timing": {
-            "dense_ms": 71.45,
-            "sparse_ms": 20.67,
-            "rerank_ms": 1472.12
+            "dense_ms": 183.79,
+            "sparse_ms": 29.62,
+            "rerank_ms": 1136.36
           },
           "warnings": [
             "RERANK_BELOW_MARGIN: top=0.5060 < 0.6300",
-            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤"
+            "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤",
+            "FILTERS_APPLIED: as_of=2026-10-24；version_mode=current；audience=未指定（不硬过滤）；profile=未提供"
           ]
         }
       ]

@@ -1,8 +1,8 @@
 # W4 检索评测报告
 
 - 数据集：`dev_v0.jsonl`（e144b8001333…）
-- 生成时间：2026-10-24T05:35:00+00:00
-- git：`018ce43e54efbccf9b4be043053afcb0ed650bf4`（dirty=True）
+- 生成时间：2026-10-24T06:20:58+00:00
+- git：`26afddfba1fc6c35f40a4791c3995d591ee49374`（dirty=False）
 - 索引版本：`articles_v1@hybrid-0cb2167de3fe`
 - 向量 manifest：`17441d486b2fb788456b875665c695d9bafa2cc4a9bef1c974c91b19bd24e7a2`
 
@@ -18,9 +18,9 @@
 
 | 模式 | p50 | p95 | rerank p50 | rerank p95 |
 |---|---:|---:|---:|---:|
-| `dense` | 131.5 ms | 359.0 ms | n/a | n/a |
-| `hybrid_rrf` | 214.0 ms | 637.2 ms | n/a | n/a |
-| `hybrid_rerank` | 1325.5 ms | 1677.4 ms | 1038.0 ms | 1474.5 ms |
+| `dense` | 44.5 ms | 139.1 ms | n/a | n/a |
+| `hybrid_rrf` | 80.0 ms | 224.9 ms | n/a | n/a |
+| `hybrid_rerank` | 1224.0 ms | 1367.2 ms | 1072.5 ms | 1196.3 ms |
 
 ## 口径与限制
 
