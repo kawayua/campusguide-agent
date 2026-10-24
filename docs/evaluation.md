@@ -262,7 +262,7 @@ W4 的已知缺口：
   test-037 section 选错、test-003/029/033/035/039 缺 required fact；
 - 修复：其他大学 guard、rerank margin=0、JSON 截断重试、test-036 gold 修正；
 - 下一步：不改冻结题，处理 test-027/028/037 后重跑并只重标 changed claims；
-  A5/A4/A2 消融；A1 固定分块/A3 流程 DAG N/A；详见 `docs/weekly/w7.md`。
+  A5/A4/A2 消融（A2 待全量 support 标注）；A1 固定分块/A3 流程 DAG N/A；详见 `docs/weekly/w7.md`。
 
 ### W7 第二轮 remediation2（2026-10-24，已标注）
 
