@@ -54,7 +54,7 @@ from campusguide.qa.finalize import (
     FinalizeResult,
     finalize,
 )
-from campusguide.qa.guard import MAX_QUERY_CHARS, check_guard
+from campusguide.qa.guard import MAX_QUERY_CHARS, check_guard, check_version_intent
 from campusguide.retrieval.normalize import normalize_query
 from campusguide.verification.claims import ClaimValidator
 from campusguide.verification.scope import ScopeResult, apply_scope
@@ -338,6 +338,7 @@ class QAService:
         profile: UserProfile | None = None,
         session_id: str | None = None,
         block_types: list[BlockType] | None = None,
+        as_of: date | None = None,
     ) -> QAResult:
         started = time.perf_counter()
         trace_id = str(uuid.uuid4())
@@ -347,7 +348,7 @@ class QAService:
         retrieval_audience = None if audience in (None, Audience.ALL) else audience
         filters = PolicyFilters(
             block_types=list(block_types or self._settings.block_types),
-            as_of=self._today or date.today(),
+            as_of=as_of or self._today or date.today(),
             audience=[retrieval_audience] if retrieval_audience else None,
             profile=profile,
         )
@@ -372,6 +373,25 @@ class QAService:
                 trace_extra=trace_extra,
                 outcome=guard.outcome or OutcomeCode.INVALID_REQUEST,
                 message=guard.message,
+                issues=[],
+                scope_issues=[],
+            )
+
+        version_intent = check_version_intent(question, profile)
+        if version_intent is not None and not version_intent.allowed:
+            trace_extra["version_intent"] = {
+                "outcome": (version_intent.outcome.value if version_intent.outcome else None),
+                "intake_year": profile.intake_year if profile else None,
+            }
+            return self._finish_abstain(
+                trace_id=trace_id,
+                session_id=session_id,
+                started=started,
+                started_at=started_at,
+                question=question,
+                trace_extra=trace_extra,
+                outcome=version_intent.outcome or OutcomeCode.VERSION_MISMATCH,
+                message=version_intent.message,
                 issues=[],
                 scope_issues=[],
             )
@@ -738,6 +758,11 @@ class QAService:
             "quote_repaired": result.quote_repaired,
             "quote_repair_remaining": list(result.quote_repair_remaining),
             "quote_repair_error": result.quote_repair_error,
+            "provider_retried": result.provider_retried,
+            "json_empty_retried": result.json_empty_retried,
+            "json_truncation_retried": result.json_truncation_retried,
+            "empty_claims_retried": result.empty_claims_retried,
+            "empty_claims_error": result.empty_claims_error,
         }
 
     def _finish(
@@ -772,6 +797,10 @@ class QAService:
                 "quote_repaired",
                 "quote_repair_remaining",
                 "quote_repair_error",
+                "json_empty_retried",
+                "json_truncation_retried",
+                "empty_claims_retried",
+                "empty_claims_error",
             )
             if key in (trace_extra.get("llm") or {})
         }

@@ -23,7 +23,7 @@ from campusguide.mcp.schemas import SearchArticlesRequest
 
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_DATASET = ROOT / "data" / "eval" / "population_v1.jsonl"
-DEFAULT_OUTPUT = ROOT / "data" / "eval" / "w4-population-report.json"
+DEFAULT_OUTPUT = ROOT / "data" / "eval" / "p1-population-report.json"
 
 
 def load_cases(path: Path) -> list[dict[str, Any]]:

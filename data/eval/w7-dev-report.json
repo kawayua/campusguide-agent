@@ -1,0 +1,179 @@
+{
+  "schema_version": "w7-report-v1",
+  "dataset": "test_v1.jsonl",
+  "dataset_sha256": "8fb21ebebcea641a33eeeb972d0e4c75b3ae8b54c9e70c107a9b10fc404d0851",
+  "testset_sha256": "ed451233c9fe79397443d5a2ffbf68b9debd665040b4e5d50b0f2a4282d2e1ac",
+  "run_sha256": "f9bd754411e1b1a9b173ce80c4cd4561e3a6f45f14fe3e669696b44e64086243",
+  "metadata": {
+    "git_commit": "57f91fd8d8fe36d0975ac650d2c98f42cd1bbcd1",
+    "git_dirty": true,
+    "model": "mimo-v2.6-pro-ultraspeed",
+    "advisor_prompt_version": "w6a2-2026-10-24",
+    "embedding_model": "BAAI/bge-m3",
+    "vector_manifest": {
+      "path": "D:\\big-third-up\\campusguide-agent\\data\\vector_manifest.json",
+      "sha256": "17441d486b2fb788456b875665c695d9bafa2cc4a9bef1c974c91b19bd24e7a2",
+      "content_hash": "",
+      "source_content_hash": "dc14ddc5452b3a845430300bde27fd5ca85a1930d403562cd35001c65158aabe",
+      "points": 3952,
+      "device": "cuda",
+      "embedding_model": "BAAI/bge-m3"
+    },
+    "config_hash": "e2328238c1ac6565e7e4bd8ac8df582c3575f97b0f9eef789b17b5d4b2350cb2",
+    "config_files": [
+      "configs/retrieval.yaml",
+      "configs/abstention.yaml",
+      "configs/aliases.yaml",
+      "configs/mcp.yaml"
+    ],
+    "warmup_ms": 0,
+    "latency_scope": "cold",
+    "limit": null,
+    "text_manifest": "D:\\big-third-up\\campusguide-agent\\data\\manifest.json"
+  },
+  "retrieval": {
+    "article": {
+      "questions": 35,
+      "recall_at_8": 0.9714,
+      "mrr": 0.9381
+    },
+    "section": {
+      "questions": 5,
+      "recall_at_8": 0.8,
+      "mrr": 0.64
+    },
+    "overall": {
+      "questions": 40,
+      "recall_at_8": 0.95,
+      "mrr": 0.9008
+    }
+  },
+  "structure": {
+    "citations_total": 129,
+    "valid_citations": 129,
+    "citation_id_valid_rate": 1.0,
+    "fabricated_id_count": 0,
+    "wrong_part_count": 0,
+    "quotes_total": 129,
+    "quotes_located": 129,
+    "quote_locatable_rate": 1.0,
+    "pass_with_blocking_count": 0,
+    "ok": true
+  },
+  "support": {
+    "drafts_total": 130,
+    "drafts_labeled": 0,
+    "drafts_unlabeled": 130,
+    "drafts_supported": 0,
+    "rendered_total": 130,
+    "rendered_labeled": 0,
+    "rendered_supported": 0,
+    "draft_support_rate": {
+      "successes": 0,
+      "total": 0,
+      "rate": null,
+      "wilson_low": 0.0,
+      "wilson_high": 0.0
+    },
+    "rendered_support_rate": {
+      "successes": 0,
+      "total": 0,
+      "rate": null,
+      "wilson_low": 0.0,
+      "wilson_high": 0.0
+    }
+  },
+  "answer_correctness": {
+    "total": 50,
+    "labeled": 0,
+    "unlabeled": 50,
+    "counts": {
+      "unlabeled": 50
+    },
+    "correct_rate": {
+      "successes": 0,
+      "total": 0,
+      "rate": null,
+      "wilson_low": 0.0,
+      "wilson_high": 0.0
+    }
+  },
+  "refusal": {
+    "answerable": 40,
+    "unanswerable": 10,
+    "false_refusal": {
+      "successes": 5,
+      "total": 40,
+      "rate": 0.125,
+      "wilson_low": 0.0546,
+      "wilson_high": 0.2611
+    },
+    "refusal_recall": {
+      "successes": 9,
+      "total": 10,
+      "rate": 0.9,
+      "wilson_low": 0.5958,
+      "wilson_high": 0.9821
+    },
+    "reason_code_accuracy": {
+      "successes": 8,
+      "total": 10,
+      "rate": 0.8,
+      "wilson_low": 0.4902,
+      "wilson_high": 0.9433
+    }
+  },
+  "version_sensitive": {
+    "successes": 0,
+    "total": 0,
+    "rate": null,
+    "wilson_low": 0.0,
+    "wilson_high": 0.0,
+    "unlabeled": 5
+  },
+  "latency_ms": {
+    "p50": 8441.0,
+    "p95": 25944.3
+  },
+  "gates": {
+    "structure": {
+      "ok": true
+    },
+    "support": {
+      "ok": false,
+      "value": null,
+      "gate": 0.95
+    },
+    "answer_correct": {
+      "ok": false,
+      "value": null,
+      "gate": 0.85
+    },
+    "refusal_recall": {
+      "ok": true,
+      "value": 0.9,
+      "gate": 0.9
+    },
+    "false_refusal": {
+      "ok": false,
+      "value": 0.125,
+      "gate": 0.1
+    },
+    "version_sensitive": {
+      "ok": false,
+      "value": null,
+      "gate": 0.9
+    },
+    "article_recall": {
+      "ok": true,
+      "value": 0.9714,
+      "gate": 0.9
+    },
+    "p95": {
+      "ok": false,
+      "value": 25944.3,
+      "gate": 10000
+    }
+  },
+  "overall": false
+}

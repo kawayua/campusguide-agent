@@ -6,7 +6,7 @@ RUFF ?= $(UV) run ruff
 
 .PHONY: help init sync fetch parse index index-qdrant vector-index vector-index-dense validate-sources \
 	check-segmentation test lint format format-check qa ask eval-w2 eval-w3 eval-w3-hybrid eval-w4 \
-	eval-w6a2 eval-w6a2-report mcp-smoke population-check eval-w3-report label-w3 sheet-w3 \
+	eval-w6a2 eval-w6a2-report freeze-w7 eval-w7 eval-w7-report draft-w7 mcp-smoke population-check e2e-section eval-w3-report label-w3 sheet-w3 \
 	label-w6a2 sheet-w6a2 demo compose-up compose-down clean
 
 help:
@@ -21,6 +21,11 @@ help:
 	@echo "  make vector-index-dense 只构建 dense（W2/W3 兼容）"
 	@echo "  make mcp-smoke         启动 policy-search/policy-meta 做 stdio smoke"
 	@echo "  make population-check  通过 MCP 跑 5 个人群错配验收 case"
+	@echo "  make e2e-section       P1 培养方案 section 端到端 4 case"
+	@echo "  make draft-w7          AI 辅助生成 W7 50 题 draft + 核对表"
+	@echo "  make freeze-w7         校验并冻结 W7 50 题测试集"
+	@echo "  make eval-w7           跑 W7 冻结测试集并生成报告"
+	@echo "  make eval-w7-report    人工标注后复用 W7 run 生成报告"
 	@echo "  make eval-w4           dense vs hybrid RRF vs hybrid+rerank 检索对比"
 	@echo "  make eval-w6a2         W6-A2 quote 契约 20 题回归（独立 run）"
 	@echo "  make eval-w6a2-report  人工标注后复用 W6-A2 run 生成报告"
@@ -72,8 +77,23 @@ vector-index-dense:
 mcp-smoke:
 	$(PYTHON) scripts/mcp_smoke.py
 
+draft-w7:
+	$(PYTHON) scripts/draft_w7_testset.py
+
+freeze-w7:
+	$(PYTHON) scripts/freeze_testset.py
+
+eval-w7:
+	$(PYTHON) scripts/eval_w7.py
+
+eval-w7-report:
+	$(PYTHON) scripts/eval_w7.py --report-only
+
 population-check:
 	$(PYTHON) scripts/check_population_cases.py
+
+e2e-section:
+	$(PYTHON) scripts/e2e_section_check.py
 
 ask:
 	$(PYTHON) scripts/ask.py "$(Q)"

@@ -1,0 +1,179 @@
+{
+  "schema_version": "w7-report-v1",
+  "dataset": "test_v1.jsonl",
+  "dataset_sha256": "208cf3c5f032c039b3af985428c7bb2f3dfacdd422dcf8ae5dc24d2f393eb74a",
+  "testset_sha256": "2a8d0e1223621520e5807aaa3b2a244110f9835bb7bae6d5bc35e4ed7f7e8f18",
+  "run_sha256": "dbf77fb43a939c17c911095e40a0beba4f3940a997c42288834ac30958b7d560",
+  "metadata": {
+    "git_commit": "57f91fd8d8fe36d0975ac650d2c98f42cd1bbcd1",
+    "git_dirty": true,
+    "model": "mimo-v2.6-pro-ultraspeed",
+    "advisor_prompt_version": "w6a2-2026-10-24",
+    "embedding_model": "BAAI/bge-m3",
+    "vector_manifest": {
+      "path": "D:\\big-third-up\\campusguide-agent\\data\\vector_manifest.json",
+      "sha256": "17441d486b2fb788456b875665c695d9bafa2cc4a9bef1c974c91b19bd24e7a2",
+      "content_hash": "",
+      "source_content_hash": "dc14ddc5452b3a845430300bde27fd5ca85a1930d403562cd35001c65158aabe",
+      "points": 3952,
+      "device": "cuda",
+      "embedding_model": "BAAI/bge-m3"
+    },
+    "config_hash": "fa8c174a9fc5f5332fb6f762776715cf19f179de1ef0cef3b8928ed2b28c8edd",
+    "config_files": [
+      "configs/retrieval.yaml",
+      "configs/abstention.yaml",
+      "configs/aliases.yaml",
+      "configs/mcp.yaml"
+    ],
+    "warmup_ms": 0,
+    "latency_scope": "cold",
+    "limit": null,
+    "text_manifest": "D:\\big-third-up\\campusguide-agent\\data\\manifest.json"
+  },
+  "retrieval": {
+    "article": {
+      "questions": 35,
+      "recall_at_8": 0.9714,
+      "mrr": 0.9381
+    },
+    "section": {
+      "questions": 5,
+      "recall_at_8": 1.0,
+      "mrr": 0.74
+    },
+    "overall": {
+      "questions": 40,
+      "recall_at_8": 0.975,
+      "mrr": 0.9133
+    }
+  },
+  "structure": {
+    "citations_total": 121,
+    "valid_citations": 121,
+    "citation_id_valid_rate": 1.0,
+    "fabricated_id_count": 0,
+    "wrong_part_count": 0,
+    "quotes_total": 121,
+    "quotes_located": 121,
+    "quote_locatable_rate": 1.0,
+    "pass_with_blocking_count": 0,
+    "ok": true
+  },
+  "support": {
+    "drafts_total": 126,
+    "drafts_labeled": 0,
+    "drafts_unlabeled": 126,
+    "drafts_supported": 0,
+    "rendered_total": 125,
+    "rendered_labeled": 0,
+    "rendered_supported": 0,
+    "draft_support_rate": {
+      "successes": 0,
+      "total": 0,
+      "rate": null,
+      "wilson_low": 0.0,
+      "wilson_high": 0.0
+    },
+    "rendered_support_rate": {
+      "successes": 0,
+      "total": 0,
+      "rate": null,
+      "wilson_low": 0.0,
+      "wilson_high": 0.0
+    }
+  },
+  "answer_correctness": {
+    "total": 50,
+    "labeled": 0,
+    "unlabeled": 50,
+    "counts": {
+      "unlabeled": 50
+    },
+    "correct_rate": {
+      "successes": 0,
+      "total": 0,
+      "rate": null,
+      "wilson_low": 0.0,
+      "wilson_high": 0.0
+    }
+  },
+  "refusal": {
+    "answerable": 40,
+    "unanswerable": 10,
+    "false_refusal": {
+      "successes": 2,
+      "total": 40,
+      "rate": 0.05,
+      "wilson_low": 0.0138,
+      "wilson_high": 0.165
+    },
+    "refusal_recall": {
+      "successes": 10,
+      "total": 10,
+      "rate": 1.0,
+      "wilson_low": 0.7225,
+      "wilson_high": 1.0
+    },
+    "reason_code_accuracy": {
+      "successes": 10,
+      "total": 10,
+      "rate": 1.0,
+      "wilson_low": 0.7225,
+      "wilson_high": 1.0
+    }
+  },
+  "version_sensitive": {
+    "successes": 0,
+    "total": 0,
+    "rate": null,
+    "wilson_low": 0.0,
+    "wilson_high": 0.0,
+    "unlabeled": 5
+  },
+  "latency_ms": {
+    "p50": 9914.0,
+    "p95": 61173.7
+  },
+  "gates": {
+    "structure": {
+      "ok": true
+    },
+    "support": {
+      "ok": false,
+      "value": null,
+      "gate": 0.95
+    },
+    "answer_correct": {
+      "ok": false,
+      "value": null,
+      "gate": 0.85
+    },
+    "refusal_recall": {
+      "ok": true,
+      "value": 1.0,
+      "gate": 0.9
+    },
+    "false_refusal": {
+      "ok": true,
+      "value": 0.05,
+      "gate": 0.1
+    },
+    "version_sensitive": {
+      "ok": false,
+      "value": null,
+      "gate": 0.9
+    },
+    "article_recall": {
+      "ok": true,
+      "value": 0.9714,
+      "gate": 0.9
+    },
+    "p95": {
+      "ok": false,
+      "value": 61173.7,
+      "gate": 10000
+    }
+  },
+  "overall": false
+}

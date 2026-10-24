@@ -149,6 +149,7 @@ class FakeChatProvider:
         self._responses = list(responses)
         self._model = model
         self.calls: list[list[dict[str, str]]] = []
+        self.options: list[dict[str, Any]] = []
 
     @property
     def model(self) -> str:
@@ -162,6 +163,7 @@ class FakeChatProvider:
         max_tokens: int = 1200,
     ) -> ChatResponse:
         self.calls.append(messages)
+        self.options.append({"temperature": temperature, "max_tokens": max_tokens})
         if not self._responses:
             raise ChatProviderError("FakeChatProvider 没有剩余响应")
         item = self._responses.pop(0)

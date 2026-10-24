@@ -1,0 +1,16 @@
+{
+  "composition": {
+    "multi_article": 10,
+    "out_of_scope": 4,
+    "privacy": 3,
+    "repealed": 3,
+    "section": 5,
+    "single_article": 25
+  },
+  "frozen_at": "2026-10-24T09:29:59+00:00",
+  "questions": 50,
+  "schema_version": "w7-testset-v1",
+  "sha256": "2a8d0e1223621520e5807aaa3b2a244110f9835bb7bae6d5bc35e4ed7f7e8f18",
+  "source": "D:\\big-third-up\\campusguide-agent\\data\\eval\\test_v1.draft.jsonl",
+  "version_sensitive": 5
+}

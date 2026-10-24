@@ -353,6 +353,7 @@ def create_hybrid_qa_service(
         rerank_candidates=config.rerank_candidates,
         rerank_top_n=config.rerank_top_n,
         max_articles=config.max_articles,
+        max_table_sections=config.max_table_sections,
         token_budget=config.token_budget,
         min_rerank_score=config.min_rerank_score,
         min_score_margin=config.min_score_margin,

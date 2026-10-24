@@ -2,7 +2,7 @@
 
 面向高校公开制度文档的**条款级**问答与办事指引 Agent（个人作品集项目）。
 
-当前目标院校：**华南农业大学**。当前进度：W1 数据与索引地基、W2 单轮问答垂直切片、W3 引用核对与拒答 v0、W4 MCP 工具层与混合检索、W6-A2 quote 契约、P0 profile-aware 检索已实现；语料 213 份文档 / 232 个版本 / 3,952 个可检索块（含两份 2020 级扫描件 OCR）。W3 在 W3 v2 代码上跑完 20 题 dev_v0：55/55 引用 ID 有效、0 编造、0 part_no 错误、55/55 quote 可定位；拒答召回 100%、误拒率 0.0%、partial 率 7.1%；warm p50 3.34s、p95 9.78s，废止探针 p50 73.5ms（单列）。**support 标注已完成 56/56（39 supported / 17 partial / 0 unsupported）；draft 支持率 69.6%，rendered 支持率 75.0%，低于 85%，support 门禁未通过，W3 总门禁未通过**；W6-A 提示词收紧已通过（见下）。W2 的 p95 未达 10s 已明确接受，详见 [W2 周记录](docs/weekly/w2.md)；W3 状态见 [W3 周记录](docs/weekly/w3.md)。
+当前目标院校：**华南农业大学**。当前进度：W1 数据与索引地基、W2 单轮问答垂直切片、W3 引用核对与拒答 v0、W4 MCP 工具层与混合检索、W6-A2 quote 契约、P0 profile-aware 检索、P1 section 证据与生成重试、W7 冻结评测（第一轮与第二轮 remediation2 均已人工标注；remediation2 support 0.985 通过，answer 0.750 / version 0.200 / p95 35.1s 未通过）；语料 213 份文档 / 232 个版本 / 3,952 个可检索块（含两份 2020 级扫描件 OCR）。W3 在 W3 v2 代码上跑完 20 题 dev_v0：55/55 引用 ID 有效、0 编造、0 part_no 错误、55/55 quote 可定位；拒答召回 100%、误拒率 0.0%、partial 率 7.1%；warm p50 3.34s、p95 9.78s，废止探针 p50 73.5ms（单列）。**support 标注已完成 56/56（39 supported / 17 partial / 0 unsupported）；draft 支持率 69.6%，rendered 支持率 75.0%，低于 85%，support 门禁未通过，W3 总门禁未通过**；W6-A 提示词收紧已通过（见下）。W2 的 p95 未达 10s 已明确接受，详见 [W2 周记录](docs/weekly/w2.md)；W3 状态见 [W3 周记录](docs/weekly/w3.md)。
 
 W4 已实现 `policy-search` / `policy-meta` 两个只读 FastMCP server、BM25 sparse + bge-m3 dense 的 RRF 混合召回、bge-reranker-v2-m3 重排，以及受众/时间过滤。`articles_v1` 已重建为 3,952 点 hybrid 索引。dev_v0 20 题检索层：Recall@8 在 dense-only / RRF / RRF+rerank 三种模式均为 **1.000**；MRR 分别为 **0.905 / 0.848 / 0.929**。5/5 人群错配 case 通过 MCP 实跑，不返回不匹配条款。W3 回归（同一 20 题、W6-A prompt、hybrid+rerank）：结构 100%、拒答召回 100%、误拒率 0.0%、原因码 100%，partial 率 14.3%；support 未重新人工标注，不能声称通过。详见 [W4 周记录](docs/weekly/w4.md)。
 
@@ -68,6 +68,10 @@ W4 **不做**：W5 流程 DSL/日历、W6 语义蕴含与历史回答、W7 冻�
 
 **P0 增补（2026-10-24）**：`UserProfile` 的学院/专业/入学年份会映射为 organization registry 的名称/别名，追加 profile-aware 查询变体；`rerank_candidates=20` 先重排 RRF top 20 再取 8。`population_v1` 5/5 通过，p004/p005 已命中目标培养方案。P0 检索报告独立为 `data/eval/p0-retrieval-report.{json,md}`，不覆盖 W4 tag 的历史报告。详见 [P0 记录](docs/weekly/p0.md)。
 
+**P1 增补（2026-10-24）**：section-aware 证据选择（宽问题最多 2 个表格 section，课程/学分问题放开）、JSON 空返回与空 claims 各一次重试、`intake_year` 与问题版本年份不一致时提前返回 `VERSION_MISMATCH`。`make e2e-section` 4/4：p004 宽/聚焦 ANSWERED，p005 旧版 VERSION_MISMATCH，2024 版 ANSWERED；P1 检索 overall MRR **0.964**（section MRR 1.000），population 仍 5/5。详见 [P1 记录](docs/weekly/p1.md)。
+
+**W7 冻结评测（2026-10-24）**：50 题冻结集（40 可答 + 10 不可答，5 题版本敏感），test-036 因 gold 过期有记录在案的标注修正（changelog + 归档 v0）。第一轮 remediation run `b55bc436…`：结构 100%、article/section Recall@8 均 **1.000**、article MRR 0.967、拒答召回 10/10、误拒 0.025。人工标注：support **0.993**（135/136，95% CI 0.960–0.999）、answer **0.800**（32/40，CI 0.652–0.895）、version-sensitive **0.600**（3/5）；p50/p95 8.3/32.6s。第二轮 remediation2（prompt `w6a2.1`、多问/列举覆盖、空/截断更大预算、就业意图 section 提权）run `23b384f1…`：结构 100%、Recall@8 1.000、overall MRR 0.958、section MRR 0.900、误拒 0、p95 35.1s；人工标注 support **0.985**（133/135，通过）、answer **0.750**（30/40）、version-sensitive **0.200**（1/5）。test-027/028 修复为 correct，test-037 从 incorrect 升为 partial；但 test-007/031/036/038/039 回归，answer 与 version 反而低于第一轮。**W7 总门禁未通过**：answer 与 version 未达门槛，p95 超 10s。详见 [W7 周记录](docs/weekly/w7.md)。
+
 ## 快速开始
 
 ```bash
@@ -100,6 +104,10 @@ make eval-w3-hybrid      # W4 回归：hybrid 检索 + 独立 run
 make eval-w4             # 检索层 A/B/C：dense vs RRF vs RRF+rerank
 make eval-w6a2           # W6-A2 quote 契约 20 题回归
 make population-check    # 5 个人群错配 case（真实 MCP + 真实索引）
+make e2e-section         # P1 培养方案 section 端到端 4 case
+make freeze-w7           # 校验并冻结 W7 50 题测试集
+make eval-w7             # 跑 W7 冻结测试集并生成报告
+make eval-w7-report      # 人工标注后复用 W7 run 生成报告
 make sheet-w3            # 生成 data/eval/w3_support_review.md 核对表
 make label-w3 ANNOTATOR=yaukin  # 交互式人工标注 draft claim
 make eval-w3-report      # 人工标注后复用 run 生成报告
@@ -186,7 +194,7 @@ docs/               数据来源、评测与质量门、周记录（W1/W2/W3/W4�
 
 ## 质量门
 
-`make qa`（等价于 `scripts/qa.sh`）执行 `ruff check`、`ruff format --check src tests scripts` 与全量 pytest。所有测试使用 mock HTTP、临时目录、内存 Qdrant 和 fake embedder/chat，不访问学校站点或模型服务。当前测试覆盖抓取、解析、切分、脱敏、版本解析、索引确定性、Qdrant 集合骨架、本地 HTML 端到端管线、W2 的别名/过滤/向量点/dense 检索/claim quote 校验/finalize/guard/trace，W3 的原文 span、中文 fact 覆盖、scope、隐私、废止探针、PASS/PARTIAL/ABSTAIN 决策、run hash 与 support/拒答指标，以及 W4 的 BM25 sparse、RRF/rerank、受众细目过滤、MCP 契约/stdio client、5 个人群错配 case。全量离线测试 **386 passed**（W1/W2 时点 154；W3 后 295；W4 后 367；W6-A2/P0 新增 19）。
+`make qa`（等价于 `scripts/qa.sh`）执行 `ruff check`、`ruff format --check src tests scripts` 与全量 pytest。所有测试使用 mock HTTP、临时目录、内存 Qdrant 和 fake embedder/chat，不访问学校站点或模型服务。当前测试覆盖抓取、解析、切分、脱敏、版本解析、索引确定性、Qdrant 集合骨架、本地 HTML 端到端管线、W2 的别名/过滤/向量点/dense 检索/claim quote 校验/finalize/guard/trace，W3 的原文 span、中文 fact 覆盖、scope、隐私、废止探针、PASS/PARTIAL/ABSTAIN 决策、run hash 与 support/拒答指标，以及 W4 的 BM25 sparse、RRF/rerank、受众细目过滤、MCP 契约/stdio client、5 个人群错配 case。全量离线测试 **426 passed**（W1/W2 时点 154；W3 后 295；W4 后 367；W6-A2/P0/P1 新增 32；W7 基础设施新增 8；W7 remediation 新增 3；remediation2 新增 16）。
 
 W2 的指标口径：
 
@@ -216,7 +224,7 @@ W3 的指标口径：
 
 W3 不把 AI 预标注当人工验收。`data/eval/w3_support_labels.jsonl` 已由 `yaukin` 完成 56 条人工标注（39 supported / 17 partial / 0 unsupported）；`annotator` 为空或以 `ai` 开头的记录仍按 `unlabeled` 处理。当前 live run 在 dirty working tree 上执行（commit `b240e4d`，dirty=True）；W3 已按本轮 75.0% 判定不通过，不以重跑刷分。W6-A 提示词收紧已在 ultraspeed 上通过：54/54 人工标注（53 supported / 1 partial / 0 unsupported），rendered **98.1%**，结构/拒答/误拒门禁通过；唯一 partial 是 d004/c1。v2.6pro A/B 的 support 为 100%（53/53；rendered 51/51），但有 2 条 quote mismatch、d012 PARTIAL、p95 45.2s、warmup 111s，可靠性低于 ultraspeed；默认模型已回退到 `mimo-v2.6-pro-ultraspeed`（`ADVISOR_MAX_TOKENS=3000`）。W6-A 最终报告仍为 ultraspeed 的 98.1%；v2.6pro 报告保留为 A/B 记录。报告见 `data/eval/w6a-dev-report.md`。
 
-W1 的验收状态、实测数字和遗留风险记录在 [docs/weekly/w1.md](docs/weekly/w1.md)；W2/W3/W4/P0 分别在 [W2 周记录](docs/weekly/w2.md)、[W3 周记录](docs/weekly/w3.md)、[W4 周记录](docs/weekly/w4.md)、[P0 记录](docs/weekly/p0.md)；工程质量门与 W7 效果评测的边界见 [docs/evaluation.md](docs/evaluation.md)。GitHub Actions 工作流位于 `.github/workflows/ci.yml`；Gitee 仓库可使用本地 `make qa`。
+W1 的验收状态、实测数字和遗留风险记录在 [docs/weekly/w1.md](docs/weekly/w1.md)；W2/W3/W4/P0/P1/W7 分别在 [W2 周记录](docs/weekly/w2.md)、[W3 周记录](docs/weekly/w3.md)、[W4 周记录](docs/weekly/w4.md)、[P0 记录](docs/weekly/p0.md)、[P1 记录](docs/weekly/p1.md)、[W7 周记录](docs/weekly/w7.md)；工程质量门与 W7 效果评测的边界见 [docs/evaluation.md](docs/evaluation.md)。GitHub Actions 工作流位于 `.github/workflows/ci.yml`；Gitee 仓库可使用本地 `make qa`。
 
 ## 合规
 
@@ -228,4 +236,4 @@ W1 的验收状态、实测数字和遗留风险记录在 [docs/weekly/w1.md](do
 
 ## 计划
 
-总体设计见 [docs/superpowers/specs/2026-10-19-campusguide-design.md](docs/superpowers/specs/2026-10-19-campusguide-design.md)，实施计划见 [docs/superpowers/plans/2026-10-19-campusguide-implementation-plan.md](docs/superpowers/plans/2026-10-19-campusguide-implementation-plan.md)。周记录：[W1](docs/weekly/w1.md)、[W2](docs/weekly/w2.md)、[W3](docs/weekly/w3.md)、[W4](docs/weekly/w4.md)、[W6](docs/weekly/w6.md)。W2 设计见 [docs/superpowers/specs/2026-10-22-w2-single-turn-qa-design.md](docs/superpowers/specs/2026-10-22-w2-single-turn-qa-design.md)；W3 设计见 [docs/superpowers/specs/2026-10-23-w3-citation-verification-abstention-design-v2.md](docs/superpowers/specs/2026-10-23-w3-citation-verification-abstention-design-v2.md)；W4 设计见 [docs/superpowers/specs/2026-10-24-w4-mcp-hybrid-retrieval-design.md](docs/superpowers/specs/2026-10-24-w4-mcp-hybrid-retrieval-design.md)；W6-A 记录见 [W6 周记录](docs/weekly/w6.md)。
+总体设计见 [docs/superpowers/specs/2026-10-19-campusguide-design.md](docs/superpowers/specs/2026-10-19-campusguide-design.md)，实施计划见 [docs/superpowers/plans/2026-10-19-campusguide-implementation-plan.md](docs/superpowers/plans/2026-10-19-campusguide-implementation-plan.md)。周记录：[W1](docs/weekly/w1.md)、[W2](docs/weekly/w2.md)、[W3](docs/weekly/w3.md)、[W4](docs/weekly/w4.md)、[W6](docs/weekly/w6.md)。W2 设计见 [docs/superpowers/specs/2026-10-22-w2-single-turn-qa-design.md](docs/superpowers/specs/2026-10-22-w2-single-turn-qa-design.md)；W3 设计见 [docs/superpowers/specs/2026-10-23-w3-citation-verification-abstention-design-v2.md](docs/superpowers/specs/2026-10-23-w3-citation-verification-abstention-design-v2.md)；W4 设计见 [docs/superpowers/specs/2026-10-24-w4-mcp-hybrid-retrieval-design.md](docs/superpowers/specs/2026-10-24-w4-mcp-hybrid-retrieval-design.md)；W7 设计见 [docs/superpowers/specs/2026-10-24-w7-frozen-evaluation-design.md](docs/superpowers/specs/2026-10-24-w7-frozen-evaluation-design.md)；W6-A 记录见 [W6 周记录](docs/weekly/w6.md)。

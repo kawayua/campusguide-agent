@@ -199,7 +199,8 @@ def test_valid_quote_does_not_trigger_repair() -> None:
 
 
 def test_prompt_version_and_contract_phrases() -> None:
-    assert PROMPT_VERSION == "w6a2-2026-10-24"
+    # w6a2.1 保留 w6a2 契约短语，另加多问/列举覆盖约束。
+    assert PROMPT_VERSION == "w6a2.1-2026-10-24"
     for phrase in ("连续子串", "跳过中间", "一学期内", "一个条件、一个后果或一个数量"):
         assert phrase in SYSTEM_PROMPT
     messages = build_messages("问题", _evidence(), None)

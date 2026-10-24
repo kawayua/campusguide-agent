@@ -229,6 +229,20 @@ def test_meta_failure_does_not_block_answer(tmp_path: Path) -> None:
     assert result.version_metadata["demo-policy"]["error_code"] == "INDEX_UNAVAILABLE"
 
 
+def test_version_intent_blocks_before_retrieval(tmp_path: Path) -> None:
+    from campusguide.domain.profiles import UserProfile
+
+    client = FakeSearchClient(lambda request: _response())
+    service = _service(client, trace_dir=tmp_path)
+    result = service.ask(
+        "农学专业 2022 版培养方案",
+        profile=UserProfile(colleges=["agri"], majors=["agronomy"], intake_year=2024),
+    )
+    assert result.outcome is OutcomeCode.VERSION_MISMATCH
+    assert "2022" in result.message
+    assert client.requests == []
+
+
 def test_index_version_mismatch_refuses(tmp_path: Path) -> None:
     client = FakeSearchClient(lambda request: _response(index_version="server@other"))
     service = _service(

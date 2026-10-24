@@ -13,7 +13,7 @@ W1 尚无问答模块，因此**没有任何回答质量指标**。简历、READ
 |---|---|---|---|
 | 代码规范 | ruff check（E/F/I/B/UP/SIM/RUF） | `make lint` | 通过 |
 | 代码格式 | ruff format --check src tests scripts | `make format-check` | 通过 |
-| 单元、契约与集成测试 | 全离线：mock HTTP、临时目录、动态生成 PDF、内存 Qdrant、fake embedder/chat | `make test` | 386 passed（W4 后） |
+| 单元、契约与集成测试 | 全离线：mock HTTP、临时目录、动态生成 PDF、内存 Qdrant、fake embedder/chat | `make test` | 426 passed（remediation2 后） |
 | 索引确定性 | 同一输入重建，`content_hash` 与 JSONL 字节一致 | `pytest tests/unit/test_build_index.py` | 通过 |
 | 联系方式脱敏 | 手机号、身份证、学号、邮箱、联系人姓名 | `pytest tests/unit/test_redact.py` | 通过 |
 | 版本解析 | CURRENT / HISTORICAL / INCLUDE_REPEALED、冲突、无版本 | `pytest tests/unit/test_versioning.py` | 通过 |
@@ -38,7 +38,7 @@ CI 配置见 `.github/workflows/ci.yml`；Gitee 仓库当前以本地 `make qa` 
 
 - `ruff check .`：通过；
 - `ruff format --check src tests scripts`：通过；
-- `pytest`：386 passed（W1–W4 unit + contract + integration，无网络依赖；W1/W2 时点为 154；W3 后 295）；
+- `pytest`：426 passed（W1–W4 unit + contract + integration，无网络依赖；W1/W2 时点为 154；W3 后 295；remediation2 后 426）；
 - 真实语料：213 文档 / 232 版本 / 3,952 块；其中 `article` 1,366、`section` 2,586；
 - 规模构成：校级 44 文档 / 52 版本；信息学院 36 / 44；农学院 133 / 136；
 - 版本状态：`active` 222、`repealed` 10；每个文档至少有一个 `active` 版本；
@@ -227,7 +227,68 @@ W4 的已知缺口：
   p005（2024 级农学）命中 2024 版农学方案；
 - P0 检索报告：`data/eval/p0-retrieval-report.{json,md}`；Recall@8 三种模式均 1.000，
   overall MRR dense 0.905 / RRF 0.895 / rerank 0.929；
-- W4 历史报告从 tag `w4` 保留，P0 不覆盖；全量测试 386 passed。
+- W4 历史报告从 tag `w4` 保留，P0 不覆盖；全量测试 410 passed。
+
+### P1 section 证据、生成重试与版本意图（2026-10-24）
+
+- `retrieval/section_select.py`：表格 section 检测与降权；宽问题最多 2 个表格，
+  “课程/学分/学时/计划/进程/矩阵”等表格意图放开；
+- JSON 修复空返回追加一次重试；空 claims 再问一次，仍为空则接受拒答；
+- `check_version_intent`：有 `intake_year` 且问题版本年份不一致时，检索前返回
+  `VERSION_MISMATCH`；
+- `make e2e-section` 4/4：p004 宽/聚焦 ANSWERED，p005 旧版 VERSION_MISMATCH，
+  p005 2024 版 ANSWERED；p004 宽问题从两次 GENERATION_FAILED 恢复；
+- population_v1 仍 5/5；P1 检索 overall MRR 0.964、section MRR 1.000、
+  rerank p95 1,069 ms；全量测试 410 passed；P1 记录 `docs/weekly/p1.md`。
+
+### W7 冻结评测（2026-10-24）
+
+- 数据集 `test_v1.jsonl` 50 题；最终 canonical hash `2a8d0e12…8f18`
+  （v0 因 test-036 gold 过期已归档；changelog 记录）；
+- 构成：25 single / 10 multi / 5 section（40 可答）+ 4 out_of_scope / 3 repealed /
+  3 privacy（10 不可答）；5 道版本敏感题；
+- 基线 run `f9bd7544…6243`：article Recall@8 0.971、误拒 0.125；
+- remediation run `b55bc436…b968`：结构 100%、article Recall@8 **1.000**、
+  article MRR 0.967、section Recall@8 **1.000**、拒答召回 **1.000**、
+  误拒 **0.025**、原因码 1.000；p50/p95 8.3/32.6s；
+- 人工标注（annotator=`yaukin`）：support 136 条有效（1 条因
+  `TOO_MANY_CLAIMS` 排除），135 supported / 1 partial，support **0.9926**
+  （Wilson 95% CI 0.9595–0.9987）；answer 32 correct / 5 partial /
+  3 incorrect，可答正确率 **0.800**（CI 0.6524–0.8950），不可答题 10/10；
+  版本敏感 3/5=**0.600**（CI 0.2307–0.8824）；
+- **W7 总门禁未通过**：answer correctness 与 version-sensitive 未达门槛，
+  p95 32.6s 超 10s（test-027 端点长尾）；test-027 仍为唯一误拒；
+- 答案失败集中在生成层：test-027 空/截断、test-028 漏第二问、
+  test-037 section 选错、test-003/029/033/035/039 缺 required fact；
+- 修复：其他大学 guard、rerank margin=0、JSON 截断重试、test-036 gold 修正；
+- 下一步：不改冻结题，处理 test-027/028/037 后重跑并只重标 changed claims；
+  A5/A4/A2 消融；A1 固定分块/A3 流程 DAG N/A；详见 `docs/weekly/w7.md`。
+
+### W7 第二轮 remediation2（2026-10-24，已标注）
+
+- prompt `w6a2.1-2026-10-24`：多问句列出子问题并要求逐问覆盖；“哪些”类问题
+  要求逐项覆盖（一）（二）……；含就业/工作意图且 section 同时覆盖多方面时
+  优先整体引用该 section；
+- 生成重试：多问/列举题首轮预算 6000；空/截断修复直接加大预算；第三次
+  从原始证据干净重来；首个 provider 异常额外重试一次；
+- `section_select`：问题含就业/毕业后工作意图且 section 含“可在……从事……
+  工作”时 +0.03；test-037 gold section 从第 5 升到第 1；
+- run `23b384f1…a264a`：结构 100%、article/section Recall@8 **1.000**、
+  overall MRR **0.958**、section MRR **0.900**、拒答召回 1.000、
+  误拒 **0.000**、p50/p95 8.9/35.1s；
+- 人工标注：support **0.9852**（133/135，CI 0.9476–0.9959，通过）、
+  answer **0.750**（30/40，CI 0.5981–0.8581，未通过）、version-sensitive
+  **0.200**（1/5，CI 0.0362–0.6245，未通过）；p95 未通过；
+- 修复 test-027/028（incorrect→correct）与 test-037（incorrect→partial）；
+  回归 test-007（correct→incorrect）、test-031/036/038（correct→partial）、
+  test-039（partial→incorrect）；版本敏感失败集中在“一、人才培养目标”
+  section 的精确表述；
+- 只重标 changed：support 32/136 沿用、104 重标；answer 11/50 沿用、
+  39 重标；最终 labels 无 unlabeled；报告
+  `data/eval/w7-remediation2-report.{json,md}`；
+- 结论：support/structure/检索/拒答通过，answer/version/p95 未通过，
+  **W7 总门禁未通过**；下一轮应使用 dev 集验证“培养目标”section 的
+  检索与生成，不继续在冻结测试集上调参。
 
 ## W6-A2 quote 连续性与答案质量
 

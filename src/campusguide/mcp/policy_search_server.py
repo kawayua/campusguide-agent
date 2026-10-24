@@ -300,6 +300,7 @@ def create_service(
         rerank_candidates=retrieval.rerank_candidates,
         rerank_top_n=retrieval.rerank_top_n,
         max_articles=retrieval.max_articles,
+        max_table_sections=retrieval.max_table_sections,
         token_budget=retrieval.token_budget,
         min_rerank_score=retrieval.min_rerank_score,
         min_score_margin=retrieval.min_score_margin,

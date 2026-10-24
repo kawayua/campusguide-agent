@@ -1,0 +1,189 @@
+{
+  "schema_version": "w7-report-v1",
+  "dataset": "test_v1.jsonl",
+  "dataset_sha256": "208cf3c5f032c039b3af985428c7bb2f3dfacdd422dcf8ae5dc24d2f393eb74a",
+  "testset_sha256": "2a8d0e1223621520e5807aaa3b2a244110f9835bb7bae6d5bc35e4ed7f7e8f18",
+  "run_sha256": "b55bc4366ec2172a6bcfe0085caaae67e5b6930be171553509c0d137e671b968",
+  "annotators": [
+    "yaukin"
+  ],
+  "metadata": {
+    "git_commit": "57f91fd8d8fe36d0975ac650d2c98f42cd1bbcd1",
+    "git_dirty": true,
+    "model": "mimo-v2.6-pro-ultraspeed",
+    "advisor_prompt_version": "w6a2-2026-10-24",
+    "embedding_model": "BAAI/bge-m3",
+    "vector_manifest": {
+      "path": "D:\\big-third-up\\campusguide-agent\\data\\vector_manifest.json",
+      "sha256": "17441d486b2fb788456b875665c695d9bafa2cc4a9bef1c974c91b19bd24e7a2",
+      "content_hash": "",
+      "source_content_hash": "dc14ddc5452b3a845430300bde27fd5ca85a1930d403562cd35001c65158aabe",
+      "points": 3952,
+      "device": "cuda",
+      "embedding_model": "BAAI/bge-m3"
+    },
+    "config_hash": "fa8c174a9fc5f5332fb6f762776715cf19f179de1ef0cef3b8928ed2b28c8edd",
+    "config_files": [
+      "configs/retrieval.yaml",
+      "configs/abstention.yaml",
+      "configs/aliases.yaml",
+      "configs/mcp.yaml"
+    ],
+    "warmup_ms": 0,
+    "latency_scope": "cold",
+    "limit": null,
+    "text_manifest": "D:\\big-third-up\\campusguide-agent\\data\\manifest.json"
+  },
+  "retrieval": {
+    "article": {
+      "questions": 35,
+      "recall_at_8": 1.0,
+      "mrr": 0.9667
+    },
+    "section": {
+      "questions": 5,
+      "recall_at_8": 1.0,
+      "mrr": 0.74
+    },
+    "overall": {
+      "questions": 40,
+      "recall_at_8": 1.0,
+      "mrr": 0.9383
+    }
+  },
+  "structure": {
+    "citations_total": 132,
+    "valid_citations": 132,
+    "citation_id_valid_rate": 1.0,
+    "fabricated_id_count": 0,
+    "wrong_part_count": 0,
+    "quotes_total": 132,
+    "quotes_located": 132,
+    "quote_locatable_rate": 1.0,
+    "pass_with_blocking_count": 0,
+    "ok": true
+  },
+  "support": {
+    "drafts_total": 137,
+    "drafts_excluded": 1,
+    "drafts_labeled": 136,
+    "drafts_unlabeled": 0,
+    "drafts_supported": 135,
+    "rendered_total": 136,
+    "rendered_labeled": 136,
+    "rendered_supported": 135,
+    "draft_support_rate": {
+      "successes": 135,
+      "total": 136,
+      "rate": 0.9926,
+      "wilson_low": 0.9595,
+      "wilson_high": 0.9987
+    },
+    "rendered_support_rate": {
+      "successes": 135,
+      "total": 136,
+      "rate": 0.9926,
+      "wilson_low": 0.9595,
+      "wilson_high": 0.9987
+    }
+  },
+  "answer_correctness": {
+    "total": 50,
+    "answerable_total": 40,
+    "answerable_labeled": 40,
+    "answerable_unlabeled": 0,
+    "unanswerable_total": 10,
+    "unanswerable_correct": 10,
+    "unlabeled": 0,
+    "counts": {
+      "correct": 32,
+      "incorrect": 3,
+      "partial": 5
+    },
+    "correct_rate": {
+      "successes": 32,
+      "total": 40,
+      "rate": 0.8,
+      "wilson_low": 0.6524,
+      "wilson_high": 0.895
+    }
+  },
+  "refusal": {
+    "answerable": 40,
+    "unanswerable": 10,
+    "false_refusal": {
+      "successes": 1,
+      "total": 40,
+      "rate": 0.025,
+      "wilson_low": 0.0044,
+      "wilson_high": 0.1288
+    },
+    "refusal_recall": {
+      "successes": 10,
+      "total": 10,
+      "rate": 1.0,
+      "wilson_low": 0.7225,
+      "wilson_high": 1.0
+    },
+    "reason_code_accuracy": {
+      "successes": 10,
+      "total": 10,
+      "rate": 1.0,
+      "wilson_low": 0.7225,
+      "wilson_high": 1.0
+    }
+  },
+  "version_sensitive": {
+    "successes": 3,
+    "total": 5,
+    "rate": 0.6,
+    "wilson_low": 0.2307,
+    "wilson_high": 0.8824,
+    "unlabeled": 0
+  },
+  "latency_ms": {
+    "p50": 8297.0,
+    "p95": 32572.7
+  },
+  "gates": {
+    "structure": {
+      "ok": true
+    },
+    "support": {
+      "ok": true,
+      "value": 0.9926,
+      "gate": 0.95
+    },
+    "answer_correct": {
+      "ok": false,
+      "value": 0.8,
+      "gate": 0.85
+    },
+    "refusal_recall": {
+      "ok": true,
+      "value": 1.0,
+      "gate": 0.9
+    },
+    "false_refusal": {
+      "ok": true,
+      "value": 0.025,
+      "gate": 0.1
+    },
+    "version_sensitive": {
+      "ok": false,
+      "value": 0.6,
+      "gate": 0.9
+    },
+    "article_recall": {
+      "ok": true,
+      "value": 1.0,
+      "gate": 0.9
+    },
+    "p95": {
+      "ok": false,
+      "value": 32572.7,
+      "gate": 10000
+    }
+  },
+  "overall": false
+}

@@ -17,11 +17,13 @@ rerank_top_n: 8
 reranker_model: ${RERANKER_MODEL}
 token_budget: 4000
 max_articles: 8
+# 宽问题下最多保留 2 个表格 section；query 明确要课程/学分/学时/计划时放开。
+max_table_sections: 2
 
-# 以下阈值用 20 题 dev_v0 校准（2026-10-24）：
-# 可答题 top rerank 最低 0.725；非可答题最高 0.523；取 0.60 + 0.03 margin。
+# 以下阈值用 dev_v0 校准（2026-10-24）；W7 发现 0.03 绝对 margin 会误杀
+# 多条款宽问题的相关证据（top 0.624），因此 margin 置 0；min 仍为 0.60。
 min_rerank_score: 0.60
-min_score_margin: 0.03
+min_score_margin: 0.0
 
 # W2 dense-only 检索参数
 query_top_k: 20

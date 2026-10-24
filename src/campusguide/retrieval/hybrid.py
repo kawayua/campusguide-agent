@@ -36,6 +36,7 @@ from campusguide.retrieval.filters import (
 from campusguide.retrieval.normalize import expand_query
 from campusguide.retrieval.profile_expand import ProfileLexicon
 from campusguide.retrieval.rerank import Reranker
+from campusguide.retrieval.section_select import select_sections
 from campusguide.retrieval.service import RetrievalError, article_from_payload
 from campusguide.retrieval.sparse import SparseEncoder, tokenize
 
@@ -121,6 +122,7 @@ class HybridRetriever:
         rerank_top_n: int = 8,
         max_articles: int = 8,
         max_chars_per_evidence: int = 800,
+        max_table_sections: int = 2,
         token_budget: int | None = None,
         min_rerank_score: float | None = None,
         min_score_margin: float | None = None,
@@ -143,6 +145,7 @@ class HybridRetriever:
         self._rerank_top_n = rerank_top_n
         self._max_articles = max_articles
         self._max_chars_per_evidence = max_chars_per_evidence
+        self._max_table_sections = max_table_sections
         self._token_budget = token_budget if token_budget is not None else config.token_budget
         self._min_rerank_score = (
             min_rerank_score if min_rerank_score is not None else config.min_rerank_score
@@ -430,6 +433,14 @@ class HybridRetriever:
                     for item in shortlist
                     if (item.rerank_score or 0.0) >= self._min_rerank_score
                 ]
+            selection = select_sections(
+                shortlist,
+                query=queries[0],
+                limit=min(self._max_articles, rerank_top_n),
+                max_table_sections=self._max_table_sections,
+            )
+            warnings.extend(selection.warnings)
+            shortlist = selection.candidates
 
         kept: list[Evidence] = []
         used_chars = 0

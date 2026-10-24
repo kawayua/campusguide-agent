@@ -293,6 +293,7 @@ class RetrievalConfig(BaseModel):
     reranker_model: str = "BAAI/bge-reranker-v2-m3"
     token_budget: int = 4000
     max_articles: int = 8
+    max_table_sections: int = 2
     min_rerank_score: float = 0.30
     min_score_margin: float = 0.03
     query_top_k: int = 20

@@ -218,7 +218,7 @@ def build_label_template(
     run_sha256 = run.get("run_sha256") or compute_run_hash(run)
     baseline_by_key: dict[tuple[str, str, tuple[str, ...]], dict[str, Any]] = {}
     for item in baseline_labels or []:
-        if effective_label(item) == "unlabeled":
+        if effective_label(item) == "unlabeled" and not item.get("excluded_from_support"):
             continue
         baseline_by_key[_label_match_key(item)] = item
 
@@ -232,6 +232,9 @@ def build_label_template(
                 record["prefill_note"] = match.get("note", "")
                 record["prefill_source"] = "baseline"
                 record["prefill_from"] = f"{match.get('question_id')}/{match.get('claim_id')}"
+                record["prefill_annotator"] = match.get("annotator", "")
+                record["prefill_labeled_at"] = match.get("labeled_at")
+                record["prefill_excluded"] = bool(match.get("excluded_from_support"))
             records.append(record)
     return records
 
@@ -354,6 +357,7 @@ def render_label_sheet(
     questions: dict[str, str],
     *,
     title: str = "W3 support 标注核对表",
+    allow_excluded: bool = False,
 ) -> str:
     """生成人工核对用的 Markdown 表；不写入、不替人判定。"""
     counts = label_counts(records)
@@ -419,7 +423,8 @@ def render_label_sheet(
                 lines.append(f"- prefill note：{record['prefill_note']}")
         lines.extend(
             [
-                "- 判定：[ ] supported  [ ] partial  [ ] unsupported",
+                "- 判定：[ ] supported  [ ] partial  [ ] unsupported"
+                + ("  [ ] excluded（不参与统计）" if allow_excluded else ""),
                 "- note：",
                 "",
             ]

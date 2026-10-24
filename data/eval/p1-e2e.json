@@ -1,0 +1,436 @@
+{
+  "schema_version": "p1-e2e-v1",
+  "generated_at": "2026-10-24T08:08:44+00:00",
+  "cases": [
+    {
+      "id": "p004-broad",
+      "question": "农学专业培养方案",
+      "expected_outcome": "ANSWERED",
+      "outcome": "ANSWERED",
+      "decision": "pass",
+      "partial": false,
+      "message": "",
+      "answer_markdown": "**结论要点：**\n\n1. 种子科学与工程专业学制为四年，授予农学学士学位。 [农学院本科专业与创新班 段落3（章节/段落）]\n2. 农学专业学制为四年，授予农学学士学位。 [农学院本科专业与创新班 段落2（章节/段落）]\n3. “新农学”本-博贯通创新班学制为八年。 [农学院本科专业与创新班 段落1（章节/段落）]\n4. 专业核心课程为作物育种学、种子生产学、种子加工与贮藏学、种子检验学、种子经营管理学。 [种子科学与工程专业人才培养方案（2024版） 六、专业核心课程（章节/段落）]\n5. 学制为4 年，授予农学学士学位。 [种子科学与工程专业人才培养方案（2024版） 七、学制及授予学位（章节/段落）]\n\n**依据：**\n\n- [农学院本科专业与创新班 段落3（章节/段落）](https://nxy.scau.edu.cn/zyjs_17962/list.htm)\n> ◆专业名称：种子科学与工程（国家“一流专业”建设点）\n> 学制：四年授予学位：农学学士\n\n- [农学院本科专业与创新班 段落2（章节/段落）](https://nxy.scau.edu.cn/zyjs_17962/list.htm)\n> ◆专业名称：农学（国家“一流专业”建设点、国家级特色专业、国家级卓越农林人才培养计划试点专业、广东省特色专业、广东省重点专业、广东省专业综合改革试点专业）\n> 学制：四年授予学位：农学学士\n\n- [农学院本科专业与创新班 段落1（章节/段落）](https://nxy.scau.edu.cn/zyjs_17962/list.htm)\n> ◆专业名称：“新农学”本-博贯通创新班(国家“一流专业”建设点、国家级特色专业、国家级卓越农林人才培养计划试点专业)，博士一级学科为作物学(国家“双一流”建设学科)\n> 学制：八年（实行“3+1+4”模式：培养年限一般为8年，仅参加本校作物学科的推免研究生）\n\n- [种子科学与工程专业人才培养方案（2024版） 六、专业核心课程（章节/段落）](https://nxy.scau.edu.cn/_upload/article/files/39/ca/369f5a9849828f8990e00f6859b4/629f376f-34da-4d44-9f98-113dc2353c72.pdf)\n> 作物育种学、种子生产学、种子加工与贮藏学、种子检验学、种子经营管理学。\n\n- [种子科学与工程专业人才培养方案（2024版） 七、学制及授予学位（章节/段落）](https://nxy.scau.edu.cn/_upload/article/files/39/ca/369f5a9849828f8990e00f6859b4/629f376f-34da-4d44-9f98-113dc2353c72.pdf)\n> 学制为4 年，授予农学学士学位。\n\n---\n演示系统不构成官方答复，具体以学校官网为准。",
+      "quote_repair": {
+        "quote_repair_attempted": false,
+        "quote_repaired": false,
+        "quote_repair_remaining": [],
+        "quote_repair_error": "",
+        "json_empty_retried": false,
+        "empty_claims_retried": false,
+        "empty_claims_error": ""
+      },
+      "evidence": [
+        {
+          "doc_id": "agri-ug-plan-seed-2024",
+          "article_no": "七、学制及授予学位",
+          "block_type": "section",
+          "rank": 1,
+          "rerank": 0.7250192566214334
+        },
+        {
+          "doc_id": "agri-majors-undergrad",
+          "article_no": "段落2",
+          "block_type": "section",
+          "rank": 2,
+          "rerank": 0.7199525281808298
+        },
+        {
+          "doc_id": "agri-majors-undergrad",
+          "article_no": "段落4",
+          "block_type": "section",
+          "rank": 3,
+          "rerank": 0.7046600401988953
+        },
+        {
+          "doc_id": "agri-ug-plan-seed-2024",
+          "article_no": "五、主干学科",
+          "block_type": "section",
+          "rank": 4,
+          "rerank": 0.69329342872129
+        },
+        {
+          "doc_id": "agri-ug-plan-seed-2024",
+          "article_no": "二、培养目标",
+          "block_type": "section",
+          "rank": 5,
+          "rerank": 0.6905924811782467
+        },
+        {
+          "doc_id": "agri-majors-undergrad",
+          "article_no": "段落3",
+          "block_type": "section",
+          "rank": 6,
+          "rerank": 0.6862098855455389
+        },
+        {
+          "doc_id": "agri-ug-plan-seed-2024",
+          "article_no": "六、专业核心课程",
+          "block_type": "section",
+          "rank": 7,
+          "rerank": 0.684104709515459
+        },
+        {
+          "doc_id": "agri-majors-undergrad",
+          "article_no": "段落1",
+          "block_type": "section",
+          "rank": 8,
+          "rerank": 0.7036591995086597
+        }
+      ],
+      "citations": [
+        {
+          "doc_id": "agri-majors-undergrad",
+          "article_id": "agri-majors-undergrad@v2026#段落3",
+          "article_no": "段落3",
+          "part_no": 1,
+          "block_type": "section",
+          "quote": "◆专业名称：种子科学与工程（国家“一流专业”建设点）\n学制：四年授予学位：农学学士"
+        },
+        {
+          "doc_id": "agri-majors-undergrad",
+          "article_id": "agri-majors-undergrad@v2026#段落2",
+          "article_no": "段落2",
+          "part_no": 1,
+          "block_type": "section",
+          "quote": "◆专业名称：农学（国家“一流专业”建设点、国家级特色专业、国家级卓越农林人才培养计划试点专业、广东省特色专业、广东省重点专业、广东省专业综合改革试点专业）\n学制：四年授予学位：农学学士"
+        },
+        {
+          "doc_id": "agri-majors-undergrad",
+          "article_id": "agri-majors-undergrad@v2026#段落1",
+          "article_no": "段落1",
+          "part_no": 1,
+          "block_type": "section",
+          "quote": "◆专业名称：“新农学”本-博贯通创新班(国家“一流专业”建设点、国家级特色专业、国家级卓越农林人才培养计划试点专业)，博士一级学科为作物学(国家“双一流”建设学科)\n学制：八年（实行“3+1+4”模式：培养年限一般为8年，仅参加本校作物学科的推免研究生）"
+        },
+        {
+          "doc_id": "agri-ug-plan-seed-2024",
+          "article_id": "agri-ug-plan-seed-2024@v2024#六、专业核心课程",
+          "article_no": "六、专业核心课程",
+          "part_no": 1,
+          "block_type": "section",
+          "quote": "作物育种学、种子生产学、种子加工与贮藏学、种子检验学、种子经营管理学。"
+        },
+        {
+          "doc_id": "agri-ug-plan-seed-2024",
+          "article_id": "agri-ug-plan-seed-2024@v2024#七、学制及授予学位",
+          "article_no": "七、学制及授予学位",
+          "part_no": 1,
+          "block_type": "section",
+          "quote": "学制为4 年，授予农学学士学位。"
+        }
+      ],
+      "claims": [
+        {
+          "claim_id": "c1",
+          "text": "种子科学与工程专业学制为四年，授予农学学士学位。"
+        },
+        {
+          "claim_id": "c2",
+          "text": "农学专业学制为四年，授予农学学士学位。"
+        },
+        {
+          "claim_id": "c3",
+          "text": "“新农学”本-博贯通创新班学制为八年。"
+        },
+        {
+          "claim_id": "c4",
+          "text": "专业核心课程为作物育种学、种子生产学、种子加工与贮藏学、种子检验学、种子经营管理学。"
+        },
+        {
+          "claim_id": "c5",
+          "text": "学制为4 年，授予农学学士学位。"
+        }
+      ],
+      "issues": [],
+      "passed": true
+    },
+    {
+      "id": "p004-focused",
+      "question": "种子科学与工程专业 2024 版培养方案的培养目标是什么？",
+      "expected_outcome": "ANSWERED",
+      "outcome": "ANSWERED",
+      "decision": "pass",
+      "partial": false,
+      "message": "",
+      "answer_markdown": "**结论要点：**\n\n1. 培养目标提出，本专业旨在培养具有健全人格、健康身心、高尚人文情怀和社会责任感的学生。 [种子科学与工程专业人才培养方案（2024版） 二、培养目标（章节/段落）]\n2. 培养目标要求紧密对接现代种业重大需求，使学生具备扎实种子生产、种子加工贮藏、种子检验检疫、种子经营与管理以及作物栽培、作物育种等方面基本知识、基本理论、基本技能，具备解决种业问题的能力。 [种子科学与工程专业人才培养方案（2024版） 二、培养目标（章节/段落）]\n3. 培养目标提出，学生能在教育科研机构、种子管理部门、种业公司及其他相关部门或单位，从事与种业相关教学科研、行政管理、技术开发、种子生产、种子加工贮藏、种子检验检和营销贸易等工作。 [种子科学与工程专业人才培养方案（2024版） 二、培养目标（章节/段落）]\n4. 培养目标注重学生创新创业能力培养，培养出具备深厚专业素养、良好综合素质，能适应社会需求、引领种业发展的行业领军人才。 [种子科学与工程专业人才培养方案（2024版） 二、培养目标（章节/段落）]\n\n**依据：**\n\n- [种子科学与工程专业人才培养方案（2024版） 二、培养目标（章节/段落）](https://nxy.scau.edu.cn/_upload/article/files/39/ca/369f5a9849828f8990e00f6859b4/629f376f-34da-4d44-9f98-113dc2353c72.pdf)\n> 本专业旨在培养①具有健全人格、健康身心、高尚人文情怀和社会责任感\n\n- [种子科学与工程专业人才培养方案（2024版） 二、培养目标（章节/段落）](https://nxy.scau.edu.cn/_upload/article/files/39/ca/369f5a9849828f8990e00f6859b4/629f376f-34da-4d44-9f98-113dc2353c72.pdf)\n> ②紧密对接现代种业重大需求，具备扎实种子生产、种子加工贮藏、种子检验检疫、种子经营与管理以及作物栽培、作物育种等方面基本知识、基本理论、基本技能，使学生具备解决种业问题的能力。\n\n- [种子科学与工程专业人才培养方案（2024版） 二、培养目标（章节/段落）](https://nxy.scau.edu.cn/_upload/article/files/39/ca/369f5a9849828f8990e00f6859b4/629f376f-34da-4d44-9f98-113dc2353c72.pdf)\n> ③能在教育科研机构、种子管理部门、种业公司及其他相关部门或单位，从事与种业相关教学科研、行政管理、技术开发、种子生产、种子加工贮藏、种子检验检和营销贸易等工作。\n\n- [种子科学与工程专业人才培养方案（2024版） 二、培养目标（章节/段落）](https://nxy.scau.edu.cn/_upload/article/files/39/ca/369f5a9849828f8990e00f6859b4/629f376f-34da-4d44-9f98-113dc2353c72.pdf)\n> 注重学生创新创业能力培养，培养出具备深厚专业素养、良好综合素质，能适应社会需求、引领种业发展的行业领军人才。\n\n---\n演示系统不构成官方答复，具体以学校官网为准。",
+      "quote_repair": {
+        "quote_repair_attempted": false,
+        "quote_repaired": false,
+        "quote_repair_remaining": [],
+        "quote_repair_error": "",
+        "json_empty_retried": false,
+        "empty_claims_retried": false,
+        "empty_claims_error": ""
+      },
+      "evidence": [
+        {
+          "doc_id": "agri-ug-plan-seed-2024",
+          "article_no": "二、培养目标",
+          "block_type": "section",
+          "rank": 1,
+          "rerank": 0.7310450781457436
+        },
+        {
+          "doc_id": "agri-ug-plan-seed-2024",
+          "article_no": "四、毕业要求",
+          "block_type": "section",
+          "rank": 2,
+          "rerank": 0.7309732207060448
+        },
+        {
+          "doc_id": "agri-ug-plan-seed-2024",
+          "article_no": "九、人才培养目标实现矩阵",
+          "block_type": "section",
+          "rank": 3,
+          "rerank": 0.7309596354618654
+        },
+        {
+          "doc_id": "agri-ug-plan-seed-2024",
+          "article_no": "六、专业核心课程",
+          "block_type": "section",
+          "rank": 4,
+          "rerank": 0.7298118863543571
+        },
+        {
+          "doc_id": "agri-ug-plan-seed-2024",
+          "article_no": "七、学制及授予学位",
+          "block_type": "section",
+          "rank": 5,
+          "rerank": 0.7295054172698401
+        },
+        {
+          "doc_id": "agri-ug-plan-seed-2024",
+          "article_no": "五、主干学科",
+          "block_type": "section",
+          "rank": 6,
+          "rerank": 0.7264552449578042
+        },
+        {
+          "doc_id": "agri-majors-undergrad",
+          "article_no": "段落3",
+          "block_type": "section",
+          "rank": 7,
+          "rerank": 0.7238384869701624
+        },
+        {
+          "doc_id": "agri-ug-plan-seed-2024",
+          "article_no": "三、培养规格",
+          "block_type": "section",
+          "rank": 8,
+          "rerank": 0.7310479142205141
+        }
+      ],
+      "citations": [
+        {
+          "doc_id": "agri-ug-plan-seed-2024",
+          "article_id": "agri-ug-plan-seed-2024@v2024#二、培养目标",
+          "article_no": "二、培养目标",
+          "part_no": 1,
+          "block_type": "section",
+          "quote": "本专业旨在培养①具有健全人格、健康身心、高尚人文情怀和社会责任感"
+        },
+        {
+          "doc_id": "agri-ug-plan-seed-2024",
+          "article_id": "agri-ug-plan-seed-2024@v2024#二、培养目标",
+          "article_no": "二、培养目标",
+          "part_no": 1,
+          "block_type": "section",
+          "quote": "②紧密对接现代种业重大需求，具备扎实种子生产、种子加工贮藏、种子检验检疫、种子经营与管理以及作物栽培、作物育种等方面基本知识、基本理论、基本技能，使学生具备解决种业问题的能力。"
+        },
+        {
+          "doc_id": "agri-ug-plan-seed-2024",
+          "article_id": "agri-ug-plan-seed-2024@v2024#二、培养目标",
+          "article_no": "二、培养目标",
+          "part_no": 1,
+          "block_type": "section",
+          "quote": "③能在教育科研机构、种子管理部门、种业公司及其他相关部门或单位，从事与种业相关教学科研、行政管理、技术开发、种子生产、种子加工贮藏、种子检验检和营销贸易等工作。"
+        },
+        {
+          "doc_id": "agri-ug-plan-seed-2024",
+          "article_id": "agri-ug-plan-seed-2024@v2024#二、培养目标",
+          "article_no": "二、培养目标",
+          "part_no": 1,
+          "block_type": "section",
+          "quote": "注重学生创新创业能力培养，培养出具备深厚专业素养、良好综合素质，能适应社会需求、引领种业发展的行业领军人才。"
+        }
+      ],
+      "claims": [
+        {
+          "claim_id": "c1",
+          "text": "培养目标提出，本专业旨在培养具有健全人格、健康身心、高尚人文情怀和社会责任感的学生。"
+        },
+        {
+          "claim_id": "c2",
+          "text": "培养目标要求紧密对接现代种业重大需求，使学生具备扎实种子生产、种子加工贮藏、种子检验检疫、种子经营与管理以及作物栽培、作物育种等方面基本知识、基本理论、基本技能，具备解决种业问题的能力。"
+        },
+        {
+          "claim_id": "c3",
+          "text": "培养目标提出，学生能在教育科研机构、种子管理部门、种业公司及其他相关部门或单位，从事与种业相关教学科研、行政管理、技术开发、种子生产、种子加工贮藏、种子检验检和营销贸易等工作。"
+        },
+        {
+          "claim_id": "c4",
+          "text": "培养目标注重学生创新创业能力培养，培养出具备深厚专业素养、良好综合素质，能适应社会需求、引领种业发展的行业领军人才。"
+        }
+      ],
+      "issues": [],
+      "passed": true
+    },
+    {
+      "id": "p005-old",
+      "question": "农学专业 2022 版培养方案",
+      "expected_outcome": "VERSION_MISMATCH",
+      "outcome": "VERSION_MISMATCH",
+      "decision": "abstain",
+      "partial": false,
+      "message": "问题指向 2022 版，但你提供的是 2024 级；当前适用版本可能不同。请确认届别，或改问 2024 版。",
+      "answer_markdown": "",
+      "quote_repair": {},
+      "evidence": [],
+      "citations": [],
+      "claims": [],
+      "issues": [],
+      "passed": true
+    },
+    {
+      "id": "p005-2024",
+      "question": "农学专业 2024 版培养方案",
+      "expected_outcome": "ANSWERED",
+      "outcome": "ANSWERED",
+      "decision": "pass",
+      "partial": false,
+      "message": "",
+      "answer_markdown": "**结论要点：**\n\n1. 专业名称为农学（Agronomy）。 [农学专业人才培养方案（2024版） 一、专业名称（中英文）；专业代码（章节/段落）]\n2. 学制为4 年。 [农学专业人才培养方案（2024版） 七、学制及授予学位（章节/段落）]\n3. 授予农学学士学位。 [农学专业人才培养方案（2024版） 七、学制及授予学位（章节/段落）]\n4. 专业核心课程为遗传学、作物栽培学、耕作学、作物育种学、种子学。 [农学专业人才培养方案（2024版） 六、专业核心课程（章节/段落）]\n5. 依托作物学一级学科，包含作物遗传育种、作物栽培学与耕作学等二级学科。 [农学专业人才培养方案（2024版） 五、主干学科（章节/段落）]\n\n**依据：**\n\n- [农学专业人才培养方案（2024版） 一、专业名称（中英文）；专业代码（章节/段落）](https://nxy.scau.edu.cn/_upload/article/files/ad/0c/f096268a4a71812dc3c84d17eee8/5b6a253e-2518-48e0-a3e7-0bda15dbe505.pdf)\n> 专业名称：农学（Agronomy）\n\n- [农学专业人才培养方案（2024版） 七、学制及授予学位（章节/段落）](https://nxy.scau.edu.cn/_upload/article/files/ad/0c/f096268a4a71812dc3c84d17eee8/5b6a253e-2518-48e0-a3e7-0bda15dbe505.pdf)\n> 学制为4 年，授予农学学士学位。\n\n- [农学专业人才培养方案（2024版） 六、专业核心课程（章节/段落）](https://nxy.scau.edu.cn/_upload/article/files/ad/0c/f096268a4a71812dc3c84d17eee8/5b6a253e-2518-48e0-a3e7-0bda15dbe505.pdf)\n> 遗传学、作物栽培学、耕作学、作物育种学、种子学。\n\n- [农学专业人才培养方案（2024版） 五、主干学科（章节/段落）](https://nxy.scau.edu.cn/_upload/article/files/ad/0c/f096268a4a71812dc3c84d17eee8/5b6a253e-2518-48e0-a3e7-0bda15dbe505.pdf)\n> 依托作物学一级学科，包含作物遗传育种、作物栽培学与耕作学等二级学科。\n\n---\n演示系统不构成官方答复，具体以学校官网为准。",
+      "quote_repair": {
+        "quote_repair_attempted": false,
+        "quote_repaired": false,
+        "quote_repair_remaining": [],
+        "quote_repair_error": "",
+        "json_empty_retried": false,
+        "empty_claims_retried": false,
+        "empty_claims_error": ""
+      },
+      "evidence": [
+        {
+          "doc_id": "agri-ug-plan-agronomy-2024",
+          "article_no": "二、培养目标",
+          "block_type": "section",
+          "rank": 1,
+          "rerank": 0.7308000144827547
+        },
+        {
+          "doc_id": "agri-ug-plan-agronomy-2024",
+          "article_no": "九、人才培养目标实现矩阵",
+          "block_type": "section",
+          "rank": 2,
+          "rerank": 0.7307572589689678
+        },
+        {
+          "doc_id": "agri-ug-plan-agronomy-2024",
+          "article_no": "六、专业核心课程",
+          "block_type": "section",
+          "rank": 3,
+          "rerank": 0.7307423885202686
+        },
+        {
+          "doc_id": "agri-ug-plan-agronomy-2024",
+          "article_no": "五、主干学科",
+          "block_type": "section",
+          "rank": 4,
+          "rerank": 0.7307293236759789
+        },
+        {
+          "doc_id": "agri-ug-plan-agronomy-2024",
+          "article_no": "七、学制及授予学位",
+          "block_type": "section",
+          "rank": 5,
+          "rerank": 0.7307138071873777
+        },
+        {
+          "doc_id": "agri-ug-plan-agronomy-2024",
+          "article_no": "三、培养规格",
+          "block_type": "section",
+          "rank": 6,
+          "rerank": 0.7309763151272728
+        },
+        {
+          "doc_id": "agri-ug-plan-agronomy-2024",
+          "article_no": "一、专业名称（中英文）；专业代码",
+          "block_type": "section",
+          "rank": 7,
+          "rerank": 0.7301977005347678
+        },
+        {
+          "doc_id": "agri-ug-plan-agronomy-dingying-2024",
+          "article_no": "一、专业名称（中英文）；专业代码",
+          "block_type": "section",
+          "rank": 8,
+          "rerank": 0.7301449845207393
+        }
+      ],
+      "citations": [
+        {
+          "doc_id": "agri-ug-plan-agronomy-2024",
+          "article_id": "agri-ug-plan-agronomy-2024@v2024#一、专业名称（中英文）；专业代码",
+          "article_no": "一、专业名称（中英文）；专业代码",
+          "part_no": 1,
+          "block_type": "section",
+          "quote": "专业名称：农学（Agronomy）"
+        },
+        {
+          "doc_id": "agri-ug-plan-agronomy-2024",
+          "article_id": "agri-ug-plan-agronomy-2024@v2024#七、学制及授予学位",
+          "article_no": "七、学制及授予学位",
+          "part_no": 1,
+          "block_type": "section",
+          "quote": "学制为4 年，授予农学学士学位。"
+        },
+        {
+          "doc_id": "agri-ug-plan-agronomy-2024",
+          "article_id": "agri-ug-plan-agronomy-2024@v2024#六、专业核心课程",
+          "article_no": "六、专业核心课程",
+          "part_no": 1,
+          "block_type": "section",
+          "quote": "遗传学、作物栽培学、耕作学、作物育种学、种子学。"
+        },
+        {
+          "doc_id": "agri-ug-plan-agronomy-2024",
+          "article_id": "agri-ug-plan-agronomy-2024@v2024#五、主干学科",
+          "article_no": "五、主干学科",
+          "part_no": 1,
+          "block_type": "section",
+          "quote": "依托作物学一级学科，包含作物遗传育种、作物栽培学与耕作学等二级学科。"
+        }
+      ],
+      "claims": [
+        {
+          "claim_id": "c1",
+          "text": "专业名称为农学（Agronomy）。"
+        },
+        {
+          "claim_id": "c2",
+          "text": "学制为4 年。"
+        },
+        {
+          "claim_id": "c3",
+          "text": "授予农学学士学位。"
+        },
+        {
+          "claim_id": "c4",
+          "text": "专业核心课程为遗传学、作物栽培学、耕作学、作物育种学、种子学。"
+        },
+        {
+          "claim_id": "c5",
+          "text": "依托作物学一级学科，包含作物遗传育种、作物栽培学与耕作学等二级学科。"
+        }
+      ],
+      "issues": [],
+      "passed": true
+    }
+  ],
+  "summary": {
+    "total": 4,
+    "passed": 4,
+    "failed": 0
+  }
+}
