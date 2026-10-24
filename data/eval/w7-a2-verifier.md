@@ -11,7 +11,7 @@
 | 变体 | supported/已标 | partial | unsupported | support rate | unsupported rate |
 |---|---:|---:|---:|---:|---:|
 | baseline（有 Verifier） | 133/135 | 2 | 0 | 0.985 | 0.000 |
-| A2（无 Verifier） | 0/0 | 0 | 0 | n/a | n/a |
+| A2（无 Verifier） | 136/138 | 2 | 0 | 0.986 | 0.000 |
 
 ## 拒答与误拒
 

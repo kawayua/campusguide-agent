@@ -1,7 +1,7 @@
 # W7 A2 pass-through support 核对表（全量）
 
 - run_sha256：`f9f127c526335210ad798cfbe7fab5a20d52f5af1e004726479245044cf707fa`
-- 总数：138；已标注：0；unlabeled：138
+- 总数：138；已标注：138；unlabeled：0
 
 ## 判定口径（严格引文级）
 
@@ -26,7 +26,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 02. test-002 / c2
@@ -41,7 +41,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 03. test-003 / c1
@@ -56,7 +56,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 04. test-003 / c2
@@ -71,7 +71,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 05. test-004 / c1
@@ -86,7 +86,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 06. test-004 / c2
@@ -101,7 +101,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 07. test-005 / c1
@@ -116,7 +116,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 08. test-005 / c2
@@ -131,7 +131,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 09. test-005 / c3
@@ -146,7 +146,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 10. test-006 / c1
@@ -161,7 +161,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 11. test-006 / c2
@@ -176,7 +176,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 12. test-006 / c3
@@ -191,7 +191,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 13. test-007 / c1
@@ -206,7 +206,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 14. test-007 / c2
@@ -221,7 +221,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 15. test-007 / c3
@@ -236,7 +236,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 16. test-008 / c1
@@ -251,7 +251,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 17. test-008 / c2
@@ -266,7 +266,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 18. test-008 / c3
@@ -281,7 +281,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 19. test-008 / c4
@@ -296,7 +296,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 20. test-009 / c1
@@ -311,7 +311,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 21. test-009 / c2
@@ -326,7 +326,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 22. test-009 / c3
@@ -341,7 +341,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 23. test-009 / c4
@@ -356,7 +356,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 24. test-009 / c5
@@ -371,7 +371,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 25. test-010 / c1
@@ -386,7 +386,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 26. test-010 / c2
@@ -401,7 +401,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 27. test-010 / c3
@@ -416,7 +416,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 28. test-010 / c4
@@ -431,7 +431,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 29. test-011 / c1
@@ -447,7 +447,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 30. test-011 / c2
@@ -464,7 +464,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 31. test-011 / c3
@@ -482,7 +482,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 32. test-011 / c4
@@ -501,7 +501,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 33. test-011 / c5
@@ -521,7 +521,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 34. test-012 / c1
@@ -536,7 +536,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 35. test-013 / c1
@@ -551,7 +551,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 36. test-013 / c2
@@ -566,7 +566,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 37. test-014 / c1
@@ -581,7 +581,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 38. test-014 / c2
@@ -596,7 +596,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 39. test-015 / c1
@@ -611,7 +611,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 40. test-015 / c2
@@ -626,7 +626,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 41. test-015 / c3
@@ -641,8 +641,8 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
-- note：
+- 判定：[ ] supported  [x] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- note：claim 多了主语「校学位评定委员会、学位评定分委员会的」，quote 仅「决议事项…」
 
 ## 42. test-016 / c1
 
@@ -656,7 +656,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 43. test-016 / c2
@@ -671,7 +671,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 44. test-017 / c1
@@ -686,7 +686,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 45. test-017 / c2
@@ -701,7 +701,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 46. test-017 / c3
@@ -716,7 +716,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 47. test-017 / c4
@@ -731,7 +731,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 48. test-018 / c1
@@ -746,7 +746,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 49. test-018 / c2
@@ -761,7 +761,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 50. test-018 / c3
@@ -776,7 +776,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 51. test-018 / c4
@@ -791,7 +791,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 52. test-018 / c5
@@ -806,7 +806,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 53. test-019 / c1
@@ -821,7 +821,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 54. test-020 / c1
@@ -836,7 +836,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 55. test-020 / c2
@@ -851,7 +851,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 56. test-021 / c1
@@ -867,7 +867,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 57. test-021 / c2
@@ -884,7 +884,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 58. test-021 / c3
@@ -902,7 +902,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 59. test-022 / c1
@@ -917,7 +917,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 60. test-022 / c2
@@ -932,7 +932,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 61. test-022 / c3
@@ -947,7 +947,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 62. test-022 / c4
@@ -962,7 +962,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 63. test-022 / c5
@@ -977,7 +977,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 64. test-023 / c1
@@ -992,7 +992,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 65. test-023 / c2
@@ -1007,7 +1007,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 66. test-023 / c3
@@ -1022,7 +1022,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 67. test-023 / c4
@@ -1037,7 +1037,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 68. test-023 / c5
@@ -1052,7 +1052,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 69. test-024 / c1
@@ -1067,7 +1067,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 70. test-024 / c2
@@ -1082,7 +1082,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 71. test-024 / c3
@@ -1097,7 +1097,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 72. test-025 / c1
@@ -1112,7 +1112,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 73. test-025 / c2
@@ -1127,7 +1127,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 74. test-025 / c3
@@ -1142,7 +1142,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 75. test-026 / c1
@@ -1158,7 +1158,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 76. test-026 / c2
@@ -1173,7 +1173,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 77. test-026 / c3
@@ -1188,7 +1188,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 78. test-027 / c1
@@ -1203,7 +1203,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 79. test-027 / c2
@@ -1218,7 +1218,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 80. test-027 / c3
@@ -1233,7 +1233,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 81. test-028 / c1
@@ -1248,7 +1248,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 82. test-028 / c2
@@ -1263,7 +1263,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 83. test-028 / c3
@@ -1278,7 +1278,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 84. test-028 / c4
@@ -1293,7 +1293,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 85. test-028 / c5
@@ -1308,7 +1308,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 86. test-029 / c1
@@ -1323,7 +1323,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 87. test-029 / c2
@@ -1338,7 +1338,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 88. test-029 / c3
@@ -1353,7 +1353,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 89. test-029 / c4
@@ -1368,7 +1368,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 90. test-029 / c5
@@ -1383,7 +1383,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 91. test-030 / c1
@@ -1398,7 +1398,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 92. test-030 / c2
@@ -1413,7 +1413,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 93. test-030 / c3
@@ -1428,7 +1428,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 94. test-031 / c1
@@ -1443,7 +1443,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 95. test-031 / c2
@@ -1458,7 +1458,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 96. test-031 / c3
@@ -1473,7 +1473,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 97. test-031 / c4
@@ -1488,7 +1488,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 98. test-032 / c1
@@ -1503,7 +1503,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 99. test-032 / c2
@@ -1518,7 +1518,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 100. test-032 / c3
@@ -1533,7 +1533,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 101. test-032 / c4
@@ -1548,7 +1548,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 102. test-032 / c5
@@ -1563,7 +1563,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 103. test-033 / c1
@@ -1578,7 +1578,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 104. test-033 / c2
@@ -1593,7 +1593,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 105. test-033 / c3
@@ -1608,7 +1608,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 106. test-033 / c4
@@ -1623,7 +1623,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 107. test-033 / c5
@@ -1638,7 +1638,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 108. test-034 / c1
@@ -1653,7 +1653,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 109. test-034 / c2
@@ -1668,7 +1668,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 110. test-034 / c3
@@ -1683,7 +1683,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 111. test-034 / c4
@@ -1698,7 +1698,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 112. test-034 / c5
@@ -1713,7 +1713,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 113. test-035 / c1
@@ -1728,7 +1728,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 114. test-035 / c2
@@ -1743,7 +1743,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 115. test-035 / c3
@@ -1758,7 +1758,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 116. test-035 / c4
@@ -1773,7 +1773,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 117. test-035 / c5
@@ -1788,7 +1788,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 118. test-036 / c1
@@ -1804,7 +1804,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 119. test-036 / c2
@@ -1819,7 +1819,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 120. test-036 / c3
@@ -1834,7 +1834,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 121. test-036 / c4
@@ -1849,7 +1849,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 122. test-036 / c5
@@ -1864,8 +1864,8 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
-- note：
+- 判定：[ ] supported  [x] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- note：claim「包括外语的听、说、读、写、译等」漏掉 quote「文字撰写、语言表达、计算机应用」，以偏概全
 
 ## 123. test-037 / c1
 
@@ -1879,7 +1879,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 124. test-037 / c2
@@ -1894,7 +1894,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 125. test-037 / c3
@@ -1909,7 +1909,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 126. test-038 / c1
@@ -1924,7 +1924,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 127. test-038 / c2
@@ -1939,7 +1939,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 128. test-038 / c3
@@ -1954,7 +1954,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 129. test-038 / c4
@@ -1969,7 +1969,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 130. test-038 / c5
@@ -1984,7 +1984,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 131. test-039 / c1
@@ -1999,7 +1999,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 132. test-039 / c2
@@ -2014,7 +2014,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 133. test-039 / c3
@@ -2029,7 +2029,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 134. test-039 / c4
@@ -2044,7 +2044,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 135. test-039 / c5
@@ -2059,7 +2059,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 136. test-040 / c1
@@ -2074,7 +2074,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 137. test-040 / c2
@@ -2089,7 +2089,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：
 
 ## 138. test-040 / c3
@@ -2104,5 +2104,5 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
+- 判定：[x] supported  [ ] partial  [ ] unsupported  [ ] excluded（不参与统计）
 - note：

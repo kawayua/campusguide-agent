@@ -121,9 +121,7 @@
 | 变体 | supported/已标 | support rate | unsupported rate | 误拒率 |
 |---|---:|---:|---:|---:|
 | baseline（有 Verifier） | 133/135（共 136） | 0.985 | 0.000 | 0.000 |
-| A2（无 Verifier） | 0/0（共 138） | n/a | n/a | 0.000 |
-
-- A2 support 仍有 138 条未标注；该表仅基于已标注子集。
+| A2（无 Verifier） | 136/138（共 138） | 0.986 | 0.000 | 0.000 |
 
 - A1 固定分块、A3 流程 DAG 为 N/A。
 

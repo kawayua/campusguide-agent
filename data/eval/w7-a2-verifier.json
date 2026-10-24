@@ -3,7 +3,7 @@
   "dataset": "test_v1.jsonl",
   "dataset_sha256": "208cf3c5f032c039b3af985428c7bb2f3dfacdd422dcf8ae5dc24d2f393eb74a",
   "testset_sha256": "2a8d0e1223621520e5807aaa3b2a244110f9835bb7bae6d5bc35e4ed7f7e8f18",
-  "generated_at": "2026-10-24T13:49:24+00:00",
+  "generated_at": "2026-10-24T14:03:15+00:00",
   "baseline_run_sha256": "23b384f155560320f5cb32c836cd2c965190bd4746c9f9dc17f423e81ffa264a",
   "a2_run_sha256": "f9f127c526335210ad798cfbe7fab5a20d52f5af1e004726479245044cf707fa",
   "baseline": {
@@ -74,40 +74,40 @@
     "support": {
       "drafts_total": 138,
       "drafts_excluded": 0,
-      "drafts_labeled": 0,
-      "drafts_unlabeled": 138,
-      "drafts_supported": 0,
+      "drafts_labeled": 138,
+      "drafts_unlabeled": 0,
+      "drafts_supported": 136,
       "rendered_total": 138,
-      "rendered_labeled": 0,
-      "rendered_supported": 0,
+      "rendered_labeled": 138,
+      "rendered_supported": 136,
       "draft_support_rate": {
-        "successes": 0,
-        "total": 0,
-        "rate": null,
-        "wilson_low": 0.0,
-        "wilson_high": 0.0
+        "successes": 136,
+        "total": 138,
+        "rate": 0.9855,
+        "wilson_low": 0.9487,
+        "wilson_high": 0.996
       },
       "rendered_support_rate": {
-        "successes": 0,
-        "total": 0,
-        "rate": null,
-        "wilson_low": 0.0,
-        "wilson_high": 0.0
+        "successes": 136,
+        "total": 138,
+        "rate": 0.9855,
+        "wilson_low": 0.9487,
+        "wilson_high": 0.996
       },
-      "supported_claims": 0,
-      "partial_claims": 0,
+      "supported_claims": 136,
+      "partial_claims": 2,
       "unsupported_claims": 0,
       "claim_support_rate": {
-        "successes": 0,
-        "total": 0,
-        "rate": null,
-        "wilson_low": 0.0,
-        "wilson_high": 0.0
+        "successes": 136,
+        "total": 138,
+        "rate": 0.9855,
+        "wilson_low": 0.9487,
+        "wilson_high": 0.996
       },
       "claim_unsupported_rate": {
         "successes": 0,
-        "total": 0,
-        "rate": null
+        "total": 138,
+        "rate": 0.0
       }
     },
     "refusal": {
@@ -136,7 +136,7 @@
     "structural_dropped_claims": 0
   },
   "metadata": {
-    "git_commit": "bd28d63b835aa863f820feee546b327a8fd633f0",
+    "git_commit": "ed471d3ac2b46ed964d5cae852af011931b1edbd",
     "git_dirty": true,
     "index_version": "",
     "model": "mimo-v2.6-pro-ultraspeed",

@@ -299,8 +299,10 @@ W4 的已知缺口：
   方案；拒答召回/误拒不变 1.000/0.000；
 - A2 Verifier（`data/eval/w7-a2-verifier.{json,md}`）：eval-only
   pass-through，关闭 W3 核验，跑 50 题；拒答召回 1.000/误拒 0.000、
-  结构门禁不适用；共 138 条待人工标注 claim，support 尚待全量标注；
-  核对表 `data/eval/w7_a2_support_review.md`；
+  结构门禁不适用；138 条 claim 全量人工标注：**136 supported / 2 partial
+  / 0 unsupported**（support **0.986**，baseline 0.985）；关闭 Verifier
+  未带来 support 下降或误拒上升，主要改变 claim 数量/过滤；两次 claim
+  集不同，只能作方向性比较；
 - A1/A3 N/A；
 - 结论：support/structure/检索/拒答通过，answer/version/p95 未通过，
   **W7 总门禁未通过**；下一轮应使用 dev 集验证“培养目标”section 的
