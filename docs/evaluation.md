@@ -119,6 +119,8 @@ W3 的目标是**确定性核对**：引文 span 可映射回原文、claim 中�
 - 人工标注确认了 W3 v1 的 75.0% 结果：本轮没有 `unsupported`，17 条 partial 主要是 claim 增加条件/后果/列表展开/措辞强化，属于 W6 重写要解决的问题；
 - run 在 dirty working tree 上执行（commit `b240e4d`，dirty=True）；W3 已按本轮 75.0% 判定不通过，不以重跑刷分。W6 正式验收前再提交代码并重跑。
 
+**W3 结项决定（2026-10-24）**：W3 v2 baseline 的 75.0% 保留为未通过记录；用户接受 W6-A 提示词收紧作为 W3 的 support remediation（同一 20 题、同一 Verifier、54/54 人工、98.1%），W3 记为**有条件通过**。W6-A 是独立 run/报告，不是把 W3 的 75.0% 改写成 98.1%；两者都保留。W3 代码提交 `759653b`。
+
 W3 的原因码扩展为：`PARTIAL_ANSWER`、`UNVERIFIABLE`、`ONLY_REPEALED`、`VERSION_MISMATCH`、`VERSION_CONFLICT`，并保留 `NO_VALID_CLAIM`（仅模型零 claims）、`NO_EVIDENCE`、`HISTORICAL_NOT_SUPPORTED`、`PRIVACY_REQUEST`、`OUT_OF_SCOPE`、`GENERATION_FAILED`、`INDEX_UNAVAILABLE`。`PARTIAL_ANSWER` 不进入“完整回答”统计。
 
 ### 人工 support 标注口径

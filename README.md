@@ -10,6 +10,8 @@ W3 在 W2 之上增加：quote 映射回 `article.text` 原文 span、claim 数�
 
 W6-A 提示词收紧已在 `mimo-v2.6-pro-ultraspeed` 上通过：54/54 人工标注（53 supported / 1 partial / 0 unsupported），draft/rendered 支持率 **98.1%**；结构/拒答/误拒门禁通过；唯一 partial 是 d004/c1（“进入教室”范围边界）。v2.6pro A/B 已完成：support 100%（53/53；rendered 51/51），但出现 2 条 quote mismatch（d012 c4/c5）、d012 PARTIAL，p95 45.2s、warmup 111s，**可靠性低于 ultraspeed**；按可靠性优先，默认模型已回退到 `mimo-v2.6-pro-ultraspeed`（`ADVISOR_MAX_TOKENS=3000`）。W6-A 最终结果仍为 ultraspeed 的 98.1%；v2.6pro 报告保留为 A/B 记录。详见 [W6 周记录](docs/weekly/w6.md)。
 
+**W3 结项决定（2026-10-24）**：W3 v2 自身的 rendered 支持率仍是 75.0%，不追溯修改；用户接受 W6-A 提示词收紧作为 W3 的 support remediation（同一 20 题、同一 Verifier、54/54 人工、98.1%），因此 W3 记为**有条件通过**。W3 baseline 75.0% 和 W6-A 98.1% 都保留在报告中，不合并成同一个数字。W3 代码 `759653b` 与报告随后同步到 Gitee。
+
 这里的“条款级”专指 `article` 块（第 X 条）；培养方案、教师详情、新闻/讲座目录以 `section` 块入库。检索、引用和评测必须显式区分 `block_type`，不能把 `section` 计入条款指标。
 
 > 本系统为个人演示项目，只覆盖指定学校的公开制度文件，不构成官方答复。具体政策以学校官网和负责部门解释为准。请勿输入学号、身份证、成绩单等个人信息。
