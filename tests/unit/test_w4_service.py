@@ -182,6 +182,32 @@ def test_profile_is_forwarded_to_mcp_request(tmp_path: Path) -> None:
     assert request.filters.profile.intake_year == 2024
 
 
+def test_quote_repair_is_visible_in_trace(tmp_path: Path) -> None:
+    from campusguide.agents.providers import FakeChatProvider
+
+    provider = FakeChatProvider(
+        [
+            _claims_json(quote="原文中没有这句话"),
+            _claims_json(quote="学习成绩优异"),
+        ]
+    )
+    client = FakeSearchClient(lambda request: _response())
+    service = QAService(
+        search_client=client,
+        advisor=Advisor(provider),
+        settings=QASettings(min_dense_score=0.0),
+        trace_writer=TraceWriter(tmp_path),
+        today=date(2026, 10, 24),
+    )
+    result = service.ask("国家奖学金申请条件是什么？", audience=Audience.UNDERGRADUATE)
+    assert result.outcome is OutcomeCode.ANSWERED
+    assert result.quote_repair["quote_repair_attempted"] is True
+    assert result.quote_repair["quote_repaired"] is True
+    assert result.quote_repair["quote_repair_remaining"] == []
+    trace = _last_trace(tmp_path)
+    assert trace["llm"]["quote_repaired"] is True
+
+
 def test_version_metadata_comes_from_policy_meta(tmp_path: Path) -> None:
     meta = FakeMetaClient()
     client = FakeSearchClient(lambda request: _response())

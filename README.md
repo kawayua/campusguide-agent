@@ -2,7 +2,7 @@
 
 面向高校公开制度文档的**条款级**问答与办事指引 Agent（个人作品集项目）。
 
-当前目标院校：**华南农业大学**。当前进度：W1 数据与索引地基、W2 单轮问答垂直切片、W3 引用核对与拒答 v0、W4 MCP 工具层与混合检索已实现；语料 213 份文档 / 232 个版本 / 3,952 个可检索块（含两份 2020 级扫描件 OCR）。W3 在 W3 v2 代码上跑完 20 题 dev_v0：55/55 引用 ID 有效、0 编造、0 part_no 错误、55/55 quote 可定位；拒答召回 100%、误拒率 0.0%、partial 率 7.1%；warm p50 3.34s、p95 9.78s，废止探针 p50 73.5ms（单列）。**support 标注已完成 56/56（39 supported / 17 partial / 0 unsupported）；draft 支持率 69.6%，rendered 支持率 75.0%，低于 85%，support 门禁未通过，W3 总门禁未通过**；W6-A 提示词收紧已通过（见下）。W2 的 p95 未达 10s 已明确接受，详见 [W2 周记录](docs/weekly/w2.md)；W3 状态见 [W3 周记录](docs/weekly/w3.md)。
+当前目标院校：**华南农业大学**。当前进度：W1 数据与索引地基、W2 单轮问答垂直切片、W3 引用核对与拒答 v0、W4 MCP 工具层与混合检索、W6-A2 quote 契约已实现；语料 213 份文档 / 232 个版本 / 3,952 个可检索块（含两份 2020 级扫描件 OCR）。W3 在 W3 v2 代码上跑完 20 题 dev_v0：55/55 引用 ID 有效、0 编造、0 part_no 错误、55/55 quote 可定位；拒答召回 100%、误拒率 0.0%、partial 率 7.1%；warm p50 3.34s、p95 9.78s，废止探针 p50 73.5ms（单列）。**support 标注已完成 56/56（39 supported / 17 partial / 0 unsupported）；draft 支持率 69.6%，rendered 支持率 75.0%，低于 85%，support 门禁未通过，W3 总门禁未通过**；W6-A 提示词收紧已通过（见下）。W2 的 p95 未达 10s 已明确接受，详见 [W2 周记录](docs/weekly/w2.md)；W3 状态见 [W3 周记录](docs/weekly/w3.md)。
 
 W4 已实现 `policy-search` / `policy-meta` 两个只读 FastMCP server、BM25 sparse + bge-m3 dense 的 RRF 混合召回、bge-reranker-v2-m3 重排，以及受众/时间过滤。`articles_v1` 已重建为 3,952 点 hybrid 索引。dev_v0 20 题检索层：Recall@8 在 dense-only / RRF / RRF+rerank 三种模式均为 **1.000**；MRR 分别为 **0.905 / 0.848 / 0.929**。5/5 人群错配 case 通过 MCP 实跑，不返回不匹配条款。W3 回归（同一 20 题、W6-A prompt、hybrid+rerank）：结构 100%、拒答召回 100%、误拒率 0.0%、原因码 100%，partial 率 14.3%；support 未重新人工标注，不能声称通过。详见 [W4 周记录](docs/weekly/w4.md)。
 
@@ -11,6 +11,8 @@ W2 只证明“引用真实、可定位”：答案由 claim-first 生成，正�
 W3 在 W2 之上增加：quote 映射回 `article.text` 原文 span、claim 数字/日期/金额/期限被引用覆盖、受众/版本 scope、输出隐私扫描、废止探针，以及 `PASS / PARTIAL_ANSWER / UNVERIFIABLE` 决策。W3 仍未做语义蕴含（W6）；本轮人工标注已完成，但 rendered 支持率 75.0% 未达 85%，W3 总门禁未通过。
 
 W6-A 提示词收紧已在 `mimo-v2.6-pro-ultraspeed` 上通过：54/54 人工标注（53 supported / 1 partial / 0 unsupported），draft/rendered 支持率 **98.1%**；结构/拒答/误拒门禁通过；唯一 partial 是 d004/c1（“进入教室”范围边界）。v2.6pro A/B 已完成：support 100%（53/53；rendered 51/51），但出现 2 条 quote mismatch（d012 c4/c5）、d012 PARTIAL，p95 45.2s、warmup 111s，**可靠性低于 ultraspeed**；按可靠性优先，默认模型已回退到 `mimo-v2.6-pro-ultraspeed`（`ADVISOR_MAX_TOKENS=3000`）。W6-A 最终结果仍为 ultraspeed 的 98.1%；v2.6pro 报告保留为 A/B 记录。详见 [W6 周记录](docs/weekly/w6.md)。
+
+W6-A2（2026-10-24）在 W6-A 上增加 quote 连续性契约：quote 必须是同一证据正文的连续子串，不得拼接“引导句 + 非相邻分项”；时间/范围与数字必须原样出现在 quote；一条 claim 只表达一个条件、后果或数量；quote 不可定位时只重试一次，仍失败由 W3 Verifier 丢弃。20 题 hybrid 回归中 d005/d006 已从 PARTIAL 恢复 **ANSWERED**，partial 率 7.1%，结构/拒答/误拒门禁通过；50 draft / 49 rendered 已人工标注 **100% supported**，**W6-A2 总门禁通过**。详见 [W6 周记录](docs/weekly/w6.md)。
 
 **W3 结项决定（2026-10-24）**：W3 v2 自身的 rendered 支持率仍是 75.0%，不追溯修改；用户接受 W6-A 提示词收紧作为 W3 的 support remediation（同一 20 题、同一 Verifier、54/54 人工、98.1%），因此 W3 记为**有条件通过**。W3 baseline 75.0% 和 W6-A 98.1% 都保留在报告中，不合并成同一个数字。W3 代码 `759653b` 与报告随后同步到 Gitee。
 
@@ -94,6 +96,7 @@ make eval-w2             # 20 题开发集，输出 data/eval/w2-dev-report.{jso
 make eval-w3             # W3 dense 基线：run + 人工标注模板 + 报告
 make eval-w3-hybrid      # W4 回归：hybrid 检索 + 独立 run
 make eval-w4             # 检索层 A/B/C：dense vs RRF vs RRF+rerank
+make eval-w6a2           # W6-A2 quote 契约 20 题回归
 make population-check    # 5 个人群错配 case（真实 MCP + 真实索引）
 make sheet-w3            # 生成 data/eval/w3_support_review.md 核对表
 make label-w3 ANNOTATOR=yaukin  # 交互式人工标注 draft claim

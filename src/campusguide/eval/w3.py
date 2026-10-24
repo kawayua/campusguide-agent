@@ -782,12 +782,15 @@ def render_markdown(report: dict[str, Any]) -> str:
     vector_manifest = metadata.get("vector_manifest") or {}
     prompt_version = str(metadata.get("advisor_prompt_version") or "")
     retrieval_mode = str(metadata.get("retrieval_mode") or "")
-    title = (
-        "CampusGuide W6-A 开发集报告"
-        if prompt_version.startswith("w6")
-        else "CampusGuide W3 开发集报告"
-    )
-    gate_label = "W6-A 总门禁" if prompt_version.startswith("w6") else "W3 总门禁"
+    if prompt_version.startswith("w6a2"):
+        title = "CampusGuide W6-A2 开发集报告"
+        gate_label = "W6-A2 总门禁"
+    elif prompt_version.startswith("w6"):
+        title = "CampusGuide W6-A 开发集报告"
+        gate_label = "W6-A 总门禁"
+    else:
+        title = "CampusGuide W3 开发集报告"
+        gate_label = "W3 总门禁"
     support_gate_ok = gates.get("support", {}).get("ok")
     support_gate_text = "通过" if support_gate_ok else f"未通过（{support.get('gate_reason', '')}）"
     lines = [
@@ -1053,6 +1056,7 @@ def row_from_result(item: dict[str, Any], result: QAResult) -> dict[str, Any]:
         "retrieval_timing": result.retrieval_timing,
         "retrieval_warnings": result.retrieval_warnings,
         "mcp": result.mcp,
+        "quote_repair": result.quote_repair,
         "probe": result.probe,
         "probe_ms": result.probe_ms,
         "qa_ms": result.qa_ms,

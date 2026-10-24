@@ -13,6 +13,12 @@ from typing import Any
 from pydantic import BaseModel, Field
 
 from campusguide.agents.providers import ChatProvider, ChatProviderError, ChatResponse
+from campusguide.agents.quote_repair import (
+    build_repair_messages,
+    find_quote_problems,
+    merge_repairs,
+    remaining_problem_ids,
+)
 from campusguide.domain.enums import Audience, ClaimKind
 from campusguide.domain.models import Evidence
 
@@ -42,9 +48,13 @@ class AdvisorResult:
     drafts: list[ClaimDraft]
     responses: list[ChatResponse] = field(default_factory=list)
     repaired: bool = False
+    quote_repair_attempted: bool = False
+    quote_repaired: bool = False
+    quote_repair_remaining: list[str] = field(default_factory=list)
+    quote_repair_error: str = ""
 
 
-PROMPT_VERSION = "w6a-2026-10-23"
+PROMPT_VERSION = "w6a2-2026-10-24"
 
 SYSTEM_PROMPT = """你是华南农业大学制度问答助手。你只能依据本轮提供的“证据片段”回答。
 必须遵守：
@@ -52,26 +62,31 @@ SYSTEM_PROMPT = """你是华南农业大学制度问答助手。你只能依据�
 2. JSON 结构：{"claims": [{"claim_id": "c1", "text": "...", "kind": "eligibility", "citations": [{"article_id": "...", "quote": "..."}]}]}。
 3. 生成 1-5 条 claim；每条 claim 只能包含一个事实性结论，并至少包含 1 个 citation。
 4. citation.article_id 必须逐字取自证据中的“引用ID”，不得编造、不得改写。
-5. citation.quote 必须从对应证据的“正文”中逐字复制一段连续文字，至少 6 个字；
+5. citation.quote 必须从对应证据的“正文”中逐字复制**一个连续子串**，至少 6 个字；
    不得改写、不得使用省略号、不得拼接不相邻的句子。
-   quote 必须包含 claim 的完整“条件 + 后果/结论”；不能只截取条件、只截取后果，
-   也不能把分散在不相邻段落的句子拼起来。quote 不完整时，先在同一证据正文中
-   选择更长的连续片段；仍不完整时，缩短 claim，只保留 quote 能支持的部分；
-   无法支持则不要生成该 claim。
+   quote 必须包含 claim 的完整“条件 + 后果/结论”；不能只截取条件、只截取后果。
+   如果结论在引导句、分项在下方，必须从引导句连续复制到该分项，允许包含中间分项；
+   绝不能用省略号或跳过中间内容把“引导句 + 非相邻分项”拼成一段。
+   无法用连续 quote 支持时，缩短 claim、删除该 claim 或返回空 claims，不要拼接。
 6. claim 只能复述其 citation.quote 已经写出的事实。不得补充 quote 未出现的
    条件、范围、时间、地点、受众、后果、版本号、条号或评价性概括；
    不得用“问题”中的词补足 quote 没有的内容。
+   claim 中的时间/范围条件（如“一学期内”“每学年”）和数字、金额、期限必须原样
+   出现在 quote 中；quote 没有写出的范围/数字，claim 也不能写。
 7. 保留原文的限定词和强弱：一般、原则上、可以、应当、不得、至少、最多等；
    不得把“可以/一般”改写成“必须/一律”，也不得反向弱化。
 8. 如果 claim 需要列举多项，quote 必须包含这些项的原文；否则不要展开具体内容，
    只写 quote 明确写出的引用关系（如“应同时符合条件（一）至（五）”）。
 9. 不得使用证据之外的知识；证据不足时返回 {"claims": []}。
-10. 不要输出“根据规定”“综上所述”等无信息量句子；不要把多个条件合并成一条
-    claim；一条 claim 尽量只保留一个条件及其直接后果。
+10. 一条 claim 只表达一个条件、一个后果或一个数量；不要把多个条件或处分档次
+    合并成一条 claim；一条 claim 尽量只保留一个条件及其直接后果。
+    不要展开列表或概括条号；引用关系只能写到 quote 已明确写出的范围。
 11. 输出前逐条自检：claim 中每个主体、条件、数字/日期/金额/期限、后果和
     限定词是否都能在 quote 中找到？找不到就删掉该部分、缩短 claim 或改选
     更长的 quote；不要用条款上下文或其他证据补足。
-12. kind 只能取 eligibility / step / material / deadline / department / version / definition / other。"""
+12. kind 只能取 eligibility / step / material / deadline / department / version / definition / other。
+13. 如果找不到能同时覆盖“条件 + 后果”的连续 quote，不要生成该 claim；
+    不要用两个不相邻 quote、省略号或“（一）至（五）”之类概括来掩盖缺失。"""
 
 
 def _audience_label(audience: Audience | None) -> str:
@@ -121,7 +136,11 @@ def build_messages(
         f"问题：{question}\n\n"
         f"证据片段：\n{build_evidence_block(evidence)}\n\n"
         "请先为每条 claim 选择完整的 citation.quote，再写 claim；"
-        "claim 不得超出 quote。quote 不完整时请缩短 claim 或返回空 claims。\n"
+        "quote 必须是同一证据正文中的连续子串；不得用省略号、不得跳过中间分项，"
+        "也不得把“引导句 + 非相邻分项”拼接起来。"
+        "claim 的时间/范围条件和数字/金额/期限必须原样出现在 quote 中。"
+        "一条 claim 只表达一个条件、一个后果或一个数量；"
+        "claim 不得超出 quote。quote 不完整时请缩短 claim、删除该 claim 或返回空 claims。\n"
         "请只输出符合 schema 的 claims JSON。"
     )
     return [
@@ -202,10 +221,12 @@ class Advisor:
         *,
         temperature: float = 0.2,
         max_tokens: int = 1200,
+        enable_quote_repair: bool = True,
     ) -> None:
         self._provider = provider
         self._temperature = temperature
         self._max_tokens = max_tokens
+        self._enable_quote_repair = enable_quote_repair
 
     def generate(
         self,
@@ -224,10 +245,10 @@ class Advisor:
         except ChatProviderError:
             raise
         responses.append(first)
+        json_repaired = False
         try:
-            return AdvisorResult(
-                drafts=parse_claims_json(first.content).claims, responses=responses
-            )
+            drafts = parse_claims_json(first.content).claims
+            draft_content = first.content
         except AdvisorError as first_error:
             repair_messages: list[dict[str, Any]] = [
                 *messages,
@@ -254,4 +275,60 @@ class Advisor:
                 drafts = parse_claims_json(second.content).claims
             except AdvisorError as second_error:
                 raise AdvisorError(f"JSON 修复失败：{second_error}") from second_error
-            return AdvisorResult(drafts=drafts, responses=responses, repaired=True)
+            draft_content = second.content
+            json_repaired = True
+
+        return self._repair_quotes(
+            messages,
+            draft_content,
+            drafts,
+            evidence,
+            responses,
+            json_repaired=json_repaired,
+        )
+
+    def _repair_quotes(
+        self,
+        messages: list[dict[str, str]],
+        draft_content: str,
+        drafts: list[ClaimDraft],
+        evidence: list[Evidence],
+        responses: list[ChatResponse],
+        *,
+        json_repaired: bool,
+    ) -> AdvisorResult:
+        result = AdvisorResult(
+            drafts=drafts,
+            responses=responses,
+            repaired=json_repaired,
+        )
+        if not self._enable_quote_repair:
+            return result
+        problems = find_quote_problems(drafts, evidence)
+        if not problems:
+            return result
+
+        result.quote_repair_attempted = True
+        repair_messages = build_repair_messages(messages, draft_content, drafts, problems)
+        try:
+            repaired_response = self._provider.complete(
+                repair_messages,
+                temperature=0.0,
+                max_tokens=self._max_tokens,
+            )
+        except ChatProviderError as exc:
+            # 修复调用失败不阻塞整轮；保留原 draft，让 Verifier 按契约丢弃。
+            result.quote_repair_error = f"{type(exc).__name__}: {exc}"
+            return result
+        responses.append(repaired_response)
+        try:
+            repaired_drafts = parse_claims_json(repaired_response.content).claims
+        except AdvisorError as exc:
+            result.quote_repair_error = str(exc)
+            return result
+
+        merged = merge_repairs(drafts, repaired_drafts, problems)
+        result.drafts = merged.drafts
+        result.quote_repaired = merged.changed
+        result.quote_repair_remaining = remaining_problem_ids(merged.drafts, evidence)
+        return result

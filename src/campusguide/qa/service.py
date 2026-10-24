@@ -242,6 +242,7 @@ class QAResult:
     retrieval_timing: dict[str, float] = field(default_factory=dict)
     retrieval_warnings: list[str] = field(default_factory=list)
     version_metadata: dict[str, Any] = field(default_factory=dict)
+    quote_repair: dict[str, Any] = field(default_factory=dict)
 
     @property
     def answered(self) -> bool:
@@ -733,6 +734,10 @@ class QAService:
             "prompt_tokens": sum(response.prompt_tokens for response in result.responses),
             "completion_tokens": sum(response.completion_tokens for response in result.responses),
             "repaired": result.repaired,
+            "quote_repair_attempted": result.quote_repair_attempted,
+            "quote_repaired": result.quote_repaired,
+            "quote_repair_remaining": list(result.quote_repair_remaining),
+            "quote_repair_error": result.quote_repair_error,
         }
 
     def _finish(
@@ -760,6 +765,16 @@ class QAService:
         result.version_metadata = result.version_metadata or dict(
             trace_extra.get("version_metadata") or {}
         )
+        result.quote_repair = result.quote_repair or {
+            key: (trace_extra.get("llm") or {}).get(key)
+            for key in (
+                "quote_repair_attempted",
+                "quote_repaired",
+                "quote_repair_remaining",
+                "quote_repair_error",
+            )
+            if key in (trace_extra.get("llm") or {})
+        }
         payload = {
             "trace_id": trace_id,
             "session_id": session_id,

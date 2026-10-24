@@ -6,7 +6,8 @@ RUFF ?= $(UV) run ruff
 
 .PHONY: help init sync fetch parse index index-qdrant vector-index vector-index-dense validate-sources \
 	check-segmentation test lint format format-check qa ask eval-w2 eval-w3 eval-w3-hybrid eval-w4 \
-	mcp-smoke population-check eval-w3-report label-w3 sheet-w3 demo compose-up compose-down clean
+	eval-w6a2 eval-w6a2-report mcp-smoke population-check eval-w3-report label-w3 sheet-w3 \
+	label-w6a2 sheet-w6a2 demo compose-up compose-down clean
 
 help:
 	@echo "CampusGuide commands"
@@ -21,6 +22,10 @@ help:
 	@echo "  make mcp-smoke         启动 policy-search/policy-meta 做 stdio smoke"
 	@echo "  make population-check  通过 MCP 跑 5 个人群错配验收 case"
 	@echo "  make eval-w4           dense vs hybrid RRF vs hybrid+rerank 检索对比"
+	@echo "  make eval-w6a2         W6-A2 quote 契约 20 题回归（独立 run）"
+	@echo "  make eval-w6a2-report  人工标注后复用 W6-A2 run 生成报告"
+	@echo "  make sheet-w6a2        生成 W6-A2 Markdown 核对表"
+	@echo "  make label-w6a2 ANNOTATOR=你的名字  交互式标注 W6-A2 claims"
 	@echo "  make validate-sources  校验来源清单的版本/元数据完整性"
 	@echo "  make check-segmentation 抽样 20 条 article，生成人工核对清单"
 	@echo "  make test              运行离线测试（unit + contract + integration）"
@@ -91,6 +96,29 @@ eval-w3-report:
 
 eval-w4:
 	$(PYTHON) scripts/eval_w4.py
+
+eval-w6a2:
+	$(PYTHON) scripts/eval_w3.py --retrieval hybrid \
+		--run data/eval/w6a2-run.json \
+		--labels data/eval/w6a2_support_labels.jsonl \
+		--output-json data/eval/w6a2-dev-report.json \
+		--output-md data/eval/w6a2-dev-report.md
+
+eval-w6a2-report:
+	$(PYTHON) scripts/eval_w3.py --report-only \
+		--run data/eval/w6a2-run.json \
+		--labels data/eval/w6a2_support_labels.jsonl \
+		--output-json data/eval/w6a2-dev-report.json \
+		--output-md data/eval/w6a2-dev-report.md
+
+sheet-w6a2:
+	$(PYTHON) scripts/label_w3.py --run data/eval/w6a2-run.json \
+		--labels data/eval/w6a2_support_labels.jsonl --sheet \
+		--sheet-output data/eval/w6a2_support_review.md
+
+label-w6a2:
+	$(PYTHON) scripts/label_w3.py --run data/eval/w6a2-run.json \
+		--labels data/eval/w6a2_support_labels.jsonl --annotator "$(ANNOTATOR)"
 
 label-w3:
 	$(PYTHON) scripts/label_w3.py --annotator "$(ANNOTATOR)"

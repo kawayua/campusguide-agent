@@ -110,6 +110,7 @@ def _debug_panel(result: QAResult) -> str:
         "retrieval_timing": result.retrieval_timing,
         "retrieval_warnings": result.retrieval_warnings,
         "version_metadata": result.version_metadata,
+        "quote_repair": result.quote_repair,
         "llm_model": result.llm_model,
         "retrieval": retrieval,
         "rendered_claim_ids": result.rendered_claim_ids,

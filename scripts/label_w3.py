@@ -245,11 +245,12 @@ def main() -> int:
             )
             return 2
         prompt_version = str(run.get("metadata", {}).get("advisor_prompt_version") or "")
-        sheet_title = (
-            "W6-A support 标注核对表"
-            if prompt_version.startswith("w6")
-            else "W3 support 标注核对表"
-        )
+        if prompt_version.startswith("w6a2"):
+            sheet_title = "W6-A2 support 标注核对表"
+        elif prompt_version.startswith("w6"):
+            sheet_title = "W6-A support 标注核对表"
+        else:
+            sheet_title = "W3 support 标注核对表"
         _write_sheet(records, questions, output, title=sheet_title)
         _print_counts(records)
         return 0

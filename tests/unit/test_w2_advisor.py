@@ -30,7 +30,7 @@ def test_advisor_repairs_invalid_json_once() -> None:
             '"citations": [{"article_id": "a", "quote": "q"}]}]}',
         ]
     )
-    advisor = Advisor(provider)
+    advisor = Advisor(provider, enable_quote_repair=False)
     result = advisor.generate("问题", [make_evidence(make_article())])
 
     assert result.repaired is True

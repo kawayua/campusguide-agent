@@ -13,7 +13,7 @@ W1 尚无问答模块，因此**没有任何回答质量指标**。简历、READ
 |---|---|---|---|
 | 代码规范 | ruff check（E/F/I/B/UP/SIM/RUF） | `make lint` | 通过 |
 | 代码格式 | ruff format --check src tests scripts | `make format-check` | 通过 |
-| 单元、契约与集成测试 | 全离线：mock HTTP、临时目录、动态生成 PDF、内存 Qdrant、fake embedder/chat | `make test` | 367 passed（W4 后） |
+| 单元、契约与集成测试 | 全离线：mock HTTP、临时目录、动态生成 PDF、内存 Qdrant、fake embedder/chat | `make test` | 380 passed（W4 后） |
 | 索引确定性 | 同一输入重建，`content_hash` 与 JSONL 字节一致 | `pytest tests/unit/test_build_index.py` | 通过 |
 | 联系方式脱敏 | 手机号、身份证、学号、邮箱、联系人姓名 | `pytest tests/unit/test_redact.py` | 通过 |
 | 版本解析 | CURRENT / HISTORICAL / INCLUDE_REPEALED、冲突、无版本 | `pytest tests/unit/test_versioning.py` | 通过 |
@@ -38,7 +38,7 @@ CI 配置见 `.github/workflows/ci.yml`；Gitee 仓库当前以本地 `make qa` 
 
 - `ruff check .`：通过；
 - `ruff format --check src tests scripts`：通过；
-- `pytest`：367 passed（W1–W4 unit + contract + integration，无网络依赖；W1/W2 时点为 154；W3 后 295）；
+- `pytest`：380 passed（W1–W4 unit + contract + integration，无网络依赖；W1/W2 时点为 154；W3 后 295）；
 - 真实语料：213 文档 / 232 版本 / 3,952 块；其中 `article` 1,366、`section` 2,586；
 - 规模构成：校级 44 文档 / 52 版本；信息学院 36 / 44；农学院 133 / 136；
 - 版本状态：`active` 222、`repealed` 10；每个文档至少有一个 `active` 版本；
@@ -217,6 +217,32 @@ W4 的已知缺口：
   不匹配条款”的验收，但不等于正确方案召回；
 - BM25 是词面匹配，不能处理“种子科学 → 农学”这类语义改写；
 - `min_rerank_score=0.60` 只由 20 题开发集校准，W7 冻结集需重新验证。
+
+## W6-A2 quote 连续性与答案质量
+
+W6-A2 只改生成/重写层，不改 W3 Verifier：
+
+- citation.quote 必须是同一证据正文的连续子串；不得拼接“引导句 + 非相邻分项”；
+- claim 的时间/范围（如“一学期内”）和数字/金额/期限必须原样出现在 quote；
+- 一条 claim 只表达一个条件、一个后果或一个数量；
+- quote 不可定位或数字未覆盖时，只对失败 claim 做一次 citation 重写；仍失败由
+  W3 Verifier 丢弃，不把重写当成新证据。
+
+2026-10-24 dev_v0 20 题（hybrid+rerank，prompt `w6a2-2026-10-24`）：
+
+| 指标 | 结果 | 门禁 |
+|---|---:|---|
+| 结构门禁 | 引用 ID 100% / quote 100% / 0 编造 / 0 part 错误 | 通过 |
+| 拒答召回 | 100% | ≥80%，通过 |
+| 误拒率 | 7.1%（d012 端点空返） | ≤20%，通过 |
+| partial 率 | 7.1%（d001 第 6 条 claim 被上限裁掉） | 记录 |
+| d005 / d006 | **ANSWERED / ANSWERED** | 达成 |
+| support | 50 draft / 49 rendered 已人工标注 100% | 通过 |
+| W6-A2 总门禁 | 结构 / support / 拒答 / 误拒全部通过 | 通过 |
+
+run：`data/eval/w6a2-run.json`，`run_sha256=b7ee6884…f569`。旧 W6-A labels 仅
+用于 8 条 prefill 建议，未自动复用；人工核对表为
+`data/eval/w6a2_support_review.md`，50/50 已由 `yaukin` 标注为 supported。
 
 ## 失败归因模板
 

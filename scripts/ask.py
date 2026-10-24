@@ -92,6 +92,7 @@ def main() -> int:
             "retrieval_timing": result.retrieval_timing,
             "retrieval_warnings": result.retrieval_warnings,
             "version_metadata": result.version_metadata,
+            "quote_repair": result.quote_repair,
             "issues": [issue.model_dump(mode="json", exclude_none=True) for issue in result.issues],
             "scope_issues": [
                 issue.model_dump(mode="json", exclude_none=True) for issue in result.scope_issues
