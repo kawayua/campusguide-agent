@@ -41,7 +41,8 @@ from campusguide.ingest.segment import segment_document
 
 INDEX_SCHEMA_VERSION = "1.2"
 INDEX_VERSION = "w2-articles-v1"
-EXPECTED_LOW_CONFIDENCE_VERSIONS = 16
+# W5 added one low-confidence page (研究生院培养科, 核验日锚点) to the W2 baseline.
+EXPECTED_LOW_CONFIDENCE_VERSIONS = 17
 ARTICLES_FILENAME = "articles.jsonl"
 DOCUMENTS_FILENAME = "documents.jsonl"
 MANIFEST_FILENAME = "manifest.json"

@@ -161,7 +161,8 @@ documents:
   issuing_department: 本科生院（教务处）
   audience:
   - undergraduate
-  flow_ids: []
+  flow_ids:
+  - recommendation-eligibility
   topic_tags:
   - 推免
   - 研究生
@@ -494,7 +495,8 @@ documents:
   issuing_department: 党委学生工作部
   audience:
   - undergraduate
-  flow_ids: []
+  flow_ids:
+  - scholarship-application
   topic_tags:
   - 国家奖助学金
   - 本科
@@ -536,7 +538,8 @@ documents:
   issuing_department: 党委学生工作部
   audience:
   - undergraduate
-  flow_ids: []
+  flow_ids:
+  - scholarship-application
   topic_tags:
   - 综合测评
   - 评优
@@ -1967,7 +1970,7 @@ documents:
       - info
       intake_years:
       - 2025
-      - 2026
+      - '2026'
       program_types:
       - academic
 - doc_id: info-grad-cs-plan
@@ -1996,7 +1999,7 @@ documents:
       - info
       intake_years:
       - 2025
-      - 2026
+      - '2026'
       program_types:
       - academic
 - doc_id: info-grad-computer-tech-plan
@@ -2025,7 +2028,7 @@ documents:
       - info
       intake_years:
       - 2025
-      - 2026
+      - '2026'
       program_types:
       - professional
 - doc_id: info-grad-iem-plan
@@ -2054,7 +2057,7 @@ documents:
       - info
       intake_years:
       - 2025
-      - 2026
+      - '2026'
       program_types:
       - professional
 - doc_id: info-grad-software-plan
@@ -2083,7 +2086,7 @@ documents:
       - info
       intake_years:
       - 2025
-      - 2026
+      - '2026'
       program_types:
       - academic
 - doc_id: info-grad-agri-engineering-plan
@@ -2111,7 +2114,7 @@ documents:
       colleges:
       - info
       intake_years:
-      - 2026
+      - '2026'
       program_types:
       - academic
 
@@ -2913,7 +2916,7 @@ documents:
       colleges:
       - agri
       intake_years:
-      - 2026
+      - '2026'
       program_types:
       - academic
 - doc_id: agri-grad-plan-agronomy-095131
@@ -2943,7 +2946,7 @@ documents:
       - agri
       intake_years:
       - 2025
-      - 2026
+      - '2026'
       program_types:
       - professional
 - doc_id: agri-undergrad-mentor-rule-2025
@@ -2979,6 +2982,8 @@ documents:
   issuing_department: 农学院
   audience:
   - undergraduate
+  flow_ids:
+  - recommendation-eligibility
   audience_detail:
     colleges:
     - agri
@@ -5852,3 +5857,328 @@ documents:
     status: active
     format: html
     notes: 近一年栏目元数据；最新一条 2026-09-24；只登记标题/日期/链接；不抓正文和附件；采集日期 2026-10-21。
+- doc_id: national-aid-2026-info-merit
+  title: 关于做好我院2026年本科生国家奖学金评审工作的通知
+  doc_type: notice
+  authority_level: operational
+  issuer_level: college
+  issuer_college_id: info
+  issuing_department: 数学与信息学院、软件学院
+  audience:
+  - undergraduate
+  flow_ids:
+  - scholarship-application
+  audience_detail:
+    colleges:
+    - info
+    note: 2026年学院执行通知；只保留公开制度事实，联系人姓名已脱敏。
+  topic_tags:
+  - 国家奖学金
+  - '2026'
+  versions:
+  - version_id: v2026
+    url: https://info.scau.edu.cn/2026/1010/c3772a448289/page.htm
+    local_path: data/incoming/w5/national-aid-2026-info-merit.html
+    published_at: '2026-10-09'
+    effective_from: '2026-10-09'
+    effective_to: null
+    status: active
+    format: html
+    notes: 官网路径日期2026-10-10，页面/正文日期2026-10-09；本地转录为脱敏节选，引用以官网原文为准。
+- doc_id: national-aid-2026-info-aid
+  title: 关于做好我院2026年本科生国家助学金、国家励志奖学金评审工作的通知
+  doc_type: notice
+  authority_level: operational
+  issuer_level: college
+  issuer_college_id: info
+  issuing_department: 数学与信息学院、软件学院
+  audience:
+  - undergraduate
+  flow_ids:
+  - scholarship-application
+  audience_detail:
+    colleges:
+    - info
+    note: 2026年学院执行通知；只保留公开制度事实，联系人姓名已脱敏。
+  topic_tags:
+  - 国家励志奖学金
+  - 国家助学金
+  - '2026'
+  versions:
+  - version_id: v2026
+    url: https://info.scau.edu.cn/2026/1013/c3772a448651/page.htm
+    local_path: data/incoming/w5/national-aid-2026-info-aid.html
+    published_at: '2026-10-13'
+    effective_from: '2026-10-13'
+    effective_to: null
+    status: active
+    format: html
+    notes: 2026年10月13日学院通知；本地转录为脱敏节选，引用以官网原文为准。
+- doc_id: national-aid-2026-agri-inspirational-publicity
+  title: 关于农学院2025-2026学年本科生国家励志奖学金拟获奖人选的公示
+  doc_type: notice
+  authority_level: operational
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  audience:
+  - undergraduate
+  flow_ids:
+  - scholarship-application
+  audience_detail:
+    colleges:
+    - agri
+    note: 2026年公示元数据；只登记标题/日期/公示期/依据，不收录个人名单。
+  topic_tags:
+  - 国家励志奖学金
+  - '2026'
+  - 公示
+  versions:
+  - version_id: v2026
+    url: https://nxy.scau.edu.cn/2026/1023/c17982a449674/page.htm
+    local_path: data/incoming/w5/national-aid-2026-agri-inspirational-publicity.html
+    published_at: '2026-10-23'
+    effective_from: '2026-10-23'
+    effective_to: null
+    status: active
+    format: html
+    notes: 脱敏元数据转录；官网原公示含姓名/学号，未下载、未索引；用于判定2026批次已结束。
+- doc_id: national-aid-2026-agri-grant-publicity
+  title: 关于农学院2026-2027学年本科生国家助学金受助人选拟推荐名单的公示
+  doc_type: notice
+  authority_level: operational
+  issuer_level: college
+  issuer_college_id: agri
+  issuing_department: 农学院
+  audience:
+  - undergraduate
+  flow_ids:
+  - scholarship-application
+  audience_detail:
+    colleges:
+    - agri
+    note: 2026年公示元数据；只登记标题/日期/公示期/依据，不收录个人名单。
+  topic_tags:
+  - 国家助学金
+  - '2026'
+  - 公示
+  versions:
+  - version_id: v2026
+    url: https://nxy.scau.edu.cn/2026/1021/c17982a449483/page.htm
+    local_path: data/incoming/w5/national-aid-2026-agri-grant-publicity.html
+    published_at: '2026-10-21'
+    effective_from: '2026-10-21'
+    effective_to: null
+    status: active
+    format: html
+    notes: 脱敏元数据转录；官网原公示含姓名/学号，未下载、未索引；用于判定2026批次已结束。
+- doc_id: comprehensive-evaluation-2026-info
+  title: 关于做好我院2025-2026学年本科生综合测评及评优工作的通知
+  doc_type: notice
+  authority_level: operational
+  issuer_level: college
+  issuer_college_id: info
+  issuing_department: 数学与信息学院、软件学院
+  audience:
+  - undergraduate
+  flow_ids:
+  - scholarship-application
+  audience_detail:
+    colleges:
+    - info
+    note: 综合测评是国家级奖学金前置；本通知不是国家级奖项评审通知。
+  topic_tags:
+  - 综合测评
+  - '2026'
+  versions:
+  - version_id: v2026
+    url: https://info.scau.edu.cn/2026/0917/c3772a446211/page.htm
+    local_path: data/incoming/w5/comprehensive-evaluation-2026-info.html
+    published_at: '2026-09-17'
+    effective_from: '2026-09-17'
+    effective_to: null
+    status: active
+    format: html
+    notes: 2026年学院综测通知；本地转录为脱敏节选；不写国家级奖项事实。
+- doc_id: comprehensive-evaluation-2026-final-publicity
+  title: 关于我院2025-2026学年度本科生综合测评拟获奖名单公示（最终版）
+  doc_type: notice
+  authority_level: operational
+  issuer_level: college
+  issuer_college_id: info
+  issuing_department: 数学与信息学院、软件学院
+  audience:
+  - undergraduate
+  flow_ids: []
+  audience_detail:
+    colleges:
+    - info
+    note: 仅作综合测评参考；不进入国家级奖学金流程事实。
+  topic_tags:
+  - 综合测评
+  - '2026'
+  - 公示
+  versions:
+  - version_id: v2026
+    url: https://info.scau.edu.cn/2026/1023/c3772a449715/page.htm
+    local_path: data/incoming/w5/comprehensive-evaluation-2026-final-publicity.html
+    published_at: '2026-10-23'
+    effective_from: '2026-10-23'
+    effective_to: null
+    status: active
+    format: html
+    notes: 仅保留标题/日期/公示期/异议截止；官网名单含姓名/学号/成绩，未下载、未索引。
+- doc_id: recommendation-2027-notice
+  title: 关于做好2027年优秀应届本科毕业生免试攻读研究生推荐阶段工作的通知
+  doc_type: notice
+  authority_level: operational
+  issuer_level: university
+  issuing_department: 本科生院（教务处）学籍科
+  audience:
+  - undergraduate
+  flow_ids:
+  - recommendation-eligibility
+  audience_detail:
+    stages:
+    - final_year
+    status:
+    - graduating
+    note: 面向2027届应届本科毕业生。
+  topic_tags:
+  - 推免
+  - '2027'
+  versions:
+  - version_id: v2026
+    url: https://jwc.scau.edu.cn/2026/0829/c5135a442400/page.htm
+    local_path: data/incoming/w5/recommendation-2027-notice.html
+    published_at: '2026-08-29'
+    effective_from: '2026-08-29'
+    effective_to: null
+    status: active
+    format: html
+    notes: 2027推荐阶段通知；本地转录为脱敏节选；学院细则与名额以学院通知为准。
+- doc_id: recommendation-2027-publicity
+  title: 关于2027年推荐优秀应届本科毕业生免试攻读研究生拟获资格名单的公示
+  doc_type: notice
+  authority_level: operational
+  issuer_level: university
+  issuing_department: 本科生院（教务处）学籍科
+  audience:
+  - undergraduate
+  flow_ids:
+  - recommendation-eligibility
+  audience_detail:
+    stages:
+    - final_year
+    status:
+    - graduating
+    note: 面向2027届应届本科毕业生。
+  topic_tags:
+  - 推免
+  - '2027'
+  - 公示
+  versions:
+  - version_id: v2026
+    url: https://jwc.scau.edu.cn/2026/0912/c5135a443871/page.htm
+    local_path: data/incoming/w5/recommendation-2027-publicity.html
+    published_at: '2026-09-12'
+    effective_from: '2026-09-12'
+    effective_to: null
+    status: active
+    format: html
+    notes: 脱敏元数据转录；官网名单含姓名/学号，未下载、未索引；用于公示期/放弃截止/名额。
+- doc_id: enrollment-certificate-guide
+  title: 中英文成绩单、学历学位证明及其他证明
+  doc_type: guide
+  authority_level: informational
+  issuer_level: university
+  issuing_department: 本科生院（教务处）教学运行科
+  audience:
+  - undergraduate
+  flow_ids:
+  - enrollment-certificate
+  topic_tags:
+  - 在读证明
+  - 成绩单
+  - 学历学位证明
+  versions:
+  - version_id: v2026
+    url: https://jwc.scau.edu.cn/hnnydxywcjdwxlxwzmjqtzm/list.htm
+    local_path: data/incoming/w5/enrollment-certificate-guide.html
+    published_at: '2026-03-03'
+    effective_from: '2026-03-03'
+    effective_to: null
+    status: active
+    format: html
+    notes: 主页面现行；日期取附件1说明2026-03-03；本地转录为脱敏节选；引用以官网原文为准。
+- doc_id: enrollment-certificate-fee-note-2026
+  title: 关于办理出国成绩单及学历学位证明的说明
+  doc_type: notice
+  authority_level: operational
+  issuer_level: university
+  issuing_department: 本科生院（教务处）教学运行科
+  audience:
+  - undergraduate
+  flow_ids:
+  - enrollment-certificate
+  topic_tags:
+  - 在读证明
+  - 收费
+  - 办理说明
+  versions:
+  - version_id: v2026
+    url: https://jwc.scau.edu.cn/_upload/article/files/ae/b5/4c10927c4cbbaec9352e590a6d96/b8a3e914-1eee-4ea6-8995-441fca761a37.doc
+    local_path: data/incoming/w5/enrollment-certificate-fee-note-2026.html
+    published_at: '2026-03-03'
+    effective_from: '2026-03-03'
+    effective_to: null
+    status: active
+    format: html
+    notes: 官网附件1为.doc，无法直接解析；本地HTML转录；引用URL指向官网.doc。
+- doc_id: enrollment-certificate-self-print-2024
+  title: 本科生自助打印服务指南
+  doc_type: guide
+  authority_level: informational
+  issuer_level: university
+  issuing_department: 本科生院（教务处）教学运行科
+  audience:
+  - undergraduate
+  flow_ids:
+  - enrollment-certificate
+  topic_tags:
+  - 在读证明
+  - 自助打印
+  versions:
+  - version_id: v2024
+    url: https://jwc.scau.edu.cn/_upload/article/files/ae/b5/4c10927c4cbbaec9352e590a6d96/d6814017-7423-44be-9821-81548d26630f.docx
+    local_path: data/incoming/w5/enrollment-certificate-self-print-2024.html
+    published_at: '2024-11-05'
+    effective_from: '2024-11-05'
+    effective_to: null
+    status: active
+    format: html
+    notes: 官网附件为.docx，无法直接解析；本地HTML转录；引用URL指向官网.docx。
+- doc_id: enrollment-certificate-grad-office
+  title: 研究生院培养科：学籍证明与学历证明
+  doc_type: guide
+  authority_level: informational
+  issuer_level: university
+  issuing_department: 研究生院培养科
+  audience:
+  - graduate
+  flow_ids:
+  - enrollment-certificate
+  topic_tags:
+  - 在读证明
+  - 学籍证明
+  - 研究生
+  versions:
+  - version_id: v2026
+    url: https://yjsy.scau.edu.cn/299/list.htm
+    local_path: data/incoming/w5/enrollment-certificate-grad-office.html
+    published_at: '2026-10-25'
+    effective_from: '2026-10-25'
+    effective_to: null
+    status: active
+    format: html
+    notes: 页面现行；日期取核验日（date_confidence=low）；只作培养科导航，材料/费用/时限以培养科确认为准。

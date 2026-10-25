@@ -1,0 +1,73 @@
+schema_version: '1.0'
+corpus_id: scau
+academic_year: 2026-2027
+source_url: https://jwc.scau.edu.cn/2026/0427/c6957a433190/page.htm
+source_note: 华南农业大学2026-2027学年校历及作息时间表（教学运行科，2026-04-27）；第二学期表头标注“征求意见稿”，春夏日期以定稿为准。
+events:
+- event_id: register-returning-2026
+  title: 老生报到注册
+  start: 2026-08-28
+  end: 2026-08-29
+  audience:
+  - undergraduate
+  academic_year: 2026-2027
+- event_id: teaching-autumn-2026
+  title: 本科生教学（老生，1-18周）
+  start: 2026-08-31
+  end: 2026-12-31
+  audience:
+  - undergraduate
+  academic_year: 2026-2027
+- event_id: register-new-2026
+  title: 新生报到
+  start: 2026-08-30
+  end: 2026-09-01
+  audience:
+  - undergraduate
+  academic_year: 2026-2027
+- event_id: final-exam-autumn-2026
+  title: 期末考试（19-20周）
+  start: 2027-01-04
+  end: 2027-01-15
+  audience:
+  - undergraduate
+  academic_year: 2026-2027
+- event_id: winter-vacation-2027
+  title: 寒假
+  start: 2027-01-18
+  end: 2027-02-21
+  audience:
+  - undergraduate
+  academic_year: 2026-2027
+- event_id: register-spring-2027
+  title: 春季学期注册
+  start: 2027-02-20
+  end: 2027-02-21
+  audience:
+  - undergraduate
+  academic_year: 2026-2027
+  note: 第二学期校历为征求意见稿，以定稿为准。
+- event_id: teaching-spring-2027
+  title: 本科生教学（春季，1-18周）
+  start: 2027-02-22
+  end: 2027-06-25
+  audience:
+  - undergraduate
+  academic_year: 2026-2027
+  note: 第二学期校历为征求意见稿，以定稿为准。
+- event_id: final-exam-spring-2027
+  title: 本科生考试（春季）
+  start: 2027-06-28
+  end: 2027-07-09
+  audience:
+  - undergraduate
+  academic_year: 2026-2027
+  note: 第二学期校历为征求意见稿，以定稿为准。
+- event_id: summer-vacation-2027
+  title: 暑假
+  start: 2027-07-12
+  end: 2027-08-29
+  audience:
+  - undergraduate
+  academic_year: 2026-2027
+  note: 第二学期校历为征求意见稿，以定稿为准。
