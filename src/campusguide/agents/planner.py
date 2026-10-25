@@ -536,9 +536,7 @@ class Planner:
             ]
             if not fact_queries:
                 fact_queries = subs
-            queries = self._query_items(
-                _contextualize_queries(fact_queries, text), audience
-            )
+            queries = self._query_items(_contextualize_queries(fact_queries, text), audience)
             if queries:
                 intent = Intent.MIXED
 
