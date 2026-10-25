@@ -2,11 +2,12 @@
 
 | 项目 | 内容 |
 |---|---|
-| 文档版本 | 0.1（设计稿） |
+| 文档版本 | 0.2（设计稿，2026-10-25 范围裁决） |
 | 日期 | 2026-10-25 |
 | 基线 | W7 已终止并打 tag `w7`（W7 总门禁未通过）；W4 MCP/混合检索稳定；435 tests |
-| 范围 | YAML 流程 DSL、受限三值谓词、三个首版流程、多轮槽位、checklist 渲染 |
+| 范围 | YAML 流程 DSL、受限三值谓词、三个首版流程、多轮槽位、checklist 渲染、`closed` 截止态 |
 | 阶段关系 | **W5 是 W7 之后的独立能力**；不修改 W7 冻结测试集/报告，也不把 W5 流程指标写进 W7 结果 |
+| 首版边界 | 奖学金只做**国家级**三奖；院级综合/单项/社会奖只 handoff；在读证明本科生完整流程、研究生导航 handoff |
 | 状态 | 设计待确认；可以进入实现 |
 
 ---
@@ -40,6 +41,28 @@ W5 是后加的流程能力：
 - README 必须写“W5 不在 W7 测试集覆盖范围内”，不能据此声称 W7 通过；
 - W7 的 answer/version/p95 失败仍是项目已知限制。
 
+### 0.2 2026-10-25 范围裁决（本版新增）
+
+1. **奖学金首版只做国家级**：国家奖学金、国家励志奖学金、国家助学金。
+   - 院级综合奖、单项奖、社会奖不进入 W5 流程事实；只输出“看学院综测/评优通知”的 handoff。
+   - 综合测评仍是国家级奖学金的前置条件，但综测成绩/拟获奖名单不作为国家级奖项事实。
+2. **新增 `closed` 状态**：截止日期已过的步骤、以及已有公开证据证明本批次已结束的步骤，标记为 `closed`，不显示“现在可办理”。
+   - 不把旧批次日期套到新批次；没有新通知时用 `deadline_note`，不猜下一年日期。
+   - `closed` 是步骤状态；流程整体状态由步骤聚合为 `open / partial / closed / unknown`。
+3. **在读证明改为双轨**：
+   - 本科生：按教务处主页面 + 附件1 + 自助打印指南做**完整流程**，可写死材料、费用、地点、时间和领取方式；
+   - 研究生：只做**导航 + 研究生院培养科 handoff**，材料/费用/时限以培养科确认为准；
+   - 不再把整个在读证明流程标成 `navigation_only`。
+4. **2026 奖学金当前批次已全部截止**（截至 2026-10-25）：
+   - 数信国奖 10-10 09:00 截止，励志 10-21、助学金 10-16；
+   - 公管国奖 10-05 24:00 截止，励志 10-19、助学金 10-10；
+   - 农学院 2026 励志/助学金拟推荐名单已分别于 10-23、10-21 公示，但未检索到 2026 本科生评审通知，具体截止日不写死。
+   - 因此 `as_of=2026-10-25` 时应输出 `closed`，而不是继续追问年级后给“现在去申请”。
+5. **两个学院的支持口径**：
+   - 数信：2026 国奖通知 + 2026 励志/助学金通知，作为当前批次日期与材料的直接来源；
+   - 农学院：2026 励志/助学金**公示元数据**（不收录姓名/学号）作为“批次已结束”的证据；2026 国奖未检索到公开通知，标 `unknown` + 学院 handoff；
+   - 公管：作为第三个学院样例，用于验证同一流程的多学院分支，不改变“两个学院”主口径。
+
 ---
 
 ## 1. 当前基线与数据缺口
@@ -53,14 +76,22 @@ W5 是后加的流程能力：
 - `flows/` 模块目前只是占位文件；
 - 435 个离线测试，W7 结束。
 
-### 1.2 必须先解决的数据缺口
+### 1.2 数据缺口与已确认来源（2026-10-25 更新）
 
-1. **三个 flow 的 `flow_ids` 目前为空**：W5 要显式写入关联条款，不能靠运行时猜。
-2. **在读证明没有明确公开依据**：现有语料中没有“在读证明/学籍证明/在校证明”的对应条款。
-   - 方案 A（推荐）：先补一份公开的教务处办事指南/通知，作为 flow 的引用来源；
-   - 方案 B：该 flow 只做**导航/人工入口**，每个步骤显式 `citation_exempt: true`，不输出制度事实；
-   - 不允许编造“需要某部门盖章/收费/时限”。
-3. **校历/截止日数据不存在**：W5 新增 `configs/calendar.yaml`，只登记有公开来源的事件；没有可靠日期时使用 `deadline_note: 以当年通知为准`，不写绝对日期。
+1. **三个 flow 的 `flow_ids` 仍为空**：W5 要显式写入关联条款，不能靠运行时猜。
+2. **在读证明已有公开依据，但分本科/研究生两套**：
+   - 本科生：教务处主页面 + 附件1《关于办理出国成绩单及学历学位证明的说明》（2026-03-03）+《本科生自助打印服务指南》（2024-11-05）；
+   - 研究生：研究生院培养科职责页 + 证明样本页，无独立办事长文；只做 handoff，不写死材料/费用/时限。
+3. **奖学金当前批次来源已补齐**：
+   - 数信 2026 国奖通知（2026-10-09）：国奖 10000 元、18 人、10-10 09:00 截止；
+   - 数信 2026 励志/助学金通知（2026-10-13）：励志 6000 元、10-21 截止；助学金 2500–5000 元、10-16 截止；
+   - 公管 2026 国奖通知（2026-09-30）：10000 元、11 人、10-05 24:00 截止；励志 10-19、助学金 10-10；
+   - 农学院 2026 励志/助学金公示（2026-10-23 / 10-21）：只取标题、日期、公示期，不收录姓名/学号；2026 国奖未检索到公开通知。
+4. **推免来源已补齐**：2027 推荐阶段通知（2026-08-29）+ 拟获资格名单公示（9/12–9/18）+ 递补通告；推荐阶段已于 9/18 结束，当前同样进入 `closed`。
+5. **校历/截止日**：新增 `configs/calendar.yaml`，只登记有公开来源的事件；第二学期校历表头为“征求意见稿”，春夏日期标注“以定稿为准”。
+6. **失效链接**：`https://jwc.scau.edu.cn/2018/1112/c5171a146530/page.htm` 已 410/404，不得引用；模板入口改用主页面或模板 zip。
+7. **`.doc` / `.docx` 不能直接解析**：附件1与自助打印指南使用本地 HTML 转录（`local_path` + 官网 `url`），引用仍指向官网原文；不把模板 zip 中的个人样例（姓名/生日/学号）入库。
+8. **含个人信息的公示页**：数信 10-23 综合测评拟获奖名单、农学院 2026 励志/助学金公示均含姓名；只登记**脱敏元数据转录**，不索引原始名单。综合测评名单不进入国家级奖学金流程事实。
 
 ---
 
@@ -130,32 +161,49 @@ tests/
 ```python
 class FlowStep(BaseModel):
     ...
-    citation_exempt: bool = False   # 纯导航步骤显式豁免依据
-    deadline_note: str | None = None # 没有可靠日期时的公开提示
+    citation_exempt: bool = False    # 纯导航步骤显式豁免依据
+    deadline_note: str | None = None  # 没有可靠日期时的公开提示
+    closed_observed_at: date | None = None  # 公示等公开证据证明本批次已结束
 
 class FlowInstance(BaseModel):
     ...
+    # step_states 的 value 增加 "closed"
+    step_states: dict[str, Literal[
+        "available", "blocked", "conditional", "done", "not_applicable", "closed"
+    ]] = {}
     asked_slots: list[str] = []
     declined_slots: list[str] = []
     pending_slot: str | None = None
     clarify_count: int = 0
     done_step_ids: list[str] = []
     last_question: str | None = None
+    batch_label: str | None = None
+    status: Literal["open", "partial", "closed", "unknown"] = "unknown"
 
 class ChecklistItem(BaseModel):
     step_id: str
     title: str
-    status: Literal["available", "blocked", "conditional", "done", "not_applicable"]
+    status: Literal[
+        "available", "blocked", "conditional", "done", "not_applicable", "closed"
+    ]
     description: str
     materials: list[str]
-    deadline: str | None
+    deadline: str | None          # ISO date 或 datetime（带 +08:00）
     deadline_note: str | None
     department: str
     citations: list[str]
     blocked_reason: str | None
+    status_note: str | None       # closed 的原因/下次看哪里
 ```
 
-`FlowDefinition` 增加 `navigation_only: bool = False`。若为 `true`：
+`FlowDefinition` 增加：
+
+```python
+navigation_only: bool = False
+batch_label: str | None = None   # 如“2026 年本科生国家奖助学金批次”
+```
+
+`navigation_only` 保留给纯 handoff 流程；**在读证明不再使用它**。若为 `true`：
 
 - 所有步骤必须 `citation_exempt: true`；
 - 只能输出导航/入口信息，不能输出资格判断、材料、时限或收费事实；
@@ -165,55 +213,129 @@ class ChecklistItem(BaseModel):
 
 - 每个步骤必须有 `responsible_department`；
 - 每个步骤至少有 1 条 citation，除非 `citation_exempt: true`；
-- `citation_exempt` 只允许导航/入口步骤，不允许带材料/时限/部门事实；
-- `deadline` 与 `deadline_note` 二者至少有一个；有可靠日期时用 `calendar:event_id` 或 ISO 日期；
+- `citation_exempt` 只允许导航/入口步骤；可含部门名与 handoff URL，不允许带材料/时限/收费/资格判断；
+- `deadline` 与 `deadline_note` 二者至少有一个；`deadline` 用 ISO date 或带时区的 ISO datetime；
+- **日期截止口径**：date-only 的 deadline 视为当天 23:59:59（Asia/Shanghai）；有具体时刻的写 datetime；比较用注入的 `as_of`，测试不读系统时钟；
+- `closed_observed_at` 必须有公开来源（公示/名单页），且 `deadline_note` 说明“具体截止日未公开”；不能凭猜测写；
+- `closed` 优先于 `blocked/conditional`；已 closed 的步骤不再追问槽位；
 - `citation_exempt` 的步骤不能出现在“资格判断”中。
 
 ### 3.2 三个流程的初始数据
 
-#### 奖学金申请
+#### 奖学金申请（首版只做国家级三奖）
 
 - `flow_id: scholarship-application`
+- `batch_label: 2026 年本科生国家奖助学金批次`
 - audience: `undergraduate`
 - slots:
-  - `grade`（integer，1–5，required）
-  - `award_type`（enum：国家奖学金/国家励志奖学金/国家助学金/校级奖学金，optional）
+  - `college`（enum：数学与信息学院、软件学院 / 公共管理学院 / 农学院 / 其他；required）
+  - `award_type`（enum：国家奖学金 / 国家励志奖学金 / 国家助学金；optional；未填时展示三奖对比）
+  - `grade`（integer，1–4；required；国奖/励志要求二年级及以上）
   - `has_disciplinary_record`（boolean，required）
-- citations 候选（已存在）：
+  - `has_financial_aid`（boolean，optional；**不强制追问**，unknown 时按条件性说明处理）
+- 范围：
+  - 只写国家级三奖的资格、金额、程序、材料与截止；
+  - 院级综合奖/单项奖/社会奖不进步骤，只 handoff 学院学工办/综测通知；
+  - 综合测评是前置基础，但综测拟获奖名单不是国家级奖项事实。
+- 制度 citations：
   - `national-aid-undergrad@v2021#第八条` 基本条件
   - `#第九条` 国家奖学金条件
   - `#第十条` 国家励志奖学金条件
   - `#第十二条` 申请方式
   - `#第十三条` 材料真实性
   - `#第十六条` 评审程序
-- 材料/截止时间来自公开通知或 `configs/calendar.yaml`；没有通知时用 `deadline_note`。
+- 2026 当前批次 citations（新增，需先入库）：
+  - `national-aid-2026-info-merit`：数信国奖通知（2026-10-09）
+  - `national-aid-2026-info-aid`：数信励志/助学金通知（2026-10-13）
+  - `national-aid-2026-pa-merit`：公管国奖通知（2026-09-30）
+  - `national-aid-2026-pa-aid`：公管励志/助学金通知（2026-10-01）
+  - `national-aid-2026-agri-inspirational-publicity`：农学院励志公示（2026-10-23，脱敏元数据）
+  - `national-aid-2026-agri-grant-publicity`：农学院助学金公示（2026-10-21，脱敏元数据）
+
+**2026 批次事实表（金额/名额/截止均按当年通知，不用 2021 的 8000 旧口径）**
+
+| 学院 | 奖项 | 金额 | 名额 | 学生申请截止 | 截至 2026-10-25 |
+|---|---|---|---:|---|---|
+| 数信 | 国家奖学金 | 10000 元/人/年 | 18 | 2026-10-10 09:00 | `closed` |
+| 数信 | 国家励志奖学金 | 6000 元/人/年 | 见分配表 | 2026-10-21 | `closed` |
+| 数信 | 国家助学金 | 2500–5000 元/人/年 | 按认定人数 | 2026-10-16 | `closed` |
+| 公管 | 国家奖学金 | 10000 元/人/年 | 11（全校 171） | 2026-10-05 24:00 | `closed` |
+| 公管 | 国家励志奖学金 | 6000 元/人/年 | 见分配表 | 2026-10-19 | `closed` |
+| 公管 | 国家助学金 | 2500–5000 元/人/年 | 按认定人数 | 2026-10-10 | `closed` |
+| 农学院 | 国家励志奖学金 | 6000 元/人/年 | 未公开 | 未检索到 2026 通知 | `closed`（公示 10-23 起） |
+| 农学院 | 国家助学金 | 2500–5000 元/人/年 | 未公开 | 未检索到 2026 通知 | `closed`（公示 10-21 起） |
+| 农学院 | 国家奖学金 | 10000 元/人/年 | 未公开 | 未检索到 2026 通知 | `unknown` + handoff |
+
+- 共同程序：学生申请 → 学院评审/公示 ≥3 个工作日 → 报学工部 → 学校评审/公示 5 个工作日 → 报省教育厅；
+- 共同材料（具体以学院通知为准）：国家奖学金申请审批表 / 国家励志奖学金资助业务名单申请表 / 本专科国家助学金导入模板、成绩与综测证明；励志/助学金另需家庭经济困难认定；
+- 国奖 2026 校额 171 人（公管通知披露）；学院名额以学院通知/分配表为准；
+- 农学院未检索到 2026 本科生评审通知，不能把 2024 通知的 10 月日期套到 2026；`deadline_note` 写“具体截止日未公开，以学院当年通知为准”；
+- `as_of=2026-10-25`：整批 `closed`，不追问年级；`as_of=2026-09-30`：国奖/部分助学金仍 `open`，按学院/奖项追问；
+- `as_of=2026-10-18`：数信国奖/助学金 `closed`、励志仍 `open` → 流程 `partial`，只对未截止奖项追问。
 
 #### 推免资格确认
 
 - `flow_id: recommendation-eligibility`
+- `batch_label: 2027 年推免推荐阶段`
 - audience: `undergraduate`
 - slots:
   - `is_graduating`（boolean，required）
   - `has_recommendation_quota`（boolean，required）
   - `in_recommendation_list`（boolean，optional）
   - `grade`（integer，optional）
-- citations 候选：
+- 制度 citations：
   - `postgraduate-recommendation@v2025#第十条` 基本条件
   - `#第十一条` 学业要求
   - `#第十六条` 工作程序
   - `#第十七条` 自主选择志愿/报名
-- 学院细则存在时通过 `parent_doc_id`/alias 关联；首版不拆分所有学院差异。
+- 2027 节点 citations（新增，需先入库）：
+  - `recommendation-2027-notice`：推荐阶段通知（2026-08-29）
+  - `recommendation-2027-publicity`：拟获资格名单公示（2026-09-12）
+- 2027 公开节点：
+  - 通知 2026-08-29；拟获资格公示 2026-09-12～09-18；
+  - 放弃资格书面申请截止 2026-09-16 12:00（行政楼 305）；
+  - 推荐阶段结束 2026-09-18；名额正式 904 + 候补 8；研究生支教团正式 6 + 候补 6；
+  - 接收阶段 9-18 后登录 `https://yz.chsi.com.cn/tm/`，由招生单位组织复试/待录取。
+- 截至 2026-10-25，推荐阶段已结束：流程状态 `closed` 或 `partial`（仅接收阶段 handoff），不再追问“是否在名单”后给“现在申请”；
+- 2028 批次未发布，不得推断日期；学院细则、接收复试只 handoff 学院，`deadline_note`。
 
-#### 在读证明开具
+#### 在读证明开具（本科生完整流程 + 研究生导航）
 
 - `flow_id: enrollment-certificate`
+- `batch_label: null`（常年可办，无批次）
+- `navigation_only: false`
+- audience: `undergraduate`, `graduate`
 - slots:
-  - `purpose`（enum：升学/就业/实习/其他，required）
-  - `delivery`（enum：自助打印/窗口领取/邮寄，required）
-- **数据缺口**：现有语料没有对应公开依据。
-  - W5 先把该流程标为 `navigation_only: true`，每步 `citation_exempt: true`，只输出“去教务处/查看官网模板/带学生证”等导航信息；
-  - 或者先补充公开办事指南，再填 citations；
-  - 不能在 YAML 中写未经来源支持的材料、费用或时限。
+  - `level`（enum：本科生 / 研究生；required）
+  - `enrollment_status`（enum：在校生 / 已毕业；required）
+  - `purpose`（enum：升学 / 就业 / 实习 / 出国留学 / 其他；required）
+  - `delivery`（enum：自助打印 / 窗口领取 / 委托他人；required，本科生分支）
+- citations（新增，需先入库）：
+  - `enrollment-certificate-guide`：教务处主页面
+  - `enrollment-certificate-fee-note-2026`：附件1《关于办理出国成绩单及学历学位证明的说明》本地 HTML 转录（URL 指向官网 `.doc`）
+  - `enrollment-certificate-self-print-2024`：《本科生自助打印服务指南》本地 HTML 转录（URL 指向官网 `.docx`）
+  - `enrollment-certificate-grad-office`：研究生院培养科职责页
+  - `enrollment-certificate-grad-sample`：研究生证明样本页（可选）
+- 本科生事实（可写死）：
+  - **未毕业学生不办理学历证明，只出具在读证明**；已毕业走学历学位证明，不是在读证明；
+  - 在校生 **5 份内免费**，累计超出 **5 元/份**；已毕业 **15 元/份**；收费，**自备现金**；
+  - 窗口：行政楼 **305**，电话 **020-85280049**；周一至周五 **8:00–12:00，14:30–17:30**；领取当天或隔天；
+  - 密封：**自带信封**；可委托他人现场办理并携带身份证；**不接受电话、邮件办理**；
+  - 自助打印：2007 级（含）以后在校生/毕业生；在校生用身份证、校园卡、学号及统一身份认证密码；**24 小时**开放，地点为行政楼一楼大厅、三角市紫荆e站 24 小时自助服务大厅；宿舍区另有泰山区、华山区、启林南、启林北学生社区服务中心；
+  - 留学密封：本科生院教学运行科教材服务中心（图书馆-紫荆e站综合服务大厅旁），**020-38675286**；
+  - 电子证明：可信电子成绩单证明入口 `http://cjd.scau.edu.cn/transcript_server/#/login`，学信网验证入口另列。
+- 研究生事实（只 handoff）：
+  - 研究生院 **培养科**：**020-85280189**，行政楼 **309**；职责含开具中英文学籍证明、学历证明；
+  - 样本页：`https://yjsy.scau.edu.cn/2024/0621/c285a378932/page.htm`；
+  - 材料/费用/时限：**以培养科确认为准**（`deadline_note`），不套用本科生 5 份免费/5 元规则。
+- 分支：
+  - `level=本科生 & enrollment_status=已毕业` → 流程 `not_applicable`，handoff 学历学位证明；
+  - `level=研究生` → 只出培养科导航步骤，不写材料/费用/时限；
+  - `delivery=委托他人` → 加“受托人携带身份证”步骤；
+  - `purpose=出国留学` → 加“密封/自带信封”步骤；
+  - `delivery=自助打印` → 只用自助打印指南中的登录方式和 24 小时点位。
+- 不引用已失效的 2018 模板页；模板入口用主页面/模板 zip，不索引模板中的个人样例（姓名/生日/学号）。
+- 在读证明无批次截止，正常状态 `open`；窗口下班时间不是 `closed`，只显示办理时间。
 
 ### 3.3 版本与加载
 
@@ -226,6 +348,10 @@ class ChecklistItem(BaseModel):
   - citations 存在；
   - 步骤部门/依据/截止信息完整；
   - `citation_exempt` 仅用于导航步骤；
+  - `deadline` 可解析为 ISO date/datetime；date-only 不报错但按当日结束处理；
+  - `closed_observed_at` 有 citation 或明确来源，且同时有 `deadline_note`；
+  - 没有 `deadline` 且没有 `closed_observed_at` 时，必须有 `deadline_note`；
+  - `navigation_only=true` 时拒绝材料/时限/收费/资格事实；
   - 失败直接报错，不加载半成品。
 
 ---
@@ -365,17 +491,38 @@ W5 不使用 LLM 做流程匹配；W6 可加入语义 Planner。
 - `blocked`：依赖被 blocked/ineligible；
 - `conditional`：条件 unknown 且 on_unknown=conditional；
 - `not_applicable`：条件 false 且步骤不适用；
+- `closed`：本批次已截止/已结束，保留事实与来源，但不显示“现在可办理”；
 - `done`：仅会话内勾选，不持久化。
 
 ### 7.3 排序与字段
 
 - DAG 拓扑排序；同层按 YAML 声明顺序；
-- 每项输出 `ChecklistItem`：标题、状态、描述、材料、截止日期/提示、部门、引用条款、阻塞原因；
+- 每项输出 `ChecklistItem`：标题、状态、描述、材料、截止日期/提示、部门、引用条款、阻塞原因、`status_note`；
 - `deadline` 来自绝对日期或 `calendar:event_id`；日期显示 `Asia/Shanghai`；
 - 没有可靠日期时显示 `deadline_note`，不伪造日期；
 - `citation_exempt` 步骤只显示导航信息，不显示制度事实；
 - 每一步的 citations 来自 YAML；不能在渲染时新增；
 - handoff 固定来自 YAML（department/url/note），不伪造电话/承诺。
+
+### 7.4 `closed` 判定与呈现
+
+```text
+if deadline exists and as_of > deadline:            closed
+elif closed_observed_at exists and as_of >= it:     closed
+elif only deadline_note:                            not closed (unknown window)
+else:                                               open/conditional/blocked per prerequisites
+```
+
+- `closed` 优先于 `blocked/conditional`；
+- 关闭原因写入 `status_note`：具体截止时间 + 来源；若只有公示证据，写“具体截止日未公开，按公示日期判定已结束”；
+- 不输出下一年度日期；只写“下一批次以当年通知为准”；
+- 流程整体状态（只统计带 `deadline`/`closed_observed_at` 的步骤）：
+  - 所有带日期的步骤 `closed` → `closed`；
+  - 部分 `closed`、部分未截止 → `partial`；
+  - 无 `closed` 且有确定窗口 → `open`；
+  - 无确定窗口 → `unknown`；
+- 整批 `closed` 时跳过槽位追问，直接输出 closed checklist + 官方入口；`partial` 时只对未截止的步骤追问槽位；
+- `closed` 步骤仍保留材料/费用/地点等历史事实，便于下一年准备，但必须带 `batch_label`，避免被误读为当前批次。
 
 ---
 
@@ -393,11 +540,12 @@ W5 不使用 LLM 做流程匹配；W6 可加入语义 Planner。
 
 - 只读；
 - `get_flow` 只返回有效版本；历史流程暂时不开放（W6）；
+- `get_flow` 接受 `as_of`，返回每步 `closed` 与流程聚合状态；不传时用服务端 Asia/Shanghai 当天；
 - `list_flows` 不返回长步骤，避免 prompt 过长；
 - `get_calendar` 只返回公开校历事件；
 - 未注册 flow/calendar → `NOT_FOUND` / `NOT_IMPLEMENTED`；
 - 流程/校历 schema 变化更新 `schema_version`；
-- contract tests 覆盖正常/空/非法/不存在/降级。
+- contract tests 覆盖正常/空/非法/不存在/降级/closed/partial。
 
 应用侧 `FlowClient` 通过 stdio 调用；W5 不在应用进程直接读 YAML。测试可用 in-memory fake client。
 
@@ -415,29 +563,44 @@ W5 不使用 LLM 做流程匹配；W6 可加入语义 Planner。
 - MCP flow/calendar contract；
 - ConversationService 多轮状态、澄清上限、路由。
 
-### 9.2 三组脚本化多轮
+### 9.2 脚本化多轮与 `closed` 场景
 
-1. **奖学金**：
-   - “我想申请国家奖学金” → 追问年级；
-   - “大二，没受过处分” → 补齐槽位，输出 checklist；
+1. **奖学金（open → 更正）**，`as_of=2026-09-30`：
+   - “我想申请国家奖学金” → 匹配流程，追问学院；
+   - “数信，大二，没受过处分” → 补 `college/award_type/grade/has_disciplinary_record`，输出开放 checklist（数信国奖 10-10 09:00）；
    - 用户改“其实我是大三” → 重算，不重复问已填槽位。
-2. **推免资格**：
-   - “我大四，已经拿到推免资格，还需要统考报名吗？” → 匹配流程；
-   - 追问是否在名单/是否应届（按 YAML），输出资格判断与下一步；
-   - 更正资格状态 → checklist 重算。
-3. **在读证明**：
-   - “我要开在读证明” → 追问用途/领取方式；
-   - 输出导航型 checklist + 教务处人工入口；
-   - 没有公开依据时不得编造材料/时限。
+2. **奖学金（整批 closed）**，`as_of=2026-10-25`：
+   - “我想申请国家奖学金” → **不追问年级**，直接输出 `closed`：数信 10-10 09:00、公管 10-05 24:00 已截止；农学院国奖 `unknown` + 学院 handoff；
+   - 明确“下一批次以当年通知为准”，不写 2027 日期。
+3. **奖学金（partial）**，`as_of=2026-10-18`：
+   - 数信国奖/助学金已截止，励志仍开放 → 流程 `partial`；问奖项后按奖项给 open 或 closed；
+   - 不能把国奖的截止日套到励志。
+4. **奖学金（农学院 observed closed）**，`as_of=2026-10-25`：
+   - 励志/助学金按公示日期判定 `closed`，`status_note` 写明“具体截止日未公开”；
+   - 不把 2024 通知日期套到 2026。
+5. **推免**：
+   - `as_of=2026-10-25`：“我大四，已经拿到推免资格，还需要统考报名吗？” → 推荐阶段 `closed`，只给接收阶段 `yz.chsi.com.cn/tm` 与学院 handoff；
+   - `as_of=2026-09-10`：追问是否应届/是否有名额，输出推荐阶段 checklist；更正后重算；
+   - 不推断 2028 日期。
+6. **在读证明（本科生自助打印）**：
+   - “本科生，在校生，出国留学，自助打印” → 输出 5 份内免费、24 小时点位、密封自带信封、引用附件1/自助打印指南。
+7. **在读证明（本科生窗口/委托/已毕业）**：
+   - “委托同学去窗口” → 加受托人身份证步骤、305/85280049、工作日时间、收费现金；
+   - “我已经毕业了” → `not_applicable`，handoff 学历学位证明（15 元/份），不输出在读证明。
+8. **在读证明（研究生）**：
+   - “研究生在读证明” → 只输出培养科 handoff（020-85280189，行政楼 309），材料/费用/时限写“以培养科确认为准”；不套本科生 5 份免费规则。
 
 ### 9.3 验收门
 
 - 三个流程 YAML 通过加载校验；
-- 三组脚本化多轮全部通过；
-- 缺槽位会追问，已填不重复；
-- 更正槽位会重算 checklist；
-- 拒答槽位不重复追问；
+- 上述脚本化多轮全部通过；
+- `closed` 判定：deadline 过期、`closed_observed_at` 过期、整批 closed/partial 三类测试都通过；
+- 整批 closed 时不再追问槽位；partial 时只问未截止步骤；
+- 缺槽位会追问，已填不重复；更正槽位会重算 checklist；拒答槽位不重复追问；
 - 每步引用存在；`citation_exempt` 仅导航步骤；
+- 数信/公管/农学院三个学院分支可渲染；农学院未知截止日不被编造；
+- 在读证明本科生/研究生分支正确，2018 失效链接未出现；
+- W5 新增源不含姓名/学号/身份证/手机号；模板个人样例未入库；
 - 不调用 LLM API；
 - W7 冻结测试集/报告未被修改；
 - 全量离线测试通过；新增 W5 测试不回归 W2–W4。
@@ -448,13 +611,19 @@ W5 不使用 LLM 做流程匹配；W6 可加入语义 Planner。
 
 | 风险 | 影响 | 处理 |
 |---|---|---|
-| 在读证明无公开依据 | 不能输出材料/时限 | 导航型流程或先补来源；不编造 |
+| 旧批次日期被当成新批次 | 用户误以为还能申请 | `batch_label` + `closed`；新年度建新 flow 版本；不猜日期 |
+| 整批 closed 仍追问年级 | 体验差/误导 | closed 优先；整批 closed 跳过槽位追问 |
+| 多学院截止日混用 | 错给截止日 | `college` 槽位；每步独立 deadline/citation |
+| 农学院 2026 通知缺失 | 无法给精确日期 | 用公示元数据判 closed，并写“具体截止日未公开” |
+| 公示页含姓名 | 隐私风险 | 只入库脱敏元数据；不索引原始名单 |
+| 在读证明本科/研究生混用 | 错写费用/时限 | 分支步骤 + 研究生 handoff；不套本科生规则 |
+| 2018 模板页失效 | 引用不可达 | 已确认 410/404；改用主页面/模板 zip |
 | 流程 YAML 引用错误 | 引用不可核 | 加载时逐条校验 article_id |
 | 三值谓词实现错误 | 错误资格判断 | 真值表/类型测试；禁止 eval |
 | 槽位抽取误判 | 个性化错误 | 只接受明确表达；模糊就追问 |
 | 追问循环 | 用户烦躁 | 澄清上限 3；declined 不重复 |
 | 流程匹配过宽 | 强套流程 | 无候选回退政策问答；歧义追问 |
-| 截止日期无来源 | 误导 | 只用公开校历/通知；否则 deadline_note |
+| 截止日期无来源 | 误导 | 只用公开通知；否则 deadline_note |
 | W7 已完成且失败 | 不能声称 W7 通过 | W5 独立验收；README 明确边界 |
 | W5 引入 LLM 成本 | 与省钱目标冲突 | W5 默认规则；LLM 仅 W6 可选 |
 
@@ -462,14 +631,19 @@ W5 不使用 LLM 做流程匹配；W6 可加入语义 Planner。
 
 ## 11. 实施顺序
 
-1. **数据门**：补齐奖学金/推免 citations；决定在读证明是“补来源”还是“导航型”；建立 `configs/calendar.yaml`。
-2. **DSL 校验**：FlowDefinition 扩展、registry、citation/DAG/谓词校验。
+1. **数据门**：
+   - 入库 3 个核心制度 doc（已有）+ 7 个 2026 学院奖学金通知（数信 2、公管 3、农学院 2 个脱敏公示元数据）+ 2 个综测前置/参考；
+   - 入库在读证明 5 个来源（主页面、附件1 转录、自助打印转录、研究生培养科页、研究生样本页）；
+   - 入库推免 2 个 2027 通知/公示；
+   - 写入 `flow_ids`，建立 `configs/calendar.yaml`，修正 2018 失效链接引用；
+   - 断言 W5 新源不含个人姓名/学号/手机号。
+2. **DSL 校验**：FlowDefinition 扩展（`batch_label`/`deadline_note`/`closed_observed_at`/`citation_exempt`）、registry、citation/DAG/谓词校验。
 3. **谓词引擎**：tokenizer/AST/三值求值；先写失败测试。
-4. **槽位与匹配**：规则抽取、priority、拒答/更正、flow matcher。
-5. **Checklist**：DAG 状态、deadline/calendar、citation_exempt、handoff。
-6. **ConversationService**：会话状态、路由、澄清上限、CLI/demo。
+4. **槽位与匹配**：规则抽取、priority、拒答/更正、flow matcher；奖学金加 `college`。
+5. **Checklist 与 closed**：DAG 状态、deadline/calendar、closed/partial 聚合、citation_exempt、handoff。
+6. **ConversationService**：会话状态、路由、澄清上限、closed 跳过追问、CLI/demo。
 7. **MCP**：policy-meta 增加 flow/calendar tools + contract tests。
-8. **三组脚本化验收**、文档、README 边界说明。
+8. **脚本化验收**、文档、README 边界说明。
 
 每一步先测试后实现；W5 不接 LLM。
 
@@ -489,3 +663,66 @@ W5 不使用 LLM 做流程匹配；W6 可加入语义 Planner。
 - 三值谓词结果；
 - MCP `list_flows` / `get_flow` / `get_calendar`；
 - 流程事实只能来自 YAML。
+
+---
+
+## 附录 A：W5 来源登记（2026-10-25 核验）
+
+> 核验结果：以下除明确标注外均为 HTTP 200。`local_path` 转录只用于无法解析的 `.doc/.docx`，`url` 仍指向官网原文。
+
+### A.1 奖学金（国家级）
+
+| 计划 doc_id | 官方 URL | 发布日 | flow_ids | 用途/备注 |
+|---|---|---|---|---|
+| `national-aid-undergrad`（已有） | https://xg.scau.edu.cn/2022/1018/c11387a327371/page.htm | 2021-12-31 | `scholarship-application` | 华农党发〔2021〕35号；资格/程序主依据；金额用当年通知 |
+| `national-aid-2026-info-merit` | https://info.scau.edu.cn/2026/1010/c3772a448289/page.htm | 2026-10-09 | `scholarship-application` | 数信国奖：10000 元、18 人、10-10 09:00 截止 |
+| `national-aid-2026-info-aid` | https://info.scau.edu.cn/2026/1013/c3772a448651/page.htm | 2026-10-13 | `scholarship-application` | 数信励志 6000、10-21；助学金 2500–5000、10-16 |
+| `national-aid-2026-pa-merit` | https://ggglxy.scau.edu.cn/2026/0930/c11886a447806/page.htm | 2026-09-30 | `scholarship-application` | 公管国奖：10000 元、11 人、全校 171、10-05 24:00 |
+| `national-aid-2026-pa-inspirational` | https://ggglxy.scau.edu.cn/2026/1001/c11886a447815/page.htm | 2026-10-01 | `scholarship-application` | 公管励志：10-19 截止 |
+| `national-aid-2026-pa-grant` | https://ggglxy.scau.edu.cn/2026/1001/c11886a447814/page.htm | 2026-10-01 | `scholarship-application` | 公管助学金：10-10 截止 |
+| `national-aid-2026-agri-inspirational-publicity` | https://nxy.scau.edu.cn/2026/1023/c17982a449674/page.htm | 2026-10-23 | `scholarship-application` | **仅脱敏元数据**：公示 10-23～10-24；姓名/学号不入库 |
+| `national-aid-2026-agri-grant-publicity` | https://nxy.scau.edu.cn/2026/1021/c17982a449483/page.htm | 2026-10-21 | `scholarship-application` | **仅脱敏元数据**：公示 10-21～10-22；姓名/学号不入库 |
+
+### A.2 综合测评（前置/参考，不是国家级奖项）
+
+| 计划 doc_id | 官方 URL | 发布日 | flow_ids | 用途/备注 |
+|---|---|---|---|---|
+| `comprehensive-evaluation-2026-info` | https://info.scau.edu.cn/2026/0917/c3772a446211/page.htm | 2026-09-17 | `scholarship-application` | 数信综测通知；说明综测是国奖/励志基础；不写奖项事实 |
+| `comprehensive-evaluation-2026-final-publicity` | https://info.scau.edu.cn/2026/1023/c3772a449715/page.htm | 2026-10-23 | `[]`（reference only） | **仅脱敏元数据**：公示 10-23～10-27、异议截止 10-27；不进入国家级流程 |
+
+### A.3 推免
+
+| 计划 doc_id | 官方 URL | 发布日 | flow_ids | 用途/备注 |
+|---|---|---|---|---|
+| `postgraduate-recommendation`（已有） | https://xngk.scau.edu.cn/_upload/article/files/29/5e/4d0d348b41b19bdb05d7400bf83d/ec66ed2f-3117-4291-be55-3a06cb72e4ba.pdf | 2025-05-30 | `recommendation-eligibility` | 华南农办〔2025〕32号 |
+| `recommendation-2027-notice` | https://jwc.scau.edu.cn/2026/0829/c5135a442400/page.htm | 2026-08-29 | `recommendation-eligibility` | 2027 推荐阶段通知；904+8；支教团 6+6 |
+| `recommendation-2027-publicity` | https://jwc.scau.edu.cn/2026/0912/c5135a443871/page.htm | 2026-09-12 | `recommendation-eligibility` | 公示 9-12～9-18；放弃截止 9-16 12:00；推荐阶段 9-18 结束 |
+| `agri-postgrad-recommendation-rule-2024`（已有） | https://nxy.scau.edu.cn/2024/0825/c17984a382772/page.htm | 2024-08-25 | `recommendation-eligibility` | 学院细则样例；只 handoff，不写全校通用事实 |
+
+补充（只入 notes，不单独入库）：递补通告一 https://jwc.scau.edu.cn/2026/0916/c5135a445961/page.htm ；递补通告二 https://jwc.scau.edu.cn/2026/0917/c5135a446139/page.htm 。
+
+### A.4 在读证明
+
+| 计划 doc_id | 官方 URL | 日期 | flow_ids | 用途/备注 |
+|---|---|---|---|---|
+| `enrollment-certificate-guide` | https://jwc.scau.edu.cn/hnnydxywcjdwxlxwzmjqtzm/list.htm | 页面现行 | `enrollment-certificate` | 主页面：对象、注意事项、时间、电话、打印点 |
+| `enrollment-certificate-fee-note-2026` | https://jwc.scau.edu.cn/_upload/article/files/ae/b5/4c10927c4cbbaec9352e590a6d96/b8a3e914-1eee-4ea6-8995-441fca761a37.doc | 2026-03-03 | `enrollment-certificate` | 附件1；本地 HTML 转录；5 份免费/5 元、已毕业 15 元、305/85280049 |
+| `enrollment-certificate-self-print-2024` | https://jwc.scau.edu.cn/_upload/article/files/ae/b5/4c10927c4cbbaec9352e590a6d96/d6814017-7423-44be-9821-81548d26630f.docx | 2024-11-05 | `enrollment-certificate` | 自助打印指南；本地 HTML 转录；24h 点位/登录方式/密封 |
+| `enrollment-certificate-grad-office` | https://yjsy.scau.edu.cn/299/list.htm | 页面现行 | `enrollment-certificate` | 研究生院培养科：020-85280189、行政楼 309 |
+| `enrollment-certificate-grad-sample` | https://yjsy.scau.edu.cn/2024/0621/c285a378932/page.htm | 2024-06-21 | `enrollment-certificate` | 研究生证明样本入口；材料/费用/时限以培养科为准 |
+
+模板 zip（不索引个人样例）：https://jwc.scau.edu.cn/_upload/article/files/ae/b5/4c10927c4cbbaec9352e590a6d96/d0d8410e-5cc4-42eb-aec8-88360791515c.zip 。
+
+### A.5 校历
+
+| 计划 id | 来源 | 备注 |
+|---|---|---|
+| `calendar-2026-2027` | https://jwc.scau.edu.cn/2026/0427/c6957a433190/page.htm + `2026-2027学年校历及作息时间表.xlsx` | 2026-04-27；第二学期表头“征求意见稿”，春夏日期标注以定稿为准 |
+
+### A.6 明确排除
+
+- `https://jwc.scau.edu.cn/2018/1112/c5171a146530/page.htm`：410/404，不引用；
+- 数信 2026 国奖评审结果名单（2026-10-10）、数信 10-23 综合测评拟获奖名单原始表、农学院 2026 励志/助学金公示原始名单：含姓名/学号/成绩，**不下载、不索引**；只允许脱敏元数据；
+- 2024 农学院本科生国家奖助学金通知：只作程序背景，不把其 10 月日期套到 2026；
+- 2023 校级奖学金通知：只作流程骨架背景，不用于 2026 金额/截止；
+- 国家奖学金 2021 的 8000 元旧口径：不用于 2026；2026 以 10000 元通知为准。
