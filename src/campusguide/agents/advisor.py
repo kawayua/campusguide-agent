@@ -60,6 +60,14 @@ class AdvisorResult:
 
 
 PROMPT_VERSION = "w6a2.4-2026-10-24"
+# W6 图角色使用独立 prompt 版本；W6-A2 的契约常量保留给历史 run。
+W6B_ADVISOR_PROMPT_VERSION = "w6b-advisor-2026-10-25"
+REVISE_PROMPT_VERSION = "w6b-revise-2026-10-25"
+
+FLOW_BOUNDARY_PROMPT = (
+    "流程事实（步骤、材料、部门、截止时间）由系统 checklist 渲染；"
+    "你只解释政策依据，不补步骤、不补材料、不写截止日期或部门。"
+)
 
 _ENUMERATION_RE = re.compile(r"哪些(?:情形|情况|条件|材料|要求|行为|档次|标准|项目)")
 _MULTI_ASPECT_RE = re.compile(
@@ -172,12 +180,16 @@ def build_messages(
     question: str,
     evidence: list[Evidence],
     audience: Audience | None,
+    *,
+    flow_context: str = "",
 ) -> list[dict[str, str]]:
     generation_evidence = _generation_evidence(question, evidence)
     parts = [
         f"受众：{_audience_label(audience)}",
         f"问题：{question}",
     ]
+    if flow_context:
+        parts.extend(["", f"流程边界：{flow_context}"])
     subquestions = _subquestions(question)
     if len(subquestions) > 1:
         parts.extend(
@@ -236,6 +248,76 @@ def build_messages(
         {"role": "system", "content": SYSTEM_PROMPT},
         {"role": "user", "content": user},
     ]
+
+
+REVISE_SYSTEM_PROMPT = """你是制度问答的 claim 修复器。只修复被标记失败的 claim。
+必须遵守：
+1. 只输出 JSON：{"claims":[...]}，不要解释、不要 Markdown。
+2. 只能输出 failed_claim_ids 中的 claim_id；不得新增 claim，不得改写通过的 claim。
+3. 每条 claim 仍必须满足：citation.article_id 逐字来自证据引用ID；
+   citation.quote 是同一证据正文中的连续子串（至少 6 字），不得省略、不得拼接；
+   claim 的数字/日期/范围/限定词必须原样出现在 quote 中。
+4. 如果失败项无法用连续 quote 支持，直接省略该 claim，不要编造。
+5. 流程事实由系统 checklist 渲染；不要补步骤、材料、部门或截止时间。"""
+
+
+def build_revise_messages(
+    question: str,
+    evidence: list[Evidence],
+    *,
+    failed_claim_ids: list[str],
+    issues: list[dict[str, Any]],
+    previous_claims: list[ClaimDraft],
+    audience: Audience | None,
+    flow_context: str = "",
+) -> list[dict[str, str]]:
+    previous = [
+        {
+            "claim_id": draft.claim_id,
+            "text": draft.text,
+            "kind": draft.kind,
+            "citations": [
+                {"article_id": citation.article_id, "quote": citation.quote}
+                for citation in draft.citations
+            ],
+        }
+        for draft in previous_claims
+    ]
+    user = "\n".join(
+        [
+            f"受众：{_audience_label(audience)}",
+            f"问题：{question}",
+            f"failed_claim_ids：{json.dumps(failed_claim_ids, ensure_ascii=False)}",
+            f"失败原因：{json.dumps(issues, ensure_ascii=False)}",
+            f"上一轮 claims：{json.dumps(previous, ensure_ascii=False)}",
+            ("流程边界：" + flow_context) if flow_context else "",
+            "可用证据：",
+            build_evidence_block(evidence),
+            "",
+            "请只返回失败 claim 的修订版；修不好就省略；不要新增 claim。",
+        ]
+    )
+    return [
+        {"role": "system", "content": REVISE_SYSTEM_PROMPT},
+        {"role": "user", "content": user},
+    ]
+
+
+def merge_revised_drafts(
+    previous: list[ClaimDraft],
+    revised: list[ClaimDraft],
+    failed_claim_ids: list[str],
+) -> list[ClaimDraft]:
+    """通过的 claim 原样保留；失败项有修订则替换，没有则保留原项。"""
+    failed = set(failed_claim_ids)
+    by_id = {draft.claim_id: draft for draft in revised if draft.claim_id in failed}
+    merged: list[ClaimDraft] = []
+    for draft in previous:
+        if draft.claim_id in failed and draft.claim_id in by_id:
+            merged.append(by_id[draft.claim_id])
+        else:
+            merged.append(draft)
+    return merged
 
 
 def _extract_json_text(content: str) -> str:
@@ -333,8 +415,10 @@ class Advisor:
         question: str,
         evidence: list[Evidence],
         audience: Audience | None = None,
+        *,
+        flow_context: str = "",
     ) -> AdvisorResult:
-        messages = build_messages(question, evidence, audience)
+        messages = build_messages(question, evidence, audience, flow_context=flow_context)
         responses: list[ChatResponse] = []
         provider_retried = False
         first_tokens = (
@@ -488,6 +572,68 @@ class Advisor:
         result.empty_claims_retried = empty_claims_retried
         result.empty_claims_error = empty_claims_error
         result.provider_retried = provider_retried
+        return result
+
+    def revise(
+        self,
+        question: str,
+        evidence: list[Evidence],
+        *,
+        failed_claim_ids: list[str],
+        issues: list[dict[str, Any]],
+        previous_claims: list[ClaimDraft],
+        audience: Audience | None = None,
+        flow_context: str = "",
+    ) -> AdvisorResult:
+        """只修失败 claim；不新增、不改通过项、不引用证据外 ID。"""
+        if not failed_claim_ids:
+            return AdvisorResult(drafts=[])
+        messages = build_revise_messages(
+            question,
+            evidence,
+            failed_claim_ids=failed_claim_ids,
+            issues=issues,
+            previous_claims=previous_claims,
+            audience=audience,
+            flow_context=flow_context,
+        )
+        responses: list[ChatResponse] = []
+        try:
+            response = self._provider.complete(
+                messages,
+                temperature=0.0,
+                max_tokens=self._max_tokens,
+            )
+        except ChatProviderError:
+            raise
+        responses.append(response)
+        repaired = False
+        try:
+            drafts = parse_claims_json(response.content).claims
+        except AdvisorError:
+            repair_messages: list[dict[str, Any]] = [
+                *messages,
+                {"role": "assistant", "content": response.content},
+                {
+                    "role": "user",
+                    "content": (
+                        "上面的输出不是合法 claims JSON。请只输出失败 claim 的修订版："
+                        '{"claims":[...]}，不要解释。'
+                    ),
+                },
+            ]
+            second = self._provider.complete(
+                repair_messages, temperature=0.0, max_tokens=self._max_tokens
+            )
+            responses.append(second)
+            drafts = parse_claims_json(second.content).claims
+            repaired = True
+        failed = set(failed_claim_ids)
+        filtered = [draft for draft in drafts if draft.claim_id in failed]
+        result = AdvisorResult(drafts=filtered, responses=responses, repaired=repaired)
+        problems = find_quote_problems(filtered, evidence)
+        result.quote_repair_attempted = bool(problems)
+        result.quote_repair_remaining = sorted({problem.claim_id for problem in problems})
         return result
 
     def _repair_quotes(

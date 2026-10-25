@@ -370,6 +370,34 @@ run：`data/eval/w6a2-run.json`，`run_sha256=b7ee6884…f569`。旧 W6-A labels
 用于 8 条 prefill 建议，未自动复用；人工核对表为
 `data/eval/w6a2_support_review.md`，50/50 已由 `yaukin` 标注为 supported。
 
+## W6-B 完整四角色图与语义核对
+
+W6-B 是 W7 之后的独立能力，不修改 W7 冻结集/标签/报告，W7 仍为
+failed/tagged。评测使用 20 题 dev_v0（14 可答 + 6 不可答），
+`model_profile=vpro`（Planner/Advisor/语义均 `mimo-v2.6-pro`），prompt 为
+`w6b-planner/advisor/revise/semantic-2026-10-25`；向量索引为
+`articles_v1@hybrid-6bafb68410b9`（4,026 点）。
+
+| 指标 | W6-B | 门禁 |
+|---|---:|---|
+| 结构 | 45/45 引用有效、0 编造、0 part、45/45 quote 可定位 | 通过 |
+| 最终 quote mismatch | 0 | 通过 |
+| 语义 | 46/46 supported；0 contradicted 渲染；0 unchecked；0 unavailable | 通过 |
+| 拒答召回 / 误拒 | 100% / 0.0% | ≥80% / ≤20%，通过 |
+| partial | 0 | 记录 |
+| revise / clarify | 2 / 0 | 记录 |
+| trace | 20/20 完整 | 通过 |
+| p50 / p95 | 41.4s / 165.9s（warmup 51.4s） | 不设硬门禁，单列 |
+| support | 46/46 人工标注；45 supported / 1 partial；rendered 97.8% | ≥85%，通过（记录项） |
+| W6 总门禁 | 结构/拒答/误拒/语义/quote mismatch/trace/model_profile 全部通过 | 通过 |
+
+run：`data/eval/w6b-run.json`，`run_sha256=09159efb…739d`；报告：
+`data/eval/w6b-dev-report.{json,md}`；核对表：
+`data/eval/w6b_support_review.md`。12 条红队、5 个固定场景和 W5 回归均在
+离线测试中通过；生产 MCP 流程路径另做 1 题 smoke。support 已由
+`yaukin` 完成 46/46 人工标注（45 supported / 1 partial）；语义 supported
+与人工 support 分开记录，不把前者当成人工验收。
+
 ## 失败归因模板
 
 每次评测报告至少包含：

@@ -7,11 +7,12 @@
 
 from __future__ import annotations
 
+import contextlib
 import json
 import logging
 import os
 import sys
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
@@ -301,18 +302,16 @@ def create_mcp_qa_service(
     )
 
 
-def create_hybrid_qa_service(
+def create_local_hybrid_search_client(
     *,
     client: QdrantClient,
     paths: RuntimePaths | None = None,
     embedder: EmbeddingProvider | None = None,
     reranker: Reranker | None = None,
-    provider=None,
     verify_index: bool = True,
     use_rerank: bool = True,
-    verifier: Any | None = None,
-) -> QAService:
-    """W4 评测入口：进程内 HybridRetriever + 同一 SearchClient 契约。"""
+):
+    """构造进程内 Hybrid Retriever 的 SearchClient（W6 图评测复用）。"""
     from campusguide.qa.search_clients import LocalHybridSearchClient
     from campusguide.retrieval.embedder import BgeM3Embedder
     from campusguide.retrieval.hybrid import HybridRetriever
@@ -324,7 +323,6 @@ def create_hybrid_qa_service(
     load_dotenv(ROOT / ".env")
     paths = paths or RuntimePaths()
     config = load_retrieval_config(paths.retrieval_config)
-    abstention = load_abstention_config(paths.abstention_config)
     manifest = _read_manifest(paths.vector_manifest)
     if verify_index:
         verify_or_raise(
@@ -366,12 +364,243 @@ def create_hybrid_qa_service(
         profile_lexicon=ProfileLexicon.from_organization(organization),
         use_rerank=use_rerank,
     )
+    return LocalHybridSearchClient(retriever)
+
+
+def create_hybrid_qa_service(
+    *,
+    client: QdrantClient,
+    paths: RuntimePaths | None = None,
+    embedder: EmbeddingProvider | None = None,
+    reranker: Reranker | None = None,
+    provider=None,
+    verify_index: bool = True,
+    use_rerank: bool = True,
+    verifier: Any | None = None,
+) -> QAService:
+    """W4 评测入口：进程内 HybridRetriever + 同一 SearchClient 契约。"""
+    load_dotenv(ROOT / ".env")
+    paths = paths or RuntimePaths()
+    search_client = create_local_hybrid_search_client(
+        client=client,
+        paths=paths,
+        embedder=embedder,
+        reranker=reranker,
+        verify_index=verify_index,
+        use_rerank=use_rerank,
+    )
+    config = load_retrieval_config(paths.retrieval_config)
+    abstention = load_abstention_config(paths.abstention_config)
+    manifest = _read_manifest(paths.vector_manifest)
     settings = QASettings.from_config(config, abstention)
     settings.expected_index_version = str(manifest.get("index_version", ""))
     return _assemble_service(
-        search_client=LocalHybridSearchClient(retriever),
+        search_client=search_client,
         advisor=_advisor(provider),
         settings=settings,
         paths=paths,
         verifier=verifier,
+    )
+
+
+DEFAULT_GRAPH_CONFIG = ROOT / "configs" / "graph.yaml"
+DEFAULT_HANDOFF_CONFIG = ROOT / "configs" / "handoff.yaml"
+
+
+@dataclass
+class GraphRuntime:
+    runner: Any
+    service: Any
+    search_client: Any = None
+    meta_client: Any = None
+    clients: list[Any] = field(default_factory=list)
+    model_profile: str = "vpro"
+    models: dict[str, str] = field(default_factory=dict)
+    prompt_versions: dict[str, str] = field(default_factory=dict)
+    index_version: str = ""
+
+    def close(self) -> None:
+        for client in [*self.clients, self.search_client, self.meta_client]:
+            close = getattr(client, "close", None)
+            if callable(close):
+                with contextlib.suppress(Exception):
+                    close()
+
+
+def _role_provider(model_env: str, timeout: float):
+    from campusguide.agents.providers import OpenAICompatibleChat
+
+    return OpenAICompatibleChat(
+        base_url=os.getenv("LLM_BASE_URL", ""),
+        api_key=os.getenv("LLM_API_KEY", ""),
+        model=os.getenv(model_env, ""),
+        timeout=timeout,
+    )
+
+
+def create_graph_runtime(
+    *,
+    paths: RuntimePaths | None = None,
+    search_client: Any | None = None,
+    meta_client: Any | None = None,
+    flow_catalog: Any | None = None,
+    planner_provider: Any | None = None,
+    advisor_provider: Any | None = None,
+    semantic_provider: Any | None = None,
+    start: bool = True,
+    today: Any | None = None,
+    trace_writer: Any | None = None,
+) -> GraphRuntime:
+    """装配 W6 图。生产默认启动 MCP；评测可注入 local search/flow catalog。"""
+    from campusguide.agents.advisor import (
+        REVISE_PROMPT_VERSION,
+        W6B_ADVISOR_PROMPT_VERSION,
+        Advisor,
+    )
+    from campusguide.agents.graph import GraphNodes, GraphRunner
+    from campusguide.agents.planner import PLANNER_PROMPT_VERSION, Planner
+    from campusguide.agents.retriever import GraphRetriever
+    from campusguide.agents.verifier import GraphVerifier
+    from campusguide.config import load_graph_config, load_handoff_config
+    from campusguide.conversation.service import ConversationService
+    from campusguide.flows.catalog import MCPFlowCatalog
+    from campusguide.verification.claims import ClaimValidator
+    from campusguide.verification.semantic import (
+        SEMANTIC_PROMPT_VERSION,
+        SemanticVerifier,
+    )
+
+    load_dotenv(ROOT / ".env")
+    paths = paths or RuntimePaths()
+    retrieval = load_retrieval_config(paths.retrieval_config)
+    abstention = load_abstention_config(paths.abstention_config)
+    graph_config = load_graph_config(DEFAULT_GRAPH_CONFIG)
+    if os.getenv("W6_GRAPH_ENABLED", "true").strip().lower() in {"0", "false", "no", "off"}:
+        raise RuntimeError("W6 图已通过 W6_GRAPH_ENABLED=false 关闭")
+    profile = os.getenv("W6_MODEL_PROFILE", "").strip()
+    semantic_mode = os.getenv("W6_SEMANTIC_MODE", "").strip()
+    overrides: dict[str, object] = {}
+    if profile:
+        overrides["model_profile"] = profile
+    if semantic_mode:
+        overrides["semantic"] = {
+            **graph_config.semantic.model_dump(),
+            "on_unavailable": semantic_mode,
+        }
+    if overrides:
+        from campusguide.config import GraphConfig
+
+        graph_config = GraphConfig.model_validate({**graph_config.model_dump(), **overrides})
+    handoff_config = load_handoff_config(DEFAULT_HANDOFF_CONFIG)
+    mcp_config = load_mcp_config(paths.mcp_config)
+    manifest = _read_manifest(paths.vector_manifest)
+    expected_index_version = str(manifest.get("index_version", ""))
+    driven_clients: list[Any] = []
+
+    if search_client is None:
+        from campusguide.qa.search_clients import UnavailableSearchClient
+
+        mcp_search = MCPPolicySearchClient(_client_config(mcp_config.search_server))
+        driven_clients.append(mcp_search)
+        if start:
+            try:
+                mcp_search.start()
+            except Exception as exc:
+                logger.error("policy-search 启动失败，W6 将明确拒答：%s", exc)
+                search_client = UnavailableSearchClient(str(exc))
+            else:
+                search_client = mcp_search
+        else:
+            search_client = mcp_search
+    if meta_client is None:
+        meta_client = MCPPolicyMetaClient(_client_config(mcp_config.meta_server))
+        driven_clients.append(meta_client)
+        if start:
+            try:
+                meta_client.start()
+            except Exception as exc:
+                logger.error("policy-meta 启动失败：%s", exc)
+    if flow_catalog is None:
+        flow_catalog = MCPFlowCatalog(meta_client)
+
+    planner_provider = planner_provider or _role_provider("PLANNER_MODEL", 20.0)
+    advisor_provider = advisor_provider or _role_provider("ADVISOR_MODEL", 40.0)
+    semantic_provider = semantic_provider or _role_provider(
+        "VERIFIER_MODEL", graph_config.semantic.timeout_seconds
+    )
+
+    retriever = GraphRetriever(
+        search_client,
+        top_k=retrieval.recall_top_k,
+        rerank_top_n=retrieval.rerank_top_n,
+        max_evidence=graph_config.max_evidence,
+        max_per_doc=graph_config.max_per_doc,
+        token_budget=graph_config.token_budget,
+        expected_index_version=expected_index_version,
+        enable_repealed_probe=abstention.enable_repealed_probe,
+    )
+    planner = Planner(
+        flow_catalog,
+        provider=planner_provider,
+        llm_enabled=graph_config.planner.llm_enabled,
+        max_queries=graph_config.max_queries,
+        max_clarify=graph_config.max_clarify,
+    )
+    advisor = Advisor(
+        advisor_provider,
+        max_tokens=int(os.getenv("ADVISOR_MAX_TOKENS", "3000")),
+    )
+    semantic = SemanticVerifier(
+        semantic_provider,
+        enabled=graph_config.semantic.enabled,
+        batch_size=graph_config.semantic.batch_size,
+        timeout_seconds=graph_config.semantic.timeout_seconds,
+    )
+    validator = ClaimValidator(
+        min_quote_chars=abstention.min_quote_chars,
+        max_claims=abstention.max_claims,
+    )
+    verifier = GraphVerifier(
+        validator,
+        semantic,
+        max_revise=graph_config.max_revise,
+        semantic_mode=graph_config.semantic.on_unavailable,
+    )
+    nodes = GraphNodes(
+        planner=planner,
+        retriever=retriever,
+        advisor=advisor,
+        verifier=verifier,
+        catalog=flow_catalog,
+        handoff_config=handoff_config,
+        trace_writer=trace_writer or TraceWriter(paths.trace_dir),
+        max_clarify=graph_config.max_clarify,
+        max_revise=graph_config.max_revise,
+        today=today,
+    )
+    runner = GraphRunner(nodes, ttl_hours=graph_config.checkpointer.ttl_hours)
+    service = ConversationService(
+        None,
+        graph_runner=runner,
+        today_provider=(lambda: today) if today else None,
+    )
+    return GraphRuntime(
+        runner=runner,
+        service=service,
+        search_client=search_client,
+        meta_client=meta_client,
+        clients=driven_clients,
+        model_profile=graph_config.model_profile,
+        models={
+            "planner": getattr(planner_provider, "model", os.getenv("PLANNER_MODEL", "")),
+            "advisor": getattr(advisor_provider, "model", os.getenv("ADVISOR_MODEL", "")),
+            "semantic": getattr(semantic_provider, "model", os.getenv("VERIFIER_MODEL", "")),
+        },
+        prompt_versions={
+            "planner": PLANNER_PROMPT_VERSION,
+            "advisor": W6B_ADVISOR_PROMPT_VERSION,
+            "revise": REVISE_PROMPT_VERSION,
+            "semantic": SEMANTIC_PROMPT_VERSION,
+        },
+        index_version=expected_index_version,
     )

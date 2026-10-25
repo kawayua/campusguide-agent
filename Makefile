@@ -6,8 +6,8 @@ RUFF ?= $(UV) run ruff
 
 .PHONY: help init sync fetch parse index index-qdrant vector-index vector-index-dense validate-sources \
 	check-segmentation test lint format format-check qa ask eval-w2 eval-w3 eval-w3-hybrid eval-w4 \
-	eval-w6a2 eval-w6a2-report freeze-w7 eval-w7 eval-w7-report eval-w7-a5 eval-w7-a4 eval-w7-a4-report eval-w7-a2 eval-w7-a2-report draft-w7 mcp-smoke population-check e2e-section eval-w3-report label-w3 sheet-w3 \
-	label-w6a2 sheet-w6a2 demo w5-chat w5-demo compose-up compose-down clean
+	eval-w6a2 eval-w6a2-report eval-w6b eval-w6b-report sheet-w6b label-w6b freeze-w7 eval-w7 eval-w7-report eval-w7-a5 eval-w7-a4 eval-w7-a4-report eval-w7-a2 eval-w7-a2-report draft-w7 mcp-smoke population-check e2e-section eval-w3-report label-w3 sheet-w3 \
+	label-w6a2 sheet-w6a2 demo w5-chat w5-demo w6-chat compose-up compose-down clean
 
 help:
 	@echo "CampusGuide commands"
@@ -34,6 +34,10 @@ help:
 	@echo "  make eval-w4           dense vs hybrid RRF vs hybrid+rerank 检索对比"
 	@echo "  make eval-w6a2         W6-A2 quote 契约 20 题回归（独立 run）"
 	@echo "  make eval-w6a2-report  人工标注后复用 W6-A2 run 生成报告"
+	@echo "  make eval-w6b          W6-B 图级 20 题回归（独立 run）"
+	@echo "  make eval-w6b-report   人工标注后复用 W6-B run 生成报告"
+	@echo "  make sheet-w6b         生成 W6-B Markdown 核对表"
+	@echo "  make label-w6b ANNOTATOR=你的名字  交互式标注 W6-B claims"
 	@echo "  make sheet-w6a2        生成 W6-A2 Markdown 核对表"
 	@echo "  make label-w6a2 ANNOTATOR=你的名字  交互式标注 W6-A2 claims"
 	@echo "  make validate-sources  校验来源清单的版本/元数据完整性"
@@ -52,6 +56,7 @@ help:
 	@echo "  make label-w3 ANNOTATOR=你的名字  交互式人工标注"
 	@echo "  make demo              启动 Gradio 单轮页面"
 	@echo "  make w5-chat           启动 W5 流程 CLI（可加 AS_OF=2026-10-25）"
+	@echo "  make w6-chat           启动 W6 图 CLI（vPro，可加 AS_OF=...）"
 	@echo "  make w5-demo           跑 W5 脚本化流程 demo（SCENARIO=certificate）"
 	@echo "  make compose-up        启动 Qdrant（docker compose）"
 
@@ -122,6 +127,9 @@ ask:
 
 w5-chat:
 	$(PYTHON) scripts/chat.py $(if $(AS_OF),--as-of $(AS_OF),)
+
+w6-chat:
+	$(PYTHON) scripts/chat.py --graph $(if $(AS_OF),--as-of $(AS_OF),)
 
 w5-demo:
 	$(PYTHON) scripts/flow_demo.py --scenario $(or $(SCENARIO),scholarship)

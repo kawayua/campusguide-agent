@@ -2,7 +2,7 @@
 
 面向高校公开制度文档的**条款级**问答与办事指引 Agent（个人作品集项目）。
 
-当前目标院校：**华南农业大学**。当前进度：W1 数据与索引地基、W2 单轮问答垂直切片、W3 引用核对与拒答 v0、W4 MCP 工具层与混合检索、W5 流程 DSL 与多轮槽位、W6-A2 quote 契约、P0 profile-aware 检索、P1 section 证据与生成重试、W7 冻结评测（四轮均已人工标注；remediation4 质量门禁全过，p50 7.37s/p95 21.38s 未过，W7 总门禁未通过）。W5 数据门新增 12 份脱敏来源后，当前全库为 **225 份文档 / 244 个版本 / 4,026 个可检索块**；W1–W7 历史指标仍按当时语料 213 / 232 / 3,952 记录，不回填。W3 在 W3 v2 代码上跑完 20 题 dev_v0：55/55 引用 ID 有效、0 编造、0 part_no 错误、55/55 quote 可定位；拒答召回 100%、误拒率 0.0%、partial 率 7.1%；warm p50 3.34s、p95 9.78s，废止探针 p50 73.5ms（单列）。**support 标注已完成 56/56（39 supported / 17 partial / 0 unsupported）；draft 支持率 69.6%，rendered 支持率 75.0%，低于 85%，support 门禁未通过，W3 总门禁未通过**；W6-A 提示词收紧已通过（见下）。W2 的 p95 未达 10s 已明确接受，详见 [W2 周记录](docs/weekly/w2.md)；W3 状态见 [W3 周记录](docs/weekly/w3.md)。
+当前目标院校：**华南农业大学**。当前进度：W1 数据与索引地基、W2 单轮问答垂直切片、W3 引用核对与拒答 v0、W4 MCP 工具层与混合检索、W5 流程 DSL 与多轮槽位、W6-A2 quote 契约、W6-B 完整四角色图与语义核对、P0 profile-aware 检索、P1 section 证据与生成重试、W7 冻结评测（四轮均已人工标注；remediation4 质量门禁全过，p50 7.37s/p95 21.38s 未过，W7 总门禁未通过）。W5 数据门新增 12 份脱敏来源后，当前全库为 **225 份文档 / 244 个版本 / 4,026 个可检索块**；W1–W7 历史指标仍按当时语料 213 / 232 / 3,952 记录，不回填。W3 在 W3 v2 代码上跑完 20 题 dev_v0：55/55 引用 ID 有效、0 编造、0 part_no 错误、55/55 quote 可定位；拒答召回 100%、误拒率 0.0%、partial 率 7.1%；warm p50 3.34s、p95 9.78s，废止探针 p50 73.5ms（单列）。**support 标注已完成 56/56（39 supported / 17 partial / 0 unsupported）；draft 支持率 69.6%，rendered 支持率 75.0%，低于 85%，support 门禁未通过，W3 总门禁未通过**；W6-A 提示词收紧已通过（见下）。W2 的 p95 未达 10s 已明确接受，详见 [W2 周记录](docs/weekly/w2.md)；W3 状态见 [W3 周记录](docs/weekly/w3.md)。
 
 W4 已实现 `policy-search` / `policy-meta` 两个只读 FastMCP server、BM25 sparse + bge-m3 dense 的 RRF 混合召回、bge-reranker-v2-m3 重排，以及受众/时间过滤。`articles_v1` 已重建为 3,952 点 hybrid 索引。dev_v0 20 题检索层：Recall@8 在 dense-only / RRF / RRF+rerank 三种模式均为 **1.000**；MRR 分别为 **0.905 / 0.848 / 0.929**。5/5 人群错配 case 通过 MCP 实跑，不返回不匹配条款。W3 回归（同一 20 题、W6-A prompt、hybrid+rerank）：结构 100%、拒答召回 100%、误拒率 0.0%、原因码 100%，partial 率 14.3%；support 未重新人工标注，不能声称通过。详见 [W4 周记录](docs/weekly/w4.md)。
 
@@ -13,6 +13,8 @@ W3 在 W2 之上增加：quote 映射回 `article.text` 原文 span、claim 数�
 W6-A 提示词收紧已在 `mimo-v2.6-pro-ultraspeed` 上通过：54/54 人工标注（53 supported / 1 partial / 0 unsupported），draft/rendered 支持率 **98.1%**；结构/拒答/误拒门禁通过；唯一 partial 是 d004/c1（“进入教室”范围边界）。v2.6pro A/B 已完成：support 100%（53/53；rendered 51/51），但出现 2 条 quote mismatch（d012 c4/c5）、d012 PARTIAL，p95 45.2s、warmup 111s，**可靠性低于 ultraspeed**；按可靠性优先，默认模型已回退到 `mimo-v2.6-pro-ultraspeed`（`ADVISOR_MAX_TOKENS=3000`）。W6-A 最终结果仍为 ultraspeed 的 98.1%；v2.6pro 报告保留为 A/B 记录。详见 [W6 周记录](docs/weekly/w6.md)。
 
 W6-A2（2026-10-24）在 W6-A 上增加 quote 连续性契约：quote 必须是同一证据正文的连续子串，不得拼接“引导句 + 非相邻分项”；时间/范围与数字必须原样出现在 quote；一条 claim 只表达一个条件、后果或数量；quote 不可定位时只重试一次，仍失败由 W3 Verifier 丢弃。20 题 hybrid 回归中 d005/d006 已从 PARTIAL 恢复 **ANSWERED**，partial 率 7.1%，结构/拒答/误拒门禁通过；50 draft / 49 rendered 已人工标注 **100% supported**，**W6-A2 总门禁通过**。详见 [W6 周记录](docs/weekly/w6.md)。
+
+W6-B（2026-10-25）按 [W6 设计](docs/superpowers/specs/2026-10-25-w6-full-graph-semantic-verification-design.md) 完成 LangGraph 四角色图：混合 Planner（规则优先）、多查询 Retriever、流程 citation 水合、Advisor revise、claim-quote 语义 Verifier、revise≤2/clarify≤3、Finalize handoff；数据门将向量索引从 3,952 重建到 **4,026**（`articles_v1@hybrid-6bafb68410b9`）。20 题 dev_v0 使用 `model_profile=vpro`（Planner/Advisor/语义均为 `mimo-v2.6-pro`）：结构 **45/45 引用有效、0 编造、0 part 错误、45/45 quote 可定位**，最终 **0 条 quote mismatch**；语义 46/46 supported、0 contradicted 渲染；拒答召回 100%、误拒率 0.0%、partial 0；**W6 总门禁通过**。p50/p95 为 **41.4s/165.9s**、warmup 51.4s，作为已知限制单列，不设延迟硬门禁。support 已由 `yaukin` 完成 46/46 人工标注（45 supported / 1 partial / 0 unsupported，rendered **97.8%**），按设计作为记录项；唯一 partial 为 d014/c1。12/12 红队、5 个固定场景、W5 三流程回归与生产 MCP 流程 smoke 均通过；全量离线测试 **613 passed**。W6 不修改 W7 冻结集/标签/报告，W7 仍为 failed/tagged。详见 [W6 周记录](docs/weekly/w6.md)。
 
 **W3 结项决定（2026-10-24）**：W3 v2 自身的 rendered 支持率仍是 75.0%，不追溯修改；用户接受 W6-A 提示词收紧作为 W3 的 support remediation（同一 20 题、同一 Verifier、54/54 人工、98.1%），因此 W3 记为**有条件通过**。W3 baseline 75.0% 和 W6-A 98.1% 都保留在报告中，不合并成同一个数字。W3 代码 `759653b` 与报告随后同步到 Gitee。
 
@@ -117,6 +119,8 @@ make eval-w3             # W3 dense 基线：run + 人工标注模板 + 报告
 make eval-w3-hybrid      # W4 回归：hybrid 检索 + 独立 run
 make eval-w4             # 检索层 A/B/C：dense vs RRF vs RRF+rerank
 make eval-w6a2           # W6-A2 quote 契约 20 题回归
+make eval-w6b            # W6-B 完整四角色图 20 题回归（vPro）
+make w6-chat             # W6 图 CLI（默认 vPro）
 make population-check    # 5 个人群错配 case（真实 MCP + 真实索引）
 make e2e-section         # P1 培养方案 section 端到端 4 case
 make freeze-w7           # 校验并冻结 W7 50 题测试集
@@ -220,7 +224,7 @@ docs/               数据来源、评测与质量门、周记录（W1/W2/W3/W4�
 
 ## 质量门
 
-`make qa`（等价于 `scripts/qa.sh`）执行 `ruff check`、`ruff format --check src tests scripts` 与全量 pytest。所有测试使用 mock HTTP、临时目录、内存 Qdrant 和 fake embedder/chat，不访问学校站点或模型服务。当前测试覆盖抓取、解析、切分、脱敏、版本解析、索引确定性、Qdrant 集合骨架、本地 HTML 端到端管线、W2 的别名/过滤/向量点/dense 检索/claim quote 校验/finalize/guard/trace，W3 的原文 span、中文 fact 覆盖、scope、隐私、废止探针、PASS/PARTIAL/ABSTAIN 决策、run hash 与 support/拒答指标，以及 W4 的 BM25 sparse、RRF/rerank、受众细目过滤、MCP 契约/stdio client、5 个人群错配 case。全量离线测试 **435 passed**（W1/W2 时点 154；W3 后 295；W4 后 367；W6-A2/P0/P1 新增 32；W7 基础设施新增 8；W7 remediation 新增 3；remediation2/A5/A4/A2 新增 22；remediation3/remediation4 后为 435）。
+`make qa`（等价于 `scripts/qa.sh`）执行 `ruff check`、`ruff format --check src tests scripts` 与全量 pytest。所有测试使用 mock HTTP、临时目录、内存 Qdrant 和 fake embedder/chat，不访问学校站点或模型服务。当前测试覆盖抓取、解析、切分、脱敏、版本解析、索引确定性、Qdrant 集合骨架、本地 HTML 端到端管线、W2 的别名/过滤/向量点/dense 检索/claim quote 校验/finalize/guard/trace，W3 的原文 span、中文 fact 覆盖、scope、隐私、废止探针、PASS/PARTIAL/ABSTAIN 决策、run hash 与 support/拒答指标，以及 W4 的 BM25 sparse、RRF/rerank、受众细目过滤、MCP 契约/stdio client、5 个人群错配 case，和 W6-B 的 GraphState/Planner/多查询 Retriever/流程 citation 水合/Advisor revise/语义四标签/H9/Finalize 四种渲染/澄清与 revise 循环/12 条红队/5 个固定场景。全量离线测试 **613 passed**（W1/W2 时点 154；W3 后 295；W4 后 367；W6-A2/P0/P1 新增 32；W7 基础设施新增 8；W7 remediation 新增 3；remediation2/A5/A4/A2 新增 22；remediation3/remediation4 后为 435；W6-B 图/语义/红队/场景/W5 回归新增 118）。
 
 W2 的指标口径：
 

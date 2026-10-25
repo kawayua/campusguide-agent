@@ -411,3 +411,29 @@ class MCPPolicyMetaClient(_BaseToolClient):
 
     def list_documents(self, **filters: Any) -> dict[str, Any]:
         return self.call("list_documents", filters)["data"]
+
+    def list_flows(
+        self,
+        *,
+        audience: str | None = None,
+        as_of: str | None = None,
+    ) -> dict[str, Any]:
+        return self.call(
+            "list_flows",
+            {"audience": audience, "as_of": as_of},
+        )["data"]
+
+    def get_flow(self, flow_id: str, *, as_of: str | None = None) -> dict[str, Any]:
+        return self.call("get_flow", {"flow_id": flow_id, "as_of": as_of})["data"]
+
+    def get_calendar(
+        self,
+        *,
+        start: str | None = None,
+        end: str | None = None,
+        audience: str | None = None,
+    ) -> dict[str, Any]:
+        return self.call(
+            "get_calendar",
+            {"start": start, "end": end, "audience": audience},
+        )["data"]

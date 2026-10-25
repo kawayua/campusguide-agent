@@ -1,0 +1,26 @@
+# 人工入口兜底。优先级：flow YAML handoff > 本文件 flow/reason > 通用入口。
+# 只写公开部门与官网页面，不写个人姓名，不编造电话。
+defaults:
+  department: 学校相关负责部门
+  url: https://www.scau.edu.cn/
+flows:
+  scholarship-application:
+    department: 学生工作部资助中心 / 学院学生工作办公室
+    url: https://xg.scau.edu.cn/jxj/list.htm
+  recommendation-eligibility:
+    department: 本科生院学籍科 / 学院
+    url: https://jwc.scau.edu.cn/5135/list.htm
+  enrollment-certificate:
+    department: 本科生院教学运行科 / 研究生院培养科
+    url: https://jwc.scau.edu.cn/hnnydxywcjdwxlxwzmjqtzm/list.htm
+reasons:
+  NO_EVIDENCE:
+    department: 学校相关负责部门
+  UNVERIFIABLE:
+    department: 学校相关负责部门
+  UNVERIFIABLE_SEMANTIC:
+    department: 学校相关负责部门
+  AUDIENCE_MISMATCH:
+    department: 学校相关负责部门
+  VERSION_MISMATCH:
+    department: 学校相关负责部门

@@ -172,6 +172,10 @@ class Evidence(BaseModel):
     rerank_score: float | None = None
     retrieval_query: str = ""
     rank: int = 0
+    # W6：同一 block 命中多个子查询时记录来源；source=flow 表示由流程
+    # citation 通过 get_article 水合，分数固定为 0，但仍参与引用核对。
+    matched_queries: list[str] = Field(default_factory=list)
+    source: Literal["search", "flow"] = "search"
 
     @property
     def key(self) -> tuple[str, int]:

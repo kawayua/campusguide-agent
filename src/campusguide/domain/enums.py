@@ -89,6 +89,7 @@ class VersionMode(StrEnum):
 class Intent(StrEnum):
     POLICY_QA = "policy_qa"
     PROCEDURE_GUIDANCE = "procedure_guidance"
+    MIXED = "mixed"
     SMALLTALK = "smalltalk"
     OUT_OF_SCOPE = "out_of_scope"
     PRIVACY_REQUEST = "privacy_request"
@@ -108,6 +109,15 @@ class ClaimKind(StrEnum):
 class VerificationDecision(StrEnum):
     PASS = "pass"
     PARTIAL = "partial"
+    ABSTAIN = "abstain"
+
+
+class GraphDecision(StrEnum):
+    """W6 图内决策；不替换 W3 的 VerificationDecision。"""
+
+    PASS = "pass"
+    REVISE = "revise"
+    CLARIFY = "clarify"
     ABSTAIN = "abstain"
 
 

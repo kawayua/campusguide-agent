@@ -252,6 +252,53 @@ class AbstentionConfig(BaseModel):
     false_refusal_gate: float = 0.20
 
 
+class GraphPlannerConfig(BaseModel):
+    llm_enabled: bool = True
+    fallback: Literal["rule"] = "rule"
+
+
+class GraphSemanticConfig(BaseModel):
+    enabled: bool = True
+    on_unavailable: Literal["strict", "allow_with_warning"] = "strict"
+    batch_size: int = Field(default=5, ge=1, le=5)
+    timeout_seconds: float = Field(default=20.0, gt=0)
+
+
+class GraphCheckpointerConfig(BaseModel):
+    backend: Literal["memory", "sqlite"] = "memory"
+    ttl_hours: int = Field(default=24, ge=1)
+
+
+class GraphConfig(BaseModel):
+    """W6 图编排参数；硬校验阈值仍留在 abstention.yaml。"""
+
+    enabled: bool = True
+    model_profile: Literal["vpro", "ultraspeed"] = "vpro"
+    max_queries: int = Field(default=3, ge=1, le=3)
+    max_evidence: int = Field(default=8, ge=1)
+    token_budget: int = Field(default=4000, ge=500)
+    max_revise: int = Field(default=2, ge=0)
+    max_clarify: int = Field(default=3, ge=0)
+    max_per_doc: int = Field(default=3, ge=1)
+    planner: GraphPlannerConfig = Field(default_factory=GraphPlannerConfig)
+    semantic: GraphSemanticConfig = Field(default_factory=GraphSemanticConfig)
+    checkpointer: GraphCheckpointerConfig = Field(default_factory=GraphCheckpointerConfig)
+
+
+class HandoffEntry(BaseModel):
+    department: str
+    url: str | None = None
+    note: str | None = None
+
+
+class HandoffConfig(BaseModel):
+    """Finalize 的人工入口兜底；不编造电话/个人联系方式。"""
+
+    defaults: HandoffEntry
+    flows: dict[str, HandoffEntry] = Field(default_factory=dict)
+    reasons: dict[str, HandoffEntry] = Field(default_factory=dict)
+
+
 class MCPServerConfig(BaseModel):
     command: list[str] = Field(
         default_factory=lambda: ["python", "-m", "campusguide.mcp.policy_search_server"]
@@ -455,6 +502,20 @@ def load_abstention_config(path: str | Path) -> AbstentionConfig:
     if not isinstance(raw, dict):
         raise ValueError("abstention.yaml 顶层必须是对象")
     return AbstentionConfig.model_validate(raw)
+
+
+def load_graph_config(path: str | Path) -> GraphConfig:
+    raw = load_yaml(path)
+    if not isinstance(raw, dict):
+        raise ValueError("graph.yaml 顶层必须是对象")
+    return GraphConfig.model_validate(raw)
+
+
+def load_handoff_config(path: str | Path) -> HandoffConfig:
+    raw = load_yaml(path)
+    if not isinstance(raw, dict):
+        raise ValueError("handoff.yaml 顶层必须是对象")
+    return HandoffConfig.model_validate(raw)
 
 
 def load_mcp_config(path: str | Path) -> MCPConfig:

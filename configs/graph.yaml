@@ -1,0 +1,24 @@
+# W6 图编排与语义核对配置。
+# 模型供应商仍由 configs/models.yaml + .env 决定；model_profile 只标记本次
+# run 的角色模型档案，不能在同一 run 中途切换。
+enabled: true
+model_profile: vpro
+max_queries: 3
+max_evidence: 8
+token_budget: 4000
+max_revise: 2
+max_clarify: 3
+# 同一文档最多保留多少条证据，避免长文档挤占多问覆盖。
+max_per_doc: 3
+planner:
+  llm_enabled: true
+  fallback: rule
+semantic:
+  enabled: true
+  on_unavailable: strict
+  batch_size: 5
+  timeout_seconds: 20
+checkpointer:
+  # W6 首版只落地 memory；sqlite 后端与 TTL 持久化留 W8。
+  backend: memory
+  ttl_hours: 24

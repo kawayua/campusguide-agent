@@ -5,9 +5,18 @@ from __future__ import annotations
 from collections.abc import Callable, Mapping
 from dataclasses import dataclass, field
 from datetime import date, datetime
+from typing import Any
 
 from campusguide.conversation.session import ConversationSession, SessionStore
-from campusguide.domain.models import CalendarEvent, ChecklistItem, FlowDefinition
+from campusguide.domain.enums import Audience, BlockType
+from campusguide.domain.models import (
+    CalendarEvent,
+    ChecklistItem,
+    Citation,
+    Claim,
+    FlowDefinition,
+)
+from campusguide.domain.profiles import UserProfile
 from campusguide.flows.engine import FlowEvaluation, evaluate_flow, render_checklist_text
 from campusguide.flows.registry import FlowMatch, FlowRegistry, match_flows
 from campusguide.flows.slots import extract_slots
@@ -26,6 +35,14 @@ class ConversationReply:
     ambiguous_flow_ids: list[str] = field(default_factory=list)
     warnings: list[str] = field(default_factory=list)
     closed: bool = False
+    # W6 图门面扩展
+    claims: list[Claim] = field(default_factory=list)
+    citations: list[Citation] = field(default_factory=list)
+    outcome: str = ""
+    decision: str = ""
+    handoff: dict[str, Any] = field(default_factory=dict)
+    trace: list[dict[str, Any]] = field(default_factory=list)
+    clarification: dict[str, Any] | None = None
 
 
 def _default_fallback(message: str) -> str:
@@ -38,18 +55,22 @@ def _default_fallback(message: str) -> str:
 class ConversationService:
     def __init__(
         self,
-        registry: FlowRegistry,
+        registry: FlowRegistry | None = None,
         *,
         calendar: Mapping[str, CalendarEvent] | None = None,
         fallback: Fallback | None = None,
         today_provider: Callable[[], date] | None = None,
         max_clarify: int = 3,
+        graph_runner: Any | None = None,
     ) -> None:
+        if registry is None and graph_runner is None:
+            raise ValueError("必须提供 FlowRegistry 或 graph_runner")
         self._registry = registry
         self._calendar = dict(calendar or {})
         self._fallback = fallback or _default_fallback
         self._today_provider = today_provider or date.today
         self._max_clarify = max_clarify
+        self._graph_runner = graph_runner
         self._store = SessionStore()
 
     @property
@@ -229,7 +250,21 @@ class ConversationService:
         message: str,
         *,
         as_of: date | datetime | None = None,
+        audience: Audience | None = None,
+        profile: UserProfile | None = None,
+        block_types: list[BlockType] | None = None,
     ) -> ConversationReply:
+        if self._graph_runner is not None:
+            return self._handle_graph(
+                session_id,
+                message,
+                as_of=as_of,
+                audience=audience,
+                profile=profile,
+                block_types=block_types,
+            )
+        if self._registry is None:
+            raise RuntimeError("legacy 模式缺少 FlowRegistry")
         session = self._store.get(session_id)
         session.turn_id += 1
         effective_as_of = self._as_of(as_of)
@@ -291,6 +326,73 @@ class ConversationService:
                 ambiguous_flow_ids=[item.flow.flow_id for item in matches],
             )
         return ConversationReply(text=self._fallback(text))
+
+    def _handle_graph(
+        self,
+        session_id: str,
+        message: str,
+        *,
+        as_of: date | datetime | None,
+        audience: Audience | None,
+        profile: UserProfile | None,
+        block_types: list[BlockType] | None,
+    ) -> ConversationReply:
+        text = message.strip()
+        if not text:
+            return ConversationReply(text="请描述你要办理的事项。")
+        if text in {"取消", "重来", "重新开始", "换个流程", "换一个"}:
+            reset = getattr(self._graph_runner, "reset", None)
+            if callable(reset):
+                reset(session_id)
+            return ConversationReply(text="已退出当前流程。请告诉我要办理的事项。")
+        effective = as_of if as_of is not None else self._today_provider()
+        as_date = self._as_date(effective) if isinstance(effective, datetime) else effective
+        state = self._graph_runner.invoke(
+            session_id,
+            text,
+            as_of=as_date,
+            audience=audience,
+            profile=profile,
+            block_types=block_types,
+        )
+        plan = state.get("plan")
+        clarification = state.get("clarification")
+        next_slot = None
+        if clarification and clarification.get("reason") == "SLOT_MISSING":
+            next_slot = state.get("pending_slot")
+            if next_slot is None:
+                missing = clarification.get("missing_slots") or []
+                next_slot = missing[0] if missing else None
+        outcome = state.get("outcome") or {}
+        warnings = list(state.get("retrieval_warnings") or [])
+        if plan is not None:
+            warnings.extend(getattr(plan, "warnings", []) or [])
+        return ConversationReply(
+            text=state.get("final_answer", ""),
+            flow_id=state.get("flow_id"),
+            status=state.get("flow_status"),
+            checklist=list(state.get("checklist") or []),
+            next_slot=next_slot,
+            missing_slots=list(state.get("missing_slots") or []),
+            ambiguous_flow_ids=list(state.get("pending_flow_ids") or []),
+            warnings=list(dict.fromkeys(warnings)),
+            closed=bool(state.get("closed")),
+            claims=list(state.get("claims") or []),
+            citations=list(state.get("citations") or []),
+            outcome=str(outcome.get("code") or ""),
+            decision=(
+                state.get("decision").value if getattr(state.get("decision"), "value", None) else ""
+            ),
+            handoff=dict(state.get("handoff") or {}),
+            trace=list(state.get("trace") or []),
+            clarification=dict(clarification) if clarification else None,
+        )
+
+    def reset(self, session_id: str) -> None:
+        self._store.reset(session_id)
+        reset = getattr(self._graph_runner, "reset", None)
+        if callable(reset):
+            reset(session_id)
 
     def _respond_with_flow(
         self,
