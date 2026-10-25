@@ -6,7 +6,7 @@ RUFF ?= $(UV) run ruff
 
 .PHONY: help init sync fetch parse index index-qdrant vector-index vector-index-dense validate-sources \
 	check-segmentation test lint format format-check qa ask eval-w2 eval-w3 eval-w3-hybrid eval-w4 \
-	eval-w6a2 eval-w6a2-report eval-w6b eval-w6b-report sheet-w6b label-w6b freeze-w7 eval-w7 eval-w7-report eval-w7-a5 eval-w7-a4 eval-w7-a4-report eval-w7-a2 eval-w7-a2-report draft-w7 mcp-smoke population-check e2e-section eval-w3-report label-w3 sheet-w3 \
+	eval-w6a2 eval-w6a2-report eval-w6b eval-w6b-report eval-w6b-mcp eval-w6b-mcp-report eval-w6b-scenarios sheet-w6b label-w6b sheet-w6b-mcp label-w6b-mcp freeze-w7 eval-w7 eval-w7-report eval-w7-a5 eval-w7-a4 eval-w7-a4-report eval-w7-a2 eval-w7-a2-report draft-w7 mcp-smoke population-check e2e-section eval-w3-report label-w3 sheet-w3 \
 	label-w6a2 sheet-w6a2 demo w5-chat w5-demo w6-chat compose-up compose-down clean
 
 help:
@@ -34,10 +34,14 @@ help:
 	@echo "  make eval-w4           dense vs hybrid RRF vs hybrid+rerank 检索对比"
 	@echo "  make eval-w6a2         W6-A2 quote 契约 20 题回归（独立 run）"
 	@echo "  make eval-w6a2-report  人工标注后复用 W6-A2 run 生成报告"
-	@echo "  make eval-w6b          W6-B 图级 20 题回归（独立 run）"
+	@echo "  make eval-w6b          W6-B 图级 20 题回归（local-hybrid）"
+	@echo "  make eval-w6b-mcp      W6-B 生产 MCP 20 题回归（独立 run）"
+	@echo "  make eval-w6b-scenarios  W6-B MCP 流程/混合固定场景"
 	@echo "  make eval-w6b-report   人工标注后复用 W6-B run 生成报告"
 	@echo "  make sheet-w6b         生成 W6-B Markdown 核对表"
-	@echo "  make label-w6b ANNOTATOR=你的名字  交互式标注 W6-B claims"
+	@echo "  make label-w6b ANNOTATOR=你的名字  标注 W6-B local claims"
+	@echo "  make sheet-w6b-mcp     生成 W6-B MCP 核对表"
+	@echo "  make label-w6b-mcp ANNOTATOR=你的名字  标注 W6-B MCP claims"
 	@echo "  make sheet-w6a2        生成 W6-A2 Markdown 核对表"
 	@echo "  make label-w6a2 ANNOTATOR=你的名字  交互式标注 W6-A2 claims"
 	@echo "  make validate-sources  校验来源清单的版本/元数据完整性"
@@ -213,3 +217,44 @@ compose-down:
 
 clean:
 	rm -rf .pytest_cache .ruff_cache
+
+eval-w6b:
+	$(PYTHON) scripts/eval_w6b.py
+
+eval-w6b-report:
+	$(PYTHON) scripts/eval_w6b.py --report-only
+
+eval-w6b-mcp:
+	$(PYTHON) scripts/eval_w6b.py --mcp \
+		--run data/eval/w6b-mcp-run.json \
+		--labels data/eval/w6b-mcp_support_labels.jsonl \
+		--output-json data/eval/w6b-mcp-dev-report.json \
+		--output-md data/eval/w6b-mcp-dev-report.md
+
+eval-w6b-mcp-report:
+	$(PYTHON) scripts/eval_w6b.py --report-only \
+		--run data/eval/w6b-mcp-run.json \
+		--labels data/eval/w6b-mcp_support_labels.jsonl \
+		--output-json data/eval/w6b-mcp-dev-report.json \
+		--output-md data/eval/w6b-mcp-dev-report.md
+
+eval-w6b-scenarios:
+	$(PYTHON) scripts/eval_w6b_mcp_scenarios.py
+
+sheet-w6b:
+	$(PYTHON) scripts/label_w3.py --run data/eval/w6b-run.json \
+		--labels data/eval/w6b_support_labels.jsonl --sheet \
+		--sheet-output data/eval/w6b_support_review.md
+
+label-w6b:
+	$(PYTHON) scripts/label_w3.py --run data/eval/w6b-run.json \
+		--labels data/eval/w6b_support_labels.jsonl --annotator "$(ANNOTATOR)"
+
+sheet-w6b-mcp:
+	$(PYTHON) scripts/label_w3.py --run data/eval/w6b-mcp-run.json \
+		--labels data/eval/w6b-mcp_support_labels.jsonl --sheet \
+		--sheet-output data/eval/w6b-mcp_support_review.md
+
+label-w6b-mcp:
+	$(PYTHON) scripts/label_w3.py --run data/eval/w6b-mcp-run.json \
+		--labels data/eval/w6b-mcp_support_labels.jsonl --annotator "$(ANNOTATOR)"
