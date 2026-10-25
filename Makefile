@@ -6,7 +6,7 @@ RUFF ?= $(UV) run ruff
 
 .PHONY: help init sync fetch parse index index-qdrant vector-index vector-index-dense validate-sources \
 	check-segmentation test lint format format-check qa ask eval-w2 eval-w3 eval-w3-hybrid eval-w4 \
-	eval-w6a2 eval-w6a2-report eval-w6b eval-w6b-report eval-w6b-mcp eval-w6b-mcp-report eval-w6b-scenarios sheet-w6b label-w6b sheet-w6b-mcp label-w6b-mcp freeze-w7 eval-w7 eval-w7-report eval-w7-a5 eval-w7-a4 eval-w7-a4-report eval-w7-a2 eval-w7-a2-report draft-w7 mcp-smoke population-check e2e-section eval-w3-report label-w3 sheet-w3 \
+	eval-w6a2 eval-w6a2-report eval-w6b eval-w6b-report eval-w6b-mcp eval-w6b-mcp-report eval-w6b-scenarios sheet-w6b label-w6b sheet-w6b-mcp label-w6b-mcp import-w6b-mcp freeze-w7 eval-w7 eval-w7-report eval-w7-a5 eval-w7-a4 eval-w7-a4-report eval-w7-a2 eval-w7-a2-report draft-w7 mcp-smoke population-check e2e-section eval-w3-report label-w3 sheet-w3 \
 	label-w6a2 sheet-w6a2 demo w5-chat w5-demo w6-chat compose-up compose-down clean
 
 help:
@@ -42,6 +42,7 @@ help:
 	@echo "  make label-w6b ANNOTATOR=你的名字  标注 W6-B local claims"
 	@echo "  make sheet-w6b-mcp     生成 W6-B MCP 核对表"
 	@echo "  make label-w6b-mcp ANNOTATOR=你的名字  标注 W6-B MCP claims"
+	@echo "  make import-w6b-mcp ANNOTATOR=你的名字  从 MCP 核对表写回 labels"
 	@echo "  make sheet-w6a2        生成 W6-A2 Markdown 核对表"
 	@echo "  make label-w6a2 ANNOTATOR=你的名字  交互式标注 W6-A2 claims"
 	@echo "  make validate-sources  校验来源清单的版本/元数据完整性"
@@ -258,3 +259,8 @@ sheet-w6b-mcp:
 label-w6b-mcp:
 	$(PYTHON) scripts/label_w3.py --run data/eval/w6b-mcp-final-run.json \
 		--labels data/eval/w6b-mcp-final_support_labels.jsonl --annotator "$(ANNOTATOR)"
+
+import-w6b-mcp:
+	$(PYTHON) scripts/import_w7_review.py --annotator "$(ANNOTATOR)" \
+		--support-labels data/eval/w6b-mcp-final_support_labels.jsonl \
+		--support-review data/eval/w6b-mcp-final_support_review.md

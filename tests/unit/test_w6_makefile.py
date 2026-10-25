@@ -17,6 +17,7 @@ def test_w6_make_targets_have_rules_not_only_phony() -> None:
         "label-w6b:",
         "sheet-w6b-mcp:",
         "label-w6b-mcp:",
+        "import-w6b-mcp:",
         "w6-chat:",
     ):
         assert target in text, f"Makefile 缺少规则：{target}"
