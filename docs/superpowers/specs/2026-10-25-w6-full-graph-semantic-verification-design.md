@@ -8,7 +8,7 @@
 | 语料 | 文本索引 225 文档 / 244 版本 / 4,026 块；**W6 数据门已重建向量索引到 4,026 点**（`articles_v1@hybrid-6bafb68410b9`） |
 | 范围 | LangGraph 四角色编排、混合 Planner、多查询 Retriever、Advisor 重写、语义 Verifier、clarify 回退、Finalize handoff、12 条红队 |
 | 明确不做 | 不改 W7 冻结测试集/报告；不声称 W7 通过；W6 首版不做历史版本回答；不修改 W7 已冻结的模型/prompt 记录 |
-| 状态 | 已实现；最终 clean MCP run（commit `2d3fe37`，dirty=false）W6 总门禁通过（结构 46/46、quote mismatch 0、拒答 100%、误拒 0、语义 45/45 supported、trace 完整）；support 45 条新 claim 待人工标注（8 条 exact prefill），本地历史 run 的 97.8% 不转移；报告见 `data/eval/w6b-mcp-final-dev-report.md` |
+| 状态 | 已实现；最终 clean MCP run（commit `2d3fe37`，dirty=false）W6 总门禁通过（结构 46/46、quote mismatch 0、拒答 100%、误拒 0、语义 45/45 supported、trace 完整）；support 45/45 人工标注（44 supported / 1 partial，rendered 97.8%），本地历史 run 的标签未被直接搬运；报告见 `data/eval/w6b-mcp-final-dev-report.md` |
 
 > 本设计覆盖 W6 的图编排与语义核对主体（W6-B/W6-C）。W6-A（提示词收紧）和 W6-A2（quote 连续性/范围契约）已经完成，作为本设计的生成层前置，不重复实施。
 
@@ -906,8 +906,8 @@ checkpointer:
   误拒率 0.0%、partial 0、原因码 100%；
 - 图：Planner rule 19 / llm 1；revise 2 次；clarify 0；trace 20/20 完整；
 - 延迟：p50 41.7s / p95 174.4s，作为已知限制单列；
-- support：最终 MCP run 45 条 claim，0/45 人工标注（8 条 exact prefill），
-  按设计非硬门禁；本地历史 run 的 support 97.8% 不转移到新 run；
+- support：最终 MCP run 45/45 人工标注（44 supported / 1 partial / 0 unsupported），
+  rendered 97.8%；唯一 partial 为 d014/c1；本地历史 run 的标签未直接搬运；
 - W6 总门禁通过；12/12 红队、5 个固定场景、W5 回归与 5/5 生产 MCP
   flow/mixed 场景通过；全量离线 615 tests。
 

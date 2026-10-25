@@ -389,7 +389,7 @@ dev_v0（14 可答 + 6 不可答），`model_profile=vpro`（Planner/Advisor/语
 | revise / clarify | 2 / 0 | 记录 |
 | trace | 20/20 完整 | 通过 |
 | p50 / p95 | 41.7s / 174.4s | 不设硬门禁，单列 |
-| support | 45 条新 claim；0/45 人工标注（8 条 exact prefill） | 记录项，非硬门禁 |
+| support | 45/45 人工标注；44 supported / 1 partial；rendered 97.8% | ≥85%，通过（记录项） |
 | W6 总门禁 | 结构/拒答/误拒/语义/quote mismatch/trace/model_profile 全部通过 | 通过 |
 
 run：`data/eval/w6b-mcp-final-run.json`，`run_sha256=aed3834d…e1f3`；
@@ -398,7 +398,9 @@ run：`data/eval/w6b-mcp-final-run.json`，`run_sha256=aed3834d…e1f3`；
 
 **历史本地 run**：更早的 local-hybrid run `09159efb…739d` 在 dirty tree 上
 执行，不能证明最终提交；其 46/46 support（45 supported / 1 partial，
-rendered 97.8%）只属于该 run，不转移到 final MCP run。两份 run 都保留。
+rendered 97.8%）只属于该 run。final MCP run 已另做 45/45 人工标注
+（44 supported / 1 partial，rendered 97.8%），标签未直接搬运。两份 run
+都保留。
 
 **生产 MCP 流程/混合场景**：clean commit `f03b9f2` 上 5/5 PASS
 （closed/open flow、certificate clarify、mixed、decline），报告
