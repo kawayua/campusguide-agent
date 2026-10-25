@@ -1,16 +1,241 @@
-# W5 填充：流程骨架。步骤、材料、时限与依据条款在 W5 按公开制度补齐。
 flow_id: enrollment-certificate
-version: "0.0.0"
+version: "2026.1"
 title: 在读证明开具
-description: 在读证明的办理步骤、材料与领取方式（W5 实现）
-audience: [undergraduate, graduate]
-aliases: ["在读证明", "在校证明", "学籍证明"]
-effective_from: 2025-09-01
+description: 本科生在读证明完整流程（窗口/自助打印/委托/留学密封），研究生只走研究生院培养科 handoff。
+audience:
+- undergraduate
+- graduate
+aliases:
+- 在读证明
+- 在校证明
+- 学籍证明
+- 在读证明怎么开
+effective_from: 2026-03-03
 effective_to: null
-slots: []
+batch_label: null
+navigation_only: false
+slots:
+- name: level
+  type: enum
+  required: true
+  question: 你是本科生还是研究生？
+  why_needed: 本科生和研究生由不同部门办理
+  allowed_values:
+  - undergraduate
+  - graduate
+  aliases:
+    undergraduate:
+    - 本科生
+    - 本科
+    - 在读本科
+    graduate:
+    - 研究生
+    - 硕士
+    - 博士
+    - 在读研究生
+  priority: 10
+- name: enrollment_status
+  type: enum
+  required: true
+  question: 你目前是在校生还是已经毕业？
+  why_needed: 未毕业学生只出具在读证明；已毕业走学历学位证明
+  allowed_values:
+  - enrolled
+  - graduated
+  aliases:
+    enrolled:
+    - 在校生
+    - 在读学生
+    - 未毕业
+    - 还没毕业
+    graduated:
+    - 已毕业
+    - 毕业了
+    - 毕业生
+  priority: 20
+- name: purpose
+  type: enum
+  required: true
+  question: 这份证明主要用于什么？（升学 / 就业 / 实习 / 出国留学 / 其他）
+  why_needed: 出国留学可能需要密封，其他用途按普通办理
+  allowed_values:
+  - study
+  - employment
+  - internship
+  - overseas
+  - other
+  aliases:
+    study:
+    - 升学
+    - 考研
+    - 保研
+    employment:
+    - 就业
+    - 找工作
+    - 入职
+    internship:
+    - 实习
+    overseas:
+    - 出国
+    - 留学
+    - 出国留学
+    other:
+    - 其他
+  priority: 30
+- name: delivery
+  type: enum
+  required: false
+  question: 你想怎么领取？（自助打印 / 窗口领取 / 委托他人）
+  why_needed: 不同领取方式的材料、地点和时限不同
+  allowed_values:
+  - self-print
+  - window
+  - entrust
+  aliases:
+    self-print:
+    - 自助打印
+    - 自助机
+    - 打印机
+    window:
+    - 窗口
+    - 现场
+    - 窗口领取
+    entrust:
+    - 委托
+    - 代办
+    - 委托他人
+    - 同学代取
+  priority: 40
 prerequisites: []
-steps: []
+steps:
+- id: ug-self-print
+  title: 本科生：自助打印在读证明
+  when: slots.level == "undergraduate" and slots.enrollment_status == "enrolled" and slots.delivery == "self-print"
+  description: 2007 级（含）以后在校生可用自助打印机；在校生用身份证、校园卡、学号及统一身份认证密码登录。打印前核对姓名、学号、专业等信息。
+  materials:
+  - 身份证
+  - 校园卡
+  - 学号及学校统一身份认证密码
+  deadline_note: 自助打印机 24 小时开放；行政楼一楼大厅、三角市紫荆e站 24 小时自助服务大厅，宿舍区另有打印点
+  responsible_department: 本科生院教学运行科
+  citations:
+  - enrollment-certificate-guide@v2026#五、自助打印
+  - enrollment-certificate-self-print-2024@v2024#一、服务对象与业务范围
+  - enrollment-certificate-self-print-2024@v2024#二、登录方式
+  - enrollment-certificate-self-print-2024@v2024#六、打印点
+  on_unknown: conditional
+- id: ug-window
+  title: 本科生：窗口办理在读证明
+  when: slots.level == "undergraduate" and slots.enrollment_status == "enrolled" and slots.delivery == "window"
+  description: 到行政楼 305 本科生院教学运行科窗口办理；未毕业学生只出具在读证明。领取时间视办理人数而定，当天或隔天领取。
+  materials:
+  - 身份证/校园卡（以窗口要求为准）
+  - 密封信封（如需密封）
+  deadline_note: 周一至周五 8:00-12:00、14:30-17:30；当天或隔天领取
+  responsible_department: 本科生院教学运行科（行政楼 305）
+  citations:
+  - enrollment-certificate-guide@v2026#三、注意事项
+  - enrollment-certificate-guide@v2026#四、办理时间与地点
+  - enrollment-certificate-fee-note-2026@v2026#四、办理时间与领取
+  - enrollment-certificate-fee-note-2026@v2026#七、办理地点
+  on_unknown: conditional
+- id: ug-entrust
+  title: 本科生：委托他人现场办理
+  when: slots.level == "undergraduate" and slots.enrollment_status == "enrolled" and slots.delivery == "entrust"
+  description: 可委托他人到窗口现场办理，受托人需携带身份证；不接受电话、邮件办理。密封材料请自带信封。
+  materials:
+  - 受托人身份证
+  - 本人办理材料
+  - 密封信封（如需密封）
+  deadline_note: 周一至周五 8:00-12:00、14:30-17:30；当天或隔天领取
+  responsible_department: 本科生院教学运行科（行政楼 305）
+  citations:
+  - enrollment-certificate-guide@v2026#三、注意事项
+  - enrollment-certificate-guide@v2026#四、办理时间与地点
+  - enrollment-certificate-fee-note-2026@v2026#四、办理时间与领取
+  on_unknown: conditional
+- id: ug-seal
+  title: 本科生：留学密封
+  when: slots.level == "undergraduate" and slots.enrollment_status == "enrolled" and slots.purpose == "overseas"
+  description: 如需密封，请自带信封；留学密封可到本科生院教学运行科教材服务中心（图书馆-紫荆e站综合服务大厅旁）。
+  materials:
+  - 信封
+  deadline_note: 办理时间以窗口/教材服务中心工作时间为准
+  responsible_department: 本科生院教学运行科教材服务中心
+  citations:
+  - enrollment-certificate-guide@v2026#三、注意事项
+  - enrollment-certificate-guide@v2026#六、留学密封
+  - enrollment-certificate-fee-note-2026@v2026#五、密封
+  on_unknown: conditional
+- id: ug-fee
+  title: 本科生：费用与领取
+  when: slots.level == "undergraduate" and slots.enrollment_status == "enrolled"
+  description: 在校生 5 份内免费，累计超出 5 份的每份 5 元；办理相关材料需收费，请自备现金。领取时间视办理人数而定。
+  materials:
+  - 现金（超出免费份数时）
+  deadline_note: 以窗口/自助打印现场为准
+  responsible_department: 本科生院教学运行科
+  citations:
+  - enrollment-certificate-fee-note-2026@v2026#六、收费
+  - enrollment-certificate-guide@v2026#三、注意事项
+  on_unknown: conditional
+- id: ug-graduated
+  title: 本科生已毕业：改办学历学位证明
+  when: slots.level == "undergraduate" and slots.enrollment_status == "graduated"
+  description: 已毕业学生不办理在读证明；请办理学历学位证明。已毕业学生每份 15 元，须持毕业文凭及成绩表原件等材料到教学运行科审核。
+  materials:
+  - 毕业文凭原件
+  - 成绩表原件
+  - 打印好的成绩表
+  deadline_note: 周一至周五 8:00-12:00、14:30-17:30；当天或隔天领取
+  responsible_department: 本科生院教学运行科（行政楼 305）
+  citations:
+  - enrollment-certificate-fee-note-2026@v2026#二、毕业生办理
+  - enrollment-certificate-fee-note-2026@v2026#六、收费
+  - enrollment-certificate-guide@v2026#一、服务对象
+  on_unknown: conditional
+- id: grad-office
+  title: 研究生：联系研究生院培养科
+  when: slots.level == "graduate" and slots.enrollment_status == "enrolled"
+  description: 研究生院培养科负责开具中英文学籍证明、学历证明等。材料、费用、办理时限和领取方式以培养科确认及当年通知为准，不套用本科生 5 份免费规则。
+  materials:
+  - 以培养科确认为准
+  deadline_note: 材料/费用/时限以研究生院培养科确认为准
+  responsible_department: 研究生院培养科（行政楼 309，020-85280189）
+  citations:
+  - enrollment-certificate-grad-office@v2026#一、负责事项
+  - enrollment-certificate-grad-office@v2026#二、联系方式
+  - enrollment-certificate-grad-office@v2026#三、材料、费用与时限
+  on_unknown: conditional
+- id: grad-sample
+  title: 研究生：查看证明样本
+  when: slots.level == "graduate" and slots.enrollment_status == "enrolled"
+  description: 可先查看研究生院公开的证明样本，再按培养科要求准备材料。
+  deadline_note: 样本入口长期公开；办理时间以培养科为准
+  responsible_department: 研究生院培养科
+  citations:
+  - enrollment-certificate-grad-office@v2026#四、样本
+  on_unknown: conditional
+- id: grad-graduated
+  title: 研究生已毕业：咨询培养科/研究生院
+  when: slots.level == "graduate" and slots.enrollment_status == "graduated"
+  description: 已毕业研究生请向研究生院培养科咨询学历证明等办理方式；在读证明只面向在校生。
+  deadline_note: 以培养科确认为准
+  responsible_department: 研究生院培养科（行政楼 309，020-85280189）
+  citations:
+  - enrollment-certificate-grad-office@v2026#二、联系方式
+  - enrollment-certificate-grad-office@v2026#三、材料、费用与时限
+  on_unknown: conditional
+- id: electronic-proof
+  title: 可信电子证明（可选）
+  when: slots.level == "undergraduate" and slots.enrollment_status == "enrolled" and slots.purpose == "overseas"
+  description: 可申请可信电子成绩单证明并通过学信网验证；电子证明不替代纸质在读证明，具体以教务处/学院要求为准。
+  deadline_note: 以电子证明平台和接收单位要求为准
+  responsible_department: 本科生院教学运行科
+  citations:
+  - enrollment-certificate-guide@v2026#七、电子证明
+  on_unknown: conditional
 handoff:
-  department: 教务处
-  url: null
-  note: 具体模板、盖章与领取方式以教务处说明为准
+  department: 本科生院教学运行科 / 研究生院培养科
+  url: https://jwc.scau.edu.cn/hnnydxywcjdwxlxwzmjqtzm/list.htm
+  note: 本科生：行政楼 305，020-85280049；研究生：培养科 020-85280189，行政楼 309。模板中的个人样例不进入本流程。

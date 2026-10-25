@@ -288,8 +288,21 @@ class SlotDefinition(BaseModel):
     question: str
     why_needed: str
     allowed_values: list[str] | None = None
+    aliases: dict[str, list[str]] | None = None
     validation: dict[str, Any] | None = None
     priority: int = 100
+
+    @model_validator(mode="after")
+    def _validate_definition(self) -> SlotDefinition:
+        if self.type == "enum" and not self.allowed_values:
+            raise ValueError(f"enum 槽位 {self.name} 必须提供 allowed_values")
+        if self.aliases:
+            for canonical, values in self.aliases.items():
+                if self.allowed_values and canonical not in self.allowed_values:
+                    raise ValueError(f"槽位 {self.name} 的别名键不在 allowed_values：{canonical}")
+                if not values:
+                    raise ValueError(f"槽位 {self.name} 的别名 {canonical} 不能为空")
+        return self
 
 
 class SlotValue(BaseModel):
@@ -303,10 +316,19 @@ class FlowInstance(BaseModel):
     flow_id: str
     flow_version: str
     step_states: dict[
-        str, Literal["available", "blocked", "conditional", "done", "not_applicable"]
+        str,
+        Literal["available", "blocked", "conditional", "done", "not_applicable", "closed"],
     ] = Field(default_factory=dict)
     current_step_ids: list[str] = Field(default_factory=list)
     missing_slots: list[str] = Field(default_factory=list)
+    asked_slots: list[str] = Field(default_factory=list)
+    declined_slots: list[str] = Field(default_factory=list)
+    pending_slot: str | None = None
+    clarify_count: int = 0
+    done_step_ids: list[str] = Field(default_factory=list)
+    last_question: str | None = None
+    batch_label: str | None = None
+    status: Literal["open", "partial", "closed", "unknown"] = "unknown"
     updated_at: datetime
 
 
@@ -318,9 +340,36 @@ class FlowStep(BaseModel):
     when: str | None = None
     materials: list[str] = Field(default_factory=list)
     deadline: str | None = None
+    deadline_note: str | None = None
+    closed_observed_at: date | None = None
     responsible_department: str
     citations: list[str] = Field(default_factory=list)
+    citation_exempt: bool = False
     on_unknown: Literal["ask", "conditional", "block"] = "ask"
+
+    @model_validator(mode="after")
+    def _validate_step(self) -> FlowStep:
+        if self.citation_exempt and (self.materials or self.deadline or self.closed_observed_at):
+            raise ValueError(f"citation_exempt 步骤不能携带材料/截止事实：{self.id}")
+        if self.deadline and self.closed_observed_at:
+            raise ValueError(f"步骤不能同时填写 deadline 与 closed_observed_at：{self.id}")
+        if not self.deadline and not self.closed_observed_at and not self.deadline_note:
+            raise ValueError(f"步骤必须填写 deadline/deadline_note/closed_observed_at：{self.id}")
+        return self
+
+
+class ChecklistItem(BaseModel):
+    step_id: str
+    title: str
+    status: Literal["available", "blocked", "conditional", "done", "not_applicable", "closed"]
+    description: str
+    materials: list[str] = Field(default_factory=list)
+    deadline: str | None = None
+    deadline_note: str | None = None
+    department: str
+    citations: list[str] = Field(default_factory=list)
+    blocked_reason: str | None = None
+    status_note: str | None = None
 
 
 class Prerequisite(BaseModel):
@@ -345,7 +394,8 @@ class CalendarEvent(BaseModel):
     end: date | None = None
     audience: list[Audience]
     academic_year: str
-    source_url: HttpUrl
+    source_url: HttpUrl | None = None
+    note: str | None = None
 
 
 class FlowDefinition(BaseModel):
@@ -357,6 +407,8 @@ class FlowDefinition(BaseModel):
     aliases: list[str] = Field(default_factory=list)
     effective_from: date
     effective_to: date | None = None
+    batch_label: str | None = None
+    navigation_only: bool = False
     slots: list[SlotDefinition] = Field(default_factory=list)
     prerequisites: list[Prerequisite] = Field(default_factory=list)
     steps: list[FlowStep] = Field(default_factory=list)

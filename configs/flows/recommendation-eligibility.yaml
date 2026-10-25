@@ -1,16 +1,102 @@
-# W5 填充：流程骨架。步骤、材料、时限与依据条款在 W5 按公开制度补齐。
 flow_id: recommendation-eligibility
-version: "0.0.0"
+version: "2026.1"
 title: 推免资格确认
-description: 面向本科毕业生的推免资格与后续报名判断流程（W5 实现）
-audience: [undergraduate]
-aliases: ["推免", "保研", "推荐免试"]
-effective_from: 2025-09-01
-effective_to: null
-slots: []
-prerequisites: []
-steps: []
+description: 2027 年推荐阶段资格确认、放弃截止与接收阶段入口；学院细则和接收复试只 handoff。
+audience:
+- undergraduate
+aliases:
+- 推免
+- 保研
+- 推荐免试
+- 推免资格
+effective_from: 2026-08-01
+effective_to: 2027-07-31
+batch_label: 2027 年推免推荐阶段
+navigation_only: false
+slots:
+- name: is_graduating
+  type: boolean
+  required: true
+  question: 你是否是 2027 届应届本科毕业生？
+  why_needed: 推免只面向应届本科毕业生
+  priority: 10
+- name: has_recommendation_quota
+  type: boolean
+  required: true
+  question: 你所在学院是否有推免名额（或你是否已获得学院推荐资格）？
+  why_needed: 没有名额的学院/专业不能推荐
+  priority: 20
+- name: in_recommendation_list
+  type: boolean
+  required: false
+  question: 你是否已在 2027 年推免拟获资格名单中？
+  why_needed: 名单内才需要关注放弃截止和接收阶段
+  priority: 30
+prerequisites:
+- id: graduating
+  description: 推免只面向应届本科毕业生
+  when: slots.is_graduating == true
+  on_false: ineligible
+  on_unknown: ask
+  citations:
+  - postgraduate-recommendation@v2025#第十条
+- id: quota
+  description: 需要学院有推免名额或已获得学院推荐资格
+  when: slots.has_recommendation_quota == true
+  on_false: ineligible
+  on_unknown: ask
+  citations:
+  - postgraduate-recommendation@v2025#第十一条
+  - recommendation-2027-notice@v2026#三、工作安排
+steps:
+- id: check-college-rules
+  title: 查看学院推免实施细则
+  description: 学院负责制定并公布本院实施细则、名额、材料要求和综合评价安排；以下为学校公开节点，具体以学院通知为准。
+  deadline_note: 学院细则和名额以学院当年通知为准
+  responsible_department: 所在学院教务/学工办公室
+  citations:
+  - recommendation-2027-notice@v2026#三、工作安排
+  - postgraduate-recommendation@v2025#第十六条
+  on_unknown: conditional
+- id: apply-2027
+  title: 2027 推荐阶段：校内申请与学院评价
+  description: 2027 年推荐阶段已于 2026-09-18 结束；下一批次申请时间以学校/学院当年通知为准。
+  deadline_note: 2027 推荐阶段已于 2026-09-18 结束；下一批次以当年通知为准
+  closed_observed_at: 2026-09-18
+  responsible_department: 本科生院学籍科 / 学院
+  citations:
+  - recommendation-2027-publicity@v2026#三、推荐阶段结束
+  - recommendation-2027-notice@v2026#一、适用对象
+  - postgraduate-recommendation@v2025#第十六条
+  on_unknown: conditional
+- id: abandon-2027
+  title: 放弃推免资格的书面申请
+  when: slots.in_recommendation_list == true
+  description: 如放弃 2027 年推免资格，须在 2026-09-16 12:00 前向本科生院学籍科提交书面申请（行政楼 305）。
+  deadline: "2026-09-16T12:00:00+08:00"
+  responsible_department: 本科生院学籍科
+  citations:
+  - recommendation-2027-publicity@v2026#二、放弃资格
+  on_unknown: conditional
+- id: receiving-stage
+  title: 接收阶段：登录全国推免系统
+  when: slots.in_recommendation_list == true
+  description: 推免资格用于免试攻读研究生，获得资格后不需要再参加全国硕士研究生招生考试的初试报名；应在推荐阶段结束后登录 https://yz.chsi.com.cn/tm/ 注册、填报志愿、参加接收单位复试并确认待录取，具体以招生单位要求为准。
+  deadline_note: 接收阶段由招生单位组织，具体时间以招生单位通知为准
+  responsible_department: 招生单位 / 本科生院学籍科
+  citations:
+  - recommendation-2027-publicity@v2026#五、接收阶段
+  - recommendation-2027-publicity@v2026#四、名额
+  on_unknown: conditional
+- id: college-receiving-handoff
+  title: 学院接收复试安排（handoff）
+  description: 学院推免实施细则、接收复试安排、成绩认定等以学院官网通知为准；本流程不写死学院差异。
+  deadline_note: 以学院当年通知为准
+  responsible_department: 所在学院
+  citations:
+  - recommendation-2027-notice@v2026#三、工作安排
+  on_unknown: conditional
 handoff:
-  department: 教务处
-  url: null
-  note: 具体名额、学院细则与时间节点以当年通知为准
+  department: 本科生院学籍科 / 学院
+  url: https://jwc.scau.edu.cn/5135/list.htm
+  note: 学校办法与 2027 公开节点已登记；学院细则、接收复试和 2028 批次时间以当年通知为准。

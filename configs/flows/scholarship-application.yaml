@@ -1,16 +1,233 @@
-# W5 填充：流程骨架。步骤、材料、时限与依据条款在 W5 按公开制度补齐。
 flow_id: scholarship-application
-version: "0.0.0"
-title: 本科生奖学金申请
-description: 面向本科生的奖学金申请与评审流程（W5 实现）
-audience: [undergraduate]
-aliases: ["奖学金", "评奖评优"]
-effective_from: 2025-09-01
-effective_to: null
-slots: []
-prerequisites: []
-steps: []
+version: "2026.1"
+title: 本科生国家奖学金申请
+description: 国家奖学金、国家励志奖学金、国家助学金的资格、材料与 2026 年批次节点；院级综合奖/社会奖不在本流程内。
+audience:
+- undergraduate
+aliases:
+- 国家奖学金
+- 国奖
+- 国家励志奖学金
+- 励志奖学金
+- 国家助学金
+- 奖学金
+- 评奖评优
+effective_from: 2026-09-01
+effective_to: 2027-08-31
+batch_label: 2026 年本科生国家奖助学金批次
+navigation_only: false
+slots:
+- name: college
+  type: enum
+  required: true
+  question: 你是哪个学院的？（数信 / 农学院 / 其他）
+  why_needed: 不同学院的截止日和材料不同
+  allowed_values:
+  - info
+  - agri
+  - other
+  aliases:
+    info:
+    - 数学与信息学院、软件学院
+    - 数学与信息学院
+    - 数信学院
+    - 数信
+    - 软件学院
+    agri:
+    - 农学院
+    - 华农农学院
+    other:
+    - 其他学院
+    - 其他
+  priority: 10
+- name: award_type
+  type: enum
+  required: false
+  question: 你要申请哪一项？（国家奖学金 / 国家励志奖学金 / 国家助学金）
+  why_needed: 三项的金额、条件和截止日不同
+  allowed_values:
+  - merit
+  - inspirational
+  - grant
+  aliases:
+    merit:
+    - 国家奖学金
+    - 国奖
+    inspirational:
+    - 国家励志奖学金
+    - 励志奖学金
+    - 国励
+    - 励志
+    grant:
+    - 国家助学金
+    - 国助
+    - 助学金
+  priority: 20
+- name: grade
+  type: integer
+  required: true
+  question: 你现在读大几？
+  why_needed: 国家奖学金和国家励志奖学金要求二年级及以上
+  validation:
+    min: 1
+    max: 5
+  priority: 30
+- name: has_record
+  type: boolean
+  required: true
+  question: 你在校期间是否受过纪律处分？
+  why_needed: 国家奖助学金要求遵守校规校纪
+  priority: 40
+- name: has_financial_aid
+  type: boolean
+  required: false
+  question: 你是否已完成家庭经济困难认定？（国家励志奖学金/国家助学金需要；国家奖学金不需要）
+  why_needed: 国家励志奖学金和国家助学金要求通过家庭经济困难认定
+  priority: 50
+prerequisites:
+- id: eligibility
+  description: 需为二年级及以上，且在校期间无纪律处分
+  when: slots.grade >= 2 and slots.has_record == false
+  on_false: ineligible
+  on_unknown: ask
+  citations:
+  - national-aid-undergrad@v2021#第八条
+  - national-aid-undergrad@v2021#第九条
+  - national-aid-undergrad@v2021#第十条
+- id: financial-aid
+  description: 国家励志奖学金和国家助学金要求通过家庭经济困难认定
+  when: slots.award_type == "merit" or slots.has_financial_aid == true
+  on_false: ineligible
+  on_unknown: conditional
+  citations:
+  - national-aid-undergrad@v2021#第八条
+  - national-aid-undergrad@v2021#第十条
+steps:
+- id: info-merit-apply
+  title: 数信学院：国家奖学金申请
+  description: 在学院通知截止前提交国家奖学金申请材料；学院评审后按规定公示。
+  when: slots.college == "info" and slots.award_type == "merit"
+  materials:
+  - 国家奖学金申请审批表
+  - 学习成绩与综合测评证明
+  - 个人事迹材料
+  - 学院通知要求的其他材料
+  deadline: "2026-10-10T09:00:00+08:00"
+  responsible_department: 数学与信息学院、软件学院学生工作办公室
+  citations:
+  - national-aid-2026-info-merit@v2026#三、金额与名额
+  - national-aid-2026-info-merit@v2026#五、评审流程及时间安排
+  - national-aid-2026-info-merit@v2026#六、申请材料
+  - national-aid-undergrad@v2021#第九条
+  on_unknown: conditional
+- id: info-inspirational-apply
+  title: 数信学院：国家励志奖学金申请
+  description: 在学院通知截止前提交国家励志奖学金申请；需已通过家庭经济困难认定。
+  when: slots.college == "info" and slots.award_type == "inspirational"
+  materials:
+  - 国家励志奖学金资助业务名单申请表
+  - 学习成绩与综合测评证明
+  - 家庭经济困难认定材料
+  deadline: "2026-10-21"
+  responsible_department: 数学与信息学院、软件学院学生工作办公室
+  citations:
+  - national-aid-2026-info-aid@v2026#二、金额与名额
+  - national-aid-2026-info-aid@v2026#四、时间安排
+  - national-aid-2026-info-aid@v2026#五、申请材料
+  - national-aid-undergrad@v2021#第十条
+  on_unknown: conditional
+- id: info-grant-apply
+  title: 数信学院：国家助学金申请
+  description: 在学院通知截止前提交国家助学金申请；需已通过家庭经济困难认定。
+  when: slots.college == "info" and slots.award_type == "grant"
+  materials:
+  - 本专科国家助学金导入模板
+  - 家庭经济困难认定材料
+  deadline: "2026-10-16"
+  responsible_department: 数学与信息学院、软件学院学生工作办公室
+  citations:
+  - national-aid-2026-info-aid@v2026#二、金额与名额
+  - national-aid-2026-info-aid@v2026#四、时间安排
+  - national-aid-2026-info-aid@v2026#五、申请材料
+  - national-aid-undergrad@v2021#第八条
+  on_unknown: conditional
+- id: agri-inspirational-check
+  title: 农学院：国家励志奖学金 2026 批次已结束
+  description: 学院已于 2026-10-23 公示拟获奖人选；具体申请截止日未公开，下一批次以学院通知为准。
+  when: slots.college == "agri" and slots.award_type == "inspirational"
+  materials:
+  - 国家励志奖学金资助业务名单申请表
+  - 家庭经济困难认定材料
+  deadline_note: 2026 年拟获奖名单已于 10-23 公示；具体截止日未公开，以学院当年通知为准
+  closed_observed_at: 2026-10-23
+  responsible_department: 农学院学生工作办公室
+  citations:
+  - national-aid-2026-agri-inspirational-publicity@v2026#二、公示时间
+  - national-aid-2026-agri-inspirational-publicity@v2026#四、依据
+  - national-aid-undergrad@v2021#第十条
+  on_unknown: conditional
+- id: agri-grant-check
+  title: 农学院：国家助学金 2026 批次已结束
+  description: 学院已于 2026-10-21 公示拟推荐名单；具体申请截止日未公开，下一批次以学院通知为准。
+  when: slots.college == "agri" and slots.award_type == "grant"
+  materials:
+  - 本专科国家助学金导入模板
+  - 家庭经济困难认定材料
+  deadline_note: 2026 年拟推荐名单已于 10-21 公示；具体截止日未公开，以学院当年通知为准
+  closed_observed_at: 2026-10-21
+  responsible_department: 农学院学生工作办公室
+  citations:
+  - national-aid-2026-agri-grant-publicity@v2026#二、公示时间
+  - national-aid-2026-agri-grant-publicity@v2026#四、依据
+  - national-aid-undergrad@v2021#第八条
+  on_unknown: conditional
+- id: agri-merit-check
+  title: 农学院：国家奖学金（以学院通知为准）
+  description: 未检索到农学院 2026 年本科生国家奖学金公开通知；请以学院当年通知为准，向学院学工办确认名额和截止日。
+  when: slots.college == "agri" and slots.award_type == "merit"
+  materials:
+  - 国家奖学金申请审批表
+  - 学习成绩与综合测评证明
+  deadline_note: 未检索到农学院 2026 年本科生国家奖学金公开通知；以学院当年通知为准
+  responsible_department: 农学院学生工作办公室
+  citations:
+  - national-aid-undergrad@v2021#第九条
+  - national-aid-undergrad@v2021#第十六条
+  on_unknown: conditional
+- id: other-college-handoff
+  title: 其他学院：以本学院通知为准
+  description: 流程只登记了数信和农学院的 2026 公开来源；其他学院请查看本学院学工通知或联系学院学工办。
+  when: slots.college == "other"
+  deadline_note: 其他学院以本学院当年通知为准
+  responsible_department: 所在学院学生工作办公室
+  citations:
+  - national-aid-undergrad@v2021#第十六条
+  on_unknown: conditional
+- id: prepare-materials
+  title: 提前准备申请材料
+  description: 成绩单、综合测评证明、个人事迹等可提前准备；国家励志奖学金/国家助学金还需家庭经济困难认定。
+  when: slots.award_type in ["merit", "inspirational", "grant"]
+  materials:
+  - 成绩单
+  - 综合测评证明
+  - 家庭经济困难认定材料（励志/助学金）
+  deadline_note: 申请前准备，具体份数和模板以学院当年通知为准
+  responsible_department: 所在学院学生工作办公室
+  citations:
+  - national-aid-undergrad@v2021#第十二条
+  - national-aid-undergrad@v2021#第十三条
+  on_unknown: conditional
+- id: review-publicity
+  title: 学院/学校评审与公示
+  description: 学院初步审查并公示不少于 3 个工作日；学校审核后公示不少于 5 个工作日；无异议后报省教育厅。
+  when: slots.award_type in ["merit", "inspirational", "grant"]
+  deadline_note: 以学院/学校当年公示为准
+  responsible_department: 党委学生工作部（党委研究生工作部）
+  citations:
+  - national-aid-undergrad@v2021#第十六条
+  - national-aid-2026-info-merit@v2026#五、评审流程及时间安排
+  on_unknown: conditional
 handoff:
-  department: 学生工作部
-  url: null
-  note: 具体名额和批次以当年通知为准
+  department: 学生工作部资助中心 / 学院学生工作办公室
+  url: https://xg.scau.edu.cn/jxj/list.htm
+  note: 具体名额、材料和批次以学校/学院当年通知为准；院级综合奖、单项奖、社会奖请另看学院综测/评优通知。

@@ -3,7 +3,6 @@ from __future__ import annotations
 from datetime import UTC, date, datetime
 
 import pytest
-import yaml
 from pydantic import ValidationError
 
 from campusguide.domain.enums import ArticleStatus, Audience, BlockType
@@ -12,7 +11,6 @@ from campusguide.domain.models import (
     ArticlePublic,
     Claim,
     DocumentVersion,
-    FlowDefinition,
 )
 
 
@@ -83,12 +81,17 @@ def test_claim_requires_citation() -> None:
         Claim(claim_id="c1", text="需要引用", citations=[])
 
 
-def test_flow_skeletons_are_valid(repo_root) -> None:
-    flow_dir = repo_root / "configs" / "flows"
-    files = sorted(flow_dir.glob("*.yaml"))
-    assert len(files) == 3
-    for path in files:
-        data = yaml.safe_load(path.read_text(encoding="utf-8"))
-        flow = FlowDefinition.model_validate(data)
+def test_flow_configs_are_valid(repo_root) -> None:
+    from campusguide.flows.dsl import load_flows
+
+    flows = load_flows(repo_root / "configs" / "flows")
+    assert len(flows) == 3
+    assert {flow.flow_id for flow in flows} == {
+        "scholarship-application",
+        "recommendation-eligibility",
+        "enrollment-certificate",
+    }
+    for flow in flows:
         assert flow.flow_id
-        assert flow.steps == []
+        assert flow.steps
+        assert flow.batch_label is not None or flow.flow_id == "enrollment-certificate"
