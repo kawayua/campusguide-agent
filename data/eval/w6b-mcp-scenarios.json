@@ -1,0 +1,445 @@
+{
+  "schema_version": "w6b-mcp-scenarios-v1",
+  "generated_at": "2026-10-25T08:16:04+00:00",
+  "manifest": {
+    "graph_version": "w6-2026-10-25",
+    "git_commit": "f03b9f27b4d87bac06abd987861f4defb44a8bc6",
+    "git_dirty": false,
+    "model_profile": "vpro",
+    "models": {
+      "planner": "mimo-v2.6-pro",
+      "advisor": "mimo-v2.6-pro",
+      "semantic": "mimo-v2.6-pro"
+    },
+    "prompts": {
+      "planner": "w6b-planner-2026-10-25",
+      "advisor": "w6b-advisor-2026-10-25",
+      "revise": "w6b-revise-2026-10-25",
+      "semantic": "w6b-semantic-2026-10-25"
+    },
+    "index_version": "articles_v1@hybrid-6bafb68410b9",
+    "vector_manifest_sha256": "3fd7e321ee2d639e0370360c639db0a665ca2220edd0cda90b9b8d1b2572709e",
+    "test_set": "dev_v0",
+    "test_set_sha256": "e144b800133353517a78350dd089ac1ccd39805ec1b3b61b6dd72ad70d15c356",
+    "config_sha256": "f2285c3b5dfb35e3e2b0d179a5d9b3e35b117f6a517d389e1a35202521d0f041",
+    "retrieval_mode": "mcp-hybrid",
+    "flow_source": "mcp:policy-meta",
+    "started_at": "2026-10-25T08:12:39+00:00",
+    "w7_frozen": true,
+    "w7_boundary": "W6 不重跑/不修改 W7；W7 总门禁未通过的结论不变。"
+  },
+  "summary": {
+    "total": 5,
+    "passed": 5,
+    "failed": []
+  },
+  "cases": [
+    {
+      "case_id": "mcp-closed-flow",
+      "name": "政策流程：国奖 2026 批次已截止",
+      "as_of": "2026-10-25",
+      "messages": [
+        "国家奖学金怎么申请"
+      ],
+      "expect": {
+        "outcome": "ANSWERED",
+        "flow_id": "scholarship-application",
+        "closed": true
+      },
+      "pass": true,
+      "failures": [],
+      "turns": [
+        {
+          "outcome": "ANSWERED",
+          "decision": null,
+          "flow_id": "scholarship-application",
+          "flow_status": "closed",
+          "closed": true,
+          "intent": "procedure_guidance",
+          "next_slot": null,
+          "clarification": {},
+          "claims": 0,
+          "checklist": 9,
+          "citations": 0,
+          "handoff": {
+            "department": "学生工作部资助中心 / 学院学生工作办公室",
+            "url": "https://xg.scau.edu.cn/jxj/list.htm",
+            "note": "具体名额、材料和批次以学校/学院当年通知为准；院级综合奖、单项奖、社会奖请另看学院综测/评优通知。",
+            "source": "flow"
+          },
+          "semantic": null,
+          "trace": [
+            {
+              "node": "planner",
+              "duration_ms": 313,
+              "decision": null
+            },
+            {
+              "node": "flow",
+              "duration_ms": 2,
+              "decision": null
+            },
+            {
+              "node": "finalize",
+              "duration_ms": 0,
+              "decision": null
+            }
+          ],
+          "duration_ms": 347,
+          "final_answer": "本科生国家奖学金申请（状态：已截止）\n批次：2026 年本科生国家奖助学金批次\n- [已截止] 数信学院：国家奖学金申请\n  在学院通知截止前提交国家奖学金申请材料；学院评审后按规定公示。\n  材料：国家奖学金申请审批表、学习成绩与综合测评证明、个人事迹材料、学院通知要求的其他材料\n  截止：2026-10-10T09:00:00+08:00\n  状态说明：本批次截止：2026-10-10 09:00（Asia/Shanghai）\n  部门：数学与信息学院、软件学院学生工作办公室\n  依据：national-aid-2026-info-merit@v2026#三、金额与名额、national-aid-2026-info-merit@v2026#五、评审流程及时间安排、national-aid-2026-info-merit@v2026#六、申请材料、national-aid-undergrad@v2021#第九条\n- [待确认] 农学院：国家奖学金（以学院通知为准）\n  未检索到农学院 2026 年本科生国家奖学金公开通知；请以学院当年通知为准，向学院学工办确认名额和截止日。\n  材料：国家奖学金申请审批表、学习成绩与综合测评证明\n  时限说明：未检索到农学院 2026 年本科生国家奖学金公开通知；以学院当年通知为准\n  状态说明：需要补充信息后才能判断\n  部门：农学院学生工作办公室\n  依据：national-aid-undergrad@v2021#第九条、national-aid-undergrad@v2021#第十六条\n- [待确认] 其他学院：以本学院通知为准\n  流程只登记了数信和农学院的 2026 公开来源；其他学院请查看本学院学工通知或联系学院学工办。\n  时限说明：其他学院以本学院当年通知为准\n  状态说明：需要补充信息后才能判断\n  部门：所在学院学生工作办公室\n  依据：national-aid-undergrad@v2021#第十六条\n- [可办理] 提前准备申请材料\n  成绩单、综合测评证明、个人事迹等可提前准备；国家励志奖学金/国家助学金还需家庭经济困难认定。\n  材料：成绩单、综合测评证明、家庭经济困难认定材料（励志/助学金）\n  时限说明：申请前准备，具体份数和模板以学院当年通知为准\n  部门：所在学院学生工作办公室\n  依据：national-aid-undergrad@v2021#第十二条、national-aid-undergrad@v2021#第十三条\n- [可办理] 学院/学校评审与公示\n  学院初步审查并公示不少于 3 个工作日；学校审核后公示不少于 5 个工作日；无异议后报省教育厅。\n  时限说明：以学院/学校当年公示为准\n  部门：党委学生工作部（党委研究生工作部）\n  依据：national-aid-undergrad@v2021#第十六条、national-aid-2026-info-merit@v2026#五、评审流程及时间安排\n下一批次的时间、名额和材料以学校/学院当年通知为准；本流程不推断下一年日期。\n人工入口：学生工作部资助中心 / 学院学生工作办公室\nhttps://xg.scau.edu.cn/jxj/list.htm\n具体名额、材料和批次以学校/学院当年通知为准；院级综合奖、单项奖、社会奖请另看学院综测/评优通知。\n---\n演示系统不构成官方答复，具体以学校官网为准。"
+        }
+      ]
+    },
+    {
+      "case_id": "mcp-open-flow",
+      "name": "政策流程：数信大二申请国奖（开放期）",
+      "as_of": "2026-09-30",
+      "messages": [
+        "数信学院大二申请国奖",
+        "没有处分"
+      ],
+      "expect": {
+        "first_outcome": "CLARIFY",
+        "outcome": "ANSWERED",
+        "flow_status": "open"
+      },
+      "pass": true,
+      "failures": [],
+      "turns": [
+        {
+          "outcome": "CLARIFY",
+          "decision": null,
+          "flow_id": "scholarship-application",
+          "flow_status": "open",
+          "closed": false,
+          "intent": "procedure_guidance",
+          "next_slot": "has_record",
+          "clarification": {
+            "reason": "SLOT_MISSING",
+            "question": "你在校期间是否受过纪律处分？",
+            "allowed_values": [],
+            "missing_slots": [
+              "has_record"
+            ]
+          },
+          "claims": 0,
+          "checklist": 0,
+          "citations": 0,
+          "handoff": {
+            "department": "学生工作部资助中心 / 学院学生工作办公室",
+            "url": "https://xg.scau.edu.cn/jxj/list.htm",
+            "note": "具体名额、材料和批次以学校/学院当年通知为准；院级综合奖、单项奖、社会奖请另看学院综测/评优通知。",
+            "source": "flow"
+          },
+          "semantic": null,
+          "trace": [
+            {
+              "node": "planner",
+              "duration_ms": 19,
+              "decision": null
+            },
+            {
+              "node": "finalize",
+              "duration_ms": 0,
+              "decision": null
+            }
+          ],
+          "duration_ms": 27,
+          "final_answer": "你在校期间是否受过纪律处分？\n可以直接回答；不想说也可以说“跳过”。"
+        },
+        {
+          "outcome": "ANSWERED",
+          "decision": null,
+          "flow_id": "scholarship-application",
+          "flow_status": "open",
+          "closed": false,
+          "intent": "procedure_guidance",
+          "next_slot": null,
+          "clarification": {},
+          "claims": 0,
+          "checklist": 9,
+          "citations": 0,
+          "handoff": {
+            "department": "学生工作部资助中心 / 学院学生工作办公室",
+            "url": "https://xg.scau.edu.cn/jxj/list.htm",
+            "note": "具体名额、材料和批次以学校/学院当年通知为准；院级综合奖、单项奖、社会奖请另看学院综测/评优通知。",
+            "source": "flow"
+          },
+          "semantic": null,
+          "trace": [
+            {
+              "node": "planner",
+              "duration_ms": 0,
+              "decision": null
+            },
+            {
+              "node": "flow",
+              "duration_ms": 1,
+              "decision": null
+            },
+            {
+              "node": "finalize",
+              "duration_ms": 0,
+              "decision": null
+            }
+          ],
+          "duration_ms": 12,
+          "final_answer": "本科生国家奖学金申请（状态：可办理）\n批次：2026 年本科生国家奖助学金批次\n- [可办理] 数信学院：国家奖学金申请\n  在学院通知截止前提交国家奖学金申请材料；学院评审后按规定公示。\n  材料：国家奖学金申请审批表、学习成绩与综合测评证明、个人事迹材料、学院通知要求的其他材料\n  截止：2026-10-10T09:00:00+08:00\n  部门：数学与信息学院、软件学院学生工作办公室\n  依据：national-aid-2026-info-merit@v2026#三、金额与名额、national-aid-2026-info-merit@v2026#五、评审流程及时间安排、national-aid-2026-info-merit@v2026#六、申请材料、national-aid-undergrad@v2021#第九条\n- [可办理] 提前准备申请材料\n  成绩单、综合测评证明、个人事迹等可提前准备；国家励志奖学金/国家助学金还需家庭经济困难认定。\n  材料：成绩单、综合测评证明、家庭经济困难认定材料（励志/助学金）\n  时限说明：申请前准备，具体份数和模板以学院当年通知为准\n  部门：所在学院学生工作办公室\n  依据：national-aid-undergrad@v2021#第十二条、national-aid-undergrad@v2021#第十三条\n- [可办理] 学院/学校评审与公示\n  学院初步审查并公示不少于 3 个工作日；学校审核后公示不少于 5 个工作日；无异议后报省教育厅。\n  时限说明：以学院/学校当年公示为准\n  部门：党委学生工作部（党委研究生工作部）\n  依据：national-aid-undergrad@v2021#第十六条、national-aid-2026-info-merit@v2026#五、评审流程及时间安排\n人工入口：学生工作部资助中心 / 学院学生工作办公室\nhttps://xg.scau.edu.cn/jxj/list.htm\n具体名额、材料和批次以学校/学院当年通知为准；院级综合奖、单项奖、社会奖请另看学院综测/评优通知。\n---\n演示系统不构成官方答复，具体以学校官网为准。"
+        }
+      ]
+    },
+    {
+      "case_id": "mcp-certificate-clarify",
+      "name": "在读证明：本科/研究生必须先澄清",
+      "as_of": "2026-10-25",
+      "messages": [
+        "我要开在读证明"
+      ],
+      "expect": {
+        "outcome": "CLARIFY",
+        "flow_id": "enrollment-certificate",
+        "next_slot": "level"
+      },
+      "pass": true,
+      "failures": [],
+      "turns": [
+        {
+          "outcome": "CLARIFY",
+          "decision": null,
+          "flow_id": "enrollment-certificate",
+          "flow_status": "unknown",
+          "closed": false,
+          "intent": "procedure_guidance",
+          "next_slot": "level",
+          "clarification": {
+            "reason": "SLOT_MISSING",
+            "question": "你是本科生还是研究生？",
+            "allowed_values": [
+              "undergraduate",
+              "graduate"
+            ],
+            "missing_slots": [
+              "level",
+              "enrollment_status",
+              "purpose",
+              "delivery"
+            ]
+          },
+          "claims": 0,
+          "checklist": 0,
+          "citations": 0,
+          "handoff": {
+            "department": "本科生院教学运行科 / 研究生院培养科",
+            "url": "https://jwc.scau.edu.cn/hnnydxywcjdwxlxwzmjqtzm/list.htm",
+            "note": "本科生：行政楼 305，020-85280049；研究生：培养科 020-85280189，行政楼 309。模板中的个人样例不进入本流程。",
+            "source": "flow"
+          },
+          "semantic": null,
+          "trace": [
+            {
+              "node": "planner",
+              "duration_ms": 2,
+              "decision": null
+            },
+            {
+              "node": "finalize",
+              "duration_ms": 0,
+              "decision": null
+            }
+          ],
+          "duration_ms": 11,
+          "final_answer": "你是本科生还是研究生？\n可以直接回答；不想说也可以说“跳过”。"
+        }
+      ]
+    },
+    {
+      "case_id": "mcp-mixed",
+      "name": "混合：国奖怎么申请 + 金额是多少",
+      "as_of": "2026-10-25",
+      "messages": [
+        "国家奖学金怎么申请，金额是多少"
+      ],
+      "expect": {
+        "outcome": "ANSWERED",
+        "intent": "mixed",
+        "checklist_min": 1,
+        "claims_min": 1
+      },
+      "pass": true,
+      "failures": [],
+      "turns": [
+        {
+          "outcome": "ANSWERED",
+          "decision": "pass",
+          "flow_id": "scholarship-application",
+          "flow_status": "closed",
+          "closed": true,
+          "intent": "mixed",
+          "next_slot": null,
+          "clarification": {},
+          "claims": 3,
+          "checklist": 9,
+          "citations": 3,
+          "handoff": {
+            "department": "学生工作部资助中心 / 学院学生工作办公室",
+            "url": "https://xg.scau.edu.cn/jxj/list.htm",
+            "note": "具体名额、材料和批次以学校/学院当年通知为准；院级综合奖、单项奖、社会奖请另看学院综测/评优通知。",
+            "source": "flow"
+          },
+          "semantic": {
+            "c1": "supported",
+            "c2": "supported",
+            "c3": "supported"
+          },
+          "trace": [
+            {
+              "node": "planner",
+              "duration_ms": 3,
+              "decision": null
+            },
+            {
+              "node": "flow",
+              "duration_ms": 2,
+              "decision": null
+            },
+            {
+              "node": "retriever",
+              "duration_ms": 2013,
+              "decision": null
+            },
+            {
+              "node": "advisor",
+              "duration_ms": 95072,
+              "decision": null
+            },
+            {
+              "node": "verifier",
+              "duration_ms": 15233,
+              "decision": "revise"
+            },
+            {
+              "node": "advisor",
+              "duration_ms": 11007,
+              "decision": null
+            },
+            {
+              "node": "verifier",
+              "duration_ms": 9469,
+              "decision": "pass"
+            },
+            {
+              "node": "finalize",
+              "duration_ms": 0,
+              "decision": null
+            }
+          ],
+          "duration_ms": 132834,
+          "final_answer": "**办理路径（流程事实以 checklist 为准）：**\n\n本科生国家奖学金申请（状态：已截止）\n批次：2026 年本科生国家奖助学金批次\n- [已截止] 数信学院：国家奖学金申请\n  在学院通知截止前提交国家奖学金申请材料；学院评审后按规定公示。\n  材料：国家奖学金申请审批表、学习成绩与综合测评证明、个人事迹材料、学院通知要求的其他材料\n  截止：2026-10-10T09:00:00+08:00\n  状态说明：本批次截止：2026-10-10 09:00（Asia/Shanghai）\n  部门：数学与信息学院、软件学院学生工作办公室\n  依据：national-aid-2026-info-merit@v2026#三、金额与名额、national-aid-2026-info-merit@v2026#五、评审流程及时间安排、national-aid-2026-info-merit@v2026#六、申请材料、national-aid-undergrad@v2021#第九条\n- [待确认] 农学院：国家奖学金（以学院通知为准）\n  未检索到农学院 2026 年本科生国家奖学金公开通知；请以学院当年通知为准，向学院学工办确认名额和截止日。\n  材料：国家奖学金申请审批表、学习成绩与综合测评证明\n  时限说明：未检索到农学院 2026 年本科生国家奖学金公开通知；以学院当年通知为准\n  状态说明：需要补充信息后才能判断\n  部门：农学院学生工作办公室\n  依据：national-aid-undergrad@v2021#第九条、national-aid-undergrad@v2021#第十六条\n- [待确认] 其他学院：以本学院通知为准\n  流程只登记了数信和农学院的 2026 公开来源；其他学院请查看本学院学工通知或联系学院学工办。\n  时限说明：其他学院以本学院当年通知为准\n  状态说明：需要补充信息后才能判断\n  部门：所在学院学生工作办公室\n  依据：national-aid-undergrad@v2021#第十六条\n- [可办理] 提前准备申请材料\n  成绩单、综合测评证明、个人事迹等可提前准备；国家励志奖学金/国家助学金还需家庭经济困难认定。\n  材料：成绩单、综合测评证明、家庭经济困难认定材料（励志/助学金）\n  时限说明：申请前准备，具体份数和模板以学院当年通知为准\n  部门：所在学院学生工作办公室\n  依据：national-aid-undergrad@v2021#第十二条、national-aid-undergrad@v2021#第十三条\n- [可办理] 学院/学校评审与公示\n  学院初步审查并公示不少于 3 个工作日；学校审核后公示不少于 5 个工作日；无异议后报省教育厅。\n  时限说明：以学院/学校当年公示为准\n  部门：党委学生工作部（党委研究生工作部）\n  依据：national-aid-undergrad@v2021#第十六条、national-aid-2026-info-merit@v2026#五、评审流程及时间安排\n下一批次的时间、名额和材料以学校/学院当年通知为准；本流程不推断下一年日期。\n人工入口：学生工作部资助中心 / 学院学生工作办公室\nhttps://xg.scau.edu.cn/jxj/list.htm\n具体名额、材料和批次以学校/学院当年通知为准；院级综合奖、单项奖、社会奖请另看学院综测/评优通知。\n\n**政策说明：**\n\n**结论要点：**\n\n1. 国家奖学金的奖励标准为博士研究生每生每年30000元，硕士研究生每生每年20000元。 [华南农业大学研究生国家奖助学金实施办法 第五条]\n2. 申请国家奖学金应同时符合条件（一）至（五）。 [华南农业大学本科生国家奖助学金实施办法 第八条]\n3. 申请国家奖学金的学生，除具备第八条规定的基本条件外，须同时具备下列条件：（一）年级要求为二年级及以上年级；（二）成绩要求为学习成绩排名与综合测评成绩排名均位于前10%（含10%）。 [华南农业大学本科生国家奖助学金实施办法 第九条]\n\n**依据：**\n\n- [华南农业大学研究生国家奖助学金实施办法 第五条](https://xg.scau.edu.cn/2022/1018/c11387a327370/page.htm)\n> 国家奖学金的奖励标准为博士研究生每生每年30000元，硕士研究生每生每年20000元。\n\n- [华南农业大学本科生国家奖助学金实施办法 第八条](https://xg.scau.edu.cn/2022/1018/c11387a327371/page.htm)\n> 其中，申请国家奖学金应同时符合条件（一）至（五）\n> 日期为文号年份/月份锚点，非精确发布日。\n\n- [华南农业大学本科生国家奖助学金实施办法 第九条](https://xg.scau.edu.cn/2022/1018/c11387a327371/page.htm)\n> 国家奖学金申请条件：申请国家奖学金的学生，除具备第八条规定的基本条件外，须同时具备下列条件：\n> （一）年级要求：二年级及以上年级。\n> （二）成绩要求：学习成绩排名与综合测评成绩排名均位于前10%（含10%）。\n> 日期为文号年份/月份锚点，非精确发布日。\n\n---\n演示系统不构成官方答复，具体以学校官网为准。"
+        }
+      ]
+    },
+    {
+      "case_id": "mcp-decline",
+      "name": "拒答槽位：在读证明转通用路径 + handoff",
+      "as_of": "2026-10-25",
+      "messages": [
+        "我要开在读证明",
+        "跳过"
+      ],
+      "expect": {
+        "first_outcome": "CLARIFY",
+        "handoff": true
+      },
+      "pass": true,
+      "failures": [],
+      "turns": [
+        {
+          "outcome": "CLARIFY",
+          "decision": null,
+          "flow_id": "enrollment-certificate",
+          "flow_status": "unknown",
+          "closed": false,
+          "intent": "procedure_guidance",
+          "next_slot": "level",
+          "clarification": {
+            "reason": "SLOT_MISSING",
+            "question": "你是本科生还是研究生？",
+            "allowed_values": [
+              "undergraduate",
+              "graduate"
+            ],
+            "missing_slots": [
+              "level",
+              "enrollment_status",
+              "purpose",
+              "delivery"
+            ]
+          },
+          "claims": 0,
+          "checklist": 0,
+          "citations": 0,
+          "handoff": {
+            "department": "本科生院教学运行科 / 研究生院培养科",
+            "url": "https://jwc.scau.edu.cn/hnnydxywcjdwxlxwzmjqtzm/list.htm",
+            "note": "本科生：行政楼 305，020-85280049；研究生：培养科 020-85280189，行政楼 309。模板中的个人样例不进入本流程。",
+            "source": "flow"
+          },
+          "semantic": null,
+          "trace": [
+            {
+              "node": "planner",
+              "duration_ms": 2,
+              "decision": null
+            },
+            {
+              "node": "finalize",
+              "duration_ms": 0,
+              "decision": null
+            }
+          ],
+          "duration_ms": 8,
+          "final_answer": "你是本科生还是研究生？\n可以直接回答；不想说也可以说“跳过”。"
+        },
+        {
+          "outcome": "PARTIAL_ANSWER",
+          "decision": null,
+          "flow_id": "enrollment-certificate",
+          "flow_status": "unknown",
+          "closed": false,
+          "intent": "procedure_guidance",
+          "next_slot": null,
+          "clarification": {},
+          "claims": 0,
+          "checklist": 10,
+          "citations": 0,
+          "handoff": {
+            "department": "本科生院教学运行科 / 研究生院培养科",
+            "url": "https://jwc.scau.edu.cn/hnnydxywcjdwxlxwzmjqtzm/list.htm",
+            "note": "本科生：行政楼 305，020-85280049；研究生：培养科 020-85280189，行政楼 309。模板中的个人样例不进入本流程。",
+            "source": "flow"
+          },
+          "semantic": null,
+          "trace": [
+            {
+              "node": "planner",
+              "duration_ms": 1,
+              "decision": null
+            },
+            {
+              "node": "flow",
+              "duration_ms": 1,
+              "decision": null
+            },
+            {
+              "node": "finalize",
+              "duration_ms": 0,
+              "decision": null
+            }
+          ],
+          "duration_ms": 14,
+          "final_answer": "在读证明开具（状态：以官方通知为准）\n- [待确认] 本科生：自助打印在读证明\n  2007 级（含）以后在校生可用自助打印机；在校生用身份证、校园卡、学号及统一身份认证密码登录。打印前核对姓名、学号、专业等信息。\n  材料：身份证、校园卡、学号及学校统一身份认证密码\n  时限说明：自助打印机 24 小时开放；行政楼一楼大厅、三角市紫荆e站 24 小时自助服务大厅，宿舍区另有打印点\n  状态说明：需要补充信息后才能判断\n  部门：本科生院教学运行科\n  依据：enrollment-certificate-guide@v2026#五、自助打印、enrollment-certificate-self-print-2024@v2024#一、服务对象与业务范围、enrollment-certificate-self-print-2024@v2024#二、登录方式、enrollment-certificate-self-print-2024@v2024#六、打印点\n- [待确认] 本科生：窗口办理在读证明\n  到行政楼 305 本科生院教学运行科窗口办理；未毕业学生只出具在读证明。领取时间视办理人数而定，当天或隔天领取。\n  材料：身份证/校园卡（以窗口要求为准）、密封信封（如需密封）\n  时限说明：周一至周五 8:00-12:00、14:30-17:30；当天或隔天领取\n  状态说明：需要补充信息后才能判断\n  部门：本科生院教学运行科（行政楼 305）\n  依据：enrollment-certificate-guide@v2026#三、注意事项、enrollment-certificate-guide@v2026#四、办理时间与地点、enrollment-certificate-fee-note-2026@v2026#四、办理时间与领取、enrollment-certificate-fee-note-2026@v2026#七、办理地点\n- [待确认] 本科生：委托他人现场办理\n  可委托他人到窗口现场办理，受托人需携带身份证；不接受电话、邮件办理。密封材料请自带信封。\n  材料：受托人身份证、本人办理材料、密封信封（如需密封）\n  时限说明：周一至周五 8:00-12:00、14:30-17:30；当天或隔天领取\n  状态说明：需要补充信息后才能判断\n  部门：本科生院教学运行科（行政楼 305）\n  依据：enrollment-certificate-guide@v2026#三、注意事项、enrollment-certificate-guide@v2026#四、办理时间与地点、enrollment-certificate-fee-note-2026@v2026#四、办理时间与领取\n- [待确认] 本科生：留学密封\n  如需密封，请自带信封；留学密封可到本科生院教学运行科教材服务中心（图书馆-紫荆e站综合服务大厅旁）。\n  材料：信封\n  时限说明：办理时间以窗口/教材服务中心工作时间为准\n  状态说明：需要补充信息后才能判断\n  部门：本科生院教学运行科教材服务中心\n  依据：enrollment-certificate-guide@v2026#三、注意事项、enrollment-certificate-guide@v2026#六、留学密封、enrollment-certificate-fee-note-2026@v2026#五、密封\n- [待确认] 本科生：费用与领取\n  在校生 5 份内免费，累计超出 5 份的每份 5 元；办理相关材料需收费，请自备现金。领取时间视办理人数而定。\n  材料：现金（超出免费份数时）\n  时限说明：以窗口/自助打印现场为准\n  状态说明：需要补充信息后才能判断\n  部门：本科生院教学运行科\n  依据：enrollment-certificate-fee-note-2026@v2026#六、收费、enrollment-certificate-guide@v2026#三、注意事项\n- [待确认] 本科生已毕业：改办学历学位证明\n  已毕业学生不办理在读证明；请办理学历学位证明。已毕业学生每份 15 元，须持毕业文凭及成绩表原件等材料到教学运行科审核。\n  材料：毕业文凭原件、成绩表原件、打印好的成绩表\n  时限说明：周一至周五 8:00-12:00、14:30-17:30；当天或隔天领取\n  状态说明：需要补充信息后才能判断\n  部门：本科生院教学运行科（行政楼 305）\n  依据：enrollment-certificate-fee-note-2026@v2026#二、毕业生办理、enrollment-certificate-fee-note-2026@v2026#六、收费、enrollment-certificate-guide@v2026#一、服务对象\n- [待确认] 研究生：联系研究生院培养科\n  研究生院培养科负责开具中英文学籍证明、学历证明等。材料、费用、办理时限和领取方式以培养科确认及当年通知为准，不套用本科生 5 份免费规则。\n  材料：以培养科确认为准\n  时限说明：材料/费用/时限以研究生院培养科确认为准\n  状态说明：需要补充信息后才能判断\n  部门：研究生院培养科（行政楼 309，020-85280189）\n  依据：enrollment-certificate-grad-office@v2026#一、负责事项、enrollment-certificate-grad-office@v2026#二、联系方式、enrollment-certificate-grad-office@v2026#三、材料、费用与时限\n- [待确认] 研究生：查看证明样本\n  可先查看研究生院公开的证明样本，再按培养科要求准备材料。\n  时限说明：样本入口长期公开；办理时间以培养科为准\n  状态说明：需要补充信息后才能判断\n  部门：研究生院培养科\n  依据：enrollment-certificate-grad-office@v2026#四、样本\n- [待确认] 研究生已毕业：咨询培养科/研究生院\n  已毕业研究生请向研究生院培养科咨询学历证明等办理方式；在读证明只面向在校生。\n  时限说明：以培养科确认为准\n  状态说明：需要补充信息后才能判断\n  部门：研究生院培养科（行政楼 309，020-85280189）\n  依据：enrollment-certificate-grad-office@v2026#二、联系方式、enrollment-certificate-grad-office@v2026#三、材料、费用与时限\n- [待确认] 可信电子证明（可选）\n  可申请可信电子成绩单证明并通过学信网验证；电子证明不替代纸质在读证明，具体以教务处/学院要求为准。\n  时限说明：以电子证明平台和接收单位要求为准\n  状态说明：需要补充信息后才能判断\n  部门：本科生院教学运行科\n  依据：enrollment-certificate-guide@v2026#七、电子证明\n人工入口：本科生院教学运行科 / 研究生院培养科\nhttps://jwc.scau.edu.cn/hnnydxywcjdwxlxwzmjqtzm/list.htm\n本科生：行政楼 305，020-85280049；研究生：培养科 020-85280189，行政楼 309。模板中的个人样例不进入本流程。\n---\n演示系统不构成官方答复，具体以学校官网为准。"
+        }
+      ]
+    }
+  ]
+}
