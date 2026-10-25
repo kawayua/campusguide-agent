@@ -1,6 +1,6 @@
 {
   "schema_version": "w6b-run-v1",
-  "generated_at": "2026-10-25T08:10:12+00:00",
+  "generated_at": "2026-10-25T13:58:20+00:00",
   "dataset": "dev_v0.jsonl",
   "dataset_sha256": "e144b800133353517a78350dd089ac1ccd39805ec1b3b61b6dd72ad70d15c356",
   "frozen": false,
@@ -103,70 +103,24 @@
   "support": {
     "support_gate": 0.85,
     "drafts_total": 45,
-    "drafts_labeled": 0,
-    "drafts_unlabeled": 45,
-    "drafts_supported": 0,
-    "drafts_partial": 0,
+    "drafts_labeled": 45,
+    "drafts_unlabeled": 0,
+    "drafts_supported": 44,
+    "drafts_partial": 1,
     "drafts_unsupported": 0,
-    "draft_support_rate": null,
+    "draft_support_rate": 0.9777777777777777,
     "rendered_total": 45,
-    "rendered_labeled": 0,
-    "rendered_unlabeled": 45,
-    "rendered_supported": 0,
-    "rendered_partial": 0,
+    "rendered_labeled": 45,
+    "rendered_unlabeled": 0,
+    "rendered_supported": 44,
+    "rendered_partial": 1,
     "rendered_unsupported": 0,
-    "rendered_support_rate": null,
-    "labels_complete": false,
-    "rendered_labels_complete": false,
-    "unlabeled_claim_ids": [
-      "d001/c1",
-      "d001/c2",
-      "d001/c3",
-      "d002/c1",
-      "d002/c2",
-      "d003/c1",
-      "d003/c2",
-      "d003/c3",
-      "d004/c1",
-      "d004/c2",
-      "d005/c1",
-      "d005/c2",
-      "d005/c3",
-      "d006/c1",
-      "d006/c2",
-      "d006/c3",
-      "d006/c4",
-      "d006/c5",
-      "d007/c1",
-      "d007/c2",
-      "d007/c3",
-      "d008/c1",
-      "d008/c2",
-      "d008/c3",
-      "d008/c4",
-      "d008/c5",
-      "d009/c1",
-      "d009/c2",
-      "d009/c3",
-      "d010/c1",
-      "d010/c2",
-      "d010/c3",
-      "d010/c4",
-      "d010/c5",
-      "d011/c1",
-      "d011/c2",
-      "d011/c3",
-      "d011/c4",
-      "d011/c5",
-      "d012/c1",
-      "d012/c2",
-      "d012/c3",
-      "d013/c1",
-      "d013/c2",
-      "d014/c1"
-    ],
-    "gate_ok": false,
-    "gate_reason": "存在未标注的 draft claim（含非人工标注）"
+    "rendered_support_rate": 0.9777777777777777,
+    "labels_complete": true,
+    "rendered_labels_complete": true,
+    "unlabeled_claim_ids": [],
+    "gate_ok": true,
+    "gate_reason": "通过"
   },
   "abstention": {
     "answerable": 14,
@@ -190,19 +144,26 @@
     }
   ],
   "error_attribution": {
-    "counts": {},
-    "rows": []
+    "counts": {
+      "PARTIAL_INCOMPLETE": 1
+    },
+    "rows": [
+      {
+        "id": "d014",
+        "code": "PARTIAL_INCOMPLETE"
+      }
+    ]
   },
   "gates": {
     "structure": {
       "ok": true
     },
     "support": {
-      "ok": false,
-      "value": null,
+      "ok": true,
+      "value": 0.9777777777777777,
       "gate": 0.85,
-      "labels_complete": false,
-      "reason": "存在未标注的 draft claim（含非人工标注）",
+      "labels_complete": true,
+      "reason": "通过",
       "hard_gate": false,
       "note": "W6 design 13.4：support 为记录项，人工标注后单列。"
     },
@@ -216,7 +177,7 @@
       "value": 0.0,
       "gate": 0.2
     },
-    "w3_overall": false,
+    "w3_overall": true,
     "blocking_reasons": [],
     "semantic": {
       "ok": true,
@@ -8041,7 +8002,7 @@
           }
         ]
       },
-      "error_attribution": null
+      "error_attribution": "PARTIAL_INCOMPLETE"
     },
     {
       "id": "d015",

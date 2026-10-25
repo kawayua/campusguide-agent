@@ -1,7 +1,7 @@
 # W3 support 标注核对表
 
 - run_sha256：`aed3834d6a8a79393dfc21c27784457dfb39c92b8b50d8c26053fdefa2dee1f3`
-- 总数：45；已标注：0；unlabeled：45
+- 总数：45；已标注：45；unlabeled：0
 
 ## 判定口径（严格引文级）
 
@@ -24,7 +24,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported
+- 判定：[x] supported  [ ] partial  [ ] unsupported
 - note：
 
 ## 02. d001 / c2
@@ -39,7 +39,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported
+- 判定：[x] supported  [ ] partial  [ ] unsupported
 - note：
 
 ## 03. d001 / c3
@@ -54,7 +54,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported
+- 判定：[x] supported  [ ] partial  [ ] unsupported
 - note：
 
 ## 04. d002 / c1
@@ -69,7 +69,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported
+- 判定：[x] supported  [ ] partial  [ ] unsupported
 - note：
 
 ## 05. d002 / c2
@@ -84,7 +84,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported
+- 判定：[x] supported  [ ] partial  [ ] unsupported
 - note：
 
 ## 06. d003 / c1
@@ -100,7 +100,7 @@
 - fact_uncovered：—
 - 当前标签：unlabeled
 - prefill 建议：supported（来自 baseline，待确认）
-- 判定：[ ] supported  [ ] partial  [ ] unsupported
+- 判定：[x] supported  [ ] partial  [ ] unsupported
 - note：
 
 ## 07. d003 / c2
@@ -115,7 +115,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported
+- 判定：[x] supported  [ ] partial  [ ] unsupported
 - note：
 
 ## 08. d003 / c3
@@ -131,7 +131,7 @@
 - fact_uncovered：—
 - 当前标签：unlabeled
 - prefill 建议：supported（来自 baseline，待确认）
-- 判定：[ ] supported  [ ] partial  [ ] unsupported
+- 判定：[x] supported  [ ] partial  [ ] unsupported
 - note：
 
 ## 09. d004 / c1
@@ -147,7 +147,7 @@
 - fact_uncovered：—
 - 当前标签：unlabeled
 - prefill 建议：supported（来自 baseline，待确认）
-- 判定：[ ] supported  [ ] partial  [ ] unsupported
+- 判定：[x] supported  [ ] partial  [ ] unsupported
 - note：
 
 ## 10. d004 / c2
@@ -162,7 +162,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported
+- 判定：[x] supported  [ ] partial  [ ] unsupported
 - note：
 
 ## 11. d005 / c1
@@ -179,7 +179,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported
+- 判定：[x] supported  [ ] partial  [ ] unsupported
 - note：
 
 ## 12. d005 / c2
@@ -197,7 +197,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported
+- 判定：[x] supported  [ ] partial  [ ] unsupported
 - note：
 
 ## 13. d005 / c3
@@ -220,7 +220,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported
+- 判定：[x] supported  [ ] partial  [ ] unsupported
 - note：
 
 ## 14. d006 / c1
@@ -235,7 +235,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported
+- 判定：[x] supported  [ ] partial  [ ] unsupported
 - note：
 
 ## 15. d006 / c2
@@ -250,7 +250,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported
+- 判定：[x] supported  [ ] partial  [ ] unsupported
 - note：
 
 ## 16. d006 / c3
@@ -265,7 +265,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported
+- 判定：[x] supported  [ ] partial  [ ] unsupported
 - note：
 
 ## 17. d006 / c4
@@ -280,7 +280,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported
+- 判定：[x] supported  [ ] partial  [ ] unsupported
 - note：
 
 ## 18. d006 / c5
@@ -295,7 +295,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported
+- 判定：[x] supported  [ ] partial  [ ] unsupported
 - note：
 
 ## 19. d007 / c1
@@ -311,7 +311,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported
+- 判定：[x] supported  [ ] partial  [ ] unsupported
 - note：
 
 ## 20. d007 / c2
@@ -326,7 +326,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported
+- 判定：[x] supported  [ ] partial  [ ] unsupported
 - note：
 
 ## 21. d007 / c3
@@ -341,7 +341,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported
+- 判定：[x] supported  [ ] partial  [ ] unsupported
 - note：
 
 ## 22. d008 / c1
@@ -357,7 +357,7 @@
 - fact_uncovered：—
 - 当前标签：unlabeled
 - prefill 建议：supported（来自 baseline，待确认）
-- 判定：[ ] supported  [ ] partial  [ ] unsupported
+- 判定：[x] supported  [ ] partial  [ ] unsupported
 - note：
 
 ## 23. d008 / c2
@@ -373,7 +373,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported
+- 判定：[x] supported  [ ] partial  [ ] unsupported
 - note：
 
 ## 24. d008 / c3
@@ -390,7 +390,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported
+- 判定：[x] supported  [ ] partial  [ ] unsupported
 - note：
 
 ## 25. d008 / c4
@@ -411,7 +411,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported
+- 判定：[x] supported  [ ] partial  [ ] unsupported
 - note：
 
 ## 26. d008 / c5
@@ -433,7 +433,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported
+- 判定：[x] supported  [ ] partial  [ ] unsupported
 - note：
 
 ## 27. d009 / c1
@@ -449,7 +449,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported
+- 判定：[x] supported  [ ] partial  [ ] unsupported
 - note：
 
 ## 28. d009 / c2
@@ -464,7 +464,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported
+- 判定：[x] supported  [ ] partial  [ ] unsupported
 - note：
 
 ## 29. d009 / c3
@@ -480,7 +480,7 @@
 - fact_uncovered：—
 - 当前标签：unlabeled
 - prefill 建议：supported（来自 baseline，待确认）
-- 判定：[ ] supported  [ ] partial  [ ] unsupported
+- 判定：[x] supported  [ ] partial  [ ] unsupported
 - note：
 
 ## 30. d010 / c1
@@ -500,7 +500,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported
+- 判定：[x] supported  [ ] partial  [ ] unsupported
 - note：
 
 ## 31. d010 / c2
@@ -516,7 +516,7 @@
 - fact_uncovered：—
 - 当前标签：unlabeled
 - prefill 建议：supported（来自 baseline，待确认）
-- 判定：[ ] supported  [ ] partial  [ ] unsupported
+- 判定：[x] supported  [ ] partial  [ ] unsupported
 - note：
 
 ## 32. d010 / c3
@@ -531,7 +531,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported
+- 判定：[x] supported  [ ] partial  [ ] unsupported
 - note：
 
 ## 33. d010 / c4
@@ -546,7 +546,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported
+- 判定：[x] supported  [ ] partial  [ ] unsupported
 - note：
 
 ## 34. d010 / c5
@@ -561,7 +561,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported
+- 判定：[x] supported  [ ] partial  [ ] unsupported
 - note：
 
 ## 35. d011 / c1
@@ -580,7 +580,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported
+- 判定：[x] supported  [ ] partial  [ ] unsupported
 - note：
 
 ## 36. d011 / c2
@@ -597,7 +597,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported
+- 判定：[x] supported  [ ] partial  [ ] unsupported
 - note：
 
 ## 37. d011 / c3
@@ -616,7 +616,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported
+- 判定：[x] supported  [ ] partial  [ ] unsupported
 - note：
 
 ## 38. d011 / c4
@@ -637,7 +637,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported
+- 判定：[x] supported  [ ] partial  [ ] unsupported
 - note：
 
 ## 39. d011 / c5
@@ -661,7 +661,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported
+- 判定：[x] supported  [ ] partial  [ ] unsupported
 - note：
 
 ## 40. d012 / c1
@@ -677,7 +677,7 @@
 - fact_uncovered：—
 - 当前标签：unlabeled
 - prefill 建议：supported（来自 baseline，待确认）
-- 判定：[ ] supported  [ ] partial  [ ] unsupported
+- 判定：[x] supported  [ ] partial  [ ] unsupported
 - note：
 
 ## 41. d012 / c2
@@ -693,7 +693,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported
+- 判定：[x] supported  [ ] partial  [ ] unsupported
 - note：
 
 ## 42. d012 / c3
@@ -708,7 +708,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported
+- 判定：[x] supported  [ ] partial  [ ] unsupported
 - note：
 
 ## 43. d013 / c1
@@ -724,7 +724,7 @@
 - fact_uncovered：—
 - 当前标签：unlabeled
 - prefill 建议：supported（来自 baseline，待确认）
-- 判定：[ ] supported  [ ] partial  [ ] unsupported
+- 判定：[x] supported  [ ] partial  [ ] unsupported
 - note：
 
 ## 44. d013 / c2
@@ -739,7 +739,7 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported
+- 判定：[x] supported  [ ] partial  [ ] unsupported
 - note：
 
 ## 45. d014 / c1
@@ -754,5 +754,5 @@
 - issues：—
 - fact_uncovered：—
 - 当前标签：unlabeled
-- 判定：[ ] supported  [ ] partial  [ ] unsupported
-- note：
+- 判定：[ ] supported  [x] partial  [ ] unsupported
+- note：claim 多了「专业核心课程」分类，quote 仅为课程名列表
