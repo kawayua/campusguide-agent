@@ -5,10 +5,10 @@
 | 文档版本 | 1.0（已实现；默认模型 vPro） |
 | 日期 | 2026-10-25 |
 | 基线 | W5 已通过（495 tests）；W6-A / W6-A2 提示词与 quote 契约已完成；W7 已终止并打 tag `w7`（质量门禁通过、p95 未过、总门禁未通过） |
-| 语料 | 文本索引 225 文档 / 244 版本 / 4,026 块；**W4 向量索引仍是 3,952 点，W6 数据门必须先重建到 4,026** |
+| 语料 | 文本索引 225 文档 / 244 版本 / 4,026 块；**W6 数据门已重建向量索引到 4,026 点**（`articles_v1@hybrid-6bafb68410b9`） |
 | 范围 | LangGraph 四角色编排、混合 Planner、多查询 Retriever、Advisor 重写、语义 Verifier、clarify 回退、Finalize handoff、12 条红队 |
 | 明确不做 | 不改 W7 冻结测试集/报告；不声称 W7 通过；W6 首版不做历史版本回答；不修改 W7 已冻结的模型/prompt 记录 |
-| 状态 | 已实现并完成 W6-B 实跑；W6 总门禁通过（结构 45/45、quote mismatch 0、拒答 100%、误拒 0、语义 46/46 supported、trace 完整）；support 46/46 人工标注（45 supported / 1 partial，rendered 97.8%）；报告见 `data/eval/w6b-dev-report.md` |
+| 状态 | 已实现；最终 clean MCP run（commit `2d3fe37`，dirty=false）W6 总门禁通过（结构 46/46、quote mismatch 0、拒答 100%、误拒 0、语义 45/45 supported、trace 完整）；support 45 条新 claim 待人工标注（8 条 exact prefill），本地历史 run 的 97.8% 不转移；报告见 `data/eval/w6b-mcp-final-dev-report.md` |
 
 > 本设计覆盖 W6 的图编排与语义核对主体（W6-B/W6-C）。W6-A（提示词收紧）和 W6-A2（quote 连续性/范围契约）已经完成，作为本设计的生成层前置，不重复实施。
 
@@ -897,20 +897,19 @@ checkpointer:
 | dev_v0 图级评测 / run manifest | `scripts/eval_w6b.py`、`src/campusguide/eval/w6b.py` |
 | CLI | `scripts/chat.py --graph`（`make w6-chat`） |
 
-验收结果（W6-B，`model_profile=vpro`，20 题 dev_v0）：
+验收结果（最终 clean MCP run：commit `2d3fe37`，`model_profile=vpro`，20 题 dev_v0，policy-search + policy-meta）：
 
-- 结构：45/45 引用有效、0 编造、0 part 错误、45/45 quote 可定位；
+- 结构：46/46 引用有效、0 编造、0 part 错误、46/46 quote 可定位；
   最终 0 条 quote mismatch；
-- 语义：46/46 supported、0 contradicted 被渲染、0 unchecked、0 unavailable；
+- 语义：45/45 supported、0 contradicted 被渲染、0 unchecked、0 unavailable；
 - 拒答：14 可答全部 ANSWERED，6 不可答全部按预期拒答；拒答召回 100%、
   误拒率 0.0%、partial 0、原因码 100%；
-- 图：Planner rule 19 / llm 1；revise 2 次（d001/d007，均修正后 PASS）；
-  clarify 0；trace 20/20 完整；
-- 延迟：p50 41.4s / p95 165.9s、warmup 51.4s，作为已知限制单列；
-- support：46/46 人工标注（45 supported / 1 partial / 0 unsupported），
-  rendered 97.8%；唯一 partial 为 d014/c1，非硬门禁；
-- W6 总门禁通过；12/12 红队、5 个固定场景、W5 回归与生产 MCP flow smoke
-  通过；全量离线 613 tests。
+- 图：Planner rule 19 / llm 1；revise 2 次；clarify 0；trace 20/20 完整；
+- 延迟：p50 41.7s / p95 174.4s，作为已知限制单列；
+- support：最终 MCP run 45 条 claim，0/45 人工标注（8 条 exact prefill），
+  按设计非硬门禁；本地历史 run 的 support 97.8% 不转移到新 run；
+- W6 总门禁通过；12/12 红队、5 个固定场景、W5 回归与 5/5 生产 MCP
+  flow/mixed 场景通过；全量离线 615 tests。
 
 实现约定：
 

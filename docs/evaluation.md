@@ -373,30 +373,38 @@ run：`data/eval/w6a2-run.json`，`run_sha256=b7ee6884…f569`。旧 W6-A labels
 ## W6-B 完整四角色图与语义核对
 
 W6-B 是 W7 之后的独立能力，不修改 W7 冻结集/标签/报告，W7 仍为
-failed/tagged。评测使用 20 题 dev_v0（14 可答 + 6 不可答），
-`model_profile=vpro`（Planner/Advisor/语义均 `mimo-v2.6-pro`），prompt 为
-`w6b-planner/advisor/revise/semantic-2026-10-25`；向量索引为
-`articles_v1@hybrid-6bafb68410b9`（4,026 点）。
+failed/tagged。最终验收使用 clean commit `2d3fe37`（manifest
+`git_dirty=false`）的生产 `policy-search` + `policy-meta` MCP 路径，20 题
+dev_v0（14 可答 + 6 不可答），`model_profile=vpro`（Planner/Advisor/语义均
+`mimo-v2.6-pro`），prompt 为 `w6b-planner/advisor/revise/semantic-2026-10-25`；
+向量索引为 `articles_v1@hybrid-6bafb68410b9`（4,026 点）。
 
-| 指标 | W6-B | 门禁 |
+| 指标 | 最终 clean MCP run | 门禁 |
 |---|---:|---|
-| 结构 | 45/45 引用有效、0 编造、0 part、45/45 quote 可定位 | 通过 |
+| 结构 | 46/46 引用有效、0 编造、0 part、46/46 quote 可定位 | 通过 |
 | 最终 quote mismatch | 0 | 通过 |
-| 语义 | 46/46 supported；0 contradicted 渲染；0 unchecked；0 unavailable | 通过 |
+| 语义 | 45/45 supported；0 contradicted 渲染；0 unchecked；0 unavailable | 通过 |
 | 拒答召回 / 误拒 | 100% / 0.0% | ≥80% / ≤20%，通过 |
 | partial | 0 | 记录 |
 | revise / clarify | 2 / 0 | 记录 |
 | trace | 20/20 完整 | 通过 |
-| p50 / p95 | 41.4s / 165.9s（warmup 51.4s） | 不设硬门禁，单列 |
-| support | 46/46 人工标注；45 supported / 1 partial；rendered 97.8% | ≥85%，通过（记录项） |
+| p50 / p95 | 41.7s / 174.4s | 不设硬门禁，单列 |
+| support | 45 条新 claim；0/45 人工标注（8 条 exact prefill） | 记录项，非硬门禁 |
 | W6 总门禁 | 结构/拒答/误拒/语义/quote mismatch/trace/model_profile 全部通过 | 通过 |
 
-run：`data/eval/w6b-run.json`，`run_sha256=09159efb…739d`；报告：
-`data/eval/w6b-dev-report.{json,md}`；核对表：
-`data/eval/w6b_support_review.md`。12 条红队、5 个固定场景和 W5 回归均在
-离线测试中通过；生产 MCP 流程路径另做 1 题 smoke。support 已由
-`yaukin` 完成 46/46 人工标注（45 supported / 1 partial）；语义 supported
-与人工 support 分开记录，不把前者当成人工验收。
+run：`data/eval/w6b-mcp-final-run.json`，`run_sha256=aed3834d…e1f3`；
+报告：`data/eval/w6b-mcp-final-dev-report.{json,md}`；support 核对表：
+`data/eval/w6b-mcp-final_support_review.md`。
+
+**历史本地 run**：更早的 local-hybrid run `09159efb…739d` 在 dirty tree 上
+执行，不能证明最终提交；其 46/46 support（45 supported / 1 partial，
+rendered 97.8%）只属于该 run，不转移到 final MCP run。两份 run 都保留。
+
+**生产 MCP 流程/混合场景**：clean commit `f03b9f2` 上 5/5 PASS
+（closed/open flow、certificate clarify、mixed、decline），报告
+`data/eval/w6b-mcp-scenarios.{json,md}`。mixed 在修复子查询主语继承后
+（“金额是多少” → “国家奖学金 金额是多少”）返回 3 条政策 claim +
+9 条 checklist。12 条红队、5 个固定场景和 W5 回归在离线测试中通过。
 
 ## 失败归因模板
 
