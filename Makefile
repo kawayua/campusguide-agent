@@ -7,7 +7,7 @@ RUFF ?= $(UV) run ruff
 .PHONY: help init sync fetch parse index index-qdrant vector-index vector-index-dense validate-sources \
 	check-segmentation test lint format format-check qa ask eval-w2 eval-w3 eval-w3-hybrid eval-w4 \
 	eval-w6a2 eval-w6a2-report freeze-w7 eval-w7 eval-w7-report eval-w7-a5 eval-w7-a4 eval-w7-a4-report eval-w7-a2 eval-w7-a2-report draft-w7 mcp-smoke population-check e2e-section eval-w3-report label-w3 sheet-w3 \
-	label-w6a2 sheet-w6a2 demo compose-up compose-down clean
+	label-w6a2 sheet-w6a2 demo w5-chat w5-demo compose-up compose-down clean
 
 help:
 	@echo "CampusGuide commands"
@@ -51,6 +51,8 @@ help:
 	@echo "  make sheet-w3          生成 56 条 Markdown 标注核对表"
 	@echo "  make label-w3 ANNOTATOR=你的名字  交互式人工标注"
 	@echo "  make demo              启动 Gradio 单轮页面"
+	@echo "  make w5-chat           启动 W5 流程 CLI（可加 AS_OF=2026-10-25）"
+	@echo "  make w5-demo           跑 W5 脚本化流程 demo（SCENARIO=certificate）"
 	@echo "  make compose-up        启动 Qdrant（docker compose）"
 
 init: sync
@@ -117,6 +119,12 @@ e2e-section:
 
 ask:
 	$(PYTHON) scripts/ask.py "$(Q)"
+
+w5-chat:
+	$(PYTHON) scripts/chat.py $(if $(AS_OF),--as-of $(AS_OF),)
+
+w5-demo:
+	$(PYTHON) scripts/flow_demo.py --scenario $(or $(SCENARIO),scholarship)
 
 eval-w2:
 	$(PYTHON) scripts/eval_w2.py

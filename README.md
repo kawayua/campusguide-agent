@@ -2,7 +2,7 @@
 
 面向高校公开制度文档的**条款级**问答与办事指引 Agent（个人作品集项目）。
 
-当前目标院校：**华南农业大学**。当前进度：W1 数据与索引地基、W2 单轮问答垂直切片、W3 引用核对与拒答 v0、W4 MCP 工具层与混合检索、W6-A2 quote 契约、P0 profile-aware 检索、P1 section 证据与生成重试、W7 冻结评测（四轮均已人工标注；remediation4 质量门禁全过，p50 7.37s/p95 21.38s 未过，W7 总门禁未通过）；语料 213 份文档 / 232 个版本 / 3,952 个可检索块（含两份 2020 级扫描件 OCR）。W3 在 W3 v2 代码上跑完 20 题 dev_v0：55/55 引用 ID 有效、0 编造、0 part_no 错误、55/55 quote 可定位；拒答召回 100%、误拒率 0.0%、partial 率 7.1%；warm p50 3.34s、p95 9.78s，废止探针 p50 73.5ms（单列）。**support 标注已完成 56/56（39 supported / 17 partial / 0 unsupported）；draft 支持率 69.6%，rendered 支持率 75.0%，低于 85%，support 门禁未通过，W3 总门禁未通过**；W6-A 提示词收紧已通过（见下）。W2 的 p95 未达 10s 已明确接受，详见 [W2 周记录](docs/weekly/w2.md)；W3 状态见 [W3 周记录](docs/weekly/w3.md)。
+当前目标院校：**华南农业大学**。当前进度：W1 数据与索引地基、W2 单轮问答垂直切片、W3 引用核对与拒答 v0、W4 MCP 工具层与混合检索、W5 流程 DSL 与多轮槽位、W6-A2 quote 契约、P0 profile-aware 检索、P1 section 证据与生成重试、W7 冻结评测（四轮均已人工标注；remediation4 质量门禁全过，p50 7.37s/p95 21.38s 未过，W7 总门禁未通过）。W5 数据门新增 12 份脱敏来源后，当前全库为 **225 份文档 / 244 个版本 / 4,026 个可检索块**；W1–W7 历史指标仍按当时语料 213 / 232 / 3,952 记录，不回填。W3 在 W3 v2 代码上跑完 20 题 dev_v0：55/55 引用 ID 有效、0 编造、0 part_no 错误、55/55 quote 可定位；拒答召回 100%、误拒率 0.0%、partial 率 7.1%；warm p50 3.34s、p95 9.78s，废止探针 p50 73.5ms（单列）。**support 标注已完成 56/56（39 supported / 17 partial / 0 unsupported）；draft 支持率 69.6%，rendered 支持率 75.0%，低于 85%，support 门禁未通过，W3 总门禁未通过**；W6-A 提示词收紧已通过（见下）。W2 的 p95 未达 10s 已明确接受，详见 [W2 周记录](docs/weekly/w2.md)；W3 状态见 [W3 周记录](docs/weekly/w3.md)。
 
 W4 已实现 `policy-search` / `policy-meta` 两个只读 FastMCP server、BM25 sparse + bge-m3 dense 的 RRF 混合召回、bge-reranker-v2-m3 重排，以及受众/时间过滤。`articles_v1` 已重建为 3,952 点 hybrid 索引。dev_v0 20 题检索层：Recall@8 在 dense-only / RRF / RRF+rerank 三种模式均为 **1.000**；MRR 分别为 **0.905 / 0.848 / 0.929**。5/5 人群错配 case 通过 MCP 实跑，不返回不匹配条款。W3 回归（同一 20 题、W6-A prompt、hybrid+rerank）：结构 100%、拒答召回 100%、误拒率 0.0%、原因码 100%，partial 率 14.3%；support 未重新人工标注，不能声称通过。详见 [W4 周记录](docs/weekly/w4.md)。
 
@@ -60,7 +60,7 @@ W3 **不做**：语义蕴含判断、LLM 重写/重试、多轮追问、MCP/spar
 - bge-reranker-v2-m3 重排，`min_rerank_score=0.60` + margin 0.03 + token budget 截断；reranker 不可用时失败关闭；
 - 受众/时间过滤：角色、学院、专业、入学年份、阶段、培养类型、群体、学籍状态、学年 cycle、`as_of`；未知用户字段保留并给出 warning，只排除明确 mismatch；
 - `search_articles` 返回 dense/sparse/RRF/rerank 分数、`index_version`、`applied_filters` 与 warnings；`get_article` 不返回 `text_raw_ref`；
-- `policy-meta` 提供 `get_document_versions` / `get_document` / `resolve_version` / `list_documents`；W4 不注册 flow/calendar 工具，客户端缺失工具时返回 `NOT_IMPLEMENTED` 并说明 W5 提供；
+- `policy-meta` 提供 `get_document_versions` / `get_document` / `resolve_version` / `list_documents`；W4 本身不注册 flow/calendar 工具，客户端缺失工具时返回 `NOT_IMPLEMENTED` 并说明 W5 提供；W5 在配置 flow registry/calendar 后追加 `list_flows` / `get_flow` / `get_calendar`；
 - MCP 超时/不可用/索引错误映射为明确拒答；QAService 校验 server 与本地 vector manifest 的 `index_version` 一致；
 - `make eval-w4` 对比 dense-only vs hybrid RRF vs hybrid+rerank；`make population-check` 通过 MCP 跑 5 个人群错配 case。
 
@@ -73,6 +73,18 @@ W4 **不做**：W5 流程 DSL/日历、W6 语义蕴含与历史回答、W7 冻�
 **W7 冻结评测（2026-10-24）**：50 题冻结集（40 可答 + 10 不可答，5 题版本敏感），test-036 因 gold 过期有记录在案的标注修正（changelog + 归档 v0）。第一轮 remediation run `b55bc436…`：结构 100%、article/section Recall@8 均 **1.000**、article MRR 0.967、拒答召回 10/10、误拒 0.025。人工标注：support **0.993**（135/136，95% CI 0.960–0.999）、answer **0.800**（32/40，CI 0.652–0.895）、version-sensitive **0.600**（3/5）；p50/p95 8.3/32.6s。第二轮 remediation2（prompt `w6a2.1`、多问/列举覆盖、空/截断更大预算、就业意图 section 提权）run `23b384f1…`：结构 100%、Recall@8 1.000、overall MRR 0.958、section MRR 0.900、误拒 0、p95 35.1s；人工标注 support **0.985**（133/135，通过）、answer **0.750**（30/40）、version-sensitive **0.200**（1/5）。test-027/028 修复为 correct，test-037 从 incorrect 升为 partial；但 test-007/031/036/038/039 回归，answer 与 version 反而低于第一轮。**W7 总门禁未通过**：answer 与 version 未达门槛，p50/p95 超 6s/10s。第三轮 remediation3（prompt `w6a2.3`，培养方案多方面问题时聚焦培养目标 section）run `6b9be808…`：support **1.000**、answer **0.875**、version-sensitive **1.000**、误拒 0.025、结构/Recall 均通过；p50/p95 12.5/31.5s 未通过，**质量门禁全绿但总门禁仍为未通过**。A5 检索消融同索引/配置可保留；A4/A2 为 w6a2.1 历史结果，严格同配置需重跑。详见 [W7 周记录](docs/weekly/w7.md)。A5 检索消融（冻结集 40 题）：dense-only Recall@8 0.963 / MRR 0.829；hybrid RRF **1.000 / 0.863**；RRF+rerank **1.000 / 0.958**，section MRR 0.900。A4 profile 消融：baseline 0/5 题错配、0/35 证据；关闭 profile 元数据后 1/5 题、7/34 证据错配（test-040 命中 2024 级方案），拒答/误拒不变。A2 pass-through Verifier 已跑并完成全量 support 标注：136/138 supported、2 partial、0 unsupported（0.986，baseline 0.985），拒答/误拒不变；关闭 Verifier 主要改变 claim 数量/过滤，未观察到 support 下降。A1/A3 N/A。
 
 **W7 remediation4（2026-10-25，采用 `w6a2.4-2026-10-24`）**：冻结集 50 题全量 run 已完成人工标注。主结果：support **1.000**（133/133）、answer correctness **0.875**（35/40）、version-sensitive **1.000**（5/5）、拒答召回 1.000、误拒 0、article Recall@8 1.000；W7 质量门禁全部通过。p50/p95 为 **7.37/21.38s**，超过原 6/10s 阈值，因此正式总门禁仍显示未通过。负责人已接受延迟为 known limitation，W7 以质量门禁通过收口；报告总门禁仍按原定义保留。A5：dense/RRF/RRF+rerank Recall@8 **0.9625/1.000/1.000**，MRR **0.8294/0.8633/0.9583**。A4：profile baseline 错配 0/5 题、0/35 证据；关闭 profile 后 1/5 题、7/34 证据、5/18 引用错配。A2：baseline 133/133 supported；pass-through 137/138 supported、1 partial、0 unsupported，拒答表现不变。详见 [W7 remediation4 报告](data/eval/w7-remediation4-report.md) 与 [W7 周记录](docs/weekly/w7.md)。
+
+## W5 能做什么
+
+- 用 `configs/flows/*.yaml` 定义三个首版流程：国家奖学金申请（只做国家级三奖）、推免资格确认、在读证明开具；
+- 受限三值谓词（`true/false/unknown`）+ 确定性槽位抽取：只接受明确表达，模糊就追问；支持更正、拒答、澄清上限；
+- checklist 由 YAML 事实渲染：材料、截止、部门、引用条款、handoff；不调用 LLM，不编造电话/时限；
+- **`closed` 状态**：截止日已过、或已有公开公示证明本批次结束时，标记“已截止”，不再追问年级/材料；不推断下一年日期；
+- 多学院/多身份分支：奖学金按数信/农学院显示不同截止或“以学院通知为准”；在读证明本科生完整流程、研究生只走培养科 handoff；
+- `policy-meta` 增加只读 `list_flows` / `get_flow` / `get_calendar`；`get_flow` 返回 `batch_status` 与流程 DSL，槽位填充仍在应用侧；
+- CLI 演示：`scripts/chat.py`、`scripts/flow_demo.py`。
+
+W5 **不做**：院级综合奖/单项奖/社会奖流程事实（只 handoff）、LLM 槽位解析、LangGraph、持久化会话、W7 冻结集改动。W7 已终止且总门禁未通过；W5 的流程验收不写入 W7 报告，也不能据此声称 W7 通过。详细边界见 [W5 设计](docs/superpowers/specs/2026-10-25-w5-flow-dsl-multiturn-design.md)。
 
 ## 快速开始
 
@@ -115,6 +127,18 @@ make label-w3 ANNOTATOR=yaukin  # 交互式人工标注 draft claim
 make eval-w3-report      # 人工标注后复用 run 生成报告
 make demo                # Gradio 单轮页面（默认 127.0.0.1:7860）
 ```
+
+W5 流程演示（不调用 LLM、不依赖 Qdrant）：
+
+```bash
+python -m uv run python scripts/chat.py --as-of 2026-10-25
+python -m uv run python scripts/flow_demo.py --scenario scholarship
+python -m uv run python scripts/flow_demo.py --scenario certificate
+python -m uv run python scripts/flow_demo.py --scenario recommendation
+python -m uv run pytest -q tests/unit/test_w5_*.py tests/contract/test_w5_*.py
+```
+
+`--as-of` 用于复现批次状态：`2026-09-30` 奖学金仍开放，`2026-10-18` 数信励志开放/国奖与助学金截止，`2026-10-25` 国家级批次全部截止。
 
 `make vector-index` 会 `--recreate` 重建 hybrid 索引；只需 dense 时用
 `make vector-index-dense`。`make eval-w3` 保持 W3 dense 基线；

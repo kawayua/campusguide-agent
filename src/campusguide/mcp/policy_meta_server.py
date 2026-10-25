@@ -17,11 +17,15 @@ from typing import Any, Protocol
 from fastmcp import FastMCP
 
 from campusguide.domain.enums import Audience, DocType, VersionMode
-from campusguide.domain.models import DocumentVersion
+from campusguide.domain.models import CalendarEvent, DocumentVersion
+from campusguide.flows.calendar import load_calendar
+from campusguide.flows.engine import evaluate_flow
+from campusguide.flows.registry import FlowRegistry
 from campusguide.ingest.versioning import resolve_version
 from campusguide.mcp.schemas import (
     DocumentSummary,
     ErrorCode,
+    FlowSummary,
     ResolveVersionData,
     ToolError,
     success,
@@ -79,8 +83,37 @@ class JsonlMetaBackend:
 
 
 class PolicyMetaService:
-    def __init__(self, backend: MetaBackend) -> None:
+    def __init__(
+        self,
+        backend: MetaBackend,
+        *,
+        flow_registry: FlowRegistry | None = None,
+        calendar_events: list[CalendarEvent] | None = None,
+    ) -> None:
         self._backend = backend
+        self._flow_registry = flow_registry
+        self._calendar_events = list(calendar_events or [])
+        self._calendar = {event.event_id: event for event in self._calendar_events}
+
+    @property
+    def flows_available(self) -> bool:
+        return self._flow_registry is not None
+
+    @property
+    def calendar_available(self) -> bool:
+        return bool(self._calendar_events)
+
+    def _parse_audience(self, audience: str | None) -> Audience | None:
+        if not audience:
+            return None
+        try:
+            return Audience(audience)
+        except ValueError as exc:
+            raise ToolError(
+                ErrorCode.INVALID_FILTER,
+                f"audience 未知：{audience!r}",
+                details={"field": "audience"},
+            ) from exc
 
     def _documents(self) -> dict[str, list[DocumentVersion]]:
         try:
@@ -163,6 +196,91 @@ class PolicyMetaService:
             warnings=list(resolution.warnings),
         )
         return success(data.model_dump(mode="json"), warnings=data.warnings)
+
+    def list_flows(
+        self,
+        audience: str | None = None,
+        as_of: str | None = None,
+    ) -> dict[str, Any]:
+        if self._flow_registry is None:
+            raise ToolError(ErrorCode.NOT_IMPLEMENTED, "流程工具未配置")
+        parsed_as_of = validate_date(as_of, "as_of") or date.today()
+        parsed_audience = self._parse_audience(audience)
+        flows = self._flow_registry.active_flows(as_of=parsed_as_of, audience=parsed_audience)
+        summaries = [
+            FlowSummary(
+                flow_id=flow.flow_id,
+                version=flow.version,
+                title=flow.title,
+                description=flow.description,
+                audience=[item.value for item in flow.audience],
+                batch_label=flow.batch_label,
+                effective_from=flow.effective_from,
+                effective_to=flow.effective_to,
+                slot_count=len(flow.slots),
+                step_count=len(flow.steps),
+                navigation_only=flow.navigation_only,
+            ).model_dump(mode="json")
+            for flow in flows
+        ]
+        return success(
+            {
+                "flows": summaries,
+                "count": len(summaries),
+                "as_of": parsed_as_of.isoformat(),
+            }
+        )
+
+    def get_flow(
+        self,
+        flow_id: str,
+        as_of: str | None = None,
+    ) -> dict[str, Any]:
+        if self._flow_registry is None:
+            raise ToolError(ErrorCode.NOT_IMPLEMENTED, "流程工具未配置")
+        if not flow_id or not flow_id.strip():
+            raise ToolError(ErrorCode.INVALID_ARGUMENT, "flow_id 不能为空")
+        parsed_as_of = validate_date(as_of, "as_of") or date.today()
+        flow = self._flow_registry.get_flow(flow_id.strip(), as_of=parsed_as_of)
+        if flow is None:
+            raise ToolError(ErrorCode.NOT_FOUND, f"未登记或当前不生效的流程：{flow_id!r}")
+        evaluation = evaluate_flow(
+            flow,
+            {},
+            as_of=parsed_as_of,
+            calendar=self._calendar,
+        )
+        payload = flow.model_dump(mode="json")
+        payload["batch_status"] = evaluation.status
+        payload["as_of"] = parsed_as_of.isoformat()
+        return success(payload, warnings=evaluation.warnings)
+
+    def get_calendar(
+        self,
+        start: str | None = None,
+        end: str | None = None,
+        audience: str | None = None,
+    ) -> dict[str, Any]:
+        if not self._calendar_events:
+            raise ToolError(ErrorCode.NOT_IMPLEMENTED, "校历工具未配置")
+        parsed_start = validate_date(start, "start")
+        parsed_end = validate_date(end, "end")
+        if parsed_start and parsed_end and parsed_start > parsed_end:
+            raise ToolError(ErrorCode.INVALID_ARGUMENT, "start 不能晚于 end")
+        parsed_audience = self._parse_audience(audience)
+        events = []
+        for event in self._calendar_events:
+            event_end = event.end or event.start
+            if parsed_start and event_end < parsed_start:
+                continue
+            if parsed_end and event.start > parsed_end:
+                continue
+            if parsed_audience is not None:
+                audiences = set(event.audience)
+                if Audience.ALL not in audiences and parsed_audience not in audiences:
+                    continue
+            events.append(event.model_dump(mode="json"))
+        return success({"events": events, "count": len(events)})
 
     def list_documents(
         self,
@@ -281,12 +399,57 @@ def build_meta_server(service: PolicyMetaService) -> FastMCP:
         except ToolError as exc:
             return exc.envelope()
 
+    if service.flows_available:
+
+        @mcp.tool(name="list_flows")
+        def list_flows(
+            audience: str | None = None,
+            as_of: str | None = None,
+        ) -> dict[str, Any]:
+            """列出当前生效的流程摘要，不返回完整步骤。"""
+            try:
+                return service.list_flows(audience, as_of)
+            except ToolError as exc:
+                return exc.envelope()
+
+        @mcp.tool(name="get_flow")
+        def get_flow(flow_id: str, as_of: str | None = None) -> dict[str, Any]:
+            """返回流程 DSL、批次状态与引用；不执行槽位填充。"""
+            try:
+                return service.get_flow(flow_id, as_of)
+            except ToolError as exc:
+                return exc.envelope()
+
+    if service.calendar_available:
+
+        @mcp.tool(name="get_calendar")
+        def get_calendar(
+            start: str | None = None,
+            end: str | None = None,
+            audience: str | None = None,
+        ) -> dict[str, Any]:
+            """按日期窗口和受众返回公开校历事件。"""
+            try:
+                return service.get_calendar(start, end, audience)
+            except ToolError as exc:
+                return exc.envelope()
+
     return mcp
 
 
 def create_service(*, root: Path = ROOT) -> PolicyMetaService:
+    registry = None
+    flows_dir = root / "configs" / "flows"
+    if flows_dir.exists():
+        registry = FlowRegistry.from_directory(flows_dir)
+    calendar_events: list[CalendarEvent] = []
+    calendar_path = root / "configs" / "calendar.yaml"
+    if calendar_path.exists():
+        calendar_events = load_calendar(calendar_path)
     return PolicyMetaService(
         JsonlMetaBackend(root / "data" / "processed" / "documents.jsonl"),
+        flow_registry=registry,
+        calendar_events=calendar_events,
     )
 
 

@@ -34,6 +34,7 @@ __all__ = [
     "ArticlePublic",
     "DocumentSummary",
     "ErrorCode",
+    "FlowSummary",
     "GetArticleData",
     "SearchArticlesData",
     "SearchArticlesRequest",
@@ -65,6 +66,20 @@ DEFAULT_RETRYABLE = {
     ErrorCode.RATE_LIMITED: True,
     ErrorCode.TOOL_UNAVAILABLE: True,
 }
+
+
+class FlowSummary(BaseModel):
+    flow_id: str
+    version: str
+    title: str
+    description: str
+    audience: list[str]
+    batch_label: str | None = None
+    effective_from: date
+    effective_to: date | None = None
+    slot_count: int
+    step_count: int
+    navigation_only: bool = False
 
 
 class ToolError(Exception):
