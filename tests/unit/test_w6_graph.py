@@ -46,7 +46,7 @@ def test_multi_query_reports_uncovered_subquestion() -> None:
     client = FakeSearchClient(
         by_query={
             "申请国家奖学金需要满足哪些条件": ["national-aid-undergrad@v2021#第九条"],
-            "奖励标准是多少": [],
+            "申请国家奖学金 奖励标准是多少": [],
         }
     )
     runner = make_runner(

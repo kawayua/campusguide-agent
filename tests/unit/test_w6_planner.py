@@ -47,15 +47,24 @@ def test_mixed_splits_policy_subquestion() -> None:
     plan = plan_for("国家奖学金怎么申请，金额是多少")
     assert plan.intent is Intent.MIXED
     assert plan.flow_id == "scholarship-application"
-    assert [item.text for item in plan.queries] == ["金额是多少"]
+    assert len(plan.queries) == 1
+    assert "金额是多少" in plan.queries[0].text
+    assert "国家奖学金" in plan.queries[0].text
 
 
 def test_multi_question_split_and_limit_three() -> None:
     plan = plan_for("国家奖学金条件是什么？励志奖学金条件是什么？助学金条件是什么？还有别的吗？")
     assert plan.intent is Intent.POLICY_QA
     assert len(plan.queries) == 3
-    assert plan.dropped_queries == ["还有别的吗"]
+    assert plan.dropped_queries == ["国家奖学金条件 还有别的吗"]
     assert [item.query_id for item in plan.queries] == ["q1", "q2", "q3"]
+
+
+def test_multi_question_context_is_propagated() -> None:
+    plan = plan_for("申请国家奖学金需要满足哪些条件？奖励标准是多少？")
+    assert len(plan.queries) == 2
+    assert "国家奖学金" in plan.queries[1].text
+    assert "奖励标准" in plan.queries[1].text
 
 
 def test_open_flow_asks_missing_slot_and_slot_fill_recomputes() -> None:

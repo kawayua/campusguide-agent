@@ -226,17 +226,17 @@ eval-w6b-report:
 
 eval-w6b-mcp:
 	$(PYTHON) scripts/eval_w6b.py --mcp \
-		--run data/eval/w6b-mcp-run.json \
-		--labels data/eval/w6b-mcp_support_labels.jsonl \
-		--output-json data/eval/w6b-mcp-dev-report.json \
-		--output-md data/eval/w6b-mcp-dev-report.md
+		--run data/eval/w6b-mcp-final-run.json \
+		--labels data/eval/w6b-mcp-final_support_labels.jsonl \
+		--output-json data/eval/w6b-mcp-final-dev-report.json \
+		--output-md data/eval/w6b-mcp-final-dev-report.md
 
 eval-w6b-mcp-report:
 	$(PYTHON) scripts/eval_w6b.py --report-only \
-		--run data/eval/w6b-mcp-run.json \
-		--labels data/eval/w6b-mcp_support_labels.jsonl \
-		--output-json data/eval/w6b-mcp-dev-report.json \
-		--output-md data/eval/w6b-mcp-dev-report.md
+		--run data/eval/w6b-mcp-final-run.json \
+		--labels data/eval/w6b-mcp-final_support_labels.jsonl \
+		--output-json data/eval/w6b-mcp-final-dev-report.json \
+		--output-md data/eval/w6b-mcp-final-dev-report.md
 
 eval-w6b-scenarios:
 	$(PYTHON) scripts/eval_w6b_mcp_scenarios.py
@@ -251,10 +251,10 @@ label-w6b:
 		--labels data/eval/w6b_support_labels.jsonl --annotator "$(ANNOTATOR)"
 
 sheet-w6b-mcp:
-	$(PYTHON) scripts/label_w3.py --run data/eval/w6b-mcp-run.json \
-		--labels data/eval/w6b-mcp_support_labels.jsonl --sheet \
-		--sheet-output data/eval/w6b-mcp_support_review.md
+	$(PYTHON) scripts/label_w3.py --run data/eval/w6b-mcp-final-run.json \
+		--labels data/eval/w6b-mcp-final_support_labels.jsonl --sheet \
+		--sheet-output data/eval/w6b-mcp-final_support_review.md
 
 label-w6b-mcp:
-	$(PYTHON) scripts/label_w3.py --run data/eval/w6b-mcp-run.json \
-		--labels data/eval/w6b-mcp_support_labels.jsonl --annotator "$(ANNOTATOR)"
+	$(PYTHON) scripts/label_w3.py --run data/eval/w6b-mcp-final-run.json \
+		--labels data/eval/w6b-mcp-final_support_labels.jsonl --annotator "$(ANNOTATOR)"

@@ -143,6 +143,33 @@ def _intent_flags(text: str) -> tuple[bool, bool]:
     return bool(_PROCEDURE_RE.search(text)), bool(_FACT_RE.search(text))
 
 
+def _topic_prefix(text: str) -> str:
+    """从原问题提取可用于补全子查询的主语片段。"""
+    marker = re.search(
+        r"怎么|如何|需要|有哪些|是什么|是多少|哪些|什么时候|何时|能否|是否|可以|的",
+        text,
+    )
+    prefix = text[: marker.start()] if marker else text
+    prefix = prefix.strip(" ，,。.、？?！!；;")
+    prefix = re.sub(r"^(请问|我想问|我想|想问|帮我看看|帮我)", "", prefix).strip()
+    return prefix[:30]
+
+
+def _contextualize_queries(queries: list[str], original: str) -> list[str]:
+    """给缺少主语的子查询补上原问题主语，避免“金额是多少”单独检索。"""
+    topic = _topic_prefix(original)
+    if not topic:
+        return queries
+    contextualized: list[str] = []
+    for query in queries:
+        has_topic = topic in query or any(word in query for word in _ENTITY_WORDS)
+        if has_topic or len(query) >= 24:
+            contextualized.append(query)
+        else:
+            contextualized.append(f"{topic} {query}")
+    return contextualized
+
+
 def _audience_from_text(text: str) -> Audience | None:
     under = "本科生" in text or "本科" in text
     grad = "研究生" in text or "硕士" in text or "博士" in text
@@ -509,7 +536,9 @@ class Planner:
             ]
             if not fact_queries:
                 fact_queries = subs
-            queries = self._query_items(fact_queries, audience)
+            queries = self._query_items(
+                _contextualize_queries(fact_queries, text), audience
+            )
             if queries:
                 intent = Intent.MIXED
 
@@ -573,6 +602,7 @@ class Planner:
         audience: Audience | None,
     ) -> Plan:
         subs = _split_subquestions(text) or [text.strip()]
+        subs = _contextualize_queries(subs, text)
         dropped = subs[self._max_queries :]
         queries = self._query_items(subs[: self._max_queries], audience)
         return Plan(
