@@ -397,7 +397,7 @@ clean commit `62419b6`（`git_dirty=false`），Planner/Advisor/语义均
 | revise / clarify | 3 / 0 | 记录 |
 | trace | 20/20 完整 | 通过 |
 | p50 / p95 | 20.2s / 43.6s | p95 ≤45s 达标；p50 ≤15s 未达，记录 |
-| support | 0/42 人工标注；待标 | 记录项，不能声称 support 通过 |
+| support | 42/42 人工标注；39 supported / 3 partial / 0 unsupported；draft 92.9% / rendered 92.7% | ≥85%，通过（记录项） |
 | W6 总门禁 | 结构/拒答/误拒/语义/quote mismatch/trace/model_profile 通过 | 通过 |
 
 run：`data/eval/w6b-ultraspeed-final-run.json`；报告：

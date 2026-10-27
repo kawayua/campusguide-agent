@@ -1,7 +1,7 @@
 # W3 support 标注核对表
 
 - run_sha256：`fa18a97a69da89ae0ad7a60e1a5357f5b5b23da610219d1dfefae88da1415035`
-- 总数：42；已标注：0；unlabeled：42
+- 总数：42；已标注：42；unlabeled：0
 
 ## 判定口径（严格引文级）
 
@@ -23,7 +23,7 @@
 
 - issues：—
 - fact_uncovered：—
-- 当前标签：unlabeled
+- 当前标签：supported（yaukin）
 - 判定：[ ] supported  [ ] partial  [ ] unsupported
 - note：
 
@@ -38,7 +38,7 @@
 
 - issues：—
 - fact_uncovered：—
-- 当前标签：unlabeled
+- 当前标签：supported（yaukin）
 - 判定：[ ] supported  [ ] partial  [ ] unsupported
 - note：
 
@@ -53,7 +53,7 @@
 
 - issues：—
 - fact_uncovered：—
-- 当前标签：unlabeled
+- 当前标签：supported（yaukin）
 - 判定：[ ] supported  [ ] partial  [ ] unsupported
 - note：
 
@@ -68,7 +68,7 @@
 
 - issues：—
 - fact_uncovered：—
-- 当前标签：unlabeled
+- 当前标签：partial（yaukin）
 - 判定：[ ] supported  [ ] partial  [ ] unsupported
 - note：
 
@@ -83,7 +83,7 @@
 
 - issues：—
 - fact_uncovered：—
-- 当前标签：unlabeled
+- 当前标签：supported（yaukin）
 - 判定：[ ] supported  [ ] partial  [ ] unsupported
 - note：
 
@@ -98,7 +98,7 @@
 
 - issues：—
 - fact_uncovered：—
-- 当前标签：unlabeled
+- 当前标签：supported（yaukin）
 - 判定：[ ] supported  [ ] partial  [ ] unsupported
 - note：
 
@@ -113,7 +113,7 @@
 
 - issues：—
 - fact_uncovered：—
-- 当前标签：unlabeled
+- 当前标签：supported（yaukin）
 - prefill 建议：supported（来自 baseline，待确认）
 - 判定：[ ] supported  [ ] partial  [ ] unsupported
 - note：
@@ -129,7 +129,7 @@
 
 - issues：—
 - fact_uncovered：—
-- 当前标签：unlabeled
+- 当前标签：supported（yaukin）
 - 判定：[ ] supported  [ ] partial  [ ] unsupported
 - note：
 
@@ -144,7 +144,7 @@
 
 - issues：—
 - fact_uncovered：—
-- 当前标签：unlabeled
+- 当前标签：supported（yaukin）
 - 判定：[ ] supported  [ ] partial  [ ] unsupported
 - note：
 
@@ -159,7 +159,7 @@
 
 - issues：—
 - fact_uncovered：—
-- 当前标签：unlabeled
+- 当前标签：supported（yaukin）
 - 判定：[ ] supported  [ ] partial  [ ] unsupported
 - note：
 
@@ -175,7 +175,7 @@
 
 - issues：—
 - fact_uncovered：—
-- 当前标签：unlabeled
+- 当前标签：supported（yaukin）
 - 判定：[ ] supported  [ ] partial  [ ] unsupported
 - note：
 
@@ -192,7 +192,7 @@
 
 - issues：—
 - fact_uncovered：—
-- 当前标签：unlabeled
+- 当前标签：supported（yaukin）
 - prefill 建议：supported（来自 baseline，待确认）
 - 判定：[ ] supported  [ ] partial  [ ] unsupported
 - note：
@@ -208,7 +208,7 @@
 
 - issues：—
 - fact_uncovered：—
-- 当前标签：unlabeled
+- 当前标签：supported（yaukin）
 - 判定：[ ] supported  [ ] partial  [ ] unsupported
 - note：
 
@@ -223,7 +223,7 @@
 
 - issues：—
 - fact_uncovered：—
-- 当前标签：unlabeled
+- 当前标签：supported（yaukin）
 - 判定：[ ] supported  [ ] partial  [ ] unsupported
 - note：
 
@@ -238,7 +238,7 @@
 
 - issues：—
 - fact_uncovered：—
-- 当前标签：unlabeled
+- 当前标签：supported（yaukin）
 - 判定：[ ] supported  [ ] partial  [ ] unsupported
 - note：
 
@@ -253,7 +253,7 @@
 
 - issues：—
 - fact_uncovered：—
-- 当前标签：unlabeled
+- 当前标签：supported（yaukin）
 - 判定：[ ] supported  [ ] partial  [ ] unsupported
 - note：
 
@@ -268,7 +268,7 @@
 
 - issues：—
 - fact_uncovered：—
-- 当前标签：unlabeled
+- 当前标签：supported（yaukin）
 - 判定：[ ] supported  [ ] partial  [ ] unsupported
 - note：
 
@@ -283,7 +283,7 @@
 
 - issues：—
 - fact_uncovered：—
-- 当前标签：unlabeled
+- 当前标签：supported（yaukin）
 - 判定：[ ] supported  [ ] partial  [ ] unsupported
 - note：
 
@@ -299,7 +299,7 @@
 
 - issues：—
 - fact_uncovered：—
-- 当前标签：unlabeled
+- 当前标签：supported（yaukin）
 - 判定：[ ] supported  [ ] partial  [ ] unsupported
 - note：
 
@@ -315,7 +315,7 @@
 
 - issues：—
 - fact_uncovered：—
-- 当前标签：unlabeled
+- 当前标签：supported（yaukin）
 - 判定：[ ] supported  [ ] partial  [ ] unsupported
 - note：
 
@@ -331,7 +331,7 @@
 
 - issues：—
 - fact_uncovered：—
-- 当前标签：unlabeled
+- 当前标签：supported（yaukin）
 - 判定：[ ] supported  [ ] partial  [ ] unsupported
 - note：
 
@@ -346,7 +346,7 @@
 
 - issues：—
 - fact_uncovered：—
-- 当前标签：unlabeled
+- 当前标签：supported（yaukin）
 - prefill 建议：supported（来自 baseline，待确认）
 - 判定：[ ] supported  [ ] partial  [ ] unsupported
 - note：
@@ -363,7 +363,7 @@
 
 - issues：—
 - fact_uncovered：—
-- 当前标签：unlabeled
+- 当前标签：supported（yaukin）
 - 判定：[ ] supported  [ ] partial  [ ] unsupported
 - note：
 
@@ -380,7 +380,7 @@
 
 - issues：—
 - fact_uncovered：—
-- 当前标签：unlabeled
+- 当前标签：supported（yaukin）
 - 判定：[ ] supported  [ ] partial  [ ] unsupported
 - note：
 
@@ -398,7 +398,7 @@
 
 - issues：—
 - fact_uncovered：—
-- 当前标签：unlabeled
+- 当前标签：supported（yaukin）
 - 判定：[ ] supported  [ ] partial  [ ] unsupported
 - note：
 
@@ -415,7 +415,7 @@
 
 - issues：—
 - fact_uncovered：—
-- 当前标签：unlabeled
+- 当前标签：supported（yaukin）
 - 判定：[ ] supported  [ ] partial  [ ] unsupported
 - note：
 
@@ -431,7 +431,7 @@
 
 - issues：—
 - fact_uncovered：—
-- 当前标签：unlabeled
+- 当前标签：partial（yaukin）
 - 判定：[ ] supported  [ ] partial  [ ] unsupported
 - note：
 
@@ -446,7 +446,7 @@
 
 - issues：—
 - fact_uncovered：—
-- 当前标签：unlabeled
+- 当前标签：supported（yaukin）
 - 判定：[ ] supported  [ ] partial  [ ] unsupported
 - note：
 
@@ -461,7 +461,7 @@
 
 - issues：—
 - fact_uncovered：—
-- 当前标签：unlabeled
+- 当前标签：supported（yaukin）
 - prefill 建议：supported（来自 baseline，待确认）
 - 判定：[ ] supported  [ ] partial  [ ] unsupported
 - note：
@@ -482,7 +482,7 @@
 
 - issues：—
 - fact_uncovered：—
-- 当前标签：unlabeled
+- 当前标签：supported（yaukin）
 - 判定：[ ] supported  [ ] partial  [ ] unsupported
 - note：
 
@@ -497,7 +497,7 @@
 
 - issues：—
 - fact_uncovered：—
-- 当前标签：unlabeled
+- 当前标签：supported（yaukin）
 - prefill 建议：supported（来自 baseline，待确认）
 - 判定：[ ] supported  [ ] partial  [ ] unsupported
 - note：
@@ -513,7 +513,7 @@
 
 - issues：—
 - fact_uncovered：—
-- 当前标签：unlabeled
+- 当前标签：supported（yaukin）
 - 判定：[ ] supported  [ ] partial  [ ] unsupported
 - note：
 
@@ -532,7 +532,7 @@
 
 - issues：—
 - fact_uncovered：—
-- 当前标签：unlabeled
+- 当前标签：supported（yaukin）
 - prefill 建议：supported（来自 baseline，待确认）
 - 判定：[ ] supported  [ ] partial  [ ] unsupported
 - note：
@@ -557,7 +557,7 @@
 
 - issues：—
 - fact_uncovered：—
-- 当前标签：unlabeled
+- 当前标签：supported（yaukin）
 - 判定：[ ] supported  [ ] partial  [ ] unsupported
 - note：
 
@@ -572,7 +572,7 @@
 
 - issues：—
 - fact_uncovered：—
-- 当前标签：unlabeled
+- 当前标签：supported（yaukin）
 - 判定：[ ] supported  [ ] partial  [ ] unsupported
 - note：
 
@@ -588,7 +588,7 @@
 
 - issues：—
 - fact_uncovered：—
-- 当前标签：unlabeled
+- 当前标签：supported（yaukin）
 - 判定：[ ] supported  [ ] partial  [ ] unsupported
 - note：
 
@@ -604,7 +604,7 @@
 
 - issues：—
 - fact_uncovered：—
-- 当前标签：unlabeled
+- 当前标签：supported（yaukin）
 - 判定：[ ] supported  [ ] partial  [ ] unsupported
 - note：
 
@@ -620,7 +620,7 @@
 
 - issues：—
 - fact_uncovered：—
-- 当前标签：unlabeled
+- 当前标签：supported（yaukin）
 - 判定：[ ] supported  [ ] partial  [ ] unsupported
 - note：
 
@@ -635,7 +635,7 @@
 
 - issues：—
 - fact_uncovered：—
-- 当前标签：unlabeled
+- 当前标签：supported（yaukin）
 - 判定：[ ] supported  [ ] partial  [ ] unsupported
 - note：
 
@@ -650,7 +650,7 @@
 
 - issues：—
 - fact_uncovered：—
-- 当前标签：unlabeled
+- 当前标签：supported（yaukin）
 - 判定：[ ] supported  [ ] partial  [ ] unsupported
 - note：
 
@@ -665,7 +665,7 @@
 
 - issues：—
 - fact_uncovered：—
-- 当前标签：unlabeled
+- 当前标签：partial（yaukin）
 - prefill 建议：partial（来自 baseline，待确认）
 - prefill note：claim 多了「专业核心课程」分类，quote 仅为课程名列表
 - 判定：[ ] supported  [ ] partial  [ ] unsupported
@@ -682,6 +682,6 @@
 
 - issues：—
 - fact_uncovered：—
-- 当前标签：unlabeled
+- 当前标签：supported（yaukin）
 - 判定：[ ] supported  [ ] partial  [ ] unsupported
 - note：

@@ -1,6 +1,6 @@
 # CampusGuide W6-B 图级 dev_v0 报告
 
-- 生成时间：2026-10-27T09:06:15+00:00
+- 生成时间：2026-10-27T09:22:09+00:00
 - 数据集：dev_v0.jsonl（20 题，非 W7 冻结集）
 - run：`fa18a97a69da89ae0ad7a60e1a5357f5b5b23da610219d1dfefae88da1415035`
 - graph：`w6-2026-10-25`
@@ -26,7 +26,7 @@
 | model_profile | PASS | {'planner': 'mimo-v2.6-pro-ultraspeed', 'advisor': 'mimo-v2.6-pro-ultraspeed', 'semantic': 'mimo-v2.6-pro-ultraspeed'} |
 | **W6 总门禁** | **PASS** | 全部 W6 硬门禁通过 |
 
-support（记录项，非硬门禁）：0/42 已标注，待人工标注。
+support（记录项，非硬门禁）：标注 42/42，rendered_support=0.926829268292683。
 
 ## 语义与图
 
