@@ -37,8 +37,6 @@ services:
       GRADIO_SERVER_NAME: 0.0.0.0
       GRADIO_SERVER_PORT: "7860"
       HF_HOME: /app/hf_cache
-      # 页面展示档；真实模型仍由 .env 的 PLANNER/ADVISOR/VERIFIER_MODEL 决定。
-      W8_DEMO_PROFILE: ultraspeed
       W8_REQUEST_TIMEOUT_SECONDS: "120"
     volumes:
       - ./data:/app/data

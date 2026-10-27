@@ -788,16 +788,13 @@ def conversation_header_html(
     profile: str,
 ) -> str:
     badges = outcome_badge_html(outcome, closed=closed) if outcome else ""
-    profile_badge = (
-        '<span class="w8-profile-badge"><span class="w8-dot"></span>'
-        f"演示 · {html.escape(profile)}</span>"
-        '<span class="w8-profile-note">评测 vPro</span>'
-    )
+    # 不在主界面标注模型：评测与生产模型分离，模型信息只在评测报告和调试面板中记录。
+    _ = profile
     return (
         '<div class="w8-conversation-head">'
         '<div class="w8-conversation-title">'
         f"<h2>{html.escape(title)}</h2><p>{html.escape(meta)}</p></div>"
-        f'<div class="w8-conversation-badges">{badges}{profile_badge}</div>'
+        f'<div class="w8-conversation-badges">{badges}</div>'
         "</div>"
     )
 

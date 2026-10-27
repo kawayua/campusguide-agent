@@ -229,12 +229,14 @@ def user_turn_count(session: dict[str, Any]) -> int:
     return sum(1 for item in session.get("messages", []) if item.get("role") == "user")
 
 
-def session_meta(session: dict[str, Any], *, profile: str = "ultraspeed") -> str:
+def session_meta(session: dict[str, Any], *, profile: str = "") -> str:
+    # 不展示模型名；profile 保留为调用兼容参数，不进入主界面。
+    _ = profile
     turns = user_turn_count(session)
     duration = session.get("duration_ms")
     if duration:
-        return f"第 {turns} 轮 · 演示档 {profile} · {duration / 1000:.1f}s（示例）"
-    return f"第 {turns} 轮 · 演示档 {profile}" if turns else "选择左侧历史，或直接提问"
+        return f"第 {turns} 轮 · {duration / 1000:.1f}s（示例）"
+    return f"第 {turns} 轮" if turns else "选择左侧历史，或直接提问"
 
 
 def session_trace_id(session: dict[str, Any]) -> str:

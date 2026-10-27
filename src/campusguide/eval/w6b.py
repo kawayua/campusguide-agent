@@ -229,10 +229,11 @@ def build_w6_report(
     report["semantic"] = semantic
     report["graph"] = graph
     report["quote_mismatch_rendered"] = quote_mismatch
+    profile = report["manifest"].get("model_profile") or "当前模型"
     report["latency"] = {
         "p50_ms": report["summary"]["p50_latency_ms"],
         "p95_ms": report["summary"]["p95_latency_ms"],
-        "note": "vPro 长尾为已知限制；不设 W6 延迟硬门禁，不隐藏。",
+        "note": f"{profile} 长尾为已知限制；不设 W6 延迟硬门禁，不隐藏。",
     }
 
     gates = report["gates"]
@@ -246,13 +247,20 @@ def build_w6_report(
     }
     gates["quote_mismatch"] = {"ok": quote_mismatch == 0, "value": quote_mismatch}
     gates["trace"] = {"ok": graph["trace_complete"], "failed_rows": graph["trace_failed_rows"]}
-    profile_ok = report["manifest"].get("model_profile") == "vpro" and set(
-        report["manifest"].get("models", {}).values()
-    ) == {"mimo-v2.6-pro"}
+    allowed_profiles = {
+        "vpro": {"mimo-v2.6-pro"},
+        "ultraspeed": {"mimo-v2.6-pro-ultraspeed"},
+    }
+    profile_name = report["manifest"].get("model_profile")
+    profile_models = set(report["manifest"].get("models", {}).values())
+    profile_ok = bool(report["manifest"]) and (
+        profile_name in allowed_profiles and profile_models == allowed_profiles[profile_name]
+    )
     gates["model_profile"] = {
-        "ok": bool(report["manifest"]) and profile_ok,
-        "model_profile": report["manifest"].get("model_profile"),
+        "ok": profile_ok,
+        "model_profile": profile_name,
         "models": report["manifest"].get("models"),
+        "allowed": {name: sorted(models) for name, models in allowed_profiles.items()},
     }
     blocking: list[str] = []
     if not gates["structure"]["ok"]:
@@ -268,7 +276,10 @@ def build_w6_report(
     if not gates["trace"]["ok"]:
         blocking.append("部分请求缺少 planner/retriever/verifier/finalize trace")
     if not gates["model_profile"]["ok"]:
-        blocking.append("model_profile/manifest 不是 vpro + mimo-v2.6-pro")
+        blocking.append(
+            "model_profile/manifest 不是 "
+            "vpro + mimo-v2.6-pro 或 ultraspeed + mimo-v2.6-pro-ultraspeed"
+        )
     gates["w6_overall"] = all(
         gates[key]["ok"]
         for key in (

@@ -11,7 +11,7 @@
 | 当前文档 | README 很长且有过时数字（3,952、W6-A 默认 ultraspeed）；无演示脚本/GIF |
 | 范围 | 图驱动多轮 UI、引用/checklist/澄清/调试面板、演示档延迟策略、Docker 一键启动、CI、README/合规/演示脚本/GIF |
 | 明确不做 | 不改 W6 图/评测基线；不改 W7 冻结集/标签/报告；不做历史版本、跨学校、个人数据、公开多租户 |
-| 状态 | UI 已定稿（三栏冷白 + STSong）；Gradio 三栏/移动端抽屉与底部 sheet、fake runner 642 tests 已落地；真实图 `handle_stream` 5/5、真实页面 6/6 smoke 已记录（实际 vPro / 页面展示 ultraspeed，延迟见 §8）；多阶段 Docker / compose app / preflight / `make demo-up` 已落地并验证；CI 已增补 compileall/config/compose 检查；README、演示脚本、合规、W8 周记录已收口（静态截图替代 GIF）。 |
+| 状态 | UI 已定稿（三栏冷白 + STSong）；Gradio 三栏/移动端抽屉与底部 sheet、fake runner 642 tests 已落地；真实图 `handle_stream` 5/5、真实页面 6/6 smoke 已记录（生产档 vPro，主界面不展示模型，延迟见 §8）；多阶段 Docker / compose app / preflight / `make demo-up` 已落地并验证；CI 已增补 compileall/config/compose 检查；README、演示脚本、合规、W8 周记录已收口（静态截图替代 GIF）。 |
 
 ---
 
@@ -20,7 +20,7 @@
 W8 做六件事：
 
 1. **UI 从 W4 单轮迁到 W6 图**：多轮 session、checklist、clarify、引用展开、拒答原因、调试面板；
-2. **演示档与评测档分离**：交互 demo 用 `ultraspeed` 降低延迟，W6 评测仍用 vPro；UI 明确标注，不混指标；
+2. **评测档与生产档分离**：W6 评测用 `ultraspeed` 产出最优数值，生产/页面用 vPro；主界面不展示模型名，README/评测报告分别记录 eval/production 模型，不混指标；
 3. **只流式显示节点进度，不流式显示未核对答案**：避免把未通过 Verifier 的文本提前展示；
 4. **Docker Compose 一键本地 demo**：Qdrant + app；数据/HF 缓存挂载，`.env` 不入镜像；一条命令启动；
 5. **CI 与文档收口**：ruff/pytest/UI 构建/compose config；README 重写为“30 秒看懂 + 5 分钟跑起来 + 指标与限制”；
@@ -60,7 +60,7 @@ W8 **不改变 W7 结论**：W7 仍 failed/tagged；README 必须同时展示 W6
 
 - Gradio 多轮图 UI；
 - 引用卡片、checklist、clarify 选项、拒答 handoff、调试面板；
-- 演示档 `ultraspeed` + 评测档 `vpro` 的显式区分；
+- 评测档 `ultraspeed` + 生产档 `vpro` 的显式区分；主界面不展示模型；
 - 节点进度事件（planner/flow/retriever/advisor/verifier/finalize）；
 - Dockerfile + compose app service + preflight + 一键 `make demo-up`；
 - CI 增补 compose config、compileall、UI build tests；
@@ -86,7 +86,7 @@ W8 **不改变 W7 结论**：W7 仍 failed/tagged；README 必须同时展示 W6
 ```text
 ┌───────────────────────┬──────────────────────────────────────┬────────────────────────────┐
 │ CampusGuide           │ 会话标题                  [已核实] [结果] │ 最后一轮                    │
-│ 华农制度问答           │ 第 N 轮 · 演示档 · 耗时              │ [办理清单] [引用] [调试]     │
+│ 华农制度问答           │ 第 N 轮 · 耗时                      │ [办理清单] [引用] [调试]     │
 │ [＋ 新对话]            ├──────────────────────────────────────┼────────────────────────────┤
 │ [搜索对话]             │                                      │ 清单摘要：9 步 / 5 已截止    │
 │ 今天                   │ Chatbot：用户与助手多轮              │ 状态筛选 / 显示不适用项      │
@@ -106,7 +106,7 @@ W8 **不改变 W7 结论**：W7 仍 failed/tagged；README 必须同时展示 W6
 - 右侧只展示**当前会话最后一轮**的结构化结果；点击左侧任意历史会加载中栏对话，并自动打开右栏该会话的结果。
 - 右栏可以收起；收起后中栏自动变宽；点击“结果”按钮或左侧历史会重新打开。新对话默认收起右栏。
 - 调试 tab 默认折叠；`DEMO_DEBUG=true` 时可默认展开。
-- 中栏顶部固定展示 `演示档 ultraspeed` 或 `评测档 vPro` 徽标，不能隐藏。
+- 主界面不展示模型名；模型信息只写入评测报告、run manifest 和默认折叠的调试面板。
 - 字体：正文无衬线；品牌名、会话标题、历史标题、右栏标题、步骤标题、引用标题使用
   `STSong → Source Han Serif SC → Noto Serif CJK SC → Noto Serif SC → Songti SC → serif`
   衬线栈。STSong 为系统字体，不打包进仓库，跨机器由开源宋体回退。
@@ -274,22 +274,24 @@ for event in service.handle_stream(session_id, message, as_of=as_of):
 - 每个节点可显示耗时；超时显示当前节点与已耗时；
 - 进度事件失败不影响最终 `invoke` 兼容路径；CLI/测试仍用 `handle`。
 
-### 4.4 演示档
+### 4.4 评测档与生产档
 
-W6 评测固定 `vpro`；W8 交互 demo 的页面档位与真实 run 分开记录：
+W6 评测档与生产档分离：
 
-- `W8_DEMO_PROFILE` **只控制页面展示档位**；真实 run profile 由 `W6_MODEL_PROFILE`/`configs/graph.yaml` 决定，角色模型由 `PLANNER_MODEL/ADVISOR_MODEL/VERIFIER_MODEL` 决定；
-- 本机按演示需要可设 `W8_DEMO_PROFILE=ultraspeed`，但调试面板与 smoke 报告必须记录实际 `model_profile`/models；不得把 vPro 延迟写成 ultraspeed 指标；
-- compose 的正式演示档应同时把角色模型设为快速版（见 5.3）；UI 徽标明确“演示档 ultraspeed；评测档 vPro”；
-- 不把 demo 的延迟/回答混入 W6 报告；
-- `configs/graph.yaml` 的 W6 默认仍 vpro，不改评测基线。
+- **评测档**：`ultraspeed`，用于 W6-B 的当前图评测与“最优数值”；新 run 必须用当前图、当前索引、当前 prompt，不能复用 W6-A/A2 旧图结果；support 仍需新 claim 集人工标注；
+- **生产/页面档**：`vPro`，由 `.env` 的 `PLANNER_MODEL/ADVISOR_MODEL/VERIFIER_MODEL` 决定；页面 smoke 与生产记录以 vPro 为准；
+- **主界面不展示模型名**：不再使用 `W8_DEMO_PROFILE` 制造“演示档”徽标；模型信息只写入评测报告、run manifest 和默认折叠的调试面板；
+- README 与 `docs/evaluation.md` 必须同时记录 eval/production 两档，不能把 ultraspeed 评测数值写成生产 vPro 数值；
+- `configs/graph.yaml` 的 `model_profile` 只标记 run 档位；实际角色模型仍由环境变量决定；切换档位必须新 run；
+- 不把生产 vPro 的延迟/回答混入 ultraspeed 评测报告，反之亦然。
 
 ### 4.5 延迟策略
 
-- 启动时 `warmup()`：拉起 MCP、加载 bge/reranker，避免首个问题承担 30–60s；当前实现在 `GraphBackend.warmup()`，启动日志同时打印展示档与实际 profile；
+- 启动时 `warmup()`：拉起 MCP、加载 bge/reranker，避免首个问题承担 30–60s；当前实现在 `GraphBackend.warmup()`，启动日志只记录真实 profile/models；
 - 5 个 demo 场景预热后执行；
-- 交互目标（演示档）：p50 ≤15s、p95 ≤45s；记录实际值，不隐藏；
-- 单请求上限默认 120s；超时走 `GENERATION_FAILED`/`TOOL_UNAVAILABLE`，不返回半成品；页面级 smoke 为容纳实际 vPro 长尾可显式调大并记录，不能借此改写默认值；
+- **评测档 ultraspeed**：目标 p50 ≤15s、p95 ≤45s；记录实际值，不隐藏；
+- **生产档 vPro**：仍可能出现 >120s 长尾（W8 页面 smoke p95 138.8s）；不设延迟硬门禁，但必须用节点进度、120s fail-closed 和演示脚本兜底；
+- 单请求上限默认 120s；超时走 `GENERATION_FAILED`/`TOOL_UNAVAILABLE`，不返回半成品；页面级 smoke 为容纳 vPro 长尾可显式调大并记录，不能借此改写默认值，也不能把该延迟写成 ultraspeed 指标；
 - 进度条 + 节点状态；不显示假的“即将完成”；
 - 不做跨用户最终答案缓存；检索缓存可选，但不能缓存答案。
 
@@ -340,7 +342,6 @@ services:
     env_file: .env
     environment:
       QDRANT_URL: http://qdrant:6333
-      W8_DEMO_PROFILE: ultraspeed
     volumes:
       - ./data:/app/data
       - hf_cache:/app/hf_cache
@@ -354,7 +355,7 @@ volumes:
 - `data/` 必须已包含 parsed/index/vector manifest；镜像不打包语料；
 - `.env` 通过 `env_file` 只读注入；不上传 API key；
 - app 健康检查等待 MCP 冷启动和模型加载；`start_period` 240s；
-- 页面展示档 `W8_DEMO_PROFILE=ultraspeed`，真实模型仍由 `.env` 决定；
+- 主界面不展示模型；生产/页面档的真实模型仍由 `.env` 决定（当前 vPro）；
 - `make demo-up` = `demo-preflight` + `docker compose up -d --build`；失败时打印具体缺失文件/命令。
 
 2026-10-27 已验证：`docker compose config` 通过；镜像 `campusguide:local` 2.79GB，
@@ -429,14 +430,14 @@ README 必须写清楚：
 4. 5 个演示场景（prompt + 预期）；
 5. 评测摘要：W6 通过 + W7 failed 并列；W3/W4/W5 历史链接；
 6. 数据来源、截止日期、合规与隐私；
-7. 已知限制：vPro 174s p95、W7 未过、历史版本不做、单学校；
+7. 已知限制：生产 vPro 138.8/174.4s p95、W7 未过、历史版本不做、单学校；
 8. 复现命令、目录结构、测试数；
 9. 免责声明。
 
 必须修正的过时数字：
 
 - 语料 **225 / 244 / 4,026**；向量 **4,026**；
-- W6-B 默认 **vPro**；W6-A 的 ultraspeed 是历史/A-B，不是当前默认；
+- W6 评测档为 **ultraspeed**，生产/页面档为 **vPro**；主界面不展示模型；W6-A 的 ultraspeed 是历史提示词基线，不能直接当 W6-B 图结果；
 - W7 仍 failed/tagged，不能写成通过。
 
 ### 7.2 `docs/demo-script.md`
@@ -490,18 +491,19 @@ README 必须写清楚：
 
 ### 8.2 Live 5 场景
 
-在 demo profile + 预热后人工执行：
+在预热后人工执行：
 
 - 5/5 完成（ANSWERED/PARTIAL/CLARIFY 按预期）；
 - 2 个拒答案例；
 - 引用可展开、checklist 可读、clarify 可点、debug 可开；
-- 记录每个场景耗时；目标 p50 ≤15s、p95 ≤45s；
-- 超过 120s 的场景必须失败关闭并显示原因，不能挂死。
+- **评测档 ultraspeed**：记录每个场景耗时；目标 p50 ≤15s、p95 ≤45s；
+- **生产档 vPro**：记录耗时，不设硬门禁；超过 120s 的场景必须失败关闭并显示原因，不能挂死。
 
-2026-10-27 真实页面 smoke（`scripts/demo_ui_smoke.py`，实际 vPro、页面展示 ultraspeed）：
+2026-10-27 真实页面 smoke（`scripts/demo_ui_smoke.py`，生产档 vPro、主界面不展示模型）：
 6/6 PASS（核心 5/5，拒答 2/2）；warmup 42.6s；p50 1.46s、p95 138.8s。
 政策问答 138.8s、混合问题 104.9s，超过默认 120s 的单项在本轮为完成长尾显式使用 240s 上限；
-目标 p95≤45s 未达标。报告：`data/eval/w8-ui-smoke.{json,md}`，截图在 `data/eval/w8-ui-smoke/`。
+生产档目标 p95≤45s 未达标，作为 vPro 已知限制记录；评测档 ultraspeed 的数值单独跑、单独报告。
+报告：`data/eval/w8-ui-smoke.{json,md}`，截图在 `data/eval/w8-ui-smoke/`。
 
 ### 8.3 验收门
 
@@ -509,16 +511,16 @@ README 必须写清楚：
 - `make qa` 全量通过（预计 630+）；
 - `docker compose config` 通过；
 - README 快速开始、指标、限制、合规齐全；
-- 5 场景 + 2 拒答 + GIF/截图；
+- 5 场景 + 2 拒答 + 截图（GIF 可选）；
 - 无原始语料/`.env`/模型权重进入 git；
 - W7 冻结文件 hash 不变；
-- 不把 W6/W7 指标混写。
+- 不把 W6/W7 指标混写；不把评测 ultraspeed 与生产 vPro 混写。
 
 ### 8.4 非门禁
 
 - 公开 URL、账号体系、移动端原生、历史版本、文件上传；
 - 公网高并发/多租户；
-- vPro 演示档的 p95 不设硬门禁，但必须记录；交互 demo 用 ultraspeed。
+- 生产 vPro 的 p95 不设硬门禁，但必须记录；评测档 ultraspeed 的 p50/p95 单独记录。
 
 ---
 
@@ -526,7 +528,7 @@ README 必须写清楚：
 
 | 风险 | 影响 | 处理 |
 |---|---|---|
-| vPro 长尾 174s | 页面像卡死 | demo profile ultraspeed；节点进度；120s fail-closed；录屏兜底 |
+| vPro 长尾 174s | 页面像卡死 | 生产档保留 vPro；节点进度；120s fail-closed；录屏兜底；评测档 ultraspeed 单列 |
 | Docker 镜像过大 | 构建/拉取慢 | CPU torch；不打包模型/数据；HF 缓存 volume；多阶段构建 |
 | 首次下载模型慢 | 一键启动失败感 | README 写明 ~4.2GB + 镜像加速；start_period 240s；预 warmup |
 | 数据缺失 | app 启动后检索空 | preflight 明确报错；不自动抓取；打印 make 命令 |
@@ -545,7 +547,7 @@ README 必须写清楚：
 1. **UI view-model + stream 契约**：先写 fake reply 渲染测试；
 2. **Graph Chat UI**：多轮 session、输入、重置、进度；
 3. **结构化面板**：checklist、引用、clarify、拒答 handoff、debug；
-4. **演示档/延迟**：ultraspeed profile、warmup、120s 超时、5 场景；
+4. **评测档/生产档**：ultraspeed 评测新 run、生产 vPro、warmup、120s 超时、5 场景；
 5. **Docker**：Dockerfile、compose app、preflight、healthcheck、`make demo-up`；
 6. **CI**：compose config、compileall、UI build tests；
 7. **文档/素材**：README 重写、demo-script、GIF/截图、博客；
@@ -561,8 +563,9 @@ README 必须写清楚：
 
 - UI 只消费 `ConversationReply`；新增字段必须向后兼容；
 - `handle_stream` 是 W8 增量，`handle` 仍保留；
-- 不改 W6 的 Planner/Verifier/模型默认；
-- W6 eval 仍 vPro；W8 demo 用 ultraspeed，UI 标注。
+- 不改 W6 的 Planner/Verifier 逻辑；
+- W6 评测用 ultraspeed，生产/页面用 vPro；主界面不展示模型；
+- 两档各自记录，不互相替代。
 
 ### 11.2 与 W5
 

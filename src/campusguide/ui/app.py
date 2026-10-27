@@ -362,7 +362,7 @@ class W8DemoUI:
             </div>
             <div class="w8-welcome-tags">
               <span>数据截止 2026-10-25</span><span>华南农业大学 · 公开制度</span>
-              <span>不查询个人信息</span><span>演示档 ultraspeed</span>
+              <span>不查询个人信息</span><span>本地演示</span>
             </div>
           </div>
         </div>

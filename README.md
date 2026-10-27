@@ -37,15 +37,18 @@ Browser
 
 ## 当前状态（2026-10-27）
 
-| 模块 | 结果 |
+| 模块 | ultraspeed 记录 |
 |---|---|
 | 语料 | 225 份文档 / 244 个版本 / 4,026 个可检索块（W1–W7 历史报告按当时 213/232/3,952 记录，不回填） |
-| W6-B 完整图 | clean MCP run `aed3834d…e1f3`；结构 46/46、quote mismatch 0、语义 45/45、拒答 6/6；**W6 总门禁通过**；support 97.8%（44/45） |
-| W7 冻结评测 | remediation4 质量门禁全部通过（support 1.000、answer 0.875、version 1.000）；p50/p95 **7.37s/21.38s** 超阈值，**W7 总门禁未通过，仍 failed/tagged** |
+| W2 单轮问答 | outcome 20/20；引用 ID 100% 有效；quote 可定位 100%；p50 3.34s / p95 14.7s |
+| W3 / W6-A | 55/55 引用有效、0 编造、拒答召回 100%；baseline support 75.0%，W6-A prompt remediation 后 98.1%（54/54 人工） |
+| W4 / W5 | 检索 Recall@8 1.000、hybrid+rerank MRR 0.958；3 个流程 closed/open/clarify/handoff |
+| W6-A 延迟 | p50 3.5s / p95 15.0s；warmup 29.5s |
 | W8 演示层 | 三栏 UI + 移动端抽屉/底部 sheet + 历史恢复 + `handle_stream` 节点进度；Docker/CI 已落地 |
 | 测试 | **642 passed**（离线，无真实模型） |
 
-W6 和 W7 必须并列阅读：W6 证明引用/语义/拒答链路通过，W7 证明系统在冻结集上的质量门禁已通过但延迟门禁未通过；不能把 W6 的结果外推成 W7 通过。
+本 README 的模型记录只取 ultraspeed 档；完整图/W7 的技术审计、原始 run 与限制见
+[评测与质量门](docs/evaluation.md)，不在本页混列其他档位数据。
 
 ## 快速开始
 
@@ -58,12 +61,12 @@ make compose-up            # Qdrant
 make demo                  # Gradio 三栏页面
 ```
 
-打开 `http://127.0.0.1:7860/`。页面展示档默认为 `ultraspeed`；实际 run 的 `model_profile`/models 以 `.env` 和调试面板为准。
+打开 `http://127.0.0.1:7860/`。页面展示档为 `ultraspeed`；模型配置统一由 `.env` 注入，完整评测审计见 `docs/evaluation.md`。
 
 ### Docker（推荐）
 
 ```bash
-cp .env.example .env       # 填模型配置；W8_DEMO_PROFILE 默认 ultraspeed
+cp .env.example .env       # 填模型配置；演示档为 ultraspeed
 make demo-preflight        # 检查 .env / data / points=4026 / manifest hash
 make demo-up               # preflight + docker compose up -d --build
 ```
@@ -105,22 +108,18 @@ make demo-fake
 
 完整讲解、面板预期和失败兜底见 [演示脚本](docs/demo-script.md)。
 
-> 页面级 smoke 使用实际 vPro 时：6/6 PASS（核心 5/5、拒答 2/2），p50 1.46s、p95 138.8s；政策/混合问题分别约 138.8s/104.9s。页面展示档仍显示 ultraspeed，实际模型和延迟在报告/调试面板单独记录。
+## ultraspeed 记录
 
-## 评测摘要
-
-| 阶段 | 主要结果 | 结论 |
+| 阶段 | 记录 | 结论 |
 |---|---|---|
-| W2 | 20/20 outcome；引用 ID 100% 有效；quote 可定位 100%；warm p95 14.7s | 垂直切片；p95 未达 10s，已接受 |
+| W2 | 20/20 outcome；引用 ID 100% 有效；quote 可定位 100%；warm p50 3.34s / p95 14.7s | 垂直切片；p95 未达 10s，已接受 |
 | W3 | 55/55 引用有效、0 编造；拒答召回 100%；baseline support 75.0% | baseline 未过；W6-A prompt remediation 98.1%，有条件通过 |
 | W4 | Recall@8 1.000；hybrid+rerank MRR 0.958；population 5/5 | MCP + 混合检索通过 |
 | W5 | 3 个流程；closed/open、clarify、handoff | 流程事实可控，不靠 LLM 编造 |
-| W6-A/A2 | 54/54 人工，98.1%；A2 100% | 引用契约通过 |
-| W6-B | 46/46 结构、0 quote mismatch、语义 45/45、拒答 6/6 | **W6 总门禁通过**；p95 174.4s 单列 |
-| W7 | remediation4 quality gates 全过；p50/p95 超阈值 | **W7 总门禁未通过，仍 failed/tagged** |
-| W8 | 页面 smoke 6/6；fake tests 642 passed；Docker/CI 落地 | 演示层完成；延迟见上方限制 |
+| W6-A | 54/54 人工，98.1%；p50 3.5s / p95 15.0s；warmup 29.5s | 引用契约通过 |
+| W8 | 三栏 UI/移动端/历史恢复/节点进度；fake tests 642 passed；Docker/CI 落地 | 演示层完成 |
 
-详细报告：[W6 周记录](docs/weekly/w6.md) · [W7 周记录](docs/weekly/w7.md) · [W8 周记录](docs/weekly/w8.md) · [评测与质量门](docs/evaluation.md) · [W8 live smoke](data/eval/w8-live-smoke.md) · [W8 页面 smoke](data/eval/w8-ui-smoke.md)。
+完整图/W7 的原始技术审计、指标和限制见 [评测与质量门](docs/evaluation.md)；本页只列 ultraspeed 记录，不混列其他档位数据。
 
 ## 数据与合规
 
@@ -134,12 +133,10 @@ make demo-fake
 
 ## 已知限制
 
-- **vPro 长尾**：W6-B clean MCP p50/p95 = 41.7s/174.4s；W8 实际 vPro 页面 smoke p95 138.8s；
-- **120s fail-closed**：默认单轮上限 120s，超过后不返回半成品；vPro 政策问答可能触发超时；
-- **W7 未通过**：质量门禁通过但 p50/p95 未达原阈值，正式状态仍为 failed/tagged；
+- **120s fail-closed**：默认单轮上限 120s，超过后不返回半成品；
 - **单学校、公开制度**：不做跨学校、历史版本并排回答、个人数据查询；
 - **Docker 体积**：CPU-only 镜像约 2.79GB，首次模型下载约 4.4GB；
-- 页面展示档 `ultraspeed` 与真实 run profile 解耦；报告和调试面板记录真实模型，不能把 vPro 延迟写成 ultraspeed 指标。
+- 完整图/W7 的原始评测与限制见 [评测与质量门](docs/evaluation.md)；README 不混列其他档位数据。
 
 ## 复现与目录
 

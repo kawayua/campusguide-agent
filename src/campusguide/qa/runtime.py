@@ -17,7 +17,6 @@ from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
 from campusguide.agents.advisor import Advisor
-from campusguide.agents.providers import OpenAICompatibleChat
 from campusguide.config import (
     MCPConfig,
     RetrievalConfig,
@@ -218,7 +217,7 @@ class _RetrieverAdapter:
 
 
 def _advisor(provider=None) -> Advisor:
-    provider = provider or OpenAICompatibleChat.from_env()
+    provider = provider or _role_provider("ADVISOR_MODEL", 40.0)
     # 推理型模型的思考 token 也计入 completion 预算，可按厂商调大。
     return Advisor(provider, max_tokens=int(os.getenv("ADVISOR_MAX_TOKENS", "1200")))
 
@@ -430,11 +429,20 @@ class GraphRuntime:
 
 
 def _role_provider(model_env: str, timeout: float):
+    """按角色构造 provider。
+
+    角色可用 ``{ROLE}_LLM_BASE_URL`` / ``{ROLE}_LLM_API_KEY`` 单独覆盖，
+    留空或未设置时回退到全局 ``LLM_BASE_URL`` / ``LLM_API_KEY``。
+    这样可以在不换 planner/verifier 的前提下单独试 advisor 模型。
+    """
     from campusguide.agents.providers import OpenAICompatibleChat
 
+    prefix = model_env.removesuffix("_MODEL")
+    base_url = os.getenv(f"{prefix}_LLM_BASE_URL") or os.getenv("LLM_BASE_URL", "")
+    api_key = os.getenv(f"{prefix}_LLM_API_KEY") or os.getenv("LLM_API_KEY", "")
     return OpenAICompatibleChat(
-        base_url=os.getenv("LLM_BASE_URL", ""),
-        api_key=os.getenv("LLM_API_KEY", ""),
+        base_url=base_url,
+        api_key=api_key,
         model=os.getenv(model_env, ""),
         timeout=timeout,
     )
