@@ -11,7 +11,7 @@
 | 当前文档 | README 很长且有过时数字（3,952、W6-A 默认 ultraspeed）；无演示脚本/GIF |
 | 范围 | 图驱动多轮 UI、引用/checklist/澄清/调试面板、演示档延迟策略、Docker 一键启动、CI、README/合规/演示脚本/GIF |
 | 明确不做 | 不改 W6 图/评测基线；不改 W7 冻结集/标签/报告；不做历史版本、跨学校、个人数据、公开多租户 |
-| 状态 | UI 已定稿（三栏冷白 + STSong）；Gradio 三栏/移动端抽屉与底部 sheet、fake runner 642 tests 已落地；真实图 `handle_stream` 5/5、真实页面 6/6 smoke 已记录（生产档 vPro，主界面不展示模型，延迟见 §8）；多阶段 Docker / compose app / preflight / `make demo-up` 已落地并验证；CI 已增补 compileall/config/compose 检查；README、演示脚本、合规、W8 周记录已收口（静态截图替代 GIF）。 |
+| 状态 | UI 已定稿（三栏冷白 + STSong）；Gradio 三栏/移动端抽屉与底部 sheet、fake runner 646 tests 已落地；真实图 `handle_stream` 5/5、真实页面 6/6 smoke 已记录（生产档 vPro，主界面不展示模型，延迟见 §8）；多阶段 Docker / compose app / preflight / `make demo-up` 已落地并验证；CI 已增补 compileall/config/compose 检查；README、演示脚本、合规、W8 周记录已收口（静态截图替代 GIF）。 |
 
 ---
 
@@ -396,14 +396,14 @@ README 必须写清楚：
 ### 6.1 现有
 
 `.github/workflows/ci.yml`：uv sync、ruff、format、compileall、YAML 配置加载、
-带 `.env.example` 的 `docker compose config`、pytest（642）。
+带 `.env.example` 的 `docker compose config`、pytest（646）。
 
 ### 6.2 增补
 
 - `python -m compileall src scripts`（已加）；
 - `docker compose config`（已加；CI 先 `cp .env.example .env`，不启动容器）；
 - UI view-model/build 测试（已有，fake runner，不加载真实模型）；
-- `pytest` 全量（642，已加）；
+- `pytest` 全量（646，已加）；
 - 可选 `workflow_dispatch` 的 `docker build`（PR 不做，镜像太大）；
 - 检查 `configs/graph.yaml`/`calendar.yaml`/`flows` 可加载（已加）；
 - 不在 CI 跑真实 LLM、Qdrant、MCP 模型或 live demo。
