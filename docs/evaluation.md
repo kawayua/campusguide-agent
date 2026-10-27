@@ -7,7 +7,7 @@ CampusGuide 的评测分为两个阶段，不能混为一谈：
 
 W1 尚无问答模块，因此**没有任何回答质量指标**。简历、README 和面试材料中不得把工程质量门写成问答效果。
 
-> **W8 当前口径（2026-10-27）**：全量离线测试 **642 passed**；语料
+> **W8 当前口径（2026-10-27）**：全量离线测试 **646 passed**；语料
 > **225 文档 / 244 版本 / 4,026 个可检索块**。下方 W1 表格保留 W1 当时的
 > 213/232/3,952 口径作为历史记录，不回填。
 
@@ -377,13 +377,40 @@ run：`data/eval/w6a2-run.json`，`run_sha256=b7ee6884…f569`。旧 W6-A labels
 ## W6-B 完整四角色图与语义核对
 
 W6-B 是 W7 之后的独立能力，不修改 W7 冻结集/标签/报告，W7 仍为
-failed/tagged。最终验收使用 clean commit `2d3fe37`（manifest
-`git_dirty=false`）的生产 `policy-search` + `policy-meta` MCP 路径，20 题
-dev_v0（14 可答 + 6 不可答），`model_profile=vpro`（Planner/Advisor/语义均
-`mimo-v2.6-pro`），prompt 为 `w6b-planner/advisor/revise/semantic-2026-10-25`；
-向量索引为 `articles_v1@hybrid-6bafb68410b9`（4,026 点）。
+failed/tagged。评测档与生产档分开记录，二者都使用生产 `policy-search` +
+`policy-meta` MCP、20 题 dev_v0、prompt
+`w6b-planner/advisor/revise/semantic-2026-10-25` 和 4,026 点索引
+`articles_v1@hybrid-6bafb68410b9`。
 
-| 指标 | 最终 clean MCP run | 门禁 |
+### 评测档 ultraspeed（主结果）
+
+clean commit `62419b6`（`git_dirty=false`），Planner/Advisor/语义均
+`mimo-v2.6-pro-ultraspeed`；run `fa18a97a…5035`。
+
+| 指标 | 评测档 ultraspeed | 门禁 |
+|---|---:|---|
+| 结构 | 39/39 引用有效、0 编造、0 part、39/39 quote 可定位 | 通过 |
+| 最终 quote mismatch | 0 | 通过 |
+| 语义 | 41 supported / 1 partially_supported；0 contradicted 渲染；0 unchecked；0 unavailable | 通过 |
+| 拒答召回 / 误拒 | 100% / 0.0% | ≥80% / ≤20%，通过 |
+| partial | 1（d012） | 记录 |
+| revise / clarify | 3 / 0 | 记录 |
+| trace | 20/20 完整 | 通过 |
+| p50 / p95 | 20.2s / 43.6s | p95 ≤45s 达标；p50 ≤15s 未达，记录 |
+| support | 0/42 人工标注；待标 | 记录项，不能声称 support 通过 |
+| W6 总门禁 | 结构/拒答/误拒/语义/quote mismatch/trace/model_profile 通过 | 通过 |
+
+run：`data/eval/w6b-ultraspeed-final-run.json`；报告：
+`data/eval/w6b-ultraspeed-final-dev-report.{json,md}`；label 模板：
+`data/eval/w6b-ultraspeed-final_support_labels.jsonl`（7 条 prefill 建议，
+未确认）；核对表：`data/eval/w6b-ultraspeed-final_support_review.md`。
+
+### 生产档 vPro（部署基线）
+
+clean commit `2d3fe37`（`git_dirty=false`），Planner/Advisor/语义均
+`mimo-v2.6-pro`；run `aed3834d…e1f3`。
+
+| 指标 | 生产档 vPro | 门禁 |
 |---|---:|---|
 | 结构 | 46/46 引用有效、0 编造、0 part、46/46 quote 可定位 | 通过 |
 | 最终 quote mismatch | 0 | 通过 |
@@ -418,7 +445,7 @@ W8 不改变 W6 图/W7 冻结集结论，只验证演示链路、节点进度和
 
 | 项目 | 结果 | 说明 |
 |---|---|---|
-| 离线测试 | **642 passed** | 新增 W8 view-model、stream、fake app、preflight 测试 |
+| 离线测试 | **646 passed** | 新增 W8 view-model、stream、fake app、preflight 测试 |
 | 服务层 5 场景 | **5/5 PASS** | `scripts/demo_smoke.py`，只走 `handle_stream` |
 | 真实页面 6 场景 | **6/6 PASS** | 核心 5/5、拒答 2/2；`scripts/demo_ui_smoke.py` |
 | 页面展示档 | `ultraspeed` | 实际 run profile=`vpro`，models=`mimo-v2.6-pro` |

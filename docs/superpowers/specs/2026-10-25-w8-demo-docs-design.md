@@ -289,7 +289,7 @@ W6 评测档与生产档分离：
 
 - 启动时 `warmup()`：拉起 MCP、加载 bge/reranker，避免首个问题承担 30–60s；当前实现在 `GraphBackend.warmup()`，启动日志只记录真实 profile/models；
 - 5 个 demo 场景预热后执行；
-- **评测档 ultraspeed**：目标 p50 ≤15s、p95 ≤45s；记录实际值，不隐藏；
+- **评测档 ultraspeed**：目标 p50 ≤15s、p95 ≤45s；2026-10-27 clean MCP 实际 p50 20.2s / p95 43.6s（p95 达标，p50 未达），support 0/42 待人工标注；
 - **生产档 vPro**：仍可能出现 >120s 长尾（W8 页面 smoke p95 138.8s）；不设延迟硬门禁，但必须用节点进度、120s fail-closed 和演示脚本兜底；
 - 单请求上限默认 120s；超时走 `GENERATION_FAILED`/`TOOL_UNAVAILABLE`，不返回半成品；页面级 smoke 为容纳 vPro 长尾可显式调大并记录，不能借此改写默认值，也不能把该延迟写成 ultraspeed 指标；
 - 进度条 + 节点状态；不显示假的“即将完成”；

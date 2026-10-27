@@ -44,7 +44,7 @@ Browser
 | W3 / W6-A | 55/55 引用有效、0 编造、拒答召回 100%；baseline support 75.0%，W6-A prompt remediation 后 98.1%（54/54 人工） |
 | W4 / W5 | 检索 Recall@8 1.000、hybrid+rerank MRR 0.958；3 个流程 closed/open/clarify/handoff |
 | W6-A 延迟 | p50 3.5s / p95 15.0s；warmup 29.5s |
-| W6-B 完整图 | dev_v0 20 题；结构 38/38、quote mismatch 0、拒答召回 1.0、W6 硬门禁 PASS；p50 20.3s / p95 55.3s；support 0/45 未标注 |
+| W6-B 完整图 | dev_v0 20 题；结构 39/39、quote mismatch 0、拒答召回 1.0、误拒 0、W6 硬门禁 PASS；p50 20.2s / p95 43.6s；support 0/42 未标注 |
 | W8 演示层 | 三栏 UI + 移动端抽屉/底部 sheet + 历史恢复 + `handle_stream` 节点进度；Docker/CI 已落地 |
 | 测试 | **646 passed**（离线，无真实模型） |
 
@@ -118,10 +118,10 @@ make demo-fake
 | W4 | Recall@8 1.000；hybrid+rerank MRR 0.958；population 5/5 | MCP + 混合检索通过 |
 | W5 | 3 个流程；closed/open、clarify、handoff | 流程事实可控，不靠 LLM 编造 |
 | W6-A | 54/54 人工，98.1%；p50 3.5s / p95 15.0s；warmup 29.5s | 引用契约通过 |
-| W6-B | dev_v0 20 题；结构 38/38、quote mismatch 0、拒答召回 1.0、硬门禁 PASS；p50 20.3s / p95 55.3s | 完整图链路通过；support 尚未人工标注 |
+| W6-B | dev_v0 20 题；结构 39/39、quote mismatch 0、拒答召回 1.0、误拒 0、硬门禁 PASS；p50 20.2s / p95 43.6s | 完整图链路通过；p95 达标，p50 未达 15s；support 尚未人工标注 |
 | W8 | 三栏 UI/移动端/历史恢复/节点进度；fake tests 646 passed；Docker/CI 落地 | 演示层完成 |
 
-W6-B ultraspeed 报告：[w6b-ultraspeed-dev-report.md](data/eval/w6b-ultraspeed-dev-report.md)。
+W6-B ultraspeed 报告：[w6b-ultraspeed-final-dev-report.md](data/eval/w6b-ultraspeed-final-dev-report.md)。
 W7 的原始技术审计、指标和限制见 [评测与质量门](docs/evaluation.md)；本页只列评测档 ultraspeed 的主记录，不混列生产 vPro 或 W7 数据。
 
 ## 数据与合规
