@@ -1,8 +1,7 @@
 # CampusGuide W8 演示脚本
 
-适用版本：2026-10-27。页面展示档为 `ultraspeed`，但本机 `.env` 实际模型仍是
-`mimo-v2.6-pro`（vPro）；调试面板与报告记录真实模型和延迟。演示时不要把 vPro
-长尾说成 ultraspeed 指标。
+适用版本：2026-10-27。页面展示档为 `ultraspeed`；本脚本只描述该档位的
+演示预期、面板和失败兜底。完整技术审计见 [评测与质量门](evaluation.md)。
 
 ## 0. 启动与检查
 
@@ -20,7 +19,6 @@ make demo-up
 - 数据截止：2026-10-25
 - 默认单轮上限：120s；超时 fail-closed，不展示半成品
 - 左下角“结果”/移动端顶部“结果”控制右侧卡片；桌面历史在左栏，移动端在左上角 `☰`
-- 页面 smoke 证据：[w8-ui-smoke.md](../data/eval/w8-ui-smoke.md)
 
 建议先跑“流程 closed / 拒绝”这类快速场景，再跑政策/混合长问题；如果政策问题
 超过 120s，如实展示超时而不是重试到“看起来成功”。
@@ -52,8 +50,8 @@ make demo-up
 - 引用绑定 `article_id`、条款标题、quote；不展示 `text_raw_ref`；
 - “金额/条件”问题走政策路径，不渲染流程 checklist。
 
-**实测**：vPro 约 138.8s；页面 smoke `ANSWERED`、5 citations。超过 120s 时展示
-超时文案，不返回半成品。
+**演示预期**：`ANSWERED`、5 citations；目标 p50≤15s / p95≤45s。超过 120s 时
+展示超时文案，不返回半成品。
 
 ![政策问答](assets/w8-policy.png)
 
@@ -72,7 +70,7 @@ make demo-up
 - closed 后不再追问当年材料，避免把过期批次说成可办理；
 - 材料、部门、截止时间、handoff 都能在 checklist 中定位。
 
-**实测**：vPro 约 1.5s；页面 smoke `ANSWERED`、5 checklist、7 citations。
+**演示预期**：`ANSWERED`、5 checklist、7 citations；以预热后的页面为准。
 
 ![流程 closed](assets/w8-closed.png)
 
@@ -94,7 +92,7 @@ make demo-up
 - 选项按钮来自 `clarification.allowed_values`，不是写死在前端；
 - 研究生/本科生分支不同；研究生走培养科 handoff，不伪造完整流程。
 
-**实测**：vPro 总约 5.2s；3 次 clarify；最终 `PARTIAL_ANSWER`、4 checklist、9 citations。
+**演示预期**：3 次 clarify；最终 `PARTIAL_ANSWER`、4 checklist、9 citations。
 
 ![多轮澄清](assets/w8-certificate.png)
 
@@ -112,7 +110,7 @@ make demo-up
 - checklist 负责流程事实，claims/quotes 负责政策事实；
 - 不把流程事实硬塞进答案文本，避免 LLM 编造截止/材料。
 
-**实测**：vPro 约 104.9s；5 checklist、10 citations。
+**演示预期**：5 checklist、10 citations；目标 p50≤15s / p95≤45s。
 
 ## 6. 隐私拒答
 
@@ -128,7 +126,7 @@ make demo-up
 - UI 底部固定“请勿输入学号/身份证/成绩单”；
 - 调试/日志脱敏，不展示用户隐私原文。
 
-**实测**：约 1.7s；页面 smoke `PRIVACY_REQUEST`。
+**演示预期**：`PRIVACY_REQUEST`，不进入检索。
 
 ![隐私拒答](../data/eval/w8-ui-smoke/privacy.png)
 
@@ -145,7 +143,7 @@ make demo-up
 - 校外问题不走向量库，避免用华农条款回答其他学校；
 - 与“引用不足时拒答”分开，展示的是范围边界而非检索失败。
 
-**实测**：约 2.0s；页面 smoke `OUT_OF_SCOPE`。
+**演示预期**：`OUT_OF_SCOPE`，不进入检索。
 
 ![校外拒答](../data/eval/w8-ui-smoke/out_of_scope.png)
 
@@ -173,7 +171,7 @@ python scripts/demo_ui_smoke.py \
   --screenshots data/eval/w8-ui-smoke
 ```
 
-报告：`data/eval/w8-ui-smoke.{json,md}`；截图：`data/eval/w8-ui-smoke/`。
+脚本会生成本次 run 的 JSON/MD 报告与截图；页面展示档为 `ultraspeed`。
 
 **边界**：页面 smoke 只验证 UI/outcome/checklist/引用/澄清链路，不替代 W6 20 题、
 W7 冻结集或人工 support 标注；本页延迟不写入 W6/W7 指标。
