@@ -260,10 +260,9 @@ def create_service(
         manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
     index_version = str(manifest.get("index_version", ""))
     sparse_info = manifest.get("sparse") or {}
-    sparse_file = sparse_info.get("vocab_file") or str(root / "data" / "sparse_vocab.json")
-    sparse_path = Path(sparse_file)
-    if not sparse_path.is_absolute():
-        sparse_path = root / sparse_path
+    from campusguide.retrieval.sparse import resolve_vocab_path
+
+    sparse_path = resolve_vocab_path(root, sparse_info.get("vocab_file"))
 
     client = create_qdrant_client()
     if manifest:

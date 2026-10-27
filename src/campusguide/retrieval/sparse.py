@@ -32,6 +32,20 @@ _TOKEN_RE = re.compile(rf"[{_CJK}]+|[a-z0-9]+")
 _CJK_RE = re.compile(rf"[{_CJK}]")
 
 
+def resolve_vocab_path(root: str | Path, configured: str | Path | None = None) -> Path:
+    """解析 vocab 路径；manifest 里的绝对路径在容器中不存在时回退 data/。"""
+    root = Path(root)
+    default = root / "data" / "sparse_vocab.json"
+    if not configured:
+        return default
+    candidate = Path(configured)
+    if not candidate.is_absolute():
+        return root / candidate
+    if candidate.exists():
+        return candidate
+    return default if default.exists() else candidate
+
+
 @runtime_checkable
 class SparseEncoder(Protocol):
     def encode_documents(self, texts: list[str]) -> list[SparseVector]: ...

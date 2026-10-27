@@ -1,0 +1,26 @@
+# Never bake secrets, local data, model weights or development artifacts.
+.git
+.gitignore
+.env
+.env.*
+data/
+docs/
+tests/
+.venv/
+.venv-*/
+__pycache__/
+**/__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.pytest_tmp/
+.tmp*
+hf_cache/
+models/
+*.safetensors
+*.bin
+*.pt
+*.pth
+*.gguf
+*.log

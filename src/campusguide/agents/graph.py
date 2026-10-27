@@ -8,8 +8,10 @@
 from __future__ import annotations
 
 import time
+from collections.abc import Iterator
+from dataclasses import dataclass
 from datetime import UTC, date, datetime
-from typing import Any
+from typing import Any, Literal
 
 from langgraph.checkpoint.memory import MemorySaver
 from langgraph.checkpoint.serde.jsonplus import JsonPlusSerializer
@@ -818,6 +820,15 @@ def _msgpack_classes() -> list[type]:
     return classes
 
 
+@dataclass(frozen=True)
+class GraphStreamEvent:
+    """图流事件：progress 只有节点名；final 才携带完整 state。"""
+
+    kind: Literal["progress", "final"]
+    node: str = ""
+    state: dict[str, Any] | None = None
+
+
 class GraphRunner:
     def __init__(
         self,
@@ -842,7 +853,7 @@ class GraphRunner:
     def graph(self):
         return self._graph
 
-    def invoke(
+    def _prepare(
         self,
         session_id: str,
         question: str,
@@ -851,7 +862,7 @@ class GraphRunner:
         audience: Audience | None = None,
         profile: UserProfile | None = None,
         block_types: list[BlockType] | None = None,
-    ) -> GraphState:
+    ) -> tuple[GraphState, dict[str, Any]]:
         started_at = datetime.now(UTC)
         last = self._last_seen.get(session_id)
         if last is not None and (started_at - last).total_seconds() > self._ttl_hours * 3600:
@@ -909,7 +920,57 @@ class GraphRunner:
             "revise_issues": [],
             "revision_count": 0,
         }
+        return state, config
+
+    def invoke(
+        self,
+        session_id: str,
+        question: str,
+        *,
+        as_of: date | None = None,
+        audience: Audience | None = None,
+        profile: UserProfile | None = None,
+        block_types: list[BlockType] | None = None,
+    ) -> GraphState:
+        state, config = self._prepare(
+            session_id,
+            question,
+            as_of=as_of,
+            audience=audience,
+            profile=profile,
+            block_types=block_types,
+        )
         return self._graph.invoke(state, config)  # type: ignore[return-value]
+
+    def stream(
+        self,
+        session_id: str,
+        question: str,
+        *,
+        as_of: date | None = None,
+        audience: Audience | None = None,
+        profile: UserProfile | None = None,
+        block_types: list[BlockType] | None = None,
+    ) -> Iterator[GraphStreamEvent]:
+        """只产出节点完成事件，不产出未核对答案 token。"""
+        state, config = self._prepare(
+            session_id,
+            question,
+            as_of=as_of,
+            audience=audience,
+            profile=profile,
+            block_types=block_types,
+        )
+        node_names = {"planner", "flow", "retriever", "advisor", "verifier", "finalize"}
+        for chunk in self._graph.stream(state, config, stream_mode="updates"):
+            if not isinstance(chunk, dict):
+                continue
+            for node in chunk:
+                if node in node_names:
+                    yield GraphStreamEvent(kind="progress", node=str(node))
+        snapshot = self._graph.get_state(config)
+        final_state = dict(snapshot.values) if snapshot and snapshot.values else {}
+        yield GraphStreamEvent(kind="final", state=final_state)
 
     def reset(self, session_id: str) -> None:
         self._last_seen.pop(session_id, None)
@@ -922,6 +983,7 @@ __all__ = [
     "GRAPH_VERSION",
     "GraphNodes",
     "GraphRunner",
+    "GraphStreamEvent",
     "build_graph",
     "route_after_advisor",
     "route_after_flow",

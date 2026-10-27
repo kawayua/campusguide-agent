@@ -2,10 +2,10 @@
 
 from __future__ import annotations
 
-from collections.abc import Callable, Mapping
+from collections.abc import Callable, Iterator, Mapping
 from dataclasses import dataclass, field
 from datetime import date, datetime
-from typing import Any
+from typing import Any, Literal
 
 from campusguide.conversation.session import ConversationSession, SessionStore
 from campusguide.domain.enums import Audience, BlockType
@@ -43,6 +43,26 @@ class ConversationReply:
     handoff: dict[str, Any] = field(default_factory=dict)
     trace: list[dict[str, Any]] = field(default_factory=list)
     clarification: dict[str, Any] | None = None
+
+
+@dataclass(frozen=True)
+class ConversationEvent:
+    """W8 流式契约：progress 只有节点文案；final 才携带 reply。"""
+
+    kind: Literal["progress", "final"]
+    node: str = ""
+    label: str = ""
+    reply: ConversationReply | None = None
+
+
+_NODE_LABELS = {
+    "planner": "规划",
+    "flow": "流程",
+    "retriever": "检索",
+    "advisor": "生成",
+    "verifier": "核对",
+    "finalize": "整理",
+}
 
 
 def _default_fallback(message: str) -> str:
@@ -355,6 +375,10 @@ class ConversationService:
             profile=profile,
             block_types=block_types,
         )
+        return self._reply_from_state(state)
+
+    @staticmethod
+    def _reply_from_state(state: Mapping[str, Any]) -> ConversationReply:
         plan = state.get("plan")
         clarification = state.get("clarification")
         next_slot = None
@@ -387,6 +411,76 @@ class ConversationService:
             trace=list(state.get("trace") or []),
             clarification=dict(clarification) if clarification else None,
         )
+
+    def handle_stream(
+        self,
+        session_id: str,
+        message: str,
+        *,
+        as_of: date | datetime | None = None,
+        audience: Audience | None = None,
+        profile: UserProfile | None = None,
+        block_types: list[BlockType] | None = None,
+    ) -> Iterator[ConversationEvent]:
+        """只流式节点进度；最终答案一次返回，避免提前展示未核对文本。"""
+        if self._graph_runner is None:
+            raise RuntimeError("handle_stream 只支持 graph 模式")
+        text = message.strip()
+        if not text:
+            yield ConversationEvent(
+                kind="final", reply=ConversationReply(text="请描述你要办理的事项。")
+            )
+            return
+        if text in {"取消", "重来", "重新开始", "换个流程", "换一个"}:
+            reset = getattr(self._graph_runner, "reset", None)
+            if callable(reset):
+                reset(session_id)
+            yield ConversationEvent(
+                kind="final",
+                reply=ConversationReply(text="已退出当前流程。请告诉我要办理的事项。"),
+            )
+            return
+
+        effective = as_of if as_of is not None else self._today_provider()
+        as_date = self._as_date(effective) if isinstance(effective, datetime) else effective
+        stream = getattr(self._graph_runner, "stream", None)
+        if not callable(stream):
+            yield ConversationEvent(
+                kind="final",
+                reply=self._handle_graph(
+                    session_id,
+                    text,
+                    as_of=as_of,
+                    audience=audience,
+                    profile=profile,
+                    block_types=block_types,
+                ),
+            )
+            return
+
+        saw_final = False
+        for event in stream(
+            session_id,
+            text,
+            as_of=as_date,
+            audience=audience,
+            profile=profile,
+            block_types=block_types,
+        ):
+            kind = getattr(event, "kind", "")
+            if kind == "progress":
+                node = str(getattr(event, "node", ""))
+                yield ConversationEvent(
+                    kind="progress",
+                    node=node,
+                    label=_NODE_LABELS.get(node, node),
+                )
+            elif kind == "final":
+                saw_final = True
+                state = getattr(event, "state", None) or {}
+                yield ConversationEvent(kind="final", reply=self._reply_from_state(state))
+        if not saw_final:
+            raise RuntimeError("图 stream 未返回 final 事件")
 
     def reset(self, session_id: str) -> None:
         self._store.reset(session_id)

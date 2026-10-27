@@ -7,6 +7,10 @@ CampusGuide 的评测分为两个阶段，不能混为一谈：
 
 W1 尚无问答模块，因此**没有任何回答质量指标**。简历、README 和面试材料中不得把工程质量门写成问答效果。
 
+> **W8 当前口径（2026-10-27）**：全量离线测试 **642 passed**；语料
+> **225 文档 / 244 版本 / 4,026 个可检索块**。下方 W1 表格保留 W1 当时的
+> 213/232/3,952 口径作为历史记录，不回填。
+
 ## W1 工程质量门
 
 | 项目 | 方法 | 命令 | 当前状态 |
@@ -407,6 +411,32 @@ rendered 97.8%）只属于该 run。final MCP run 已另做 45/45 人工标注
 `data/eval/w6b-mcp-scenarios.{json,md}`。mixed 在修复子查询主语继承后
 （“金额是多少” → “国家奖学金 金额是多少”）返回 3 条政策 claim +
 9 条 checklist。12 条红队、5 个固定场景和 W5 回归在离线测试中通过。
+
+## W8 演示层与页面 smoke（2026-10-27）
+
+W8 不改变 W6 图/W7 冻结集结论，只验证演示链路、节点进度和 UI 渲染。
+
+| 项目 | 结果 | 说明 |
+|---|---|---|
+| 离线测试 | **642 passed** | 新增 W8 view-model、stream、fake app、preflight 测试 |
+| 服务层 5 场景 | **5/5 PASS** | `scripts/demo_smoke.py`，只走 `handle_stream` |
+| 真实页面 6 场景 | **6/6 PASS** | 核心 5/5、拒答 2/2；`scripts/demo_ui_smoke.py` |
+| 页面展示档 | `ultraspeed` | 实际 run profile=`vpro`，models=`mimo-v2.6-pro` |
+| warmup | 42.6s（host）/ 4.3–5.0s（Docker + 宿主 HF 缓存） | 启动日志 `[warmup]` |
+| 单轮 p50 / p95 | 1,461 / 138,782 ms | 实际 vPro；目标 15s/45s 未达标 |
+| 页面 smoke 请求上限 | 240s | 为跑完 vPro 长尾临时调大；应用默认 120s fail-closed |
+| Docker | 镜像 2.79GB，CPU torch；compose app healthy | 不进入 W6/W7 指标 |
+
+关键结果：政策问答 138.8s、5 citations；closed 1.5s、5 checklist；在读证明
+4 轮（3 次 clarify）5.2s、最终 PARTIAL_ANSWER；混合问题 104.9s、5 checklist/
+10 citations；隐私/校外拒答约 1.7/2.0s。
+
+报告：[`data/eval/w8-live-smoke.md`](../data/eval/w8-live-smoke.md)、
+[`data/eval/w8-ui-smoke.md`](../data/eval/w8-ui-smoke.md)；截图在
+`data/eval/w8-ui-smoke/`。
+
+**边界**：页面 smoke 不检查答案支持度，不替代 W6 20 题/W7 冻结集；页面展示档
+与真实模型分层记录，不能把 vPro 延迟写成 ultraspeed 指标。
 
 ## 失败归因模板
 

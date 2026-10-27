@@ -334,9 +334,11 @@ def create_local_hybrid_search_client(
         config.embedding_model or os.getenv("EMBEDDING_MODEL", "BAAI/bge-m3"),
         device=os.getenv("EMBEDDING_DEVICE", "auto"),
     )
-    sparse_path = Path(manifest.get("sparse", {}).get("vocab_file") or paths.sparse_vocab)
-    if not sparse_path.is_absolute():
-        sparse_path = ROOT / sparse_path
+    from campusguide.retrieval.sparse import resolve_vocab_path
+
+    sparse_path = resolve_vocab_path(
+        ROOT, manifest.get("sparse", {}).get("vocab_file") or paths.sparse_vocab
+    )
     sparse_encoder = BM25SparseEncoder.load(sparse_path)
     if reranker is None and use_rerank:
         reranker = BgeReranker(

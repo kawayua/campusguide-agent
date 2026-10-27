@@ -3,11 +3,12 @@ UV ?= $(shell command -v uv 2>/dev/null || echo python -m uv)
 PYTHON ?= $(UV) run python
 PYTEST ?= $(UV) run pytest
 RUFF ?= $(UV) run ruff
+DOCKER_COMPOSE ?= docker compose
 
 .PHONY: help init sync fetch parse index index-qdrant vector-index vector-index-dense validate-sources \
 	check-segmentation test lint format format-check qa ask eval-w2 eval-w3 eval-w3-hybrid eval-w4 \
 	eval-w6a2 eval-w6a2-report eval-w6b eval-w6b-report eval-w6b-mcp eval-w6b-mcp-report eval-w6b-scenarios sheet-w6b label-w6b sheet-w6b-mcp label-w6b-mcp import-w6b-mcp freeze-w7 eval-w7 eval-w7-report eval-w7-a5 eval-w7-a4 eval-w7-a4-report eval-w7-a2 eval-w7-a2-report draft-w7 mcp-smoke population-check e2e-section eval-w3-report label-w3 sheet-w3 \
-	label-w6a2 sheet-w6a2 demo w5-chat w5-demo w6-chat compose-up compose-down clean
+	label-w6a2 sheet-w6a2 demo demo-fake demo-ui-smoke demo-up demo-preflight w8-smoke w5-chat w5-demo w6-chat compose-up compose-down clean
 
 help:
 	@echo "CampusGuide commands"
@@ -59,7 +60,13 @@ help:
 	@echo "  make eval-w3-report    复用已有 run + support labels 生成报告"
 	@echo "  make sheet-w3          生成 56 条 Markdown 标注核对表"
 	@echo "  make label-w3 ANNOTATOR=你的名字  交互式人工标注"
-	@echo "  make demo              启动 Gradio 单轮页面"
+	@echo "  make demo              启动 Gradio 三栏页面（真实图；页面展示档 ultraspeed）"
+	@echo "  make demo-fake         启动 Gradio 三栏页面（无模型 fake backend）"
+	@echo "  make demo-ui-smoke     真实页面 smoke（先启动 app；URL/SCREENSHOTS 可覆盖，TIMEOUT 仅记录）"
+	@echo "  make demo-preflight    检查 .env / 语料 / manifest / points"
+	@echo "  make demo-up           preflight + docker compose up -d --build"
+	@echo "  make demo-down         停止 app 与 Qdrant"
+	@echo "  make w8-smoke          真实图 5 场景 live smoke（AS_OF=2026-10-25）"
 	@echo "  make w5-chat           启动 W5 流程 CLI（可加 AS_OF=2026-10-25）"
 	@echo "  make w6-chat           启动 W6 图 CLI（vPro，可加 AS_OF=...）"
 	@echo "  make w5-demo           跑 W5 脚本化流程 demo（SCENARIO=certificate）"
@@ -208,7 +215,26 @@ format-check:
 qa: lint format-check test
 
 demo:
-	$(PYTHON) -m campusguide.ui.app
+	W8_DEMO_PROFILE=ultraspeed $(PYTHON) -m campusguide.ui.app
+
+demo-fake:
+	DEMO_FAKE=1 $(PYTHON) -m campusguide.ui.app
+
+demo-ui-smoke:
+	$(PYTHON) scripts/demo_ui_smoke.py --request-timeout $(or $(TIMEOUT),120) $(if $(URL),--url $(URL)) $(if $(SCREENSHOTS),--screenshots $(SCREENSHOTS))
+
+demo-preflight:
+	$(PYTHON) scripts/demo_preflight.py
+
+demo-up: demo-preflight
+	$(DOCKER_COMPOSE) up -d --build
+	@echo "demo: http://127.0.0.1:7860/（首次启动需下载 bge/reranker，start_period 240s）"
+
+demo-down:
+	$(DOCKER_COMPOSE) down
+
+w8-smoke:
+	$(PYTHON) scripts/demo_smoke.py $(if $(AS_OF),--as-of $(AS_OF),)
 
 compose-up:
 	docker compose up -d qdrant

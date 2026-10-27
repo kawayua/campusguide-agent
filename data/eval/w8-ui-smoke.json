@@ -1,0 +1,283 @@
+{
+  "generated_at": "2026-10-27T13:19:52+08:00",
+  "url": "http://127.0.0.1:7862/",
+  "viewport": [
+    1440,
+    900
+  ],
+  "profile_badge": "演示 · ultraspeed",
+  "expected_profile": "ultraspeed",
+  "profile_ok": true,
+  "actual_model_profile": "vpro",
+  "actual_models": "{'planner': 'mimo-v2.6-pro', 'advisor': 'mimo-v2.6-pro', 'semantic': 'mimo-v2.6-pro'}",
+  "scenarios": [
+    {
+      "id": "policy",
+      "name": "政策问答：国奖条件",
+      "turns": [
+        {
+          "message": "申请国家奖学金需要满足哪些条件？",
+          "via": "input",
+          "outcome": "ANSWERED",
+          "badges": [
+            "已核实回答"
+          ],
+          "closed": false,
+          "checklist": 0,
+          "citations": 5,
+          "duration_ms": 138782,
+          "progress": [
+            "正在规划与核对\n只显示节点进度，不输出未核对答案",
+            "正在准备检索\n只显示节点进度，不输出未核对答案",
+            "正在准备检索 → 规划\n只显示节点进度，不输出未核对答案",
+            "正在准备检索 → 规划 → 检索\n只显示节点进度，不输出未核对答案",
+            "正在准备检索 → 规划 → 检索 → 生成\n只显示节点进度，不输出未核对答案",
+            "正在准备检索 → 规划 → 检索 → 生成 → 核对\n只显示节点进度，不输出未核对答案",
+            "正在准备检索 → 规划 → 检索 → 生成 → 核对 → 生成\n只显示节点进度，不输出未核对答案",
+            "正在准备检索 → 规划 → 检索 → 生成 → 核对 → 生成 → 核对\n只显示节点进度，不输出未核对答案"
+          ],
+          "error": "",
+          "answer_head": "已核实回答 结论要点： 申请国家奖学金的学生应同时符合基本申请条件（一）至（五）。 [华南农业大学本科生国家奖助学金实施办法 第八条] 申请国家奖学金的学生须为二年级及以上年级。 [华南农业大学本科生国家奖助学金实施办法 第九条] 国家奖学金的成绩要求是学习成绩排名与综合测评成绩排名均位于前10%（含10%）。 [华南农业大学本科生国家奖助学金实施办法 第九条] 申请国家奖学金的研究生应同时符合研究生国家奖助学金申请基本条件（一）至（五"
+        }
+      ],
+      "final_outcome": "ANSWERED",
+      "final_closed": false,
+      "final_checklist": 0,
+      "final_citations": 5,
+      "total_ms": 138782,
+      "refusal": false,
+      "failures": [],
+      "pass": true
+    },
+    {
+      "id": "closed",
+      "name": "流程 closed：国奖怎么申请",
+      "turns": [
+        {
+          "message": "国家奖学金怎么申请",
+          "via": "input",
+          "outcome": "ANSWERED",
+          "badges": [
+            "已核实回答",
+            "批次已截止"
+          ],
+          "closed": true,
+          "checklist": 5,
+          "citations": 7,
+          "duration_ms": 1461,
+          "progress": [
+            "正在准备检索 → 规划\n只显示节点进度，不输出未核对答案"
+          ],
+          "error": "",
+          "answer_head": "已核实回答 批次已截止 本科生国家奖学金申请（状态：已截止） 批次：2026 年本科生国家奖助学金批次 [已截止] 数信学院：国家奖学金申请 在学院通知截止前提交国家奖学金申请材料；学院评审后按规定公示。 材料：国家奖学金申请审批表、学习成绩与综合测评证明、个人事迹材料、学院通知要求的其他材料 截止：2026-10-10T09:00:00+08:00 状态说明：本批次截止：2026-10-10 09:00（Asia/Shanghai） "
+        }
+      ],
+      "final_outcome": "ANSWERED",
+      "final_closed": true,
+      "final_checklist": 5,
+      "final_citations": 7,
+      "total_ms": 1461,
+      "refusal": false,
+      "failures": [],
+      "pass": true
+    },
+    {
+      "id": "certificate",
+      "name": "多轮澄清：在读证明",
+      "turns": [
+        {
+          "message": "我要开在读证明",
+          "via": "input",
+          "outcome": "CLARIFY",
+          "badges": [
+            "需要补充信息"
+          ],
+          "closed": false,
+          "checklist": 0,
+          "citations": 0,
+          "duration_ms": 1361,
+          "progress": [
+            "正在准备检索\n只显示节点进度，不输出未核对答案"
+          ],
+          "error": "",
+          "answer_head": "需要补充信息 你是本科生还是研究生？ 可以直接回答；不想说也可以说“跳过”。"
+        },
+        {
+          "message": "本科生",
+          "via": "clarify",
+          "outcome": "CLARIFY",
+          "badges": [
+            "需要补充信息"
+          ],
+          "closed": false,
+          "checklist": 0,
+          "citations": 0,
+          "duration_ms": 1202,
+          "progress": [
+            "正在准备检索 → 规划\n只显示节点进度，不输出未核对答案"
+          ],
+          "error": "",
+          "answer_head": "需要补充信息 你目前是在校生还是已经毕业？ 可以直接回答；不想说也可以说“跳过”。"
+        },
+        {
+          "message": "在校生",
+          "via": "clarify",
+          "outcome": "CLARIFY",
+          "badges": [
+            "需要补充信息"
+          ],
+          "closed": false,
+          "checklist": 0,
+          "citations": 0,
+          "duration_ms": 1229,
+          "progress": [
+            "正在准备检索 → 规划 → 整理\n只显示节点进度，不输出未核对答案"
+          ],
+          "error": "",
+          "answer_head": "需要补充信息 这份证明主要用于什么？（升学 / 就业 / 实习 / 出国留学 / 其他） 可以直接回答；不想说也可以说“跳过”。"
+        },
+        {
+          "message": "升学",
+          "via": "clarify",
+          "outcome": "PARTIAL_ANSWER",
+          "badges": [
+            "部分回答"
+          ],
+          "closed": false,
+          "checklist": 4,
+          "citations": 9,
+          "duration_ms": 1399,
+          "progress": [
+            "正在准备检索\n只显示节点进度，不输出未核对答案"
+          ],
+          "error": "",
+          "answer_head": "部分回答 在读证明开具（状态：以官方通知为准） [待确认] 本科生：自助打印在读证明 2007 级（含）以后在校生可用自助打印机；在校生用身份证、校园卡、学号及统一身份认证密码登录。打印前核对姓名、学号、专业等信息。 材料：身份证、校园卡、学号及学校统一身份认证密码 时限说明：自助打印机 24 小时开放；行政楼一楼大厅、三角市紫荆e站 24 小时自助服务大厅，宿舍区另有打印点 状态说明：需要补充信息后才能判断 部门：本科生院教学运行科 "
+        }
+      ],
+      "final_outcome": "PARTIAL_ANSWER",
+      "final_closed": false,
+      "final_checklist": 4,
+      "final_citations": 9,
+      "total_ms": 5191,
+      "refusal": false,
+      "failures": [],
+      "pass": true
+    },
+    {
+      "id": "mixed",
+      "name": "混合问题：怎么申请 + 金额",
+      "turns": [
+        {
+          "message": "国家奖学金怎么申请，金额是多少",
+          "via": "input",
+          "outcome": "ANSWERED",
+          "badges": [
+            "已核实回答",
+            "批次已截止"
+          ],
+          "closed": true,
+          "checklist": 5,
+          "citations": 10,
+          "duration_ms": 104943,
+          "progress": [
+            "正在规划与核对\n只显示节点进度，不输出未核对答案",
+            "正在准备检索 → 规划 → 流程\n只显示节点进度，不输出未核对答案",
+            "正在准备检索 → 规划 → 流程 → 检索\n只显示节点进度，不输出未核对答案",
+            "正在准备检索 → 规划 → 流程 → 检索 → 生成\n只显示节点进度，不输出未核对答案",
+            "正在准备检索 → 规划 → 流程 → 检索 → 生成 → 核对\n只显示节点进度，不输出未核对答案",
+            "正在准备检索 → 规划 → 流程 → 检索 → 生成 → 核对 → 生成\n只显示节点进度，不输出未核对答案",
+            "正在准备检索 → 规划 → 流程 → 检索 → 生成 → 核对 → 生成 → 核对\n只显示节点进度，不输出未核对答案"
+          ],
+          "error": "",
+          "answer_head": "已核实回答 批次已截止 办理路径（流程事实以 checklist 为准）： 本科生国家奖学金申请（状态：已截止） 批次：2026 年本科生国家奖助学金批次 [已截止] 数信学院：国家奖学金申请 在学院通知截止前提交国家奖学金申请材料；学院评审后按规定公示。 材料：国家奖学金申请审批表、学习成绩与综合测评证明、个人事迹材料、学院通知要求的其他材料 截止：2026-10-10T09:00:00+08:00 状态说明：本批次截止：2026-1"
+        }
+      ],
+      "final_outcome": "ANSWERED",
+      "final_closed": true,
+      "final_checklist": 5,
+      "final_citations": 10,
+      "total_ms": 104943,
+      "refusal": false,
+      "failures": [],
+      "pass": true
+    },
+    {
+      "id": "privacy",
+      "name": "隐私拒答：绩点与排名",
+      "turns": [
+        {
+          "message": "查一下我的绩点和排名",
+          "via": "input",
+          "outcome": "PRIVACY_REQUEST",
+          "badges": [
+            "未作答 · 涉及个人信息"
+          ],
+          "closed": false,
+          "checklist": 0,
+          "citations": 0,
+          "duration_ms": 1689,
+          "progress": [
+            "正在规划与核对\n只显示节点进度，不输出未核对答案"
+          ],
+          "error": "",
+          "answer_head": "未作答 · 涉及个人信息 暂时无法作答： 本系统不查询个人学号、成绩、排名等个人信息，请通过学校教务系统或相关部门办理。 下一步： 可联系：学校相关负责部门 官方入口：https://www.scau.edu.cn/ 演示系统不构成官方答复，具体以学校官网为准。"
+        }
+      ],
+      "final_outcome": "PRIVACY_REQUEST",
+      "final_closed": false,
+      "final_checklist": 0,
+      "final_citations": 0,
+      "total_ms": 1689,
+      "refusal": true,
+      "failures": [],
+      "pass": true
+    },
+    {
+      "id": "out_of_scope",
+      "name": "校外拒答：隔壁学校奖学金",
+      "turns": [
+        {
+          "message": "隔壁学校的奖学金政策是什么？",
+          "via": "input",
+          "outcome": "OUT_OF_SCOPE",
+          "badges": [
+            "超出范围"
+          ],
+          "closed": false,
+          "checklist": 0,
+          "citations": 0,
+          "duration_ms": 1961,
+          "progress": [
+            "正在规划与核对\n只显示节点进度，不输出未核对答案"
+          ],
+          "error": "",
+          "answer_head": "超出范围 暂时无法作答： 本系统只回答华南农业大学的公开制度与办事问题。 下一步： 可联系：学校相关负责部门 官方入口：https://www.scau.edu.cn/ 演示系统不构成官方答复，具体以学校官网为准。"
+        }
+      ],
+      "final_outcome": "OUT_OF_SCOPE",
+      "final_closed": false,
+      "final_checklist": 0,
+      "final_citations": 0,
+      "total_ms": 1961,
+      "refusal": true,
+      "failures": [],
+      "pass": true
+    }
+  ],
+  "summary": {
+    "total": 6,
+    "passed": 6,
+    "failed": [],
+    "core_total": 5,
+    "core_passed": 5,
+    "refusal_total": 2,
+    "refusal_passed": 2,
+    "turns": 9,
+    "p50_turn_ms": 1461,
+    "p95_turn_ms": 138782,
+    "target_p50_ms": 15000,
+    "target_p95_ms": 45000,
+    "target_met": false
+  },
+  "request_timeout_seconds": 240
+}

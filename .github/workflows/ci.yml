@@ -20,5 +20,39 @@ jobs:
         run: uv run ruff check .
       - name: Format check
         run: uv run ruff format --check src tests scripts
+      - name: Compile
+        run: uv run python -m compileall -q src scripts
+      - name: Config sanity
+        run: |
+          uv run python - <<'PY'
+          from pathlib import Path
+
+          from campusguide.config import (
+              load_abstention_config,
+              load_graph_config,
+              load_handoff_config,
+              load_mcp_config,
+              load_retrieval_config,
+          )
+          from campusguide.flows.calendar import load_calendar
+          from campusguide.flows.dsl import load_flows
+
+          root = Path.cwd()
+          load_retrieval_config(root / "configs" / "retrieval.yaml")
+          load_abstention_config(root / "configs" / "abstention.yaml")
+          load_graph_config(root / "configs" / "graph.yaml")
+          load_handoff_config(root / "configs" / "handoff.yaml")
+          load_mcp_config(root / "configs" / "mcp.yaml")
+          events = load_calendar(root / "configs" / "calendar.yaml")
+          flows = load_flows(
+              root / "configs" / "flows",
+              calendar_event_ids={event.event_id for event in events},
+          )
+          print(f"configs ok: {len(events)} events, {len(flows)} flows")
+          PY
+      - name: Compose config
+        run: |
+          cp .env.example .env
+          docker compose config --quiet
       - name: Test
         run: uv run pytest

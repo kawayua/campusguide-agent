@@ -2,7 +2,12 @@ from __future__ import annotations
 
 import math
 
-from campusguide.retrieval.sparse import BM25SparseEncoder, NullSparseEncoder, tokenize
+from campusguide.retrieval.sparse import (
+    BM25SparseEncoder,
+    NullSparseEncoder,
+    resolve_vocab_path,
+    tokenize,
+)
 
 
 def _dot(left, right) -> float:
@@ -66,6 +71,15 @@ def test_save_load_round_trip(tmp_path) -> None:
     assert loaded.index.idf_hash == encoder.index.idf_hash
     query = encoder.encode_query("奖学金")
     assert _dot(loaded.encode_documents(["奖学金申请"])[0], query) > 0
+
+
+def test_resolve_vocab_path_falls_back_from_foreign_absolute_path(tmp_path) -> None:
+    fallback = tmp_path / "data" / "sparse_vocab.json"
+    fallback.parent.mkdir(parents=True)
+    fallback.write_text("{}", encoding="utf-8")
+    assert resolve_vocab_path(tmp_path, "D:/other/sparse_vocab.json") == fallback
+    assert resolve_vocab_path(tmp_path, "data/sparse_vocab.json") == fallback
+    assert resolve_vocab_path(tmp_path) == fallback
 
 
 def test_idf_uses_bm25_formula() -> None:
