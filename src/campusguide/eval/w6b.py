@@ -459,7 +459,7 @@ def render_w6_markdown(report: dict[str, Any]) -> str:
         f"- 节点覆盖：{graph['node_counts']}。",
         f"- 流程行 {graph['flow_rows']}，混合行 {graph['mixed_rows']}，政策行 {graph['policy_rows']}；"
         "dev_v0 没有办理类问题，流程/混合路径由 5 个固定场景与 W5 回归覆盖。",
-        f"- 延迟：p50 {latency['p50_ms']}ms / p95 {latency['p95_ms']}ms（vPro 长尾为已记录限制）。",
+        f"- 延迟：p50 {latency['p50_ms']}ms / p95 {latency['p95_ms']}ms（单列记录，不设硬门禁）。",
         "",
         "## 逐题结果",
         "",
