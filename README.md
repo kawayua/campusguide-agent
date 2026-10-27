@@ -44,10 +44,11 @@ Browser
 | W3 / W6-A | 55/55 引用有效、0 编造、拒答召回 100%；baseline support 75.0%，W6-A prompt remediation 后 98.1%（54/54 人工） |
 | W4 / W5 | 检索 Recall@8 1.000、hybrid+rerank MRR 0.958；3 个流程 closed/open/clarify/handoff |
 | W6-A 延迟 | p50 3.5s / p95 15.0s；warmup 29.5s |
+| W6-B 完整图 | dev_v0 20 题；结构 38/38、quote mismatch 0、拒答召回 1.0、W6 硬门禁 PASS；p50 20.3s / p95 55.3s；support 0/45 未标注 |
 | W8 演示层 | 三栏 UI + 移动端抽屉/底部 sheet + 历史恢复 + `handle_stream` 节点进度；Docker/CI 已落地 |
 | 测试 | **642 passed**（离线，无真实模型） |
 
-本 README 的模型记录只取 ultraspeed 档；完整图/W7 的技术审计、原始 run 与限制见
+本 README 只列评测档 `ultraspeed` 的主记录；生产部署模型、vPro 运行与 W7 的完整技术审计、原始 run 和限制见
 [评测与质量门](docs/evaluation.md)，不在本页混列其他档位数据。
 
 ## 快速开始
@@ -61,12 +62,12 @@ make compose-up            # Qdrant
 make demo                  # Gradio 三栏页面
 ```
 
-打开 `http://127.0.0.1:7860/`。页面展示档为 `ultraspeed`；模型配置统一由 `.env` 注入，完整评测审计见 `docs/evaluation.md`。
+打开 `http://127.0.0.1:7860/`。主界面不展示模型名；模型配置统一由 `.env` 注入。评测档为 `ultraspeed`，生产部署模型与完整审计见 `docs/evaluation.md`。
 
 ### Docker（推荐）
 
 ```bash
-cp .env.example .env       # 填模型配置；演示档为 ultraspeed
+cp .env.example .env       # 填模型配置；主界面不展示模型名
 make demo-preflight        # 检查 .env / data / points=4026 / manifest hash
 make demo-up               # preflight + docker compose up -d --build
 ```
@@ -117,9 +118,11 @@ make demo-fake
 | W4 | Recall@8 1.000；hybrid+rerank MRR 0.958；population 5/5 | MCP + 混合检索通过 |
 | W5 | 3 个流程；closed/open、clarify、handoff | 流程事实可控，不靠 LLM 编造 |
 | W6-A | 54/54 人工，98.1%；p50 3.5s / p95 15.0s；warmup 29.5s | 引用契约通过 |
+| W6-B | dev_v0 20 题；结构 38/38、quote mismatch 0、拒答召回 1.0、硬门禁 PASS；p50 20.3s / p95 55.3s | 完整图链路通过；support 尚未人工标注 |
 | W8 | 三栏 UI/移动端/历史恢复/节点进度；fake tests 642 passed；Docker/CI 落地 | 演示层完成 |
 
-完整图/W7 的原始技术审计、指标和限制见 [评测与质量门](docs/evaluation.md)；本页只列 ultraspeed 记录，不混列其他档位数据。
+W6-B ultraspeed 报告：[w6b-ultraspeed-dev-report.md](data/eval/w6b-ultraspeed-dev-report.md)。
+W7 的原始技术审计、指标和限制见 [评测与质量门](docs/evaluation.md)；本页只列评测档 ultraspeed 的主记录，不混列生产 vPro 或 W7 数据。
 
 ## 数据与合规
 
