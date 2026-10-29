@@ -1,0 +1,64 @@
+=== corpus_random_100_001 | ANSWERED | 24.351s
+A: **结论要点：**
+
+1. 本科生考试迟到30分钟者，不得参加该课程考试，并作缺考论；研究生课程考核考试迟到30分钟以上，一律按“缺考”论，其成绩作零分处理，须进行重修；硕士研究生招生复试正式笔试、面试开始后，迟到30分钟及以上者视为弃考，不能进入考场。 [华南农业大学本科学生考场工作细则 第二十四条] [华南农业大学研究生课程考核与成绩管理规定 第十五条] [农学院硕士研究生招生复试及录取工作细则 三、复试安排（章节/段落）]
+2. 本科学生除教师指定或许可携带的书籍及文具外，不得将手机等具有存储、通讯功能的电子设备带至考座，必须放到监考员指定的位置；硕士研究生复试候考室候考及正式考试期间严禁携带手机等带有通讯功能的电子设备，通讯设备由学院统一管理。 [华南农业大学本科学生考场工作细则 第二十五条] [农学院硕士研究生招生复试及录取工作细则 三、复试安排（章节/段落）]
+3. 学生代替他
+  COV [{"unit_id": "u1", "status": "answered", "claim_ids": ["c1", "c2", "c3"], "missing_items": []}]
+
+=== corpus_random_100_020 | PARTIAL_ANSWER | 61.448s
+A: > 部分结论未通过引用核对，已省略；以下仅为可核实内容。
+> 已省略 1 条结论。
+
+**结论要点：**
+
+1. 2024级软件工程专业的核心课程包括：计算机组成与系统基础、工程经济学、操作系统、数据库系统、软件工程基础、计算机网络、软件体系结构、团队激励与沟通等。 [软件工程专业人才培养方案 六、专业核心课程（章节/段落）]
+2. 关于毕业设计的相关要求，在培养计划进程表中，毕业论文/设计实现的途径及相关要求包括：能够设计针对软件工程领域复杂问题的解决方案；能够基于科学原理并采用科学方法对软件工程领域的复杂问题进行研究；能够理解系统软件的设计思路和基本原理并具有应用软件技术、科学方法创新性地解决软件工程具体问题的能力；优质、高效、规范地开发软件系统；以及培养规格对毕业要求和培养目标的支持等。 [软件工程专业人才培养方案 十、培养计划进程表（章节/段落）] [软件工程专业人才培养方案 十、
+  COV [{"unit_id": "u1", "status": "generation_missing", "claim_ids": [], "missing_items": ["软件工程 核心课程"]}, {"unit_id": "u2", "status": "answered", "claim_ids": ["c2"], "missing_items": []}]
+  COV [{"unit_id": "u1", "status": "generation_missing", "claim_ids": [], "missing_items": ["软件工程 核心课程"]}, {"unit_id": "u2", "status": "answered", "claim_ids": ["c2", "supplement_2"], "missing_items": []}]
+  COV [{"unit_id": "u1", "status": "generation_missing", "claim_ids": [], "missing_items": ["软件工程 核心课程"]}, {"unit_id": "u2", "status": "answered", "claim_ids": ["c2", "supplement_2"], "missing_items": []}]
+
+=== corpus_random_100_035 | ANSWERED | 91.715s
+A: **结论要点：**
+
+1. 农学院研究生奖学金评选办法规定，针对老生学业奖学金和国家奖学金的科研成果（B）评分及加分如下：博士生科学研究满分70分（自评分10分，成果分60分），硕士生科学研究满分50分（自评分10分，成果分40分）。科研成果主要包括发表论文、专著（编、译）书籍、优秀成果奖、发明专利、品种权、行业标准、作报告和听学术讲座等。各项具体加分规则包括：发表SCI论文（IF小于1时：一区16分/篇、二区12分/篇、三区10分/篇、四区8分/篇；IF大于或等于1时：一区16+(IF-1)*2分/篇、二区12+(IF-1)*1.5分/篇、三区10+(IF-1)*1.5分/篇、其余SCI论文8+(IF-1)*1分/篇）；EI论文8分/篇；一级中文核心期刊论文4分/篇；二级中文核心期刊论文和CSSCI期刊2分/篇（限报2篇，第2篇只加1分）；出版本学科外文版学术专著（编、译，10万字以上）
+  COV [{"unit_id": "u1", "status": "generation_missing", "claim_ids": ["c1"], "missing_items": ["农学院2026年研究生奖学金评选办法及补充说明中，对学术不端行为的具体规定是什么？"]}]
+  COV [{"unit_id": "u1", "status": "answered", "claim_ids": ["c1", "supplement_1", "supplement_2"], "missing_items": []}]
+
+=== corpus_random_100_041 | GENERATION_FAILED | 99.558s
+A: <span class="w8-badge w8-badge-abstain"><span class="w8-dot"></span>请求失败</span>
+
+服务暂时不可用；请检查 Qdrant、MCP 与 `.env` 配置后重试。不显示堆栈。
+
+=== corpus_random_100_049 | GENERATION_FAILED | 68.989s
+A: <span class="w8-badge w8-badge-abstain"><span class="w8-dot"></span>请求失败</span>
+
+服务暂时不可用；请检查 Qdrant、MCP 与 `.env` 配置后重试。不显示堆栈。
+
+=== corpus_random_100_065 | PARTIAL_ANSWER | 56.044s
+A: > 以下为已核实内容；尚缺的回答部分见后文说明。
+
+**结论要点：**
+
+1. 计算机科学与技术专业2022版培养方案的毕业总学分为163学分，其中必修课程83.5学分，选修课程37学分，实践课程42.5学分；2024版培养方案的毕业总学分为159.5学分，其中必修课程理论课应取得89学分，选修课程理论课应取得33学分，实践(含实验)课程应取得37.5学分。 [计算机科学与技术专业人才培养方案 七、课程结构及毕业要求（章节/段落）] [计算机科学与技术专业人才培养方案 八、课程结构（章节/段落）]
+2. 计算机科学与技术专业2022版培养方案的专业核心课程包括：数据结构，离散结构，计算机组成原理，操作系统，数据库系统，编译原理，计算机网络。 [计算机科学与技术专业人才培养方案 五、专业核心课程（章节/段落）]
+3. 计算机科学与技术专业2024版培养方案的专业核心课程包括：计算机科学概论、
+  COV [{"unit_id": "u1", "status": "generation_missing", "claim_ids": ["c2"], "missing_items": ["重要", "）数据结构"]}, {"unit_id": "u2", "status": "answered", "claim_ids": ["c1"], "missing_items": []}, {"unit_id": "u3", "status": "generation_missing", "claim_ids": [], "missing_items": ["计算机科学与技术 核心课程"]}, {"unit_id": "u4", "status": "answered", "claim_ids": ["c1"], "missing_items": []}]
+  COV [{"unit_id": "u1", "status": "generation_missing", "claim_ids": ["c2"], "missing_items": ["重要", "）数据结构"]}, {"unit_id": "u2", "status": "answered", "claim_ids": ["c1"], "missing_items": []}, {"unit_id": "u3", "status": "generation_missing", "claim_ids": [], "missing_items": ["计算机科学与技术 核心课程"]}, {"unit_id": "u4", "status": "answered", "claim_ids": ["c1"], "missing_items": []}]
+  COV [{"unit_id": "u1", "status": "generation_missing", "claim_ids": ["c2"], "missing_items": ["重要", "）数据结构"]}, {"unit_id": "u2", "status": "answered", "claim_ids": ["c1"], "missing_items": []}, {"unit_id": "u3", "status": "generation_missing", "claim_ids": [], "missing_items": ["计算机科学与技术 核心课程"]}, {"unit_id": "u4", "status": "answered", "claim_ids": ["c1"], "missing_items": []}]
+
+=== corpus_random_100_098 | ANSWERED | 34.166s
+A: **结论要点：**
+
+1. 数学与信息学院设有云计算与大数据实验室。 [数学与信息学院、软件学院教学实验平台 一、教学示范中心与实验室（章节/段落）]
+
+**依据：**
+
+- [数学与信息学院、软件学院教学实验平台 一、教学示范中心与实验室（章节/段落）](https://info.scau.edu.cn/jxpt/list.htm)
+> 基于云平台的计算机实验教学示范中心信息数学与应用统计实验教学示范中心数学建模实验教学示范中心计算机软件实验室计算机硬件实验室计算机系统实验室计算机网络实验室云计算与大数据实验室物联网实验室
+> IT项目综合训练实验室
+> ERP沙盘模拟综合实验室工业工程实验室生产运作与管理实验室、信息技术与管理实验室、管理系统仿真实验室
+
+---
+演示系统不构成官方答复，具体以学校官网为准。
+  COV [{"unit_id": "u1", "status": "answered", "claim_ids": ["c2"], "missing_items": []}]

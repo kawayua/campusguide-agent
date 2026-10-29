@@ -1,0 +1,32 @@
+=== corpus_random_100_020 | ANSWERED | 44.839s
+A: **结论要点：**
+
+1. 2024级软件工程专业的核心课程包括：计算机组成与系统基础、工程经济学、操作系统、数据库系统、软件工程基础、计算机网络、软件体系结构、团队激励与沟通。 [软件工程专业人才培养方案 六、专业核心课程（章节/段落）]
+2. 2024级软件工程专业的毕业设计要求包括：在毕业要求实现途径中，毕业论文/设计可作为“设计/开发解决方案”、“研究”、“使用现代工具”、“工程与可持续发展”、“沟通”、“终身学习”等毕业要求的实现途径课程设置。 [软件工程专业人才培养方案 十、培养计划进程表（章节/段落）] [软件工程专业人才培养方案 十、培养计划进程表（章节/段落）] [软件工程专业人才培养方案 十、培养计划进程表（章节/段落）] [软件工程专业人才培养方案 十、培养计划进程表（章节/段落）]
+3. 2024级软件工程专业的毕业设计要求包括：在毕业要求实现途径中，毕业论文/设计
+  COV [{"unit_id": "u1", "status": "answered", "claim_ids": ["c1"], "missing_items": []}, {"unit_id": "u2", "status": "generation_missing", "claim_ids": [], "missing_items": ["软件工程 毕业设计"]}]
+  COV [{"unit_id": "u1", "status": "answered", "claim_ids": ["c1"], "missing_items": []}, {"unit_id": "u2", "status": "answered", "claim_ids": ["supplement_1"], "missing_items": []}]
+
+=== corpus_random_100_041 | ANSWERED | 21.677s
+A: **结论要点：**
+
+1. 2026级农业工程（农业电气化与自动化方向）的博士生培养目标为：具备严谨的科学态度和求实的创新精神，掌握农业工程学科某一领域坚实宽广的基础理论和系统深入的专门知识，熟悉本学科的研究方法和试验手段，了解本学科及相关学科领域的研究现状和发展趋势，具有较强的创新能力及独立从事农业工程科学研究和解决工程技术问题的能力，在理论研究或技术研究中取得被同行认可的创新性成果。至少掌握一门外国语，能熟练阅读本专业的外文资料，并具有较好的写作能力和进行国际学术交流的能力。可在高等院校、研究机构、企业或相关部门从事教学、科研、生产、推广、经营和管理工作的学术创新型拔尖人才。硕士生培养目标为：具备严谨的科学态度和求实的创新精神，掌握农业工程学科某一领域坚实的基础理论和系统的专门知识，了解所从事研究方向的研究现状和发展趋势，具有较强的分析和解决工程实际问题的能力，在理论研究或技术研究中有
+  COV [{"unit_id": "u1", "status": "answered", "claim_ids": ["c1"], "missing_items": []}, {"unit_id": "u2", "status": "answered", "claim_ids": ["c3"], "missing_items": []}, {"unit_id": "u3", "status": "answered", "claim_ids": ["c2"], "missing_items": []}, {"unit_id": "u4", "status": "answered", "claim_ids": ["c4"], "missing_items": []}]
+
+=== corpus_random_100_049 | GENERATION_FAILED | 111.79s
+A: <span class="w8-badge w8-badge-abstain"><span class="w8-dot"></span>请求失败</span>
+
+服务暂时不可用；请检查 Qdrant、MCP 与 `.env` 配置后重试。不显示堆栈。
+
+=== corpus_random_100_065 | PARTIAL_ANSWER | 82.254s
+A: > 部分结论未通过引用核对，已省略；以下仅为可核实内容。
+> 已省略 1 条结论。
+
+**结论要点：**
+
+1. 计算机科学与技术专业2022版培养方案的毕业总学分为163学分，其中必修课程83.5学分，选修课程37学分，实践课程42.5学分。 [计算机科学与技术专业人才培养方案 七、课程结构及毕业要求（章节/段落）]
+2. 计算机科学与技术专业2022版培养方案的毕业总学分为163学分，其中必修课程83.5学分，选修课程37学分，实践课程42.5学分；2024版培养方案的毕业总学分为159.5学分，其中必修课程理论课应取得89学分，选修课程理论课应取得33学分，实践(含实验)课程应取得37.5学分。 [计算机科学与技术专业人才培养方案 七、课程结构及毕业要求（章节/段落）] [计算机科学与技术专业人才培养方案 八、课程结构（章节/段落）]
+3. 计算机科学与技术专业2022版培养方案的专
+  COV [{"unit_id": "u1", "status": "generation_missing", "claim_ids": ["c2"], "missing_items": ["重要", "）数据结构"]}, {"unit_id": "u2", "status": "answered", "claim_ids": ["c1"], "missing_items": []}, {"unit_id": "u3", "status": "answered", "claim_ids": ["c3"], "missing_items": []}, {"unit_id": "u4", "status": "answered", "claim_ids": ["c1"], "missing_items": []}]
+  COV [{"unit_id": "u1", "status": "generation_missing", "claim_ids": ["c2"], "missing_items": ["）数据结构"]}, {"unit_id": "u2", "status": "answered", "claim_ids": ["c1"], "missing_items": []}, {"unit_id": "u3", "status": "answered", "claim_ids": ["c3"], "missing_items": []}, {"unit_id": "u4", "status": "answered", "claim_ids": ["c1"], "missing_items": []}]
+  COV [{"unit_id": "u1", "status": "generation_missing", "claim_ids": ["c2"], "missing_items": ["）数据结构"]}, {"unit_id": "u2", "status": "answered", "claim_ids": ["c1"], "missing_items": []}, {"unit_id": "u3", "status": "answered", "claim_ids": ["c3"], "missing_items": []}, {"unit_id": "u4", "status": "answered", "claim_ids": ["c1"], "missing_items": []}]

@@ -1,0 +1,19 @@
+{
+  "stopped_pids": [
+    34220,
+    37044,
+    3676,
+    10096,
+    22040,
+    16408,
+    39496,
+    11640,
+    39964
+  ],
+  "started_pid": 57228,
+  "url": "http://127.0.0.1:7860/",
+  "as_of": "2026-10-25",
+  "as_of_note": "Preserves the previous GraphBackend demo default for comparable regression.",
+  "qdrant_trust_env": false,
+  "started_at": "2026-10-29T19:12:30.210377+08:00"
+}

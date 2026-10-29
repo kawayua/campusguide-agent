@@ -1,0 +1,52 @@
+{
+  "corpus_random_100_001": {
+    "verdict": "complete",
+    "note": "迟到“30 分钟”方向正确，手机禁令与替考开除学籍齐全。",
+    "attempts": "run1 PARTIAL → retry2 ANSWERED"
+  },
+  "corpus_random_100_020": {
+    "verdict": "partial",
+    "note": "核心课程列表正确；毕业设计只答了“实现途径”，缺 617017 行的 6 学分/14 周/第 8 学期。",
+    "attempts": "run1 PARTIAL → retry2 PARTIAL → retry3 ANSWERED"
+  },
+  "corpus_random_100_028": {
+    "verdict": "complete",
+    "note": "复试环节、成绩计算与录取原则齐全；省略的一条为重复结论。",
+    "attempts": "run1 PARTIAL（省略 1 条重复结论）"
+  },
+  "corpus_random_100_035": {
+    "verdict": "partial",
+    "note": "加分规则与联培署名例外已答；问题中的“学术不端”未出现（第七节要求缺失）。",
+    "attempts": "run1 GENERATION_FAILED → retry2 ANSWERED"
+  },
+  "corpus_random_100_039": {
+    "verdict": "complete",
+    "note": "两类定义、报名条件与证书规定分别作答，正反结论不再矛盾。",
+    "attempts": "run1 ANSWERED"
+  },
+  "corpus_random_100_041": {
+    "verdict": "complete",
+    "note": "两个对象×培养目标/课程设置四个单元均有证据且均标已答；版本 2026 与 2025—2026 未混。",
+    "attempts": "run1 FAILED → retry2 FAILED(SSL) → retry3 ANSWERED"
+  },
+  "corpus_random_100_049": {
+    "verdict": "failed",
+    "note": "120 秒预算内未作答；根因是补查重置改写预算导致 20 步递归上限，已修复，420 秒预算下可出 PARTIAL 答案。",
+    "attempts": "run1 超时 → retry2/3 FAILED → 复现 GraphRecursionError → 修复后 420s 预算下 PARTIAL"
+  },
+  "corpus_random_100_064": {
+    "verdict": "complete",
+    "note": "2022 版 166 学分与 2024 版 155 学分分别给出，未接受 138 的错误数值。",
+    "attempts": "run1 ANSWERED"
+  },
+  "corpus_random_100_065": {
+    "verdict": "complete",
+    "note": "163/159.5 两个版本均保留；核心课程两版齐全；系统仍报 PARTIAL 是覆盖误判（已修）。",
+    "attempts": "run1 PARTIAL → retry2 PARTIAL → retry3 PARTIAL（内容齐全）"
+  },
+  "corpus_random_100_098": {
+    "verdict": "partial",
+    "note": "云计算与大数据实验室答对，但问题前半段“有哪些实验教学示范中心”未列出三个中心。",
+    "attempts": "run1 PARTIAL → retry2 ANSWERED（仅答实验室）"
+  }
+}

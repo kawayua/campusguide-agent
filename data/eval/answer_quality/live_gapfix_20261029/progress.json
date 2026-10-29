@@ -1,0 +1,10 @@
+{
+  "completed": 3,
+  "total": 3,
+  "outcomes": {
+    "PARTIAL_ANSWER": 1,
+    "ANSWERED": 2
+  },
+  "elapsed_s": 129.19,
+  "updated_at": "2026-10-29T19:15:53.747896+08:00"
+}

@@ -1,0 +1,197 @@
+=== corpus_random_100_001 | PARTIAL_ANSWER | 48.83s
+Q: 考试迟到、携带手机或者替考，分别涉及哪些考场规定和纪律处分？
+A: > 以下为已核实内容；尚缺的回答部分见后文说明。
+
+**结论要点：**
+
+1. 考试迟到规定与处理：本科生迟到30分钟者，不得参加该课程考试并作缺考论；研究生考试迟到30分钟以上，按缺考论，成绩作零分处理，须进行重修；硕士研究生复试正式笔试、面试开始后，迟到30分钟及以上者视为弃考，不能进入考场。 [华南农业大学本科学生考场工作细则 第二十四条] [华南农业大学研究生课程考核与成绩管理规定 第十五条] [农学院硕士研究生招生复试及录取工作细则 三、复试安排（章节/段落）]
+2. 考试迟到规定与处理：本科生迟到30分钟者，不得参加该课程考试，并作缺考论；开考30分钟后，监考员禁止迟到的考生入场。研究生考试迟到30分钟以上，一律按“缺考”论，其成绩作零分处理，须进行重修。硕士研究生复试正式笔试、面试开始后，迟到30分钟及以上者视为弃考，不能进入考场。 [华南农业大学本科学生考场工作细则 第二十四条] [华南农业大学本科学生考场工作细则 第十六条] [华南农业大学研究生课程考核与成绩管理规定 第十五条] [农学院硕士研究生招生复试及录取工作细则 三、复试安排（章节/段落）]
+3. 携带手机规定：除教师指定或许可携带的书籍及文具外，学生不得将手机等具有存储、通讯功能的电子设备带至考座，必须放到监考员指定的位置（设置为关闭状态）；硕士研究生考生进入候考室候考及正式考试期间严禁携带手机等带有通讯功能的电子设备，通讯设备由学院统一管理。 [华南农业大学本科学生考场工作细则 第二十五条] [农学院硕士研究生招生复试及录取工作细则 三、复试安排（章节/段落）]
+4. 替考及使用通讯设备作弊纪律与处分：研究生严禁代考、考试作弊等违规行为，一旦发现或被举报属实，其成绩作零分处理，进行重修，并根据《华南农业大学学生违纪处分实施办法》给予处分。学生有代替他人或者让他人代替自己参加考试、使用通讯设备或其他器材作弊行为的，给予开除学籍处分。 [华南农业大学研究生课程考核与成绩管理规定 第十六条] [华南农业大学学生违纪处分实施办法 第八条]
+5. 携带手机规定：除教师指定或许可携带的书籍及文具外，本科生不得将手机等具有存储、通讯功能的电子设备带至考座，必须放到监考员指定的位置（设置为关闭状态），监考员会指引和监督学生将手机等放置在指定的存放物品处。硕士研究生考生进入候考室候考及正式考试期间严禁携带手机等带有通讯功能的电子设备，通讯设备由学院统一管理。 [华南农业大学本科学生考场工作细则 第二十五条] [农学院硕士研究生招生复试及录取工作细则 三、复试安排（章节/段落）] [华南农业大学本科学生考场工作细则 第十四条]
+
+**依据：**
+
+- [华南农业大学本科学生考场工作细则 第二十四条](https://xngk.scau.edu.cn/_upload/article/files/59
+  COV units=[{"unit_id": "u1", "status": "generation_missing", "claim_ids": [], "missing_items": ["考试迟到、携带手机或者替考，分别涉及哪些考场规定和纪律处分"]}] missing=["考试迟到、携带手机或者替考，分别涉及哪些考场规定和纪律处分"]
+  COV units=[{"unit_id": "u1", "status": "generation_missing", "claim_ids": [], "missing_items": ["考试迟到、携带手机或者替考，分别涉及哪些考场规定和纪律处分"]}] missing=["考试迟到、携带手机或者替考，分别涉及哪些考场规定和纪律处分"]
+  COV units=[{"unit_id": "u1", "status": "generation_missing", "claim_ids": [], "missing_items": ["考试迟到、携带手机或者替考，分别涉及哪些考场规定和纪律处分"]}] missing=["考试迟到、携带手机或者替考，分别涉及哪些考场规定和纪律处分"]
+  SUP queries=1 evidence=None
+  SUP queries=1 evidence=None
+  DECISION "pass"
+  warnings=["SOURCE_VIEW_HASH:b3dbe6707e63f17386949e37b4995ab2ab1d2e8ee441e1e2923a71f1ad8723d2", "RERANK_QUERY_VIEWS:考试迟到,涉及哪些考场规定和纪律处分? | 考试迟到 考场规定 | 考试迟到 纪律处分", "RERANK_DROP:disciplinary-rules@v2017#第十六条:p1:score=0.5859", "RERANK_DROP:exam-room-rules@v2022#第三十二条:p1:score=0.5798", "RERANK_DROP:exam-room-rules@v2022#第二十九条:p1:score=0.5678", "RERANK_DROP:exam-room-rules@v2022#第四条:p1:score=0.5664", "RERANK_DROP:exam-room-rules@v2022#第二十一条:p1:score=0.5593", "RERANK_DROP:exam-room-rules@v2022#第八条:p1:score=0.5498", "RERANK_DROP:disciplinary-rules@v2017#第十八条:p1:score=0.5399", "RERANK_DROP:exam-room-rules@v2022#
+
+=== corpus_random_100_020 | PARTIAL_ANSWER | 93.417s
+Q: 2024级软件工程专业有哪些核心课程，毕业设计有什么要求？
+A: > 部分结论未通过引用核对，已省略；以下仅为可核实内容。
+> 已省略 2 条结论。
+
+**结论要点：**
+
+1. 2024级软件工程专业的核心课程包括：计算机组成与系统基础、工程经济学、操作系统、数据库系统、软件工程基础、计算机网络、软件体系结构、团队激励与沟通等。 [软件工程专业人才培养方案 六、专业核心课程（章节/段落）]
+2. 关于毕业设计的相关要求，在培养计划进程表中，毕业论文/设计作为实现途径课程设置，对应支持了“毕业要求3（设计/开发解决方案）”下的3.1设计针对软件工程领域复杂问题的解决方案，以及“毕业要求4（研究）”下的4.1能够基于前期获得的科学方法和工程技术完成对软件工程领域复杂问题的分析、设计以及实现、4.3能够理解系统软件的设计思路和基本原理并具有应用软件技术、科学方法创新性地解决软件工程具体问题的能力等毕业要求实现途径。 [软件工程专业人才培养方案 十、培养计划进程表（章节/段落）]
+3. 2024级软件工程专业的专业核心课程包括：线性代数、高等统计学、工程经济学、团队激励与沟通、计算机组成与系统基础、数据库系统、计算机网络、操作系统、软件工程基础。 [软件工程专业人才培养方案 十、培养计划进程表（章节/段落）] [软件工程专业人才培养方案 十、培养计划进程表（章节/段落）] [软件工程专业人才培养方案 十、培养计划进程表（章节/段落）] [软件工程专业人才培养方案 十、培养计划进程表（章节/段落）] [软件工程专业人才培养方案 十、培养计划进程表（章节/段落）] [软件工程专业人才培养方案 十、培养计划进程表（章节/段落）] [软件工程专业人才培养方案 十、培养计划进程表（章节/段落）] [软件工程专业人才培养方案 十、培养计划进程表（章节/段落）] [软件工程专业人才培养方案 十、培养计划进程表（章节/段落）] [软件工程专业人才培养方案 十、培养计划进程表（章节/段落）]
+4. 在培养计划进程表中，毕业论文/设计(工学)的课程设置包括“毕业论文/设计(工学) 数学与信息学院 617017 6 210 0 0 14 周 8 Graduation Thesis/Design 软件学院”。 [软件工程专业人才培养方案 十、培养计划进程表（章节/段落）]
+5. 在培养计划进程表中，毕业论文/设计作为实现途径课程设置，对应支持了“毕业要求3（设计/开发解决方案）”下的3.1设计针对软件工程领域复杂问题的解决方案，“毕业要求4（研究）”下的4.1能够基于前期获得的科学方法和工程技术完成对软件工程领域复杂问题的分析、设计以及实现、4.3能够理解系统软件的设计思路和基本原理并具有应用软件技术、科学方法创新性地解决软件工程具体问题的能力，“毕业要求5（使用现代工具）”下的5.3优质、高效、规范地开发软件系统，“毕业要求6（工程与可持续发展）”下
+  COV units=[{"unit_id": "u1", "status": "generation_missing", "claim_ids": [], "missing_items": ["软件工程 核心课程"]}, {"unit_id": "u2", "status": "missing_evidence", "claim_ids": [], "missing_items": ["毕业设计的具体要求（如学分、选题、答辩或撰写规范等详细内容）"]}] missing=["软件工程 核心课程", "毕业设计的具体要求（如学分、选题、答辩或撰写规范等详细内容）", "2024级软件工程专业毕业设计的具体要求是什么？"]
+  COV units=[{"unit_id": "u1", "status": "generation_missing", "claim_ids": [], "missing_items": ["软件工程 核心课程"]}, {"unit_id": "u2", "status": "answered", "claim_ids": ["c2", "supplement_3"], "missing_items": []}] missing=["软件工程 核心课程"]
+  COV units=[{"unit_id": "u1", "status": "generation_missing", "claim_ids": [], "missing_items": ["软件工程 核心课程"]}, {"unit_id": "u2", "status": "answered", "claim_ids": ["c2", "supplement_3"], "missing_items": []}] missing=["软件工程 核心课程"]
+  SUP queries=2 evidence=None
+  SUP queries=1 evidence=None
+  DECISION "pass"
+  warnings=["SOURCE_VIEW_HASH:b3dbe6707e63f17386949e37b4995ab2ab1d2e8ee441e1e2923a71f1ad8723d2", "STRUCTURED_MATCH:info-ug-se-plan@v2024#六、专业核心课程:p1", "RERANK_DROP:info-ug-se-plan@v2024#三、培养规格:p1:score=0.5955", "RERANK_DROP:info-ug-se-plan@v2024#四、毕业要求:p1:score=0.5766", "RERANK_DROP:info-ug-se-plan@v2024#二、培养目标:p1:score=0.5620", "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤", "PROFILE_UNDETERMINED: 用户未提供学院，结果保留可能限定该细目的条款", "FILTERS_APPLIED: as_of=2026-10-25；version_mode=current；audience=未指定（不硬过滤）；profile[majors=software-engineering; intake_year=2024]", "STRUCTURED_MATCH:info-ug-se-plan@v2024#十、培养计划进程表:p13", "ST
+
+=== corpus_random_100_028 | PARTIAL_ANSWER | 49.486s
+Q: 农学院2026年硕士研究生复试包括哪些环节，总成绩和录取结果如何确定？
+A: > 部分结论未通过引用核对，已省略；以下仅为可核实内容。
+> 已省略 1 条结论。
+
+**结论要点：**
+
+1. 农学院2026年硕士研究生复试包括笔试前安排素质评估、专业能力测试（笔试）、面试、资格审查材料提交和审核等环节。 [农学院硕士研究生招生复试及录取工作细则 三、复试安排（章节/段落）]
+2. 农学院2026年硕士研究生复试包括笔试前安排素质评估、专业能力测试（笔试）、面试（包括外语水平测试、专业素质及能力考核、综合素质及能力考核三个部分）、资格审查材料提交和审核等环节。 [农学院硕士研究生招生复试及录取工作细则 三、复试安排（章节/段落）] [农学院硕士研究生招生复试及录取工作细则 三、复试安排（章节/段落）] [农学院硕士研究生招生复试及录取工作细则 三、复试安排（章节/段落）]
+3. 总成绩和录取结果的确定规则为：1.复试成绩计算方法为：外语能力测试（面试成绩）×30%＋专业能力测试（笔试成绩）×40%＋综合素质能力考核（面试成绩）×30%；2.综合成绩计算方法为：综合成绩＝（初试总成绩/5）×50%＋复试成绩×50%；3.录取原则上，复试成绩不及格者（低于60分为不及格）不予录取，思想政治素质和道德品质考察结果不合格者不予录取，同等学力考生加试成绩不及格者不予录取；招生专业按全日制与非全日制两类分开排序，按照考生（退役大学生士兵专项计划考生除外）综合成绩从高到低分别确定拟录取名单。 [农学院硕士研究生招生复试及录取工作细则 四、成绩使用（章节/段落）] [农学院硕士研究生招生复试及录取工作细则 五、录取原则（章节/段落）]
+
+**依据：**
+
+- [农学院硕士研究生招生复试及录取工作细则 三、复试安排（章节/段落）](https://nxy.scau.edu.cn/_upload/article/files/72/58/be7a673e49b5b2afe7e583de37b9/662453cc-0072-4efa-a6ca-aaacb63bf77a.pdf)
+> （一）笔试前安排素质评估。考生须在笔试前在笔试现场开展素质评估（以问卷形式开展）。请各位考生于3 月25 日下午14:00 到达指定课室参加评估，具体操作以现场指引为准。未参加评估的同学视为放弃复试。
+> （二）笔试安排专业能力测试。对作物学、农艺与种业专业的考生进行专业知识考核，闭卷方式，笔试开始时间为3 月25 日下午15:00，时长为2 小时。
+> 其中，作物学专业知识考核统一进行命题，不分方向。
+> （三）面试时间安排学术学位硕士：3 月26 日全天专业学位硕士：3 月27 日全天
+> （四）面试内容与形式面试内容包括外语水平测试、专业素质及能力考核、综合素质及能力考核三个部分。每位专家现场独立评分，重点考查考生的专业知识结构、实践(实验)能力、综合分析及解决实际问题的能力
+  COV units=[{"unit_id": "u1", "status": "generation_missing", "claim_ids": [], "missing_items": ["农学院 农学院2026年硕士研究生复试包括哪些环节，总成绩和录取结果如何确定"]}] missing=["农学院 农学院2026年硕士研究生复试包括哪些环节，总成绩和录取结果如何确定"]
+  COV units=[{"unit_id": "u1", "status": "generation_missing", "claim_ids": [], "missing_items": ["农学院 农学院2026年硕士研究生复试包括哪些环节，总成绩和录取结果如何确定"]}] missing=["农学院 农学院2026年硕士研究生复试包括哪些环节，总成绩和录取结果如何确定"]
+  COV units=[{"unit_id": "u1", "status": "generation_missing", "claim_ids": [], "missing_items": ["农学院 农学院2026年硕士研究生复试包括哪些环节，总成绩和录取结果如何确定"]}] missing=["农学院 农学院2026年硕士研究生复试包括哪些环节，总成绩和录取结果如何确定"]
+  SUP queries=1 evidence=None
+  SUP queries=1 evidence=None
+  DECISION "pass"
+  warnings=["STATUS_MISMATCH: agri-master-admission-rule@v2025#三、复试安排 status=repealed", "STATUS_MISMATCH: agri-master-admission-rule@v2025#七、其他事项 status=repealed", "STATUS_MISMATCH: agri-master-admission-rule@v2025#二、招生计划与复试人数 status=repealed", "STATUS_MISMATCH: agri-master-admission-rule@v2025#一、组织领导 status=repealed", "STATUS_MISMATCH: agri-master-admission-rule@v2025#六、监督与复议 status=repealed", "STATUS_MISMATCH: agri-master-admission-rule@v2025#四、成绩使用 status=repealed", "STATUS_MISMATCH: agri-master-admission-rule@v2025#五、录取原则 status=repealed", "SOURCE_VIEW_HASH:b3dbe6707e63f17386949e37b4995ab2ab1d2e8ee44
+
+=== corpus_random_100_035 | GENERATION_FAILED | 76.131s
+Q: 农学院2026年研究生奖学金评选办法和补充说明，对科研成果加分及学术不端如何规定？
+A: <span class="w8-badge w8-badge-abstain"><span class="w8-dot"></span>请求失败</span>
+
+服务暂时不可用；请检查 Qdrant、MCP 与 `.env` 配置后重试。不显示堆栈。
+  warnings=null
+
+=== corpus_random_100_039 | ANSWERED | 66.53s
+Q: 微专业与辅修专业有什么区别，报名条件和完成后取得的证书分别是什么？
+A: **结论要点：**
+
+1. 微专业是指为满足学生个性化和多样化发展需求，在现有本科专业目录以外，立足经济社会发展对人才的需求，围绕某一特定领域、研究方向或者核心课程开设的一组核心课程，通过灵活且系统的培养，使学生具备跨学科交叉融合能力，能够在特定领域具备特定的专业素养和从业能力。辅修专业是指学有余力的本科生在修读主修专业的基础上，修读与主修专业不同的本科专业课程，包含辅修专业和辅修学士学位两个培养层次，其中辅修学士学位应与主修学士学位归属不同的本科专业大类。 [华南农业大学微专业建设管理办法（试行） 第二条] [华南农业大学本科生辅修管理办法 第二条]
+2. 微专业招收对象、学生遴选办法和修读学期由各微专业自主确定，报本科生院审定后面向学生公布，学生可在第二学期或第四学期提出修读申请，每个学生限报1个微专业。辅修专业的申请条件为：申请辅修的本科生应在完成主修专业学习任务后，仍有足够的精力和能力进行更深层次的学习或拓展，无学业黄色预警、红色预警及留级记录；学生可在第二学期或第四学期提出辅修申请，在校期间只能申请修读一个辅修专业或一个辅修学士学位。 [华南农业大学本科生辅修管理办法 第七条] [华南农业大学本科生辅修管理办法 第八条] [华南农业大学微专业建设管理办法（试行） 第十一条]
+3. 微专业定义：微专业是指为满足学生个性化和多样化发展需求，在现有本科专业目录以外，立足经济社会发展对人才的需求，围绕某一特定领域、研究方向或者核心素养开设的一组核心课程，通过灵活且系统的培养，使学生具备跨学科交叉融合能力，能够在特定领域具备特定的专业素养和从业能力。辅修专业定义：本办法所称辅修是指学有余力的本科生在修读主修专业的基础上，修读与主修专业不同的本科专业课程，包含辅修专业和辅修学士学位两个培养层次。其中，辅修学士学位应与主修学士学位归属不同的本科专业大类。 [华南农业大学微专业建设管理办法（试行） 第二条] [华南农业大学本科生辅修管理办法 第二条]
+4. 微专业报名条件：各微专业自主确定招收对象、学生遴选办法和修读学期，报本科生院审定后面向学生公布。学生在第二学期或第四学期提出修读申请，每个学生限报1 个微专业。辅修专业报名条件：申请辅修的本科生应在完成主修专业学习任务后，仍有足够的精力和能力进行更深层次的学习或拓展，无学业黄色预警、红色预警及留级记录；学生可在第二学期或第四学期提出辅修申请。学生在校期间只能申请修读一个辅修专业或一个辅修学士学位。 [华南农业大学微专业建设管理办法（试行） 第十一条] [华南农业大学本科生辅修管理办法 第七条] [华南农业大学本科生辅修管理办法 第八条]
+5. 微专业完成后取得的证书规定：学生在校期间完成微专业全部课程，获得规定学分，经学院审核，报本科生院审定，发放学校统一制作的微专业结业证书。微专业不在中国高等教育学生信息网（
+  COV units=[{"unit_id": "u1", "status": "answered", "claim_ids": ["c2"], "missing_items": []}, {"unit_id": "u2", "status": "missing_evidence", "claim_ids": [], "missing_items": ["微专业完成后取得的证书具体规定（证据中未提及微专业具体颁发何种证书）"]}, {"unit_id": "u3", "status": "generation_missing", "claim_ids": [], "missing_items": ["微专业 定义区别"]}, {"unit_id": "u4", "status": "answered", "claim_ids": ["c2"], "missing_items": []}, {"unit_id": "u5", "status": "answered", "claim_ids": ["c3"], "missing_items": []}, {"unit_id": "u6", "status": "generation_missing", "claim_ids": [], "missing_items": ["辅修专业 定义区别"]}] missing=["微专业完成后取得的证书具体规定（证据中未提及微专业具体颁发何种证书）", "微专业 定义区别", "辅修专业 定义区别", "微专业完成后取得的证书分别是什么？"]
+  COV units=[{"unit_id": "u1", "status": "answered", "claim_ids": ["c2"], "missing_items": []}, {"unit_id": "u2", "status": "answered", "claim_ids": ["c3"], "missing_items": []}, {"unit_id": "u3", "status": "generation_missing", "claim_ids": [], "missing_items": ["微专业 定义区别"]}, {"unit_id": "u4", "status": "answered", "claim_ids": ["c2"], "missing_items": []}, {"unit_id": "u5", "status": "answered", "claim_ids": ["c3"], "missing_items": []}, {"unit_id": "u6", "status": "generation_missing", "claim_ids": [], "missing_items": ["辅修专业 定义区别"]}] missing=["微专业 定义区别", "辅修专业 定义区别"]
+  COV units=[{"unit_id": "u1", "status": "answered", "claim_ids": ["c2", "supplement_2"], "missing_items": []}, {"unit_id": "u2", "status": "answered", "claim_ids": ["c3", "supplement_3"], "missing_items": []}, {"unit_id": "u3", "status": "answered", "claim_ids": ["supplement_1"], "missing_items": []}, {"unit_id": "u4", "status": "answered", "claim_ids": ["c2", "supplement_2"], "missing_items": []}, {"unit_id": "u5", "status": "answered", "claim_ids": ["c3", "supplement_3"], "missing_items": []}, {"unit_id": "u6", "status": "answered", "claim_ids": ["supplement_1"], "missing_items": []}] missing=[]
+  SUP queries=3 evidence=None
+  SUP queries=2 evidence=None
+  DECISION "pass"
+  warnings=["STATUS_MISMATCH: agri-phd-admission-rule@v2025#二、报考条件 status=repealed", "STATUS_MISMATCH: agri-phd-admission-rule@v2025#三、报名 status=repealed", "SOURCE_VIEW_HASH:b3dbe6707e63f17386949e37b4995ab2ab1d2e8ee441e1e2923a71f1ad8723d2", "RERANK_QUERY_VIEWS:微专业有什么区别,报名条件和完成后取得的证书是什么? | 微专业 申请条件 | 微专业 定义", "RERANK_DROP:micro-major@v2024#第十五条:p1:score=0.5886", "RERANK_DROP:micro-major@v2024#第十四条:p1:score=0.5872", "RERANK_DROP:micro-major@v2024#第九条:p1:score=0.5662", "RERANK_DROP:micro-major@v2024#第八条:p1:score=0.5647", "RERANK_DROP:micro-major@v2024#第十条:p1:score=0.5409", "RERANK_DROP:agri-postgrad-recomme
+
+=== corpus_random_100_041 | GENERATION_FAILED | 68.696s
+Q: 2026级农业工程中农业电气化与自动化方向，与2025—2026级工业工程与管理专业的培养目标和课程设置有什么区别？
+A: **暂时无法作答：** 生成服务暂时不可用或输出不符合契约。请检查 LLM 配置后重试；系统不会在无引用情况下作答。
+
+**下一步：**
+- 可联系：学校相关负责部门
+- 官方入口：https://www.scau.edu.cn/
+
+---
+演示系统不构成官方答复，具体以学校官网为准。
+  ERR node=advisor error=LLM 网络错误（network）：[SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1028) provider={"kind": "network", "status_code": null, "retryable": true, "retry_after": null, "attempts": 2, "message": "LLM 网络错误（network）：[SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1028)"}
+  DECISION "abstain"
+  warnings=["SOURCE_VIEW_HASH:b3dbe6707e63f17386949e37b4995ab2ab1d2e8ee441e1e2923a71f1ad8723d2", "STRUCTURED_MATCH:info-grad-agri-engineering-plan@v2026#一、人才培养目标:p1", "STRUCTURED_MATCH:info-grad-agri-engineering-plan@v2026#二、课程设置:p1", "STRUCTURED_MATCH:info-grad-agri-engineering-plan@v2026#二、课程设置~2:p1", "STRUCTURED_MATCH:info-grad-agri-engineering-plan@v2026#一、培养目标:p1", "STRUCTURED_MATCH:info-grad-agri-engineering-plan@v2026#二、课程设置~2:p3", "STRUCTURED_MATCH:info-grad-agri-engineering-plan@v2026#二、课程设置:p2", "STRUCTURED_MATCH:info-grad-agri-engineering-plan@v2026#二、课程设置~2:p2", "STRUCTURED_MATCH:info-grad-ie
+
+=== corpus_random_100_049 | GENERATION_FAILED | 122.396s
+Q: 2024级计算机科学与技术专业毕业需要多少学分，必修、选修和实践学分如何分配？
+A: <span class="w8-badge w8-badge-abstain"><span class="w8-dot"></span>请求失败</span>
+
+本轮超过 120 秒，已停止等待；未展示半成品。请稍后重试，或先用 CLI 检查 Qdrant / MCP / 模型。
+  warnings=null
+
+=== corpus_random_100_064 | ANSWERED | 70.831s
+Q: 农学院2022版与2024版农学专业培养方案的毕业学分要求有哪些变化？
+A: **结论要点：**
+
+1. 农学院2022版农学专业培养方案的毕业学分及课程结构要求为：学生毕业应取得总学分为166学分，其中必修课程62.5学分，选修课程55.5学分，实践课程48学分。 [农学院本科人才培养方案（2022版，农学/农学丁颖/种子科学与工程） 七、课程结构及毕业要求（章节/段落）]
+2. 农学院2024版农学专业培养方案的毕业学分及课程结构要求为：学生毕业应取得总学分为155学分，其中必修课程72.5学分，选修课程43学分，实践课程39.5学分。 [农学专业人才培养方案（2024版） 八、课程结构（章节/段落）]
+
+**依据：**
+
+- [农学院本科人才培养方案（2022版，农学/农学丁颖/种子科学与工程） 七、课程结构及毕业要求（章节/段落）](https://nxy.scau.edu.cn/_upload/article/files/af/7a/c767f5b54496b9bddf39ea8da726/07663f13-10ce-43a8-9150-08437ecfe5d2.pdf)
+> 学生毕业应取得总学分为166 学分，其中必修课程62.5 学分，选修课程55.5 学分，实践课程48 学分。
+
+- [农学专业人才培养方案（2024版） 八、课程结构（章节/段落）](https://nxy.scau.edu.cn/_upload/article/files/ad/0c/f096268a4a71812dc3c84d17eee8/5b6a253e-2518-48e0-a3e7-0bda15dbe505.pdf)
+> 学生毕业应取得总学分为155 学分，其中必修课程72.5 学分，选修课程43 学分，实践课程39.5 学分。
+
+---
+演示系统不构成官方答复，具体以学校官网为准。
+  COV units=[{"unit_id": "u1", "status": "missing_evidence", "claim_ids": [], "missing_items": ["2022版农学专业毕业学分要求相关证据"]}, {"unit_id": "u2", "status": "missing_evidence", "claim_ids": [], "missing_items": ["2024版农学专业毕业学分要求相关证据"]}] missing=["2022版农学专业毕业学分要求相关证据", "2024版农学专业毕业学分要求相关证据", "农学院2022版与2024版农学专业培养方案的毕业学分要求有哪些变化？"]
+  COV units=[{"unit_id": "u1", "status": "answered", "claim_ids": ["supplement_1"], "missing_items": []}, {"unit_id": "u2", "status": "answered", "claim_ids": ["supplement_2"], "missing_items": []}] missing=[]
+  SUP queries=2 evidence=None
+  DECISION "pass"
+  warnings=["SOURCE_VIEW_HASH:b3dbe6707e63f17386949e37b4995ab2ab1d2e8ee441e1e2923a71f1ad8723d2", "STRUCTURED_MATCH:agri-ug-plan-2022@v2022#七、课程结构及毕业要求:p1", "STRUCTURED_MATCH:agri-ug-plan-new-agronomy-2022@v2022#八、课程设置及毕业要求:p1", "STRUCTURED_MATCH:agri-ug-plan-2022@v2022#七、课程结构及毕业要求~2:p1", "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤", "PROFILE_UNDETERMINED: 用户未提供学院，结果保留可能限定该细目的条款", "FILTERS_APPLIED: as_of=2026-10-25；version_mode=current；audience=未指定（不硬过滤）；profile[majors=agronomy; intake_year=2022]", "STRUCTURED_MATCH:agri-ug-plan-agronomy-2024@v2024#八、课程结构:p1", "STRUCTURED_MATCH:agri-ug-plan-new-agronomy-2024@v
+
+=== corpus_random_100_065 | PARTIAL_ANSWER | 46.362s
+Q: 计算机科学与技术专业2022版和2024版培养方案的毕业总学分、核心课程有哪些变化？
+A: > 以下为已核实内容；尚缺的回答部分见后文说明。
+
+**结论要点：**
+
+1. 计算机科学与技术专业2022版培养方案的毕业总学分为163学分，其中必修课程83.5学分，选修课程37学分，实践课程42.5学分；2024版培养方案的毕业总学分为159.5学分，其中必修课程理论课应取得89学分，选修课程理论课应取得33学分，实践(含实验)课程应取得37.5学分。 [计算机科学与技术专业人才培养方案 七、课程结构及毕业要求（章节/段落）] [计算机科学与技术专业人才培养方案 八、课程结构（章节/段落）]
+2. 计算机科学与技术专业2022版培养方案的专业核心课程包括：数据结构，离散结构，计算机组成原理，操作系统，数据库系统，编译原理，计算机网络。 [计算机科学与技术专业人才培养方案 五、专业核心课程（章节/段落）]
+3. 计算机科学与技术专业2022版培养方案的专业核心课程（本专业区别于其他专业的最为重要、最为核心的课程5-8门）包括：数据结构，离散结构，计算机组成原理，操作系统，数据库系统，编译原理，计算机网络。 [计算机科学与技术专业人才培养方案 五、专业核心课程（章节/段落）]
+4. 计算机科学与技术专业2024版培养方案的专业核心课程包括：计算机科学概论、数据结构、数据库系统、面向对象程序设计、计算机网络、计算机组成原理、操作系统、编译原理。 [计算机科学与技术专业人才培养方案 六、专业核心课程（章节/段落）]
+
+**依据：**
+
+- [计算机科学与技术专业人才培养方案 七、课程结构及毕业要求（章节/段落）](https://info.scau.edu.cn/2024/1104/c11786a391167/page.htm)
+> 本专业教学计划中，课内总学时为2316 学时，学生毕业应取得总学分为163 学分，其中必修课程83.5 学分，选修课程37 学分，实践课程42.5 学分。
+> 学时课程性质 课程类别 学分 实践周数总数 理论 实验通识必修课 30 580 572 8必修学时 专业必修课 53.5 904 808 96分配通识选修课 17 272 272 与毕选修业学 拓展选修课 20 400 240 160分要实验教学 4 160 160 求实践其它实践 38.5 36.5计算机科学与技术专业毕业要求 163 2316 1892 424 36.5选修与实践统计 选修课比例 31.29% 实践环节比例 36.2%
+> 注：1、课内总学时=必修课总学时+选修课总学时+实验教学学时；
+> 2、选修课比例=（拓展选修学分20+通识选修课17+体育4+学科训练2+创新创业实践4+独立实验课选修4）/总学分163*100%=51 /163 = 31.29% ；
+> 3 、实践环节比例= （实践教育学分42.5+ 理论课附带的实验学时264/16 ）
+> /1
+  COV units=[{"unit_id": "u1", "status": "generation_missing", "claim_ids": ["c2"], "missing_items": ["重要", "）数据结构"]}, {"unit_id": "u2", "status": "answered", "claim_ids": ["c1"], "missing_items": []}, {"unit_id": "u3", "status": "generation_missing", "claim_ids": [], "missing_items": ["计算机科学与技术 核心课程"]}, {"unit_id": "u4", "status": "answered", "claim_ids": ["c1"], "missing_items": []}] missing=["重要", "）数据结构", "计算机科学与技术 核心课程"]
+  COV units=[{"unit_id": "u1", "status": "generation_missing", "claim_ids": ["c2"], "missing_items": ["重要", "）数据结构"]}, {"unit_id": "u2", "status": "answered", "claim_ids": ["c1"], "missing_items": []}, {"unit_id": "u3", "status": "generation_missing", "claim_ids": [], "missing_items": ["计算机科学与技术 核心课程"]}, {"unit_id": "u4", "status": "answered", "claim_ids": ["c1"], "missing_items": []}] missing=["重要", "）数据结构", "计算机科学与技术 核心课程"]
+  COV units=[{"unit_id": "u1", "status": "generation_missing", "claim_ids": ["c2"], "missing_items": ["）数据结构"]}, {"unit_id": "u2", "status": "answered", "claim_ids": ["c1"], "missing_items": []}, {"unit_id": "u3", "status": "generation_missing", "claim_ids": [], "missing_items": ["计算机科学与技术 核心课程"]}, {"unit_id": "u4", "status": "answered", "claim_ids": ["c1"], "missing_items": []}] missing=["）数据结构", "计算机科学与技术 核心课程"]
+  SUP queries=2 evidence=None
+  SUP queries=2 evidence=None
+  DECISION "pass"
+  warnings=["SOURCE_VIEW_HASH:b3dbe6707e63f17386949e37b4995ab2ab1d2e8ee441e1e2923a71f1ad8723d2", "STRUCTURED_MATCH:info-ug-cs-plan@v2022#七、课程结构及毕业要求:p1", "STRUCTURED_MATCH:info-ug-cs-plan@v2022#五、专业核心课程:p1", "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤", "PROFILE_UNDETERMINED: 用户未提供学院，结果保留可能限定该细目的条款", "FILTERS_APPLIED: as_of=2026-10-25；version_mode=current；audience=未指定（不硬过滤）；profile[majors=computer-science; intake_year=2022]", "STRUCTURED_MATCH:info-ug-cs-plan@v2024#六、专业核心课程:p1", "STRUCTURED_MATCH:info-ug-cs-plan@v2024#八、课程结构:p1", "STRUCTURED_MATCH:info-ug-cs-plan@v2024#四、毕业要求:p2", "STRUCTURED_MATCH:info-ug-cs
+
+=== corpus_random_100_098 | PARTIAL_ANSWER | 107.552s
+Q: 数学与信息学院有哪些实验教学示范中心，是否有云计算与大数据实验室？
+A: > 以下为已核实内容；尚缺的回答部分见后文说明。
+
+**结论要点：**
+
+1. 数学与信息学院建设有基于云平台的计算机实验教学示范中心、信息数学与应用统计实验教学示范中心、数学建模实验教学示范中心等实验教学示范中心。 [数学与信息学院、软件学院教学实验平台 一、教学示范中心与实验室（章节/段落）]
+2. 数学与信息学院设有云计算与大数据实验室。 [数学与信息学院、软件学院教学实验平台 一、教学示范中心与实验室（章节/段落）]
+
+**依据：**
+
+- [数学与信息学院、软件学院教学实验平台 一、教学示范中心与实验室（章节/段落）](https://info.scau.edu.cn/jxpt/list.htm)
+> 基于云平台的计算机实验教学示范中心信息数学与应用统计实验教学示范中心数学建模实验教学示范中心
+
+- [数学与信息学院、软件学院教学实验平台 一、教学示范中心与实验室（章节/段落）](https://info.scau.edu.cn/jxpt/list.htm)
+> 基于云平台的计算机实验教学示范中心信息数学与应用统计实验教学示范中心数学建模实验教学示范中心计算机软件实验室计算机硬件实验室计算机系统实验室计算机网络实验室云计算与大数据实验室物联网实验室
+> IT项目综合训练实验室
+> ERP沙盘模拟综合实验室工业工程实验室生产运作与管理实验室、信息技术与管理实验室、管理系统仿真实验室
+
+> 尚缺“数学与信息学院 数学与信息学院有哪些实验教学示范中心，是否有云计算与大数据实验室”：已找到相关材料，但尚未完整答出。
+
+
+---
+演示系统不构成官方答复，具体以学校官网为准。
+  COV units=[{"unit_id": "u1", "status": "generation_missing", "claim_ids": [], "missing_items": ["数学与信息学院 数学与信息学院有哪些实验教学示范中心，是否有云计算与大数据实验室"]}] missing=["数学与信息学院 数学与信息学院有哪些实验教学示范中心，是否有云计算与大数据实验室"]
+  COV units=[{"unit_id": "u1", "status": "generation_missing", "claim_ids": [], "missing_items": ["数学与信息学院 数学与信息学院有哪些实验教学示范中心，是否有云计算与大数据实验室"]}] missing=["数学与信息学院 数学与信息学院有哪些实验教学示范中心，是否有云计算与大数据实验室"]
+  COV units=[{"unit_id": "u1", "status": "generation_missing", "claim_ids": [], "missing_items": ["数学与信息学院 数学与信息学院有哪些实验教学示范中心，是否有云计算与大数据实验室"]}] missing=["数学与信息学院 数学与信息学院有哪些实验教学示范中心，是否有云计算与大数据实验室"]
+  SUP queries=1 evidence=None
+  SUP queries=1 evidence=None
+  DECISION "pass"
+  warnings=["SOURCE_VIEW_HASH:b3dbe6707e63f17386949e37b4995ab2ab1d2e8ee441e1e2923a71f1ad8723d2", "MULTIPLE_VERSIONS: info-ug-ics-plan 返回 2 个届别版本，按最新生效日保留", "MULTIPLE_VERSIONS: info-ug-cs-plan 返回 2 个届别版本，按最新生效日保留", "MULTIPLE_VERSIONS: info-ug-math-plan 返回 2 个届别版本，按最新生效日保留", "MULTIPLE_VERSIONS: info-ug-imis-plan 返回 2 个届别版本，按最新生效日保留", "MULTIPLE_VERSIONS: info-ug-stat-plan 返回 2 个届别版本，按最新生效日保留", "RERANK_DROP:info-ug-ics-plan@v2024#十、培养计划进程表:p11:score=0.5846", "RERANK_DROP:info-majors-undergrad@v2026#一、数学系:p1:score=0.5716", "RERANK_DROP:info-majors-undergrad@v2026#二、计算机科学与工程系:p2:score=0.5649", "RERANK_DROP:inf

@@ -1,0 +1,51 @@
+{
+  "original_case_1": [
+    {
+      "claim_id": "c1",
+      "findings": [
+        "threshold_direction"
+      ]
+    },
+    {
+      "claim_id": "c2",
+      "findings": []
+    },
+    {
+      "claim_id": "c3",
+      "findings": []
+    }
+  ],
+  "original_case_98": [
+    {
+      "claim_id": "c1",
+      "findings": []
+    },
+    {
+      "claim_id": "c2",
+      "findings": []
+    }
+  ],
+  "real_supplement_exception": {
+    "findings": [],
+    "supplement": [
+      "根据联培研究生第一导师的人事归属，将科研成果署名单位认定分为以下两类情形：\n（一）第一导师为我校教师的情形。此类联培研究生的科研成果，第一署名单位必须为“华南农业大学”。\n（二）第一导师为联合培养单位人员的情形。此类联培研究生的科研成果，实行“双单位认可制”，其科研成果的第一署名单位可为“华南农业大学”或“联合培养单位”。"
+    ]
+  },
+  "negative_first": {
+    "kept": [
+      "微专业结业证书规则未收录。",
+      "微专业结业证书规则为修满规定学分后颁发证书。"
+    ],
+    "notes": []
+  },
+  "valid_versions": {
+    "kept": [
+      "2022级计算机科学与技术专业毕业总学分为163学分。"
+    ],
+    "notes": [
+      "同一事项存在两种表述，已略去后一条：2024级计算机科学与技术专业毕业总学分为159"
+    ]
+  },
+  "generic_claim_coverage": true,
+  "quota_429_kind": "rate_limit"
+}

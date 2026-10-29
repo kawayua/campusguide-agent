@@ -1,0 +1,55 @@
+{
+  "as_of": "2026-10-28",
+  "source_scope": "所提供DOCX、合并100题选定记录、对应session原始轨迹、4026条本地语料及当前代码；未调用外部模型或重新跑题",
+  "selected_answers": 100,
+  "original_counts": {
+    "error": 4,
+    "valid_clarification": 2,
+    "partial": 21,
+    "complete": 64,
+    "valid_abstention": 1,
+    "failed": 8
+  },
+  "recommended_counts": {
+    "error": 4,
+    "valid_clarification": 2,
+    "partial": 19,
+    "complete": 67,
+    "valid_abstention": 1,
+    "failed": 7
+  },
+  "grading_adjustments": [
+    {
+      "case_number": 61,
+      "original": "failed",
+      "recommended": "partial",
+      "reason": "研究方向已部分答出，不能整体算“有据未答”；实践漏答，证据槽被本科计算机进程表占用。"
+    },
+    {
+      "case_number": 65,
+      "original": "partial",
+      "recommended": "complete",
+      "reason": "两年总学分和核心课清单均已正确给出；原判部分覆盖把未显式作差也算漏答，偏严。另有“5至8门”等说明粘连成伪课程的覆盖问题。"
+    },
+    {
+      "case_number": 77,
+      "original": "partial",
+      "recommended": "complete",
+      "reason": "两专业培养目标和核心课均已列出，原判要求额外说明学位类别并把缺少一句对比总结判漏答，超出必要要求。"
+    },
+    {
+      "case_number": 78,
+      "original": "partial",
+      "recommended": "complete",
+      "reason": "已回答共同申请条件和18对36学分、学位论文不少于6学分等差别；原判仅因没说证书授予而扣分，与题面不符。"
+    }
+  ],
+  "final_citations": 312,
+  "citation_offset_audit_issues": [],
+  "sum_elapsed_s": 2615.427,
+  "median_elapsed_s": 23.134999999999998,
+  "pending_batch_attempts": 76,
+  "pending_batch_selected": 57,
+  "pending_batch_extra_attempts": 19,
+  "note": "引用定位正确不等于引用支持结论；这些质量判断是固定样本的人工复核，不是独立泛化准确率。"
+}

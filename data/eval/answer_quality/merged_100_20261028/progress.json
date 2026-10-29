@@ -1,0 +1,49 @@
+{
+  "updated_at": "2026-10-28",
+  "status": "completed_100",
+  "target": 100,
+  "rounds": [
+    {
+      "round": 1,
+      "questions": "001-053",
+      "answered": 43,
+      "service_failure": 10,
+      "batch_directory": "D:\\big-third-up\\campusguide-agent\\data\\eval\\answer_quality\\batch_retest_20261028_162015"
+    },
+    {
+      "round": 2,
+      "questions": "039-100",
+      "answered": 57,
+      "service_failure": 0,
+      "attempts": 76,
+      "batch_directory": "D:\\big-third-up\\campusguide-agent\\data\\eval\\answer_quality\\batch_pending_57_20261028"
+    }
+  ],
+  "retested_cases": [
+    39,
+    40,
+    41,
+    42,
+    44,
+    45,
+    46,
+    51,
+    52,
+    53
+  ],
+  "source_review_counts": {
+    "complete": 64,
+    "partial": 21,
+    "error": 4,
+    "failed": 8,
+    "valid_clarification": 2,
+    "valid_abstention": 1,
+    "service_failure": 0
+  },
+  "citation_count": 312,
+  "citation_errors": 0,
+  "elapsed_total_s": 2615.4,
+  "elapsed_median_s": 23.135,
+  "findings": 16,
+  "assessment_limit": "第001至100题各单轮记录；039至053题首轮接口失败、以补测轮结果为准，不含追问轮；人工结论基于原文锚点逐项核对，不代表稳定性或泛化验收。"
+}
