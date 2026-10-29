@@ -1,0 +1,858 @@
+diff --git a/.env.example b/.env.example
+index 11be27e..3e3728b 100644
+--- a/.env.example
++++ b/.env.example
+@@ -35,3 +35,6 @@ W8_REQUEST_TIMEOUT_SECONDS=120
+ # ---- Ingest ----
+ CAMPUSGUIDE_USER_AGENT=CampusGuideBot/0.1 (academic demo; contact: set-your-email)
+ CAMPUSGUIDE_HTTP_TIMEOUT=30
++
++# Database connections are direct by default; opt in only for a required Qdrant proxy.
++QDRANT_TRUST_ENV=false
+diff --git a/configs/aliases.yaml b/configs/aliases.yaml
+index a715480..ff9c29f 100644
+--- a/configs/aliases.yaml
++++ b/configs/aliases.yaml
+@@ -13,3 +13,6 @@ aliases:
+   请假: [离校请假, 请假手续]
+   交换生: [校际交换, 交流学习]
+   推免: [推荐免试, 保研]
++  人工智能选修组: [人工智能方向, 方向选修模块]
++  选修组: [方向选修模块, 选修模块]
++  2024年入学: [2024级, 2024版]
+diff --git a/scripts/build_vectors.py b/scripts/build_vectors.py
+index 72e41af..f278b59 100644
+--- a/scripts/build_vectors.py
++++ b/scripts/build_vectors.py
+@@ -16,6 +16,7 @@ from qdrant_client import QdrantClient
+ 
+ from campusguide.config import load_retrieval_config
+ from campusguide.env import load_dotenv
++from campusguide.retrieval.connections import qdrant_trust_env
+ from campusguide.retrieval.embedder import BgeM3Embedder
+ from campusguide.retrieval.indexer import (
+     VectorIndexError,
+@@ -119,6 +120,7 @@ def main() -> int:
+     else:
+         client = QdrantClient(
+             url=args.qdrant_url or "http://localhost:6333",
++            trust_env=qdrant_trust_env(),
+             timeout=30,
+         )
+ 
+diff --git a/src/campusguide/agents/advisor.py b/src/campusguide/agents/advisor.py
+index 907f588..b249ebe 100644
+--- a/src/campusguide/agents/advisor.py
++++ b/src/campusguide/agents/advisor.py
+@@ -41,6 +41,7 @@ class ClaimDraft(BaseModel):
+ 
+ class ClaimsDraft(BaseModel):
+     claims: list[ClaimDraft] = Field(default_factory=list)
++    unanswered_questions: list[str] = Field(default_factory=list)
+ 
+ 
+ @dataclass
+@@ -53,6 +54,7 @@ class AdvisorResult:
+     quote_repair_remaining: list[str] = field(default_factory=list)
+     quote_repair_error: str = ""
+     provider_retried: bool = False
++    unanswered_questions: list[str] = field(default_factory=list)
+     json_empty_retried: bool = False
+     json_truncation_retried: bool = False
+     empty_claims_retried: bool = False
+@@ -61,7 +63,7 @@ class AdvisorResult:
+ 
+ PROMPT_VERSION = "w6a2.4-2026-10-24"
+ # W6 图角色使用独立 prompt 版本；W6-A2 的契约常量保留给历史 run。
+-W6B_ADVISOR_PROMPT_VERSION = "w6b-advisor-2026-10-25"
++W6B_ADVISOR_PROMPT_VERSION = "w6b-advisor-2026-10-27"
+ REVISE_PROMPT_VERSION = "w6b-revise-2026-10-25"
+ 
+ FLOW_BOUNDARY_PROMPT = (
+@@ -105,7 +107,11 @@ SYSTEM_PROMPT = """你是华南农业大学制度问答助手。你只能依据
+     更长的 quote；不要用条款上下文或其他证据补足。
+ 12. kind 只能取 eligibility / step / material / deadline / department / version / definition / other。
+ 13. 如果找不到能同时覆盖“条件 + 后果”的连续 quote，不要生成该 claim；
+-    不要用两个不相邻 quote、省略号或“（一）至（五）”之类概括来掩盖缺失。"""
++    不要用两个不相邻 quote、省略号或“（一）至（五）”之类概括来掩盖缺失。
++14. JSON 还必须包含 unanswered_questions 字符串数组。逐一检查用户要求的所有对象、
++    方面和子问题；没有被本轮 claims 回答的部分，以简短的原问题片段列入该数组。
++    即使已有部分 claim，也不能把漏答内容藏起来。全部回答时才返回空数组。
++    不得为了填满答案放松引用要求；缺少证据时保留缺口。"""
+ 
+ 
+ def _audience_label(audience: Audience | None) -> str:
+@@ -127,7 +133,7 @@ def build_evidence_block(evidence: list[Evidence]) -> str:
+     blocks: list[str] = []
+     for item in evidence:
+         article = item.article
+-        location = "章节/段落" if article.block_type.value != "article" else article.article_no
++        location = article.article_no
+         confidence = "（日期为锚点，非精确发布日）" if article.date_confidence == "low" else ""
+         blocks.append(
+             "\n".join(
+@@ -162,7 +168,18 @@ def _generation_evidence(question: str, evidence: list[Evidence]) -> list[Eviden
+ 
+ 
+ def _subquestions(question: str) -> list[str]:
+-    return [part.strip() for part in re.findall(r"[^？?]+[？?]", question)]
++    parts: list[str] = []
++    for sentence in re.split(r"[？?；;]+", question):
++        sentence = sentence.strip()
++        if not sentence:
++            continue
++        clauses = [part.strip() for part in re.split(r"[，,]+", sentence) if part.strip()]
++        interrogative = re.compile(r"吗|谁|哪|多少|什么|如何|怎样|怎么|何时|是否|能否|有何")
++        if len(clauses) > 1 and sum(bool(interrogative.search(c)) for c in clauses) > 1:
++            parts.extend(clauses)
++        else:
++            parts.append(sentence)
++    return parts
+ 
+ 
+ def _needs_larger_budget(question: str) -> bool:
+@@ -207,6 +224,8 @@ def build_messages(
+             "",
+             f"证据片段：\n{build_evidence_block(generation_evidence)}",
+             "",
++            "先检查问题要求的全部对象与方面（包括同一句中用和、与、及并列的内容），"
++            "分别选择直接证据作答，不能只回答最容易的一项。"
+             "请先为每条 claim 选择完整的 citation.quote，再写 claim；"
+             "quote 必须是同一证据正文中的连续子串；不得用省略号、不得跳过中间分项，"
+             "也不得把“引导句 + 非相邻分项”拼接起来。"
+@@ -384,7 +403,10 @@ def parse_claims_json(content: str) -> ClaimsDraft:
+                 ],
+             )
+         )
+-    return ClaimsDraft(claims=claims)
++    unanswered = payload.get("unanswered_questions", [])
++    if not isinstance(unanswered, list) or any(not isinstance(item, str) for item in unanswered):
++        raise AdvisorError('"unanswered_questions" 必须是字符串数组')
++    return ClaimsDraft(claims=claims, unanswered_questions=unanswered)
+ 
+ 
+ def normalize_kind(value: str) -> ClaimKind:
+@@ -572,6 +594,7 @@ class Advisor:
+         result.empty_claims_retried = empty_claims_retried
+         result.empty_claims_error = empty_claims_error
+         result.provider_retried = provider_retried
++        result.unanswered_questions = parse_claims_json(draft_content).unanswered_questions[:12]
+         return result
+ 
+     def revise(
+diff --git a/src/campusguide/agents/graph.py b/src/campusguide/agents/graph.py
+index 2001487..e5cf68c 100644
+--- a/src/campusguide/agents/graph.py
++++ b/src/campusguide/agents/graph.py
+@@ -84,6 +84,11 @@ def _message_for(reason: OutcomeCode | None, fallback: str = "") -> str:
+     )
+ 
+ 
++def _default_block_types(question: str) -> list[BlockType]:
++    """公开知识同时存储为条款和段落；召回后再按相关性与表格配额选择。"""
++    return [BlockType.ARTICLE, BlockType.SECTION]
++
++
+ def _append_trace(
+     state: GraphState,
+     node: str,
+@@ -278,6 +283,7 @@ class GraphNodes:
+             "checklist": [],
+             "citations": [],
+             "coverage": {},
++            "unanswered_questions": [],
+             "retrieval_warnings": list(plan.warnings),
+             "scope_issues": [],
+             "final_answer": "",
+@@ -460,6 +466,7 @@ class GraphNodes:
+             mode=mode,
+             model=(result.responses[-1].model if result.responses else ""),
+             claims=len(drafts),
++            unanswered_questions=list(result.unanswered_questions),
+             quote_repair_attempted=result.quote_repair_attempted,
+             quote_repaired=result.quote_repaired,
+             quote_repair_remaining=list(result.quote_repair_remaining),
+@@ -467,6 +474,11 @@ class GraphNodes:
+         )
+         return {
+             "drafts": drafts,
++            "unanswered_questions": (
++                list(state.get("unanswered_questions") or [])
++                if mode == "revise"
++                else list(result.unanswered_questions)
++            ),
+             "history_claims": [
+                 {
+                     "claim_id": draft.claim_id,
+@@ -567,7 +579,11 @@ class GraphNodes:
+         answer = ""
+         citations: list[dict[str, Any]] = []
+         extra_warnings = self._coverage_warnings(state)
++        for part in state.get("unanswered_questions") or []:
++            safe_part = redact_sensitive(str(part), max_chars=120)
++            extra_warnings.append(f"问题中的“{safe_part}”缺少已核对的回答依据，本轮未完成。")
+         closed = bool(state.get("closed"))
++        incomplete = bool(extra_warnings or (plan and plan.dropped_queries))
+ 
+         if plan is not None and plan.is_guard:
+             outcome_code = plan.outcome.value if plan.outcome else "INVALID_REQUEST"
+@@ -586,7 +602,7 @@ class GraphNodes:
+             answer = "\n".join(lines)
+         elif claims and flow is not None and checklist:
+             verification = state.get("verification_decision")
+-            partial = verification is VerificationDecision.PARTIAL
++            partial = verification is VerificationDecision.PARTIAL or incomplete
+             mixed = finalize_mixed(
+                 claims,
+                 flow=flow,
+@@ -604,7 +620,7 @@ class GraphNodes:
+             outcome_code = "PARTIAL_ANSWER" if partial else "ANSWERED"
+         elif claims:
+             verification = state.get("verification_decision")
+-            partial = verification is VerificationDecision.PARTIAL
++            partial = verification is VerificationDecision.PARTIAL or incomplete
+             finished = finalize(
+                 claims,
+                 partial=partial,
+@@ -633,7 +649,10 @@ class GraphNodes:
+                 closed=closed,
+                 extra_lines=extra,
+             )
+-            outcome_code = "PARTIAL_ANSWER" if missing_slots and not closed else "ANSWERED"
++            missing_facts = bool(plan and plan.queries and (incomplete or not claims))
++            outcome_code = (
++                "PARTIAL_ANSWER" if missing_facts or (missing_slots and not closed) else "ANSWERED"
++            )
+         elif flow is not None and plan is not None and plan.intent is Intent.MIXED:
+             answer = finalize_flow_without_claims(
+                 flow=flow,
+@@ -885,7 +904,7 @@ class GraphRunner:
+             "as_of": as_of or date.today(),
+             "audience": audience,
+             "user_profile": profile,
+-            "block_types": list(block_types or [BlockType.ARTICLE]),
++            "block_types": list(block_types or _default_block_types(question)),
+             "started_at": started_at.isoformat(timespec="seconds"),
+             "_started_perf": time.perf_counter(),
+             "trace": [],
+@@ -912,6 +931,7 @@ class GraphRunner:
+             "flow_status": None,
+             "citations": [],
+             "coverage": {},
++            "unanswered_questions": [],
+             "retrieval_warnings": [],
+             "scope_issues": [],
+             "final_answer": "",
+diff --git a/src/campusguide/agents/planner.py b/src/campusguide/agents/planner.py
+index 8859043..0ed1991 100644
+--- a/src/campusguide/agents/planner.py
++++ b/src/campusguide/agents/planner.py
+@@ -39,7 +39,7 @@ _PROCEDURE_RE = re.compile(
+ )
+ _FACT_RE = re.compile(
+     r"条件|资格|金额|标准|比例|多少|期限|几年|依据|规定|是什么|有哪些|"
+-    r"要求|能否|是否|可以|奖励|档次|范围|对象|区别|差异|不同"
++    r"要求|能否|是否|可以|奖励|档次|范围|对象|区别|差异|不同|谁|哪|何时|发布|公示|新闻|消息"
+ )
+ _SWITCH_RE = re.compile(r"换(?:一个|个)?流程|改办|不办这个|另一个流程|退出流程|重新开始|取消")
+ _ANAPHORA_RE = re.compile(r"这个|那个|它|上述|该政策|该办法|此规定")
+@@ -139,6 +139,45 @@ def _split_subquestions(text: str) -> list[str]:
+     return deduped
+ 
+ 
++def _cohort_filters(text: str) -> dict:
++    if not re.search(r"培养|课程|学分|专业|选修|毕业|学制", text):
++        return {}
++    years = set(re.findall(r"(20\d{2})\s*(?:年入学|级|版)", text))
++    if len(years) == 1:
++        return {"profile": {"intake_year": int(next(iter(years)))}}
++    return {}
++
++
++def _comparison_queries(text: str) -> list[str] | None:
++    """拆分明确并列的奖助项目或培养届别，不让单值流程槽位吞掉对象。"""
++    if not re.search(r"分别|区别|不同|差异|[和与]", text):
++        return None
++    awards = list(
++        re.finditer(
++            r"(?:20\d{2}(?:[—–-]20\d{2})?\s*学年)?(?:国家励志奖学金|国家奖学金|国家助学金)", text
++        )
++    )
++    if (
++        len(awards) > 1
++        and len(set(m.group() for m in awards)) > 1
++        and not re.search(r"[？?]", text[: awards[-1].end()])
++    ):
++        prefix, suffix = text[: awards[0].start()], text[awards[-1].end() :].replace("分别", "")
++        return [f"{prefix}{m.group()}{suffix}" for m in awards]
++    if re.search(r"培养方案|课程|学分|毕业", text):
++        cohorts = list(re.finditer(r"20\d{2}\s*(?:版|级)", text))
++        if len({m.group() for m in cohorts}) > 1:
++            return [
++                re.sub(
++                    r"[和与、]\s*(?=培养|课程|毕业|的)",
++                    "",
++                    text[: cohorts[0].start()] + m.group() + text[cohorts[-1].end() :],
++                )
++                for m in cohorts
++            ]
++    return None
++
++
+ def _intent_flags(text: str) -> tuple[bool, bool]:
+     return bool(_PROCEDURE_RE.search(text)), bool(_FACT_RE.search(text))
+ 
+@@ -162,7 +201,7 @@ def _contextualize_queries(queries: list[str], original: str) -> list[str]:
+         return queries
+     contextualized: list[str] = []
+     for query in queries:
+-        has_topic = topic in query or any(word in query for word in _ENTITY_WORDS)
++        has_topic = topic in query or query in topic or any(word in query for word in _ENTITY_WORDS)
+         if has_topic or len(query) >= 24:
+             contextualized.append(query)
+         else:
+@@ -296,18 +335,6 @@ class Planner:
+             or _audience_from_text(text)
+             or _audience_from_text(" ".join(str(item) for item in context.slots.values()))
+         )
+-        if self._needs_audience_clarify(text, context, audience):
+-            return Plan(
+-                intent=Intent.POLICY_QA,
+-                needs_clarification=True,
+-                clarification=Clarification(
+-                    reason="AUDIENCE_UNKNOWN",
+-                    question="你是本科生还是研究生？",
+-                    allowed_values=["本科生", "研究生"],
+-                    missing_slots=["level"],
+-                ),
+-                planner_source="rule",
+-            )
+ 
+         flows = self._list_flows(context, audience)
+         selection = self._select_pending_flow(text, context, flows)
+@@ -416,7 +443,20 @@ class Planner:
+         flows: list[FlowDefinition],
+         audience: Audience | None,
+     ) -> Plan:
++        # 明确比较多个对象时属于知识咨询，不选择单个用户或单个办理槽位。
++        if _comparison_queries(text) is not None or (
++            ("本科" in text and re.search(r"研究生|硕士|博士", text))
++            and re.search(r"分别|区别|不同|差异|各自", text)
++        ):
++            return self._maybe_llm(
++                text, context, self._policy_plan(text, context, audience), flows, audience
++            )
+         matches = match_flows(text, flows)
++        if matches and matches[0].matched == "奖学金":
++            # 通用名只能承接未命名的奖学金办理；不能把社会奖项套成国家奖项。
++            generic = re.search(r"(?:^|申请|办理|咨询|了解|的|关于)奖学金", text)
++            if generic is None:
++                return self._policy_plan(text, context, audience)
+         if len(matches) > 1:
+             candidates = [item.flow for item in matches]
+             return Plan(
+@@ -599,7 +639,7 @@ class Planner:
+         context: PlannerContext,
+         audience: Audience | None,
+     ) -> Plan:
+-        subs = _split_subquestions(text) or [text.strip()]
++        subs = _comparison_queries(text) or _split_subquestions(text) or [text.strip()]
+         subs = _contextualize_queries(subs, text)
+         dropped = subs[self._max_queries :]
+         queries = self._query_items(subs[: self._max_queries], audience)
+@@ -630,28 +670,11 @@ class Planner:
+                     query_id=f"q{len(items) + 1}",
+                     text=text.strip(),
+                     route="policy",
+-                    filters=dict(filters),
++                    filters={**filters, **_cohort_filters(text)},
+                 )
+             )
+         return items
+ 
+-    # ------------------------------------------------------------- audience
+-    @staticmethod
+-    def _needs_audience_clarify(
+-        text: str,
+-        context: PlannerContext,
+-        audience: Audience | None,
+-    ) -> bool:
+-        if audience is not None or context.audience is not None:
+-            return False
+-        if context.profile is not None and not context.profile.is_empty:
+-            return False
+-        has_under = "本科生" in text or "本科" in text
+-        has_grad = "研究生" in text or "硕士" in text or "博士" in text
+-        if not (has_under and has_grad):
+-            return False
+-        return bool(re.search(r"分别|区别|不同|差异", text))
+-
+     # ------------------------------------------------------------------- llm
+     def _maybe_llm(
+         self,
+@@ -671,6 +694,10 @@ class Planner:
+         if llm_plan is None:
+             rule_plan.planner_source = "fallback"
+             return rule_plan
++        if not rule_plan.flow_id:
++            # LLM只补充知识查询，不能将已确认的事实问题改为办理流程。
++            llm_plan.flow_id = None
++            llm_plan.intent = Intent.POLICY_QA
+         # 规则已匹配流程时，不允许 LLM 推翻流程。
+         if rule_plan.flow_id and llm_plan.flow_id != rule_plan.flow_id:
+             llm_plan.flow_id = rule_plan.flow_id
+@@ -776,6 +803,7 @@ class Planner:
+                 continue
+             route = item.get("route") if item.get("route") in {"policy", "flow"} else "policy"
+             filters = self._validate_filters(item.get("filters"), flows, dropped)
++            filters.update(_cohort_filters(query_text))
+             queries.append(
+                 QueryPlanItem(
+                     query_id=f"q{index}",
+diff --git a/src/campusguide/agents/retriever.py b/src/campusguide/agents/retriever.py
+index 45f1d47..90f6920 100644
+--- a/src/campusguide/agents/retriever.py
++++ b/src/campusguide/agents/retriever.py
+@@ -25,6 +25,7 @@ from campusguide.domain.models import (
+     PolicyFilters,
+     VerificationIssue,
+ )
++from campusguide.domain.profiles import UserProfile
+ from campusguide.mcp.client import SearchClient, SearchResponse
+ from campusguide.mcp.schemas import (
+     ErrorCode,
+@@ -32,6 +33,7 @@ from campusguide.mcp.schemas import (
+     ToolError,
+     search_request_from_filters,
+ )
++from campusguide.observability.errors import safe_error_summary
+ from campusguide.verification.scope import apply_scope
+ 
+ FLOW_CITATION_UNAVAILABLE = "FLOW_CITATION_UNAVAILABLE"
+@@ -95,6 +97,10 @@ def _filters_for_query(base: PolicyFilters, query_filters: dict) -> PolicyFilter
+     if isinstance(version_raw, str):
+         with contextlib.suppress(ValueError):
+             updates["version_mode"] = VersionMode(version_raw)
++    profile = query_filters.get("profile")
++    if isinstance(profile, dict):
++        base_profile = base.profile.model_dump() if base.profile is not None else {}
++        updates["profile"] = UserProfile.model_validate({**base_profile, **profile})
+     doc_ids = query_filters.get("doc_ids")
+     if isinstance(doc_ids, list) and doc_ids:
+         updates["doc_ids"] = [str(item) for item in doc_ids]
+@@ -171,6 +177,9 @@ class GraphRetriever:
+                 response = self._search_with_retry(item.text, filters)
+             except ToolError as exc:
+                 failures.append((item.query_id, exc))
++                bundle.warnings.append(
++                    f"RETRIEVAL_ERROR:{item.query_id}:{exc.code.value}:{safe_error_summary(exc)}"
++                )
+                 bundle.coverage[item.query_id] = []
+                 timing[item.query_id] = round((time.perf_counter() - started) * 1000, 1)
+                 continue
+diff --git a/src/campusguide/agents/state.py b/src/campusguide/agents/state.py
+index 01d7e86..faab3c0 100644
+--- a/src/campusguide/agents/state.py
++++ b/src/campusguide/agents/state.py
+@@ -89,6 +89,7 @@ class GraphState(TypedDict, total=False):
+     retrieval_warnings: list[str]
+     coverage: dict[str, list[str]]
+     questions: list[str]
++    unanswered_questions: list[str]
+     declined_slots: list[str]
+     asked_slots: list[str]
+     pending_slot: str | None
+diff --git a/src/campusguide/ingest/build_index.py b/src/campusguide/ingest/build_index.py
+index 00dce2c..6568193 100644
+--- a/src/campusguide/ingest/build_index.py
++++ b/src/campusguide/ingest/build_index.py
+@@ -38,6 +38,7 @@ from campusguide.config import (
+ from campusguide.domain.models import Article, DocumentVersion
+ from campusguide.ingest.parse import ParsedDocument, load_parsed_document
+ from campusguide.ingest.segment import segment_document
++from campusguide.retrieval.connections import qdrant_trust_env
+ 
+ INDEX_SCHEMA_VERSION = "1.2"
+ INDEX_VERSION = "w2-articles-v1"
+@@ -417,7 +418,8 @@ def build_index(
+         if retrieval is None:
+             raise BuildError("init_qdrant=True 时必须提供 retrieval 配置")
+         client = qdrant_client or QdrantClient(
+-            url=qdrant_url or os.getenv("QDRANT_URL", "http://localhost:6333")
++            url=qdrant_url or os.getenv("QDRANT_URL", "http://localhost:6333"),
++            trust_env=qdrant_trust_env(),
+         )
+         details, qdrant_warnings = init_qdrant_collection(
+             client,
+diff --git a/src/campusguide/mcp/policy_search_server.py b/src/campusguide/mcp/policy_search_server.py
+index 43ffc2c..ea8bc0d 100644
+--- a/src/campusguide/mcp/policy_search_server.py
++++ b/src/campusguide/mcp/policy_search_server.py
+@@ -15,7 +15,6 @@ from pathlib import Path
+ from typing import Any, Protocol
+ 
+ from fastmcp import FastMCP
+-from qdrant_client import QdrantClient
+ 
+ from campusguide.config import (
+     OrganizationConfig,
+@@ -35,6 +34,8 @@ from campusguide.mcp.schemas import (
+     policy_filters_from_request,
+     success,
+ )
++from campusguide.observability.errors import safe_error_summary
++from campusguide.retrieval.connections import create_qdrant_client
+ from campusguide.retrieval.embedder import BgeM3Embedder
+ from campusguide.retrieval.hybrid import HybridRetriever, SearchResult, VersionConflictError
+ from campusguide.retrieval.normalize import load_aliases
+@@ -143,7 +144,13 @@ class PolicySearchService:
+         except RerankUnavailable as exc:
+             raise ToolError(ErrorCode.RERANK_UNAVAILABLE, str(exc)) from exc
+         except (RetrievalError, FileNotFoundError, FileExistsError) as exc:
+-            raise ToolError(ErrorCode.INDEX_UNAVAILABLE, str(exc)) from exc
++            cause = safe_error_summary(exc)
++            logger.warning("policy-search backend failure %s: %s", type(exc).__name__, cause)
++            raise ToolError(
++                ErrorCode.INDEX_UNAVAILABLE,
++                cause,
++                details={"exception_type": type(exc).__name__, "cause": cause},
++            ) from exc
+         except Exception as exc:
+             logger.exception("search_articles failed")
+             raise ToolError(
+@@ -236,18 +243,6 @@ def build_search_server(service: PolicySearchService) -> FastMCP:
+     return mcp
+ 
+ 
+-def create_qdrant_client() -> QdrantClient:
+-    location = os.getenv("QDRANT_LOCATION", "").strip()
+-    if location:
+-        Path(location).mkdir(parents=True, exist_ok=True)
+-        return QdrantClient(path=location)
+-    return QdrantClient(
+-        url=os.getenv("QDRANT_URL", "http://localhost:6333"),
+-        api_key=os.getenv("QDRANT_API_KEY") or None,
+-        timeout=10,
+-    )
+-
+-
+ def create_service(
+     *,
+     root: Path = ROOT,
+diff --git a/src/campusguide/qa/guard.py b/src/campusguide/qa/guard.py
+index 1b7cd9b..8f6cc7c 100644
+--- a/src/campusguide/qa/guard.py
++++ b/src/campusguide/qa/guard.py
+@@ -16,7 +16,7 @@ MAX_QUERY_CHARS = 300
+ 
+ _HISTORICAL_RE = re.compile(
+     r"去年|前年|旧版|老版|历史版本|以前版本|废止|当时(?:的|有效)|"
+-    r"(?:19|20)\d{2}\s*年.{0,8}(?:版|版本|规定|办法|政策)"
++    r"(?:19|20)\d{2}\s*年\s*(?:的\s*)?(?:版本|旧版|老版)"
+ )
+ _PRIVACY_RE = re.compile(
+     r"(?:我|本人|我的|帮我查|帮我查询|查询我的).{0,24}"
+diff --git a/src/campusguide/qa/runtime.py b/src/campusguide/qa/runtime.py
+index 18775e7..3f53a9a 100644
+--- a/src/campusguide/qa/runtime.py
++++ b/src/campusguide/qa/runtime.py
+@@ -29,6 +29,7 @@ from campusguide.env import load_dotenv
+ from campusguide.mcp.client import MCPClientConfig, MCPPolicyMetaClient, MCPPolicySearchClient
+ from campusguide.observability.trace import TraceWriter
+ from campusguide.qa.service import QAService, QASettings
++from campusguide.retrieval.connections import create_qdrant_client as create_qdrant_client
+ from campusguide.verification.claims import ClaimValidator
+ from campusguide.verification.verifier import Verifier
+ 
+@@ -68,20 +69,6 @@ class RuntimePaths:
+     trace_dir: Path = DEFAULT_TRACE_DIR
+ 
+ 
+-def create_qdrant_client() -> QdrantClient:
+-    from qdrant_client import QdrantClient
+-
+-    location = os.getenv("QDRANT_LOCATION", "").strip()
+-    if location:
+-        Path(location).mkdir(parents=True, exist_ok=True)
+-        return QdrantClient(path=location)
+-    return QdrantClient(
+-        url=os.getenv("QDRANT_URL", "http://localhost:6333"),
+-        api_key=os.getenv("QDRANT_API_KEY") or None,
+-        timeout=10,
+-    )
+-
+-
+ def _read_manifest(path: Path) -> dict[str, Any]:
+     if not path.exists():
+         raise IndexUnavailableError(f"缺少向量 manifest：{path}，请先运行 build_vectors.py")
+diff --git a/src/campusguide/qa/service.py b/src/campusguide/qa/service.py
+index ee7ee01..4bac79f 100644
+--- a/src/campusguide/qa/service.py
++++ b/src/campusguide/qa/service.py
+@@ -83,7 +83,7 @@ _MESSAGES = {
+         "生成服务暂时不可用或输出不符合契约。请检查 LLM 配置后重试；系统不会在无引用情况下作答。"
+     ),
+     OutcomeCode.INDEX_UNAVAILABLE: (
+-        "向量索引不可用（Qdrant 未启动或索引未构建）。请先启动 Qdrant 并运行 build_vectors.py。"
++        "检索服务连接失败或索引状态异常。请检查 Qdrant 连接、数据库代理设置及服务端诊断日志。"
+     ),
+     OutcomeCode.TOOL_UNAVAILABLE: (
+         "检索工具不可用（MCP server 未启动、超时或重排模型不可用）。系统不会在无检索证据时作答。"
+diff --git a/src/campusguide/retrieval/filters.py b/src/campusguide/retrieval/filters.py
+index 0713d78..2fbe12b 100644
+--- a/src/campusguide/retrieval/filters.py
++++ b/src/campusguide/retrieval/filters.py
+@@ -128,7 +128,7 @@ def build_qdrant_filter(filters: PolicyFilters) -> Filter:
+ 
+     if filters.audience:
+         audiences = {audience.value for audience in filters.audience}
+-        audiences.add(Audience.ALL.value)
++        audiences.update({Audience.ALL.value, Audience.PUBLIC.value})
+         must.append(
+             FieldCondition(
+                 key="audience",
+diff --git a/src/campusguide/retrieval/hybrid.py b/src/campusguide/retrieval/hybrid.py
+index 9260a64..19f004d 100644
+--- a/src/campusguide/retrieval/hybrid.py
++++ b/src/campusguide/retrieval/hybrid.py
+@@ -14,6 +14,7 @@ W4 默认失败关闭：reranker 不可用时抛 ``RerankUnavailable``，不返
+ 
+ from __future__ import annotations
+ 
++import re
+ import time
+ from dataclasses import dataclass, field
+ from datetime import date
+@@ -76,6 +77,8 @@ class _Candidate:
+ def _passage(article: Article, *, max_chars: int = 1200) -> str:
+     chapter = " / ".join(article.chapter_path) if article.chapter_path else "无"
+     text = article.text if len(article.text) <= max_chars else article.text[:max_chars]
++    # Normalize layout spaces for ranking only; evidence and quote offsets stay original.
++    text = re.sub(r"(?<=[\u3400-\u9fff])[ \t]+(?=[\u3400-\u9fff])", "", text)
+     return f"标题：{article.doc_title}\n章节：{chapter}\n位置：{article.article_no}\n正文：{text}"
+ 
+ 
+@@ -179,6 +182,10 @@ class HybridRetriever:
+         return combined[: self._max_query_variants]
+ 
+     def warmup(self) -> None:
++        try:
++            self._client.get_collection(self._config.collection)
++        except Exception as exc:
++            raise RetrievalError(f"Qdrant 连接检查失败：{exc}") from exc
+         self._embedder.embed_query("CampusGuide 预热")
+         if self._use_rerank:
+             if self._reranker is None:
+@@ -278,7 +285,7 @@ class HybridRetriever:
+                     Audience.ALL not in audiences
+                     and article.audience
+                     and (
+-                        Audience.ALL not in article.audience
++                        not set(article.audience) & {Audience.ALL, Audience.PUBLIC}
+                         and not set(article.audience) & audiences
+                     )
+                 ):
+@@ -300,11 +307,12 @@ class HybridRetriever:
+         candidates: dict[tuple[str, int], _Candidate],
+         filters: PolicyFilters,
+     ) -> tuple[list[_Candidate], list[str]]:
+-        by_article: dict[str, _Candidate] = {}
++        by_article: dict[tuple[str, int], _Candidate] = {}
+         for candidate in candidates.values():
+-            existing = by_article.get(candidate.article.article_id)
++            key = (candidate.article.article_id, candidate.article.part_no)
++            existing = by_article.get(key)
+             if existing is None or candidate.rrf_score > existing.rrf_score:
+-                by_article[candidate.article.article_id] = candidate
++                by_article[key] = candidate
+ 
+         warnings: list[str] = []
+         by_doc: dict[str, list[_Candidate]] = {}
+diff --git a/src/campusguide/retrieval/section_select.py b/src/campusguide/retrieval/section_select.py
+index dafbf4a..e9e58eb 100644
+--- a/src/campusguide/retrieval/section_select.py
++++ b/src/campusguide/retrieval/section_select.py
+@@ -15,6 +15,11 @@ from campusguide.domain.enums import BlockType
+ 
+ TABLE_INTENT_RE = re.compile(
+     r"课程|学分|学时|进程|计划|安排|周|学期|矩阵|课程代码|课程名称|课程设置"
++    r"|科目|选修组|方向选修|选修模块"
++)
++SECTION_INTENT_RE = re.compile(
++    r"培养方案|培养目标|毕业要求|专业核心课程|课程结构|教学计划|进程表"
++    r"|课程|学分|学时|科目|选修组|选修模块|方向选修"
+ )
+ JOB_INTENT_RE = re.compile(r"就业|职业|去向|工作方向|毕业后|从事.{0,12}工作|工作方面")
+ JOB_TEXT_RE = re.compile(
+@@ -77,7 +82,7 @@ def selection_bonus(article: Any, *, query: str = "") -> float:
+     bonus = 0.0
+     if is_narrative_section(article):
+         bonus += 0.02
+-    if is_table_like(article):
++    if is_table_like(article) and not allows_tables(query):
+         bonus -= 0.04
+     if query and JOB_INTENT_RE.search(query) and JOB_TEXT_RE.search(article.text or ""):
+         # 培养方案问“毕业后可从事的工作”时，把“人才培养目标/就业去向”
+@@ -90,6 +95,11 @@ def allows_tables(query: str) -> bool:
+     return bool(TABLE_INTENT_RE.search(query))
+ 
+ 
++def allows_sections(query: str) -> bool:
++    """课程/培养方案类问题需要 section 级证据；其他问题默认仍只查条款。"""
++    return bool(SECTION_INTENT_RE.search(query))
++
++
+ def select_sections(
+     candidates: list[Any],
+     *,
+diff --git a/src/campusguide/verification/scope.py b/src/campusguide/verification/scope.py
+index e5ab831..c4a2c88 100644
+--- a/src/campusguide/verification/scope.py
++++ b/src/campusguide/verification/scope.py
+@@ -143,7 +143,7 @@ def _filter_audience(
+     issues: list[VerificationIssue] = []
+     for item in evidence:
+         audiences = set(item.article.audience)
+-        if Audience.ALL in audiences or effective in audiences:
++        if audiences & {Audience.ALL, Audience.PUBLIC, effective}:
+             kept.append(item)
+         else:
+             issues.append(
+diff --git a/tests/unit/test_w2_filters.py b/tests/unit/test_w2_filters.py
+index 43774b7..46a319c 100644
+--- a/tests/unit/test_w2_filters.py
++++ b/tests/unit/test_w2_filters.py
+@@ -43,7 +43,7 @@ def test_filters_include_block_type_status_and_dates() -> None:
+     audience_condition = next(
+         item for item in result.must if isinstance(item, FieldCondition) and item.key == "audience"
+     )
+-    assert set(audience_condition.match.any) == {"undergraduate", "all"}
++    assert set(audience_condition.match.any) == {"undergraduate", "all", "public"}
+ 
+ 
+ def test_filters_default_to_active_articles_and_skip_audience() -> None:
+diff --git a/tests/unit/test_w6_graph.py b/tests/unit/test_w6_graph.py
+index 6d72d67..d7a3d5a 100644
+--- a/tests/unit/test_w6_graph.py
++++ b/tests/unit/test_w6_graph.py
+@@ -12,7 +12,7 @@ from campusguide.agents.graph import (
+ )
+ from campusguide.agents.plan import Plan, QueryPlanItem
+ from campusguide.agents.providers import ChatProviderError
+-from campusguide.domain.enums import GraphDecision, Intent
++from campusguide.domain.enums import BlockType, GraphDecision, Intent
+ from tests.w6_helpers import (
+     FakeSearchClient,
+     article,
+@@ -30,6 +30,21 @@ def nodes_of(state) -> list[str]:
+     return [item["node"] for item in state.get("trace") or []]
+ 
+ 
++def test_curriculum_question_uses_section_block_types() -> None:
++    runner = make_runner()
++    state, _ = runner._prepare(
++        "block-types-curriculum",
++        "对于2024年入学的计算机科学与技术的学生来讲 我们的人工智能选修组有什么科目可以进行选择",
++    )
++    assert state["block_types"] == [BlockType.ARTICLE, BlockType.SECTION]
++
++    state, _ = runner._prepare(
++        "block-types-policy",
++        "申请国家奖学金需要满足哪些条件？",
++    )
++    assert state["block_types"] == [BlockType.ARTICLE, BlockType.SECTION]
++
++
+ def test_policy_answer_has_complete_trace() -> None:
+     runner = make_runner(
+         advisor_responses=[claims_json("national-aid-undergrad@v2021#第九条", quote())],
+diff --git a/tests/unit/test_w6_planner.py b/tests/unit/test_w6_planner.py
+index e3b28a8..72acb60 100644
+--- a/tests/unit/test_w6_planner.py
++++ b/tests/unit/test_w6_planner.py
+@@ -145,31 +145,20 @@ def test_pending_flow_selection_by_index_or_name() -> None:
+     assert explicit.intent is Intent.PROCEDURE_GUIDANCE
+ 
+ 
+-def test_audience_both_without_profile_clarifies() -> None:
++def test_audience_comparison_without_profile_is_policy_query() -> None:
+     plan = plan_for("本科生和研究生在奖学金评定上有什么区别？")
+-    assert plan.needs_clarification is True
+-    assert plan.clarification is not None
+-    assert plan.clarification.reason == "AUDIENCE_UNKNOWN"
+-    assert plan.clarification.allowed_values == ["本科生", "研究生"]
++    assert plan.needs_clarification is False
++    assert plan.flow_id is None
++    assert plan.queries
+ 
+ 
+-def test_audience_clarify_follow_up_uses_original_question() -> None:
+-    flow_catalog = catalog()
+-    planner = Planner(flow_catalog, llm_enabled=False)
+-    first = planner.plan(
+-        PlannerContext(
+-            message="本科生和研究生在奖学金评定上有什么区别？",
+-            as_of=date(2026, 10, 25),
+-        )
+-    )
+-    assert first.needs_clarification is True
++def test_legacy_audience_clarify_follow_up_uses_original_question() -> None:
++    planner = Planner(catalog(), llm_enabled=False)
+     second = planner.plan(
+         PlannerContext(
+             message="本科生",
+             as_of=date(2026, 10, 25),
+-            pending_clarification=(
+-                first.clarification.model_dump(mode="json") if first.clarification else None
+-            ),
++            pending_clarification={"reason": "AUDIENCE_UNKNOWN"},
+             pending_question="本科生和研究生在奖学金评定上有什么区别？",
+         )
+     )
+diff --git a/tests/unit/test_w6b_section_select.py b/tests/unit/test_w6b_section_select.py
+index ddecb56..a21e5dc 100644
+--- a/tests/unit/test_w6b_section_select.py
++++ b/tests/unit/test_w6b_section_select.py
+@@ -4,6 +4,7 @@ from dataclasses import dataclass
+ 
+ from campusguide.domain.enums import BlockType
+ from campusguide.retrieval.section_select import (
++    allows_sections,
+     allows_tables,
+     is_table_like,
+     select_sections,
+@@ -93,6 +94,34 @@ def test_table_intent_query_allows_tables() -> None:
+     assert len(selection.candidates) == 3
+ 
+ 
++def test_course_intent_recognizes_subject_and_elective_group() -> None:
++    query = "对于2024年入学的计算机科学与技术的学生来讲 我们的人工智能选修组有什么科目可以进行选择"
++    assert allows_sections(query) is True
++    assert allows_tables(query) is True
++    assert allows_sections("申请国家奖学金需要满足哪些条件") is False
++
++
++def test_table_intent_does_not_penalize_table_sections() -> None:
++    table = _section(
++        "plan@v2024#十、培养计划进程表",
++        "十、培养计划进程表",
++        "方向选修模块 | 人工智能方向\n课程代码 | 课程名称 | 学分\n613068 | 人工智能 | 2",
++    )
++    narrative = _section(
++        "plan@v2024#二、培养目标",
++        "二、培养目标",
++        "本专业培养具有社会责任感的复合型人才。",
++    )
++    table.rerank_score = 0.74
++    narrative.rerank_score = 0.71
++
++    broad = select_sections([table, narrative], query="培养方案", limit=2)
++    assert broad.candidates[0].article.article_id.endswith("#二、培养目标")
++
++    table_query = select_sections([table, narrative], query="人工智能选修组有哪些科目", limit=2)
++    assert table_query.candidates[0].article.article_id.endswith("#十、培养计划进程表")
++
++
+ def test_job_intent_query_boosts_placement_section() -> None:
+     target = _section(
+         "plan@v2026#一、人才培养目标",

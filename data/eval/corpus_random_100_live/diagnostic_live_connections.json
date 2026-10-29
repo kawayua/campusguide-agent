@@ -1,0 +1,372 @@
+{
+  "process_id": 41544,
+  "outcome": "INDEX_UNAVAILABLE",
+  "connections": [
+    {
+      "elapsed_s": 0.041,
+      "local": "127.0.0.1:51735",
+      "remote": "127.0.0.1:51736",
+      "state": "ESTABLISHED"
+    },
+    {
+      "elapsed_s": 0.041,
+      "local": "127.0.0.1:51736",
+      "remote": "127.0.0.1:51735",
+      "state": "ESTABLISHED"
+    },
+    {
+      "elapsed_s": 0.156,
+      "local": "127.0.0.1:51735",
+      "remote": "127.0.0.1:51736",
+      "state": "ESTABLISHED"
+    },
+    {
+      "elapsed_s": 0.156,
+      "local": "127.0.0.1:51736",
+      "remote": "127.0.0.1:51735",
+      "state": "ESTABLISHED"
+    },
+    {
+      "elapsed_s": 0.271,
+      "local": "127.0.0.1:51735",
+      "remote": "127.0.0.1:51736",
+      "state": "ESTABLISHED"
+    },
+    {
+      "elapsed_s": 0.271,
+      "local": "127.0.0.1:51736",
+      "remote": "127.0.0.1:51735",
+      "state": "ESTABLISHED"
+    },
+    {
+      "elapsed_s": 0.39,
+      "local": "127.0.0.1:51735",
+      "remote": "127.0.0.1:51736",
+      "state": "ESTABLISHED"
+    },
+    {
+      "elapsed_s": 0.39,
+      "local": "127.0.0.1:51736",
+      "remote": "127.0.0.1:51735",
+      "state": "ESTABLISHED"
+    },
+    {
+      "elapsed_s": 0.39,
+      "local": "127.0.0.1:64044",
+      "remote": "127.0.0.1:7890",
+      "state": "SYN_SENT"
+    },
+    {
+      "elapsed_s": 0.511,
+      "local": "127.0.0.1:51735",
+      "remote": "127.0.0.1:51736",
+      "state": "ESTABLISHED"
+    },
+    {
+      "elapsed_s": 0.511,
+      "local": "127.0.0.1:51736",
+      "remote": "127.0.0.1:51735",
+      "state": "ESTABLISHED"
+    },
+    {
+      "elapsed_s": 0.511,
+      "local": "127.0.0.1:64044",
+      "remote": "127.0.0.1:7890",
+      "state": "SYN_SENT"
+    },
+    {
+      "elapsed_s": 0.625,
+      "local": "127.0.0.1:51735",
+      "remote": "127.0.0.1:51736",
+      "state": "ESTABLISHED"
+    },
+    {
+      "elapsed_s": 0.625,
+      "local": "127.0.0.1:51736",
+      "remote": "127.0.0.1:51735",
+      "state": "ESTABLISHED"
+    },
+    {
+      "elapsed_s": 0.625,
+      "local": "127.0.0.1:64044",
+      "remote": "127.0.0.1:7890",
+      "state": "SYN_SENT"
+    },
+    {
+      "elapsed_s": 0.74,
+      "local": "127.0.0.1:51735",
+      "remote": "127.0.0.1:51736",
+      "state": "ESTABLISHED"
+    },
+    {
+      "elapsed_s": 0.74,
+      "local": "127.0.0.1:51736",
+      "remote": "127.0.0.1:51735",
+      "state": "ESTABLISHED"
+    },
+    {
+      "elapsed_s": 0.74,
+      "local": "127.0.0.1:64044",
+      "remote": "127.0.0.1:7890",
+      "state": "SYN_SENT"
+    },
+    {
+      "elapsed_s": 0.856,
+      "local": "127.0.0.1:51735",
+      "remote": "127.0.0.1:51736",
+      "state": "ESTABLISHED"
+    },
+    {
+      "elapsed_s": 0.856,
+      "local": "127.0.0.1:51736",
+      "remote": "127.0.0.1:51735",
+      "state": "ESTABLISHED"
+    },
+    {
+      "elapsed_s": 0.856,
+      "local": "127.0.0.1:64044",
+      "remote": "127.0.0.1:7890",
+      "state": "SYN_SENT"
+    },
+    {
+      "elapsed_s": 0.971,
+      "local": "127.0.0.1:51735",
+      "remote": "127.0.0.1:51736",
+      "state": "ESTABLISHED"
+    },
+    {
+      "elapsed_s": 0.971,
+      "local": "127.0.0.1:51736",
+      "remote": "127.0.0.1:51735",
+      "state": "ESTABLISHED"
+    },
+    {
+      "elapsed_s": 0.971,
+      "local": "127.0.0.1:64044",
+      "remote": "127.0.0.1:7890",
+      "state": "SYN_SENT"
+    },
+    {
+      "elapsed_s": 1.085,
+      "local": "127.0.0.1:51735",
+      "remote": "127.0.0.1:51736",
+      "state": "ESTABLISHED"
+    },
+    {
+      "elapsed_s": 1.085,
+      "local": "127.0.0.1:51736",
+      "remote": "127.0.0.1:51735",
+      "state": "ESTABLISHED"
+    },
+    {
+      "elapsed_s": 1.085,
+      "local": "127.0.0.1:64044",
+      "remote": "127.0.0.1:7890",
+      "state": "SYN_SENT"
+    },
+    {
+      "elapsed_s": 1.202,
+      "local": "127.0.0.1:51735",
+      "remote": "127.0.0.1:51736",
+      "state": "ESTABLISHED"
+    },
+    {
+      "elapsed_s": 1.202,
+      "local": "127.0.0.1:51736",
+      "remote": "127.0.0.1:51735",
+      "state": "ESTABLISHED"
+    },
+    {
+      "elapsed_s": 1.202,
+      "local": "127.0.0.1:64044",
+      "remote": "127.0.0.1:7890",
+      "state": "SYN_SENT"
+    },
+    {
+      "elapsed_s": 1.33,
+      "local": "127.0.0.1:51735",
+      "remote": "127.0.0.1:51736",
+      "state": "ESTABLISHED"
+    },
+    {
+      "elapsed_s": 1.33,
+      "local": "127.0.0.1:51736",
+      "remote": "127.0.0.1:51735",
+      "state": "ESTABLISHED"
+    },
+    {
+      "elapsed_s": 1.33,
+      "local": "127.0.0.1:64044",
+      "remote": "127.0.0.1:7890",
+      "state": "SYN_SENT"
+    },
+    {
+      "elapsed_s": 1.447,
+      "local": "127.0.0.1:51735",
+      "remote": "127.0.0.1:51736",
+      "state": "ESTABLISHED"
+    },
+    {
+      "elapsed_s": 1.447,
+      "local": "127.0.0.1:51736",
+      "remote": "127.0.0.1:51735",
+      "state": "ESTABLISHED"
+    },
+    {
+      "elapsed_s": 1.447,
+      "local": "127.0.0.1:64044",
+      "remote": "127.0.0.1:7890",
+      "state": "SYN_SENT"
+    },
+    {
+      "elapsed_s": 1.565,
+      "local": "127.0.0.1:51735",
+      "remote": "127.0.0.1:51736",
+      "state": "ESTABLISHED"
+    },
+    {
+      "elapsed_s": 1.565,
+      "local": "127.0.0.1:51736",
+      "remote": "127.0.0.1:51735",
+      "state": "ESTABLISHED"
+    },
+    {
+      "elapsed_s": 1.565,
+      "local": "127.0.0.1:64044",
+      "remote": "127.0.0.1:7890",
+      "state": "SYN_SENT"
+    },
+    {
+      "elapsed_s": 1.682,
+      "local": "127.0.0.1:51735",
+      "remote": "127.0.0.1:51736",
+      "state": "ESTABLISHED"
+    },
+    {
+      "elapsed_s": 1.682,
+      "local": "127.0.0.1:51736",
+      "remote": "127.0.0.1:51735",
+      "state": "ESTABLISHED"
+    },
+    {
+      "elapsed_s": 1.682,
+      "local": "127.0.0.1:64044",
+      "remote": "127.0.0.1:7890",
+      "state": "SYN_SENT"
+    },
+    {
+      "elapsed_s": 1.801,
+      "local": "127.0.0.1:51735",
+      "remote": "127.0.0.1:51736",
+      "state": "ESTABLISHED"
+    },
+    {
+      "elapsed_s": 1.801,
+      "local": "127.0.0.1:51736",
+      "remote": "127.0.0.1:51735",
+      "state": "ESTABLISHED"
+    },
+    {
+      "elapsed_s": 1.801,
+      "local": "127.0.0.1:64044",
+      "remote": "127.0.0.1:7890",
+      "state": "SYN_SENT"
+    },
+    {
+      "elapsed_s": 1.931,
+      "local": "127.0.0.1:51735",
+      "remote": "127.0.0.1:51736",
+      "state": "ESTABLISHED"
+    },
+    {
+      "elapsed_s": 1.931,
+      "local": "127.0.0.1:51736",
+      "remote": "127.0.0.1:51735",
+      "state": "ESTABLISHED"
+    },
+    {
+      "elapsed_s": 1.931,
+      "local": "127.0.0.1:64044",
+      "remote": "127.0.0.1:7890",
+      "state": "SYN_SENT"
+    },
+    {
+      "elapsed_s": 2.046,
+      "local": "127.0.0.1:51735",
+      "remote": "127.0.0.1:51736",
+      "state": "ESTABLISHED"
+    },
+    {
+      "elapsed_s": 2.046,
+      "local": "127.0.0.1:51736",
+      "remote": "127.0.0.1:51735",
+      "state": "ESTABLISHED"
+    },
+    {
+      "elapsed_s": 2.046,
+      "local": "127.0.0.1:64044",
+      "remote": "127.0.0.1:7890",
+      "state": "SYN_SENT"
+    },
+    {
+      "elapsed_s": 2.169,
+      "local": "127.0.0.1:51735",
+      "remote": "127.0.0.1:51736",
+      "state": "ESTABLISHED"
+    },
+    {
+      "elapsed_s": 2.169,
+      "local": "127.0.0.1:51736",
+      "remote": "127.0.0.1:51735",
+      "state": "ESTABLISHED"
+    },
+    {
+      "elapsed_s": 2.169,
+      "local": "127.0.0.1:64044",
+      "remote": "127.0.0.1:7890",
+      "state": "SYN_SENT"
+    },
+    {
+      "elapsed_s": 2.295,
+      "local": "127.0.0.1:51735",
+      "remote": "127.0.0.1:51736",
+      "state": "ESTABLISHED"
+    },
+    {
+      "elapsed_s": 2.295,
+      "local": "127.0.0.1:51736",
+      "remote": "127.0.0.1:51735",
+      "state": "ESTABLISHED"
+    },
+    {
+      "elapsed_s": 2.295,
+      "local": "127.0.0.1:64044",
+      "remote": "127.0.0.1:7890",
+      "state": "SYN_SENT"
+    },
+    {
+      "elapsed_s": 2.421,
+      "local": "127.0.0.1:51735",
+      "remote": "127.0.0.1:51736",
+      "state": "ESTABLISHED"
+    },
+    {
+      "elapsed_s": 2.421,
+      "local": "127.0.0.1:51736",
+      "remote": "127.0.0.1:51735",
+      "state": "ESTABLISHED"
+    },
+    {
+      "elapsed_s": 2.546,
+      "local": "127.0.0.1:51735",
+      "remote": "127.0.0.1:51736",
+      "state": "ESTABLISHED"
+    },
+    {
+      "elapsed_s": 2.546,
+      "local": "127.0.0.1:51736",
+      "remote": "127.0.0.1:51735",
+      "state": "ESTABLISHED"
+    }
+  ]
+}

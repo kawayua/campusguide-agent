@@ -1,0 +1,9 @@
+{
+  "started_at": "2026-10-28T12:25:07.385058+08:00",
+  "url": "http://127.0.0.1:7860/",
+  "transport": "gradio_client /on_send (same callback as UI submit)",
+  "mode": "sequential; independent fresh conversation per case; no automatic follow-up or retry",
+  "testset_sha256": "91d1198e9962c8db22f0c55fad47dd2b32b193e204e29cb782ddd33a6667aba7",
+  "gradio_version": "6.30.0",
+  "code_changed": true
+}

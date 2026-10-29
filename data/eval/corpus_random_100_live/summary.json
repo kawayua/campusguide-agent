@@ -1,0 +1,41 @@
+{
+  "completed": 100,
+  "outcomes": {
+    "INDEX_UNAVAILABLE": 94,
+    "CLARIFY": 2,
+    "HISTORICAL_NOT_SUPPORTED": 1,
+    "ANSWERED": 3
+  },
+  "review_statuses": {
+    "运行阻断": 94,
+    "误澄清": 2,
+    "误拒答": 1,
+    "核心正确": 1,
+    "答非所问": 1,
+    "部分正确": 1
+  },
+  "latency_s": {
+    "p50": 5.346500000000001,
+    "p95_nearest_rank": 8.356,
+    "max": 10.11,
+    "sum": 515.757,
+    "wall_clock": 521.069293
+  },
+  "node_visits": {
+    "planner": 100,
+    "retriever": 95,
+    "finalize": 100,
+    "flow": 3
+  },
+  "section_filter_risk_cases": 45,
+  "matched_server_traces": 100,
+  "citation_audit": {
+    "top_level_claim_citations": 0,
+    "checklist_reference_mentions": 75,
+    "invalid_checklist_reference_ids": [],
+    "note": "流程中可能包含不适用或未显示的步骤；引用ID存在不等于支持具体回答，也不表示运行时已水合证据。"
+  },
+  "started_at": "2026-10-27T21:14:27.402068+08:00",
+  "completed_at": "2026-10-27T21:23:08.471361+08:00",
+  "accuracy_note": "运行阻断94题；不报告正常服务条件下答案准确率。6道非INDEX最终输出逐题核对，其中1题核心正确，1题部分正确，1题答非所问，2题误澄清，1题误拒答。"
+}

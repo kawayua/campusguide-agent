@@ -1,0 +1,10 @@
+{
+  "completed": 4,
+  "total": 8,
+  "outcomes": {
+    "CLARIFY": 1,
+    "GENERATION_FAILED": 3
+  },
+  "elapsed_s": 23.8,
+  "updated_at": "2026-10-28T11:50:25.230708+08:00"
+}

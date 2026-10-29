@@ -1,0 +1,61 @@
+{
+  "frozen_at": "2026-10-28T11:07:16.543388+08:00",
+  "baseline": "data/eval/corpus_random_100_fixed/final_20261028",
+  "business_as_of": "2026-10-25",
+  "index_version": "articles_v1@hybrid-6bafb68410b9",
+  "core_count": 100,
+  "holdout_count": 20,
+  "protected_ids": [
+    "corpus_random_100_004",
+    "corpus_random_100_006",
+    "corpus_random_100_018",
+    "corpus_random_100_024",
+    "corpus_random_100_034",
+    "corpus_random_100_037",
+    "corpus_random_100_038",
+    "corpus_random_100_044",
+    "corpus_random_100_048",
+    "corpus_random_100_049",
+    "corpus_random_100_050",
+    "corpus_random_100_054",
+    "corpus_random_100_056",
+    "corpus_random_100_057",
+    "corpus_random_100_066",
+    "corpus_random_100_067",
+    "corpus_random_100_069",
+    "corpus_random_100_072",
+    "corpus_random_100_073",
+    "corpus_random_100_074",
+    "corpus_random_100_081",
+    "corpus_random_100_082",
+    "corpus_random_100_085",
+    "corpus_random_100_087",
+    "corpus_random_100_089",
+    "corpus_random_100_092",
+    "corpus_random_100_093"
+  ],
+  "critical_ids": [
+    "corpus_random_100_002",
+    "corpus_random_100_016",
+    "corpus_random_100_017",
+    "corpus_random_100_034",
+    "corpus_random_100_053",
+    "corpus_random_100_054",
+    "corpus_random_100_062",
+    "corpus_random_100_074",
+    "corpus_random_100_091",
+    "corpus_random_100_095"
+  ],
+  "targets": {
+    "correctly_handled_core": 85,
+    "correctly_handled_holdout": 16
+  },
+  "review_policy": "Semantic per-check audit; no automatic pass from non-empty evidence, empty criteria, system ANSWERED or blanket refusal; holdout is not used for individual tuning. Full source anchors supply literal facts, not extra mandatory adjacent clauses.",
+  "sha256": {
+    "data\\eval\\answer_quality\\gold_v1.jsonl": "d8975c1a520204a3aa08773c1db265110b50e6550f3401e63679cb57c4604708",
+    "data\\eval\\answer_quality\\holdout_v1.jsonl": "35340b92f800399252f5caa23b0a1ba618054f0536563fe0a1699d8112c6316b",
+    "data\\processed\\articles.jsonl": "b3dbe6707e63f17386949e37b4995ab2ab1d2e8ee441e1e2923a71f1ad8723d2",
+    "data\\processed\\documents.jsonl": "ca5e61d292580b6988bd7fc7dd3f9caab676aa88a5e191ce713012372ec50011",
+    "data\\vector_manifest.json": "3fd7e321ee2d639e0370360c639db0a665ca2220edd0cda90b9b8d1b2572709e"
+  }
+}

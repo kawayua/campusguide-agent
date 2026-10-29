@@ -1,0 +1,12 @@
+{
+  "completed": 100,
+  "total": 100,
+  "outcomes": {
+    "INDEX_UNAVAILABLE": 94,
+    "CLARIFY": 2,
+    "HISTORICAL_NOT_SUPPORTED": 1,
+    "ANSWERED": 3
+  },
+  "elapsed_s": 515.76,
+  "updated_at": "2026-10-27T21:23:08.471361+08:00"
+}

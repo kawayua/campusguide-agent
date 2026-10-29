@@ -1,0 +1,110 @@
+{
+  "started_at": "2026-10-27T22:22:09.852640+08:00",
+  "live_app_changed": false,
+  "requests": [
+    {
+      "request": {
+        "query": "本科生国家奖学金申请条件",
+        "filters": {
+          "block_types": [
+            "article"
+          ],
+          "audience": [
+            "undergraduate"
+          ],
+          "status": null,
+          "as_of": "2026-10-27",
+          "version_mode": "current",
+          "doc_ids": null,
+          "flow_ids": null,
+          "profile": null,
+          "ignore_effective_dates": false
+        },
+        "top_k": 10,
+        "rerank_top_n": 5
+      },
+      "ok": true,
+      "hits": [
+        {
+          "article_id": "national-aid-undergrad@v2021#第九条",
+          "doc_id": "national-aid-undergrad",
+          "score": 0.7300675839121546
+        },
+        {
+          "article_id": "national-aid-undergrad@v2021#第八条",
+          "doc_id": "national-aid-undergrad",
+          "score": 0.7276348835672118
+        },
+        {
+          "article_id": "national-aid-undergrad@v2021#第十条",
+          "doc_id": "national-aid-undergrad",
+          "score": 0.7267841503988373
+        },
+        {
+          "article_id": "national-aid-undergrad@v2021#第十一条",
+          "doc_id": "national-aid-undergrad",
+          "score": 0.7098126898106775
+        },
+        {
+          "article_id": "national-aid-undergrad@v2021#第七条",
+          "doc_id": "national-aid-undergrad",
+          "score": 0.7064268394686772
+        }
+      ],
+      "index_version": "articles_v1@hybrid-6bafb68410b9",
+      "elapsed_s": 1.9565434999967692
+    },
+    {
+      "request": {
+        "query": "农学院院长是谁",
+        "filters": {
+          "block_types": [
+            "article",
+            "section"
+          ],
+          "audience": null,
+          "status": null,
+          "as_of": "2026-10-27",
+          "version_mode": "current",
+          "doc_ids": null,
+          "flow_ids": null,
+          "profile": null,
+          "ignore_effective_dates": false
+        },
+        "top_k": 30,
+        "rerank_top_n": 8
+      },
+      "ok": true,
+      "hits": [
+        {
+          "article_id": "agri-leadership@v2026#段落1",
+          "doc_id": "agri-leadership",
+          "score": 0.7295771218944982
+        },
+        {
+          "article_id": "agri-teacher-382357@v20240819#段落1",
+          "doc_id": "agri-teacher-382357",
+          "score": 0.7023467307904282
+        },
+        {
+          "article_id": "agri-faculty-roster@v2026#段落1",
+          "doc_id": "agri-faculty-roster",
+          "score": 0.7194685910588862
+        },
+        {
+          "article_id": "agri-recent-news@v2026#段落32",
+          "doc_id": "agri-recent-news",
+          "score": 0.7189713664156386
+        },
+        {
+          "article_id": "agri-teacher-382372@v20240819#段落1",
+          "doc_id": "agri-teacher-382372",
+          "score": 0.6962916172586625
+        }
+      ],
+      "index_version": "articles_v1@hybrid-6bafb68410b9",
+      "elapsed_s": 1.4459531999964383
+    }
+  ],
+  "startup_s": 153.6920636000068
+}

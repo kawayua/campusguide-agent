@@ -1,0 +1,12 @@
+{
+  "started_at": "2026-10-28T16:20:15.101191+08:00",
+  "output_dir": "D:\\big-third-up\\campusguide-agent\\data\\eval\\answer_quality\\batch_retest_20261028_162015",
+  "batch_size": 10,
+  "planned_questions": 100,
+  "mode": "sequential UI callback; source and trace audit after each batch",
+  "models": {
+    "PLANNER": "gemini-3.5-flash-lite",
+    "ADVISOR": "gemini-3.5-flash-lite",
+    "VERIFIER": "gemini-3.5-flash-lite"
+  }
+}

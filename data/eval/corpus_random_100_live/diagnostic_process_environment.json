@@ -1,0 +1,86 @@
+[
+  {
+    "pid": 6064,
+    "ppid": 34496,
+    "cmd": [
+      "D:\\big-third-up\\campusguide-agent\\.venv\\Scripts\\python.exe",
+      "-m",
+      "campusguide.mcp.policy_search_server"
+    ],
+    "create_time": 1793099162.4260333,
+    "operational_environment": {
+      "QDRANT_URL": "http://localhost:6333",
+      "EMBEDDING_DEVICE": "auto",
+      "HF_HOME": "D:\\hf_cache",
+      "PYTHONPATH": "D:\\big-third-up\\campusguide-agent\\src"
+    },
+    "proxy_presence": {
+      "HTTP_PROXY": false,
+      "HTTPS_PROXY": false,
+      "ALL_PROXY": false,
+      "NO_PROXY": false
+    }
+  },
+  {
+    "pid": 34496,
+    "ppid": 42252,
+    "cmd": [
+      "D:\\big-third-up\\campusguide-agent\\.venv\\Scripts\\python.exe",
+      "-m",
+      "campusguide.ui.app"
+    ],
+    "create_time": 1793099149.5700407,
+    "operational_environment": {
+      "QDRANT_URL": "http://localhost:6333",
+      "EMBEDDING_DEVICE": "auto",
+      "HF_HOME": "D:\\hf_cache"
+    },
+    "proxy_presence": {
+      "HTTP_PROXY": false,
+      "HTTPS_PROXY": false,
+      "ALL_PROXY": false,
+      "NO_PROXY": false
+    }
+  },
+  {
+    "pid": 41544,
+    "ppid": 6064,
+    "cmd": [
+      "D:\\big-third-up\\campusguide-agent\\.venv\\Scripts\\python.exe",
+      "-m",
+      "campusguide.mcp.policy_search_server"
+    ],
+    "create_time": 1793099162.5273857,
+    "operational_environment": {
+      "QDRANT_URL": "http://localhost:6333",
+      "EMBEDDING_DEVICE": "auto",
+      "HF_HOME": "D:\\hf_cache",
+      "PYTHONPATH": "D:\\big-third-up\\campusguide-agent\\src"
+    },
+    "proxy_presence": {
+      "HTTP_PROXY": false,
+      "HTTPS_PROXY": false,
+      "ALL_PROXY": false,
+      "NO_PROXY": false
+    }
+  },
+  {
+    "pid": 42252,
+    "ppid": 42008,
+    "cmd": [
+      "D:\\big-third-up\\campusguide-agent\\.venv\\Scripts\\python.exe",
+      "-m",
+      "campusguide.ui.app"
+    ],
+    "create_time": 1793099149.554305,
+    "operational_environment": {
+      "HF_HOME": "D:\\hf_cache"
+    },
+    "proxy_presence": {
+      "HTTP_PROXY": false,
+      "HTTPS_PROXY": false,
+      "ALL_PROXY": false,
+      "NO_PROXY": false
+    }
+  }
+]

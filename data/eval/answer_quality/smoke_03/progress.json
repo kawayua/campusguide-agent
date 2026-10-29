@@ -1,0 +1,11 @@
+{
+  "completed": 8,
+  "total": 8,
+  "outcomes": {
+    "PARTIAL_ANSWER": 3,
+    "ANSWERED": 3,
+    "GENERATION_FAILED": 2
+  },
+  "elapsed_s": 160.97,
+  "updated_at": "2026-10-28T12:27:49.037153+08:00"
+}

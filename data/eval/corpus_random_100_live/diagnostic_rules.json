@@ -1,0 +1,56 @@
+{
+  "corpus_random_100_018": {
+    "question": "农学院负责本科教学、研究生工作和实验室安全的领导分别是谁？",
+    "procedure_flag": false,
+    "fact_flag": false,
+    "guard": "GuardDecision(allowed=True, outcome=None, message='')",
+    "flow_matches": [],
+    "needs_audience_clarify": true
+  },
+  "corpus_random_100_035": {
+    "question": "农学院2026年研究生奖学金评选办法和补充说明，对科研成果加分及学术不端如何规定？",
+    "procedure_flag": false,
+    "fact_flag": true,
+    "guard": "GuardDecision(allowed=False, outcome=<OutcomeCode.HISTORICAL_NOT_SUPPORTED: 'HISTORICAL_NOT_SUPPORTED'>, message='W2 只回答现行有效制度，暂不支持历史版本比较或已废止文件查询。如需现行规定，请直接描述办理事项。')",
+    "flow_matches": [
+      [
+        "scholarship-application",
+        "奖学金"
+      ]
+    ],
+    "historical_regex_match": "2026年研究生奖学金评选办法"
+  },
+  "corpus_random_100_055": {
+    "question": "本科生和研究生分别如何办理在读证明，本科生成绩单自助打印和人工办理的收费规定是什么？",
+    "procedure_flag": true,
+    "fact_flag": true,
+    "guard": "GuardDecision(allowed=True, outcome=None, message='')",
+    "flow_matches": [],
+    "needs_audience_clarify": true
+  },
+  "corpus_random_100_057": {
+    "question": "农学院关于2025—2026学年袁隆平追梦奖学金拟推荐人选的公示，何时发布？",
+    "procedure_flag": false,
+    "fact_flag": false,
+    "guard": "GuardDecision(allowed=True, outcome=None, message='')",
+    "flow_matches": [
+      [
+        "scholarship-application",
+        "奖学金"
+      ]
+    ]
+  },
+  "corpus_random_100_089": {
+    "question": "农学院2026—2027学年国家助学金和2025—2026学年国家励志奖学金分别发布了哪些评选公示？",
+    "procedure_flag": false,
+    "fact_flag": false,
+    "guard": "GuardDecision(allowed=True, outcome=None, message='')",
+    "flow_matches": [
+      [
+        "scholarship-application",
+        "国家励志奖学金"
+      ]
+    ],
+    "extracted_award_type": "inspirational"
+  }
+}

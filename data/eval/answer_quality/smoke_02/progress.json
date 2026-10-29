@@ -1,0 +1,11 @@
+{
+  "completed": 8,
+  "total": 8,
+  "outcomes": {
+    "CLARIFY": 1,
+    "UNVERIFIABLE": 1,
+    "ANSWERED": 6
+  },
+  "elapsed_s": 161.79,
+  "updated_at": "2026-10-28T11:58:31.384952+08:00"
+}

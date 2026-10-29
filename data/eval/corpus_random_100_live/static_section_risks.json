@@ -1,0 +1,475 @@
+[
+  {
+    "id": "corpus_random_100_006",
+    "question": "想研究植物微生物组或者大豆遗传改良，可以分别关注农学院的王孝林和蔡占东老师吗？",
+    "default_block_types": [
+      "article"
+    ],
+    "excluded_expected_section_docs": [
+      "agri-teacher-382376",
+      "agri-teacher-402950"
+    ]
+  },
+  {
+    "id": "corpus_random_100_009",
+    "question": "农学院有多少个实验室？",
+    "default_block_types": [
+      "article"
+    ],
+    "excluded_expected_section_docs": [
+      "agri-profile"
+    ]
+  },
+  {
+    "id": "corpus_random_100_010",
+    "question": "农学院永根·金穗学术论坛第11讲由谁主讲，与第12讲的主题有什么不同？",
+    "default_block_types": [
+      "article"
+    ],
+    "excluded_expected_section_docs": [
+      "agri-recent-lectures"
+    ]
+  },
+  {
+    "id": "corpus_random_100_011",
+    "question": "农学院的辅导员队伍和数学与信息学院的学生工作部门分别有哪些公开介绍？",
+    "default_block_types": [
+      "article"
+    ],
+    "excluded_expected_section_docs": [
+      "agri-student-affairs-team",
+      "info-student-affairs"
+    ]
+  },
+  {
+    "id": "corpus_random_100_013",
+    "question": "数学与信息学院的党委书记和院长分别是谁，各自负责哪些工作？",
+    "default_block_types": [
+      "article"
+    ],
+    "excluded_expected_section_docs": [
+      "info-leadership"
+    ]
+  },
+  {
+    "id": "corpus_random_100_018",
+    "question": "农学院负责本科教学、研究生工作和实验室安全的领导分别是谁？",
+    "default_block_types": [
+      "article"
+    ],
+    "excluded_expected_section_docs": [
+      "agri-leadership"
+    ]
+  },
+  {
+    "id": "corpus_random_100_024",
+    "question": "农学院2026年丁颖杯挑战杯竞赛的个人作品和集体作品分别有哪些作者人数要求，毕业设计能否申报？",
+    "default_block_types": [
+      "article"
+    ],
+    "excluded_expected_section_docs": [
+      "agri-competition-notice-2026"
+    ]
+  },
+  {
+    "id": "corpus_random_100_026",
+    "question": "2027届推免资格名单如何公示，如果对结果有异议应通过什么渠道反映？",
+    "default_block_types": [
+      "article"
+    ],
+    "excluded_expected_section_docs": [
+      "recommendation-2027-publicity"
+    ]
+  },
+  {
+    "id": "corpus_random_100_028",
+    "question": "农学院2026年硕士研究生复试包括哪些环节，总成绩和录取结果如何确定？",
+    "default_block_types": [
+      "article"
+    ],
+    "excluded_expected_section_docs": [
+      "agri-master-admission-rule"
+    ]
+  },
+  {
+    "id": "corpus_random_100_034",
+    "question": "数学与信息学院有多少个本科专业，分别是什么？",
+    "default_block_types": [
+      "article"
+    ],
+    "excluded_expected_section_docs": [
+      "info-majors-undergrad",
+      "info-profile"
+    ]
+  },
+  {
+    "id": "corpus_random_100_035",
+    "question": "农学院2026年研究生奖学金评选办法和补充说明，对科研成果加分及学术不端如何规定？",
+    "default_block_types": [
+      "article"
+    ],
+    "excluded_expected_section_docs": [
+      "agri-grad-scholarship-rule-2026",
+      "agri-grad-scholarship-supplement-2026"
+    ]
+  },
+  {
+    "id": "corpus_random_100_036",
+    "question": "数学与信息学院有哪些校外实践教学基地，其中哪个是国家级工程实践中心？",
+    "default_block_types": [
+      "article"
+    ],
+    "excluded_expected_section_docs": [
+      "info-practice-bases"
+    ]
+  },
+  {
+    "id": "corpus_random_100_038",
+    "question": "数学与信息学院2026年6月发布了哪些学术报告或学术会议消息？",
+    "default_block_types": [
+      "article"
+    ],
+    "excluded_expected_section_docs": [
+      "info-recent-academic"
+    ]
+  },
+  {
+    "id": "corpus_random_100_044",
+    "question": "数学与信息学院领航·成长系列活动第四期的主题是什么，消息何时发布？",
+    "default_block_types": [
+      "article"
+    ],
+    "excluded_expected_section_docs": [
+      "info-recent-news"
+    ]
+  },
+  {
+    "id": "corpus_random_100_045",
+    "question": "数学与信息学院2025—2026学年综合测评的时间安排是什么，最终结果通过什么方式公示？",
+    "default_block_types": [
+      "article"
+    ],
+    "excluded_expected_section_docs": [
+      "comprehensive-evaluation-2026-final-publicity",
+      "comprehensive-evaluation-2026-info"
+    ]
+  },
+  {
+    "id": "corpus_random_100_050",
+    "question": "2026年2月农学院哪条科研动态提到了张艳霞与梁云团队，研究主题是什么？",
+    "default_block_types": [
+      "article"
+    ],
+    "excluded_expected_section_docs": [
+      "agri-recent-research"
+    ]
+  },
+  {
+    "id": "corpus_random_100_052",
+    "question": "农学院2026年丁颖杯挑战杯院内选拔在什么时间举行，哪些学生和作品可以参赛？",
+    "default_block_types": [
+      "article"
+    ],
+    "excluded_expected_section_docs": [
+      "agri-competition-notice-2026"
+    ]
+  },
+  {
+    "id": "corpus_random_100_053",
+    "question": "农学院的学术分委员会、学位分委员会和教学指导委员会分别由谁负责？",
+    "default_block_types": [
+      "article"
+    ],
+    "excluded_expected_section_docs": [
+      "agri-committee-academic",
+      "agri-committee-degree",
+      "agri-committee-teaching"
+    ]
+  },
+  {
+    "id": "corpus_random_100_054",
+    "question": "数学与信息学院2026年本科生国家奖学金评选通知要求提交哪些材料，截止时间是什么时候？",
+    "default_block_types": [
+      "article"
+    ],
+    "excluded_expected_section_docs": [
+      "national-aid-2026-info-merit"
+    ]
+  },
+  {
+    "id": "corpus_random_100_055",
+    "question": "本科生和研究生分别如何办理在读证明，本科生成绩单自助打印和人工办理的收费规定是什么？",
+    "default_block_types": [
+      "article"
+    ],
+    "excluded_expected_section_docs": [
+      "enrollment-certificate-fee-note-2026",
+      "enrollment-certificate-grad-office",
+      "enrollment-certificate-guide",
+      "enrollment-certificate-self-print-2024"
+    ]
+  },
+  {
+    "id": "corpus_random_100_056",
+    "question": "按农学院2012—2024年的实践基地名录，共有多少个基地，各级别分别有多少个？",
+    "default_block_types": [
+      "article"
+    ],
+    "excluded_expected_section_docs": [
+      "agri-practice-bases"
+    ]
+  },
+  {
+    "id": "corpus_random_100_057",
+    "question": "农学院关于2025—2026学年袁隆平追梦奖学金拟推荐人选的公示，何时发布？",
+    "default_block_types": [
+      "article"
+    ],
+    "excluded_expected_section_docs": [
+      "agri-recent-notices"
+    ]
+  },
+  {
+    "id": "corpus_random_100_060",
+    "question": "申请2027年推荐免试研究生，需要满足哪些资格条件，校级办法与农学院细则如何衔接？",
+    "default_block_types": [
+      "article"
+    ],
+    "excluded_expected_section_docs": [
+      "recommendation-2027-notice"
+    ]
+  },
+  {
+    "id": "corpus_random_100_062",
+    "question": "数学与信息学院2026年10月16日和19日分别发布了哪些本科生通知，是否涉及电动自行车管理和综合测评评奖？",
+    "default_block_types": [
+      "article"
+    ],
+    "excluded_expected_section_docs": [
+      "info-recent-notices"
+    ]
+  },
+  {
+    "id": "corpus_random_100_066",
+    "question": "数学与信息学院有哪些学生组织和产业学院？",
+    "default_block_types": [
+      "article"
+    ],
+    "excluded_expected_section_docs": [
+      "info-industry-colleges",
+      "info-student-orgs"
+    ]
+  },
+  {
+    "id": "corpus_random_100_067",
+    "question": "农学院院长是谁？",
+    "default_block_types": [
+      "article"
+    ],
+    "excluded_expected_section_docs": [
+      "agri-leadership"
+    ]
+  },
+  {
+    "id": "corpus_random_100_068",
+    "question": "田绪红、张大斌和杨德贵分别属于数学与信息学院的哪个系？",
+    "default_block_types": [
+      "article"
+    ],
+    "excluded_expected_section_docs": [
+      "info-teachers-cs",
+      "info-teachers-ie",
+      "info-teachers-math"
+    ]
+  },
+  {
+    "id": "corpus_random_100_072",
+    "question": "数学与信息学院2026年10月20日发布了哪些活动新闻，其中招生宣讲面向哪一年的硕士研究生招生？",
+    "default_block_types": [
+      "article"
+    ],
+    "excluded_expected_section_docs": [
+      "info-recent-news"
+    ]
+  },
+  {
+    "id": "corpus_random_100_073",
+    "question": "2026年9月24日农学院发布的两条水稻科研进展，分别涉及哪些团队和研究主题？",
+    "default_block_types": [
+      "article"
+    ],
+    "excluded_expected_section_docs": [
+      "agri-recent-research"
+    ]
+  },
+  {
+    "id": "corpus_random_100_075",
+    "question": "数学与信息学院2026年国家助学金、国家励志奖学金的申请条件和办理安排是什么？",
+    "default_block_types": [
+      "article"
+    ],
+    "excluded_expected_section_docs": [
+      "national-aid-2026-info-aid"
+    ]
+  },
+  {
+    "id": "corpus_random_100_081",
+    "question": "农学院永根·金穗学术论坛第12讲的报告人是谁，报告主题是什么，消息何时发布？",
+    "default_block_types": [
+      "article"
+    ],
+    "excluded_expected_section_docs": [
+      "agri-recent-lectures"
+    ]
+  },
+  {
+    "id": "corpus_random_100_082",
+    "question": "农学院2026年9月发布了哪些心理健康活动的综测加分证明通知？",
+    "default_block_types": [
+      "article"
+    ],
+    "excluded_expected_section_docs": [
+      "agri-recent-notices"
+    ]
+  },
+  {
+    "id": "corpus_random_100_084",
+    "question": "农学院下设哪些教学系，四个系的主任分别是谁？",
+    "default_block_types": [
+      "article"
+    ],
+    "excluded_expected_section_docs": [
+      "agri-dept-crop-info",
+      "agri-dept-crop-tech",
+      "agri-dept-plant-breeding",
+      "agri-dept-seed-engineering"
+    ]
+  },
+  {
+    "id": "corpus_random_100_085",
+    "question": "数学与信息学院和软件学院是什么关系，学院下设哪些系？",
+    "default_block_types": [
+      "article"
+    ],
+    "excluded_expected_section_docs": [
+      "info-org-structure",
+      "info-profile"
+    ]
+  },
+  {
+    "id": "corpus_random_100_087",
+    "question": "知识库收录的农学院2026年9月讲座论坛消息有哪些，分别在哪天发布？",
+    "default_block_types": [
+      "article"
+    ],
+    "excluded_expected_section_docs": [
+      "agri-recent-lectures"
+    ]
+  },
+  {
+    "id": "corpus_random_100_089",
+    "question": "农学院2026—2027学年国家助学金和2025—2026学年国家励志奖学金分别发布了哪些评选公示？",
+    "default_block_types": [
+      "article"
+    ],
+    "excluded_expected_section_docs": [
+      "national-aid-2026-agri-grant-publicity",
+      "national-aid-2026-agri-inspirational-publicity"
+    ]
+  },
+  {
+    "id": "corpus_random_100_090",
+    "question": "农学院2026年10月发布的新闻有哪些，其中哪条与2026级本科生军训有关？",
+    "default_block_types": [
+      "article"
+    ],
+    "excluded_expected_section_docs": [
+      "agri-recent-news"
+    ]
+  },
+  {
+    "id": "corpus_random_100_091",
+    "question": "梁云是数学与信息学院的老师吗，属于哪个系？",
+    "default_block_types": [
+      "article"
+    ],
+    "excluded_expected_section_docs": [
+      "info-teachers-cs"
+    ]
+  },
+  {
+    "id": "corpus_random_100_093",
+    "question": "储成才、王州飞和谢庆军的主要研究方向分别是什么？",
+    "default_block_types": [
+      "article"
+    ],
+    "excluded_expected_section_docs": [
+      "agri-teacher-382341",
+      "agri-teacher-382354",
+      "agri-teacher-382355"
+    ]
+  },
+  {
+    "id": "corpus_random_100_094",
+    "question": "本科生导师通常什么时候配备，学校规定与农学院实施办法分别怎样要求导师履职？",
+    "default_block_types": [
+      "article"
+    ],
+    "excluded_expected_section_docs": [
+      "agri-undergrad-mentor-rule-2025"
+    ]
+  },
+  {
+    "id": "corpus_random_100_095",
+    "question": "数学与信息学院最近收录的一条学术报告消息发布于哪天，报告题目是什么？",
+    "default_block_types": [
+      "article"
+    ],
+    "excluded_expected_section_docs": [
+      "info-recent-academic"
+    ]
+  },
+  {
+    "id": "corpus_random_100_096",
+    "question": "农学院2026年申请考核制博士招生，对申请资格、材料提交和考核方式有哪些要求？",
+    "default_block_types": [
+      "article"
+    ],
+    "excluded_expected_section_docs": [
+      "agri-phd-admission-rule"
+    ]
+  },
+  {
+    "id": "corpus_random_100_098",
+    "question": "数学与信息学院有哪些实验教学示范中心，是否有云计算与大数据实验室？",
+    "default_block_types": [
+      "article"
+    ],
+    "excluded_expected_section_docs": [
+      "info-teaching-centers"
+    ]
+  },
+  {
+    "id": "corpus_random_100_099",
+    "question": "农学院有哪些本科专业和创新班，哪些专业是国家级一流本科专业建设点？",
+    "default_block_types": [
+      "article"
+    ],
+    "excluded_expected_section_docs": [
+      "agri-majors-undergrad",
+      "agri-profile"
+    ]
+  },
+  {
+    "id": "corpus_random_100_100",
+    "question": "两个学院分别有哪些研究生学位授权点或招生专业？",
+    "default_block_types": [
+      "article"
+    ],
+    "excluded_expected_section_docs": [
+      "agri-profile",
+      "info-admissions-graduate",
+      "info-majors-graduate"
+    ]
+  }
+]

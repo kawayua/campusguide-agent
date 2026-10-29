@@ -1,0 +1,12 @@
+{
+  "completed": 8,
+  "total": 8,
+  "outcomes": {
+    "NO_EVIDENCE": 1,
+    "PARTIAL_ANSWER": 2,
+    "ANSWERED": 4,
+    "UNVERIFIABLE": 1
+  },
+  "elapsed_s": 303.96,
+  "updated_at": "2026-10-28T12:53:08.851346+08:00"
+}

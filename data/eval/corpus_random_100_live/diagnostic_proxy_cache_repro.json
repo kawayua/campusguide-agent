@@ -1,0 +1,20 @@
+{
+  "test": "client built with unavailable proxy, then environment restored before query",
+  "live_app_changed": false,
+  "system_proxy_changed": false,
+  "checks": [
+    {
+      "mode": "cached_proxy_after_env_restored",
+      "ok": false,
+      "type": "ResponseHandlingException",
+      "message": "timed out",
+      "elapsed_s": 2.016
+    },
+    {
+      "mode": "explicit_direct",
+      "ok": true,
+      "points": 4026,
+      "elapsed_s": 0.035
+    }
+  ]
+}

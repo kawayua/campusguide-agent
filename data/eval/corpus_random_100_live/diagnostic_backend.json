@@ -1,0 +1,214 @@
+{
+  "started_at": "2026-10-27T21:15:52.505068+08:00",
+  "offline_model_loading": true,
+  "construct_elapsed_s": 0.4559713000053307,
+  "backend_type": "HybridRetriever",
+  "warmup": "ok",
+  "search_response": {
+    "ok": true,
+    "schema_version": "1.0",
+    "data": {
+      "query": "农学院院长是谁？",
+      "queries": [
+        "农学院院长是谁?"
+      ],
+      "articles": [
+        {
+          "article_id": "agri-postgrad-recommendation-rule-2024@v2024#第二条",
+          "part_no": 1,
+          "block_type": "article",
+          "article": {
+            "article_id": "agri-postgrad-recommendation-rule-2024@v2024#第二条",
+            "doc_id": "agri-postgrad-recommendation-rule-2024",
+            "version_id": "v2024",
+            "doc_title": "农学院推荐优秀应届本科毕业生免试攻读研究生工作细则",
+            "doc_type": "regulation",
+            "authority_level": "binding",
+            "chapter_path": [
+              "第二章 组织领导"
+            ],
+            "article_no": "第二条",
+            "article_index": 2,
+            "part_no": 1,
+            "block_type": "article",
+            "text": "学院成立推免生遴选工作小组及专家审核小组，负责组织实施学院推免工作。学院推免生遴选工作小组由学院党委书记、院长、党委副书记、分管本科教学工作副院长、教务员及辅导员等组成，负责制订《农学院推荐优秀应届本科毕业生免试攻读研究生工作细则》(以下简称《推免细则》)，按要求落实学院推免生的报名、审核、推荐、公示等工作。学院专家审核小组由具有相关学科副教授以上职称的学院学术分委员会委员组成，成员不少于5 人，负责对学生科研创新成果、论文、竞赛获奖奖项及内容等方面进行审核鉴定。",
+            "text_normalized": "学院成立推免生遴选工作小组及专家审核小组,负责组织实施学院推免工作。学院推免生遴选工作小组由学院党委书记、院长、党委副书记、分管本科教学工作副院长、教务员及辅导员等组成,负责制订《农学院推荐优秀应届本科毕业生免试攻读研究生工作细则》(以下简称《推免细则》),按要求落实学院推免生的报名、审核、推荐、公示等工作。学院专家审核小组由具有相关学科副教授以上职称的学院学术分委员会委员组成,成员不少于5人,负责对学生科研创新成果、论文、竞赛获奖奖项及内容等方面进行审核鉴定。",
+            "audience": [
+              "undergraduate"
+            ],
+            "audience_detail": {
+              "colleges": [
+                "agri"
+              ],
+              "majors": [],
+              "intake_years": [],
+              "intake_from": null,
+              "graduating_years": [],
+              "stages": [
+                "final_year"
+              ],
+              "program_types": [],
+              "groups": [],
+              "status": [
+                "graduating"
+              ],
+              "cycle": null,
+              "note": null
+            },
+            "status": "active",
+            "effective_from": "2024-08-25",
+            "effective_to": null,
+            "source_url": "https://nxy.scau.edu.cn/_upload/article/files/af/cc/8666385842938abb5c03bf034266/7e60438e-b5d2-49c9-a1ab-f2616072e89a.pdf",
+            "published_at": "2024-08-25",
+            "date_confidence": "high",
+            "issuing_department": "农学院",
+            "topic_tags": [
+              "规章制度"
+            ],
+            "flow_ids": [
+              "recommendation-eligibility"
+            ],
+            "source_sha256": "de9641d5c7972b6e8c4610e9cd9623f558bece2fa9fa41fe10a881286159f5eb"
+          },
+          "dense_score": 0.5171228,
+          "sparse_score": 16.006432,
+          "rrf_score": 0.031099324975891997,
+          "rerank_score": 0.6701512240269175,
+          "matched_spans": [
+            [
+              0,
+              2
+            ],
+            [
+              27,
+              29
+            ],
+            [
+              34,
+              36
+            ],
+            [
+              46,
+              48
+            ],
+            [
+              90,
+              92
+            ]
+          ],
+          "retrieval_query": "农学院院长是谁?",
+          "rank": 1
+        },
+        {
+          "article_id": "agri-postdoc-rule-2024@v2024#第五条",
+          "part_no": 1,
+          "block_type": "article",
+          "article": {
+            "article_id": "agri-postdoc-rule-2024@v2024#第五条",
+            "doc_id": "agri-postdoc-rule-2024",
+            "version_id": "v2024",
+            "doc_title": "农学院博士后流动站管理细则（试行）",
+            "doc_type": "regulation",
+            "authority_level": "binding",
+            "chapter_path": [
+              "第二章 工作管理机构及职责"
+            ],
+            "article_no": "第五条",
+            "article_index": 5,
+            "part_no": 1,
+            "block_type": "article",
+            "text": "学院成立博士后工作管理小组，全面负责学院的博士后管理工作，组长由院长担任，成员包括学院党委书记、流动站站长、分管博士后管理工作的副院长、分管本科教学工作的副院长、一级学科及二级学科带头人、学科建设办公室主任、博士后工作秘书组成。流动站设站长一名，实行站长负责制，负责做好流动站的建设及运行管理工作。学院博士后工作管理小组具体职责如下：\n（一）制定流动站发展规划及博士后管理工作细则。加强考核管理，根据学科特点，制定进站学术条件要求、出站要求及考核办法，报学校博士后管理办公室（以下简称“学校博管办”）\n备案。\n（二）组织开展流动站博士后进出站的评价与审核等工作，审核博士后科学基金、出国访学等的申请。\n（三）督促合作导师做好博士后的业务指导与管理工作。\n（四）完善博士后工作信息化建设。",
+            "text_normalized": "学院成立博士后工作管理小组,全面负责学院的博士后管理工作,组长由院长担任,成员包括学院党委书记、流动站站长、分管博士后管理工作的副院长、分管本科教学工作的副院长、一级学科及二级学科带头人、学科建设办公室主任、博士后工作秘书组成。流动站设站长一名,实行站长负责制,负责做好流动站的建设及运行管理工作。学院博士后工作管理小组具体职责如下:(一)制定流动站发展规划及博士后管理工作细则。加强考核管理,根据学科特点,制定进站学术条件要求、出站要求及考核办法,报学校博士后管理办公室(以下简称\"学校博管办\")备案。(二)组织开展流动站博士后进出站的评价与审核等工作,审核博士后科学基金、出国访学等的申请。(三)督促合作导师做好博士后的业务指导与管理工作。(四)完善博士后工作信息化建设。",
+            "audience": [
+              "postdoc",
+              "faculty"
+            ],
+            "audience_detail": {
+              "colleges": [
+                "agri"
+              ],
+              "majors": [],
+              "intake_years": [],
+              "intake_from": null,
+              "graduating_years": [],
+              "stages": [],
+              "program_types": [],
+              "groups": [],
+              "status": [],
+              "cycle": null,
+              "note": null
+            },
+            "status": "active",
+            "effective_from": "2024-08-25",
+            "effective_to": null,
+            "source_url": "https://nxy.scau.edu.cn/_upload/article/files/a9/80/7413a0154e148763fc815ee7e33a/5090fce1-f650-4b1a-bedf-34dc27b87f55.pdf",
+            "published_at": "2024-08-25",
+            "date_confidence": "high",
+            "issuing_department": "农学院",
+            "topic_tags": [
+              "规章制度"
+            ],
+            "flow_ids": [],
+            "source_sha256": "2354b0528f974f9ec85bc4b3cfca644e5d2b2adf9da21cbaf56779055b16d415"
+          },
+          "dense_score": 0.5005273,
+          "sparse_score": 16.25457,
+          "rrf_score": 0.031054405392392875,
+          "rerank_score": 0.6192676831128331,
+          "matched_spans": [
+            [
+              0,
+              2
+            ],
+            [
+              18,
+              20
+            ],
+            [
+              32,
+              34
+            ],
+            [
+              41,
+              43
+            ],
+            [
+              149,
+              151
+            ]
+          ],
+          "retrieval_query": "农学院院长是谁?",
+          "rank": 2
+        }
+      ],
+      "index_version": "articles_v1@hybrid-6bafb68410b9",
+      "degraded": false,
+      "candidates": 60,
+      "applied_filters": [
+        "as_of=2026-10-27",
+        "version_mode=current",
+        "audience=未指定（不硬过滤）",
+        "profile=未提供"
+      ],
+      "warnings": [
+        "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤",
+        "PROFILE_UNDETERMINED: 用户未提供学院，结果保留可能限定该细目的条款",
+        "PROFILE_UNDETERMINED: 用户未提供年级/阶段，结果保留可能限定该细目的条款",
+        "PROFILE_UNDETERMINED: 用户未提供学籍状态，结果保留可能限定该细目的条款",
+        "FILTERS_APPLIED: as_of=2026-10-27；version_mode=current；audience=未指定（不硬过滤）；profile=未提供"
+      ],
+      "timing": {
+        "dense_ms": 562.72,
+        "sparse_ms": 89.22,
+        "rerank_ms": 9212.55
+      }
+    },
+    "warnings": [
+      "AUDIENCE_UNDETERMINED: 未指定受众，未按角色做硬过滤",
+      "PROFILE_UNDETERMINED: 用户未提供学院，结果保留可能限定该细目的条款",
+      "PROFILE_UNDETERMINED: 用户未提供年级/阶段，结果保留可能限定该细目的条款",
+      "PROFILE_UNDETERMINED: 用户未提供学籍状态，结果保留可能限定该细目的条款",
+      "FILTERS_APPLIED: as_of=2026-10-27；version_mode=current；audience=未指定（不硬过滤）；profile=未提供"
+    ]
+  }
+}

@@ -1,0 +1,80 @@
+{
+  "text": "**暂时无法作答：** 向量索引不可用（Qdrant 未启动或索引未构建）。请先启动 Qdrant 并运行 build_vectors.py。\n\n- 子问题“农学院院长是谁”未检索到可引用的依据，未作答。\n\n**下一步：**\n- 可联系：学校相关负责部门\n- 官方入口：https://www.scau.edu.cn/\n\n---\n演示系统不构成官方答复，具体以学校官网为准。",
+  "flow_id": null,
+  "status": null,
+  "checklist": [],
+  "next_slot": null,
+  "missing_slots": [],
+  "ambiguous_flow_ids": [],
+  "warnings": [
+    "q1:INDEX_UNAVAILABLE"
+  ],
+  "closed": false,
+  "claims": [],
+  "citations": [],
+  "outcome": "INDEX_UNAVAILABLE",
+  "decision": "abstain",
+  "handoff": {
+    "department": "学校相关负责部门",
+    "url": "https://www.scau.edu.cn/",
+    "note": null,
+    "source": "config:default"
+  },
+  "trace": [
+    {
+      "node": "planner",
+      "duration_ms": 5,
+      "plan": {
+        "intent": "policy_qa",
+        "flow_id": null,
+        "queries": [
+          "农学院院长是谁"
+        ],
+        "missing_slots": [],
+        "needs_clarification": false,
+        "clarification": null,
+        "planner_source": "rule",
+        "outcome": null,
+        "pending_flow_ids": [],
+        "dropped_filters": [],
+        "dropped_queries": [],
+        "warnings": [],
+        "flow_status": null
+      }
+    },
+    {
+      "node": "retriever",
+      "duration_ms": 2888,
+      "queries": [
+        "农学院院长是谁"
+      ],
+      "evidence": 0,
+      "coverage": {
+        "q1": []
+      },
+      "warnings": [
+        "q1:INDEX_UNAVAILABLE"
+      ],
+      "index_version": "",
+      "partial": false
+    },
+    {
+      "node": "finalize",
+      "duration_ms": 1,
+      "outcome": "INDEX_UNAVAILABLE",
+      "citations": 0,
+      "checklist": 0,
+      "handoff": {
+        "department": "学校相关负责部门",
+        "url": "https://www.scau.edu.cn/",
+        "note": null,
+        "source": "config:default"
+      },
+      "semantic_unchecked": false,
+      "coverage": {
+        "q1": []
+      }
+    }
+  ],
+  "clarification": null
+}

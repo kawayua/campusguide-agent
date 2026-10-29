@@ -1,0 +1,151 @@
+{
+  "drafts": [
+    {
+      "claim_id": "c1",
+      "text": "对于2024年入学的计算机科学与技术专业学生，在方向选修模块的人工智能方向中，可选修的理论课程包括：数据分析与数据挖掘（代码603917，2学分）、人工智能（代码613068，2学分）、深度学习（代码603916，2学分）、文本挖掘与分析（代码600733，2学分）、计算机视觉与图像处理（代码602025，2学分），软件开发或人工智能其中一个选修板块至少选修8学分。",
+      "kind": "other",
+      "unit_ids": [
+        "u1"
+      ],
+      "citations": [
+        {
+          "article_id": "info-ug-cs-plan@v2024#十、培养计划进程表",
+          "quote": "人工智能方向 | 603917 | 数据分析与数据挖掘\nDataAnalysisandDataMining | 2 | 32 | 32 | 0 | 0 | 4 | 数学与信息学院（软件学院）\n613068 | 人工智能\nArtificialIntelligence | 2 | 32 | 32 | 0 | 0 | 5 | 数学与信息学院（软件学院）\n603916 | 深度学习\nDeepLearning | 2 | 32 | 32 | 0 | 0 | 5 | 数学与信息学院（软件学院）\n600733 | 文本挖掘与分析\nTextMiningandAnalytics | 2 | 32 | 32 | 0 | 0 | 6 | 数学与信息学院（软件学院）\n602025 | 计算机视觉与图像处理\nDigitalImageProcessing | 2 | 32 | 32 | 0 | 0 | 6 | 数学与信息学院（软件学院）"
+        },
+        {
+          "article_id": "info-ug-cs-plan@v2024#十、培养计划进程表",
+          "quote": "软件开发或人工智能其中一个选修板块至少选修\n8学分"
+        }
+      ]
+    },
+    {
+      "claim_id": "c2",
+      "text": "对于2024年入学的计算机科学与技术专业学生，在方向选修课程（实验）的人工智能方向中，可选修的实验课程包括：数据分析与数据挖掘实验（代码603900，0.5学分）、人工智能实验（代码603899，0.5学分）、深度学习实验（代码603898，0.5学分）、文本挖掘与分析实验（代码603897，0.5学分）、计算机视觉与图像处理实验（代码603896，0.5学分），备注为与理论课同步。",
+      "kind": "other",
+      "unit_ids": [
+        "u1"
+      ],
+      "citations": [
+        {
+          "article_id": "info-ug-cs-plan@v2024#十、培养计划进程表",
+          "quote": "数据分析与数据挖掘实验数学与信息学院（软件\n603900 Experiment of Data Analysis and Data 0.5 16 0 16 0 4方向 学院）\n选修 Mining\n课程 人工智能实验 数学与信息学院（软件\n603899 0.5 16 0 16 0 5\n（实 Experiment of Artificial Intelligence 学院） 与理论验）\n深度学习实验 数学与信息学院（软件 课同步\n|人 603898 0.5 16 0 16 0 5 Experiment of Deep Learning 学院）\n文本挖掘与分析实验能方 数学与信息学院（软件\n603897 Experiment of Text Mining and 0.5 16 0 16 0 6向 学院） Analytics\n计算机视觉与图像处理实验 数学与信息学院（软件\n603896 0.5 16 0 16 0 6\nExperiment of Digital Image Processing 学院）"
+        }
+      ]
+    }
+  ],
+  "records": [
+    {
+      "claim_id": "c1",
+      "text": "对于2024年入学的计算机科学与技术专业学生，在方向选修模块的人工智能方向中，可选修的理论课程包括：数据分析与数据挖掘（代码603917，2学分）、人工智能（代码613068，2学分）、深度学习（代码603916，2学分）、文本挖掘与分析（代码600733，2学分）、计算机视觉与图像处理（代码602025，2学分），软件开发或人工智能其中一个选修板块至少选修8学分。",
+      "kind": "other",
+      "kept": false,
+      "draft_citations": [
+        {
+          "article_id": "info-ug-cs-plan@v2024#十、培养计划进程表",
+          "quote": "人工智能方向 | 603917 | 数据分析与数据挖掘\nDataAnalysisandDataMining | 2 | 32 | 32 | 0 | 0 | 4 | 数学与信息学院（软件学院）\n613068 | 人工智能\nArtificialIntelligence | 2 | 32 | 32 | 0 | 0 | 5 | 数学与信息学院（软件学院）\n603916 | 深度学习\nDeepLearning | 2 | 32 | 32 | 0 | 0 | 5 | 数学与信息学院（软件学院）\n600733 | 文本挖掘与分析\nTextMiningandAnalytics | 2 | 32 | 32 | 0 | 0 | 6 | 数学与信息学院（软件学院）\n602025 | 计算机视觉与图像处理\nDigitalImageProcessing | 2 | 32 | 32 | 0 | 0 | 6 | 数学与信息学院（软件学院）"
+        },
+        {
+          "article_id": "info-ug-cs-plan@v2024#十、培养计划进程表",
+          "quote": "软件开发或人工智能其中一个选修板块至少选修\n8学分"
+        }
+      ],
+      "citations": [
+        {
+          "article_id": "info-ug-cs-plan@v2024#十、培养计划进程表",
+          "part_no": 36,
+          "quote": "人工智能方向 | 603917 | 数据分析与数据挖掘\nDataAnalysisandDataMining | 2 | 32 | 32 | 0 | 0 | 4 | 数学与信息学院（软件学院）\n613068 | 人工智能\nArtificialIntelligence | 2 | 32 | 32 | 0 | 0 | 5 | 数学与信息学院（软件学院）\n603916 | 深度学习\nDeepLearning | 2 | 32 | 32 | 0 | 0 | 5 | 数学与信息学院（软件学院）\n600733 | 文本挖掘与分析\nTextMiningandAnalytics | 2 | 32 | 32 | 0 | 0 | 6 | 数学与信息学院（软件学院）\n602025 | 计算机视觉与图像处理\nDigitalImageProcessing | 2 | 32 | 32 | 0 | 0 | 6 | 数学与信息学院（软件学院）",
+          "quote_start": 79,
+          "quote_end": 489
+        },
+        {
+          "article_id": "info-ug-cs-plan@v2024#十、培养计划进程表",
+          "part_no": 35,
+          "quote": "软件开发或人工智能其中一个选修板块至少选修\n8学分",
+          "quote_start": 482,
+          "quote_end": 507
+        }
+      ],
+      "issues": [
+        "code='NUMBER_NOT_SUPPORTED' scope=<IssueScope.CLAIM: 'claim'> severity=<IssueSeverity.BLOCKING: 'blocking'> claim_id='c1' article_id=None part_no=None detail='claim 中的业务事实未被引用 quote 覆盖' facts=['2学分']"
+      ],
+      "dropped_reason": "NUMBER_NOT_SUPPORTED",
+      "privacy": [],
+      "fact_coverage": {
+        "claim_facts": [
+          "2024",
+          "2学分",
+          "8学分"
+        ],
+        "uncovered": [
+          "2学分"
+        ],
+        "unparsed": [],
+        "quote_unparsed": []
+      }
+    },
+    {
+      "claim_id": "c2",
+      "text": "对于2024年入学的计算机科学与技术专业学生，在方向选修课程（实验）的人工智能方向中，可选修的实验课程包括：数据分析与数据挖掘实验（代码603900，0.5学分）、人工智能实验（代码603899，0.5学分）、深度学习实验（代码603898，0.5学分）、文本挖掘与分析实验（代码603897，0.5学分）、计算机视觉与图像处理实验（代码603896，0.5学分），备注为与理论课同步。",
+      "kind": "other",
+      "kept": false,
+      "draft_citations": [
+        {
+          "article_id": "info-ug-cs-plan@v2024#十、培养计划进程表",
+          "quote": "数据分析与数据挖掘实验数学与信息学院（软件\n603900 Experiment of Data Analysis and Data 0.5 16 0 16 0 4方向 学院）\n选修 Mining\n课程 人工智能实验 数学与信息学院（软件\n603899 0.5 16 0 16 0 5\n（实 Experiment of Artificial Intelligence 学院） 与理论验）\n深度学习实验 数学与信息学院（软件 课同步\n|人 603898 0.5 16 0 16 0 5 Experiment of Deep Learning 学院）\n文本挖掘与分析实验能方 数学与信息学院（软件\n603897 Experiment of Text Mining and 0.5 16 0 16 0 6向 学院） Analytics\n计算机视觉与图像处理实验 数学与信息学院（软件\n603896 0.5 16 0 16 0 6\nExperiment of Digital Image Processing 学院）"
+        }
+      ],
+      "citations": [],
+      "issues": [
+        "code='QUOTE_MISMATCH' scope=<IssueScope.CITATION: 'citation'> severity=<IssueSeverity.WARNING: 'warning'> claim_id='c2' article_id='info-ug-cs-plan@v2024#十、培养计划进程表' part_no=None detail='quote 无法映射回被引 part 的 article.text' facts=[]",
+        "code='NO_VALID_CITATION' scope=<IssueScope.CLAIM: 'claim'> severity=<IssueSeverity.BLOCKING: 'blocking'> claim_id='c2' article_id=None part_no=None detail='claim 没有可映射回原文的 citation' facts=[]"
+      ],
+      "dropped_reason": "NO_VALID_CITATION"
+    }
+  ],
+  "issues": [
+    {
+      "code": "NUMBER_NOT_SUPPORTED",
+      "scope": "claim",
+      "severity": "blocking",
+      "claim_id": "c1",
+      "article_id": null,
+      "part_no": null,
+      "detail": "claim 中的业务事实未被引用 quote 覆盖",
+      "facts": [
+        "2学分"
+      ]
+    },
+    {
+      "code": "QUOTE_MISMATCH",
+      "scope": "citation",
+      "severity": "warning",
+      "claim_id": "c2",
+      "article_id": "info-ug-cs-plan@v2024#十、培养计划进程表",
+      "part_no": null,
+      "detail": "quote 无法映射回被引 part 的 article.text",
+      "facts": []
+    },
+    {
+      "code": "NO_VALID_CITATION",
+      "scope": "claim",
+      "severity": "blocking",
+      "claim_id": "c2",
+      "article_id": null,
+      "part_no": null,
+      "detail": "claim 没有可映射回原文的 citation",
+      "facts": []
+    }
+  ],
+  "responses": [
+    {
+      "content": "```json\n{\n  \"claims\": [\n    {\n      \"claim_id\": \"c1\",\n      \"text\": \"对于2024年入学的计算机科学与技术专业学生，在方向选修模块的人工智能方向中，可选修的理论课程包括：数据分析与数据挖掘（代码603917，2学分）、人工智能（代码613068，2学分）、深度学习（代码603916，2学分）、文本挖掘与分析（代码600733，2学分）、计算机视觉与图像处理（代码602025，2学分），软件开发或人工智能其中一个选修板块至少选修8学分。\",\n      \"kind\": \"other\",\n      \"unit_ids\": [\"u1\"],\n      \"citations\": [\n        {\n          \"article_id\": \"info-ug-cs-plan@v2024#十、培养计划进程表\",\n          \"quote\": \"人工智能方向 | 603917 | 数据分析与数据挖掘\\nDataAnalysisandDataMining | 2 | 32 | 32 | 0 | 0 | 4 | 数学与信息学院（软件学院）\\n613068 | 人工智能\\nArtificialIntelligence | 2 | 32 | 32 | 0 | 0 | 5 | 数学与信息学院（软件学院）\\n603916 | 深度学习\\nDeepLearning | 2 | 32 | 32 | 0 | 0 | 5 | 数学与信息学院（软件学院）\\n600733 | 文本挖掘与分析\\nTextMiningandAnalytics | 2 | 32 | 32 | 0 | 0 | 6 | 数学与信息学院（软件学院）\\n602025 | 计算机视觉与图像处理\\nDigitalImageProcessing\"\n        },\n        {\n          \"article_id\": \"info-ug-cs-plan@v2024#十、培养计划进程表\",\n          \"quote\": \"软件开发或人工智能其中一个选修板块至少选修\\n8学分\"\n        }\n      ]\n    },\n    {\n      \"claim_id\": \"c2\",\n      \"text\": \"对于2024年入学的计算机科学与技术专业学生，在方向选修课程（实验）的人工智能方向中，可选修的实验课程包括：数据分析与数据挖掘实验（代码603900，0.5学分）、人工智能实验（代码603899，0.5学分）、深度学习实验（代码603898，0.5学分）、文本挖掘与分析实验（代码603897，0.5学分）、计算机视觉与图像处理实验（代码603896，0.5学分），备注为与理论课同步。\",\n      \"kind\": \"other\",\n      \"unit_ids\": [\"u1\"],\n      \"citations\": [\n        {\n          \"article_id\": \"info-ug-cs-plan@v2024#十、培养计划进程表\",\n          \"quote\": \"方向选修课程\\n（实验）\\n|人工智能方向 | 603900 | 数据分析与数据挖掘实验\\nExperimentofDataAnalysisandData\\nMining | 05\\n. | 16 | 0 | 16 | 0 | 4 | 数学与信息学院（软件学院） | 与理论课同步\\n603899 | 人工智能实验\\nExperimentofArtificialIntelligence | 05\\n. | 16 | 0 | 16 | 0 | 5 | 数学与信息学院（软件学院）\\n603898 | 深度学习实验\"\n        },\n        {\n          \"article_id\": \"info-ug-cs-plan@v2024#十、培养计划进程表\",\n          \"quote\": \"选修软件体系结构实验 数学与信息学院（软件课程\\n603903 0.5 16 0 16 0 5\\n（实 Experiment of Software Architecture 学院） 与理论验）\\n|软 软件开发技术实验 数学与信息学院（软件 课同步\\n603902 0.5 16 0 16 0 6件开 Experiment of Software Development 学院）\\n软件项目管理实验数学与信息学院（软件\\n603901 Experiment of Software Project 0.5 16 0 16 0 6学院）\\nManagement\\n数据分析与数据挖掘实验数学与信息学院（软件\\n603900 Experiment of Data Analysis and Data 0.5 16 0 16 0 4方向 学院）\\n选修 Mining\\n课程 人工智能实验 数学与信息学院（软件\\n603899 0.5 16 0 16 0 5\\n（实 Experiment of Artificial Intelligence 学院） 与理论验）\\n深度学习实验 数学与信息学院（软件 课同步\\n|人 603898 0.5 16 0 16 0 5 Experiment of Deep Learning 学院）\\n文本挖掘与分析实验能方 数学与信息学院（软件\\n603897 Experiment of Text Mining and 0.5 16 0 16 0 6向 学院） Analytics\\n计算机视觉与图像处理实验 数学与信息学院（软件\\n602025 Experiment of Digital Image Processing 学院）\"\n        }\n      ]\n    }\n  ],\n  \"unanswered_questions\": []\n}\n```",
+      "prompt_tokens": 7391,
+      "completion_tokens": 1330
+    },
+    {
+      "content": "{\"claims\":[{\"claim_id\":\"c1\",\"text\":\"对于2024年入学的计算机科学与技术专业学生，在方向选修模块的人工智能方向中，可选修的理论课程包括：数据分析与数据挖掘（代码603917，2学分）、人工智能（代码613068，2学分）、深度学习（代码603916，2学分）、文本挖掘与分析（代码600733，2学分）、计算机视觉与图像处理（代码602025，2学分），软件开发或人工智能其中一个选修板块至少选修8学分。\",\"kind\":\"other\",\"unit_ids\":[\"u1\"],\"citations\":[{\"article_id\":\"info-ug-cs-plan@v2024#十、培养计划进程表\",\"quote\":\"人工智能方向 | 603917 | 数据分析与数据挖掘\\nDataAnalysisandDataMining | 2 | 32 | 32 | 0 | 0 | 4 | 数学与信息学院（软件学院）\\n613068 | 人工智能\\nArtificialIntelligence | 2 | 32 | 32 | 0 | 0 | 5 | 数学与信息学院（软件学院）\\n603916 | 深度学习\\nDeepLearning | 2 | 32 | 32 | 0 | 0 | 5 | 数学与信息学院（软件学院）\\n600733 | 文本挖掘与分析\\nTextMiningandAnalytics | 2 | 32 | 32 | 0 | 0 | 6 | 数学与信息学院（软件学院）\\n602025 | 计算机视觉与图像处理\\nDigitalImageProcessing | 2 | 32 | 32 | 0 | 0 | 6 | 数学与信息学院（软件学院）\"},{\"article_id\":\"info-ug-cs-plan@v2024#十、培养计划进程表\",\"quote\":\"软件开发或人工智能其中一个选修板块至少选修\\n8学分\"}]},{\"claim_id\":\"c2\",\"text\":\"对于2024年入学的计算机科学与技术专业学生，在方向选修课程（实验）的人工智能方向中，可选修的实验课程包括：数据分析与数据挖掘实验（代码603900，0.5学分）、人工智能实验（代码603899，0.5学分）、深度学习实验（代码603898，0.5学分）、文本挖掘与分析实验（代码603897，0.5学分）、计算机视觉与图像处理实验（代码603896，0.5学分），备注为与理论课同步。\",\"kind\":\"other\",\"unit_ids\":[\"u1\"],\"citations\":[{\"article_id\":\"info-ug-cs-plan@v2024#十、培养计划进程表\",\"quote\":\"数据分析与数据挖掘实验数学与信息学院（软件\\n603900 Experiment of Data Analysis and Data 0.5 16 0 16 0 4方向 学院）\\n选修 Mining\\n课程 人工智能实验 数学与信息学院（软件\\n603899 0.5 16 0 16 0 5\\n（实 Experiment of Artificial Intelligence 学院） 与理论验）\\n深度学习实验 数学与信息学院（软件 课同步\\n|人 603898 0.5 16 0 16 0 5 Experiment of Deep Learning 学院）\\n文本挖掘与分析实验能方 数学与信息学院（软件\\n603897 Experiment of Text Mining and 0.5 16 0 16 0 6向 学院） Analytics\\n计算机视觉与图像处理实验 数学与信息学院（软件\\n603896 0.5 16 0 16 0 6\\nExperiment of Digital Image Processing 学院）\"}]}],\"unanswered_questions\":[]}",
+      "prompt_tokens": 8989,
+      "completion_tokens": 928
+    }
+  ]
+}

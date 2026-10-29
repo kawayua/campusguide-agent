@@ -1,0 +1,3133 @@
+{
+  "qdrant_collection": {
+    "result": {
+      "status": "green",
+      "optimizer_status": "ok",
+      "indexed_vectors_count": 4026,
+      "points_count": 4026,
+      "segments_count": 8,
+      "config": {
+        "params": {
+          "vectors": {
+            "dense": {
+              "size": 1024,
+              "distance": "Cosine"
+            }
+          },
+          "shard_number": 1,
+          "replication_factor": 1,
+          "write_consistency_factor": 1,
+          "on_disk_payload": true,
+          "sparse_vectors": {
+            "sparse": {
+              "index": {
+                "on_disk": false
+              }
+            }
+          }
+        },
+        "hnsw_config": {
+          "m": 16,
+          "ef_construct": 100,
+          "full_scan_threshold": 10000,
+          "max_indexing_threads": 0,
+          "on_disk": false
+        },
+        "optimizer_config": {
+          "deleted_threshold": 0.2,
+          "vacuum_min_vector_number": 1000,
+          "default_segment_number": 0,
+          "max_segment_size": null,
+          "memmap_threshold": null,
+          "indexing_threshold": 10000,
+          "flush_interval_sec": 5,
+          "max_optimization_threads": null,
+          "prevent_unoptimized": null
+        },
+        "wal_config": {
+          "wal_capacity_mb": 32,
+          "wal_segments_ahead": 0,
+          "wal_retain_closed": 1
+        },
+        "quantization_config": null
+      },
+      "payload_schema": {
+        "flow_ids": {
+          "data_type": "keyword",
+          "points": 171
+        },
+        "date_confidence": {
+          "data_type": "keyword",
+          "points": 4026
+        },
+        "audience_groups": {
+          "data_type": "keyword",
+          "points": 100
+        },
+        "issuer_level": {
+          "data_type": "keyword",
+          "points": 0
+        },
+        "authority_level": {
+          "data_type": "keyword",
+          "points": 4026
+        },
+        "part_no": {
+          "data_type": "integer",
+          "points": 4026
+        },
+        "audience_program_types": {
+          "data_type": "keyword",
+          "points": 275
+        },
+        "version_id": {
+          "data_type": "keyword",
+          "points": 4026
+        },
+        "audience_colleges": {
+          "data_type": "keyword",
+          "points": 2761
+        },
+        "status": {
+          "data_type": "keyword",
+          "points": 4026
+        },
+        "effective_from": {
+          "data_type": "datetime",
+          "points": 4026
+        },
+        "audience_intake_from": {
+          "data_type": "integer",
+          "points": 0
+        },
+        "doc_type": {
+          "data_type": "keyword",
+          "points": 4026
+        },
+        "effective_to": {
+          "data_type": "datetime",
+          "points": 242
+        },
+        "doc_id": {
+          "data_type": "keyword",
+          "points": 4026
+        },
+        "audience_cycle": {
+          "data_type": "keyword",
+          "points": 38
+        },
+        "article_index": {
+          "data_type": "integer",
+          "points": 4026
+        },
+        "article_id": {
+          "data_type": "keyword",
+          "points": 4026
+        },
+        "audience_intake_years": {
+          "data_type": "integer",
+          "points": 1334
+        },
+        "audience_graduating_years": {
+          "data_type": "integer",
+          "points": 0
+        },
+        "audience_stages": {
+          "data_type": "keyword",
+          "points": 173
+        },
+        "block_type": {
+          "data_type": "keyword",
+          "points": 4026
+        },
+        "audience": {
+          "data_type": "keyword",
+          "points": 4026
+        },
+        "audience_status": {
+          "data_type": "keyword",
+          "points": 110
+        },
+        "audience_majors": {
+          "data_type": "keyword",
+          "points": 1086
+        }
+      },
+      "update_queue": {
+        "length": 0
+      }
+    },
+    "status": "ok",
+    "time": 0.00070692
+  },
+  "models_from_live_ui": {
+    "model_profile": "vpro",
+    "models": "{'planner': 'gemini-3.5-flash-lite', 'advisor': 'gemini-3.5-flash-lite', 'semantic': 'gemini-3.5-flash-lite'}",
+    "prompts": "{'planner': 'w6b-planner-2026-10-25', 'advisor': 'w6b-advisor-2026-10-25', 'revise': 'w6b-revise-2026-10-25', 'semantic': 'w6b-semantic-2026-10-25'}",
+    "index_version": "articles_v1@hybrid-6bafb68410b9",
+    "graph_version": "w6-2026-10-25"
+  },
+  "text_manifest": {
+    "content_hash": "2a6219ba2c5394686a53f030213b917b4adfdf658ce75a1323ee11733cb32a81",
+    "corpus_id": "scau",
+    "counts": {
+      "articles": 4026,
+      "articles_with_multiple_parts": 161,
+      "blocks_excluded": 231,
+      "date_confidence_low": 17,
+      "documents": 225,
+      "empty_text": 0,
+      "missing_versions": 0,
+      "versions": 244
+    },
+    "embedding": {
+      "dense_vector_name": "dense",
+      "dense_vector_size": 1024,
+      "model": "BAAI/bge-m3",
+      "sparse_vector_name": "sparse"
+    },
+    "generated_at": "2026-10-25T06:05:09+00:00",
+    "index_version": "w2-articles-v1",
+    "low_confidence_versions": [
+      "academic-misconduct@v2014",
+      "agri-profile@v2026",
+      "classroom-rules@v2018",
+      "enrollment-certificate-grad-office@v2026",
+      "graduate-teaching-errors@v2022",
+      "innovation-training@v2018",
+      "lab-safety@v2015",
+      "master-doctor-degree-rules@v2010",
+      "national-aid-undergrad@v2021",
+      "official-reception@v2017",
+      "outstanding-thesis-award@v2010",
+      "professional-degree-reform@v2022",
+      "public-facilities@v2004",
+      "student-loan@v2018",
+      "undergraduate-major-transfer@v2015",
+      "undergraduate-status-rules@v2009",
+      "work-study@v2019"
+    ],
+    "missing_versions": [],
+    "schema_version": "1.2",
+    "school": "华南农业大学",
+    "sources": [
+      {
+        "articles": 14,
+        "blocks": 1,
+        "doc_id": "academic-misconduct",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "d8fbb0e8ae0ca05ca21a74fcaaedfbd0833fc9d40f0f9c2bc5c1f7a76066da2a",
+        "version_id": "v2014",
+        "warnings": []
+      },
+      {
+        "articles": 1,
+        "blocks": 0,
+        "doc_id": "agri-committee-academic",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "2eb55bd015f33a87d8820b91f69274790f4ddeaeb4ea153551323f812222e94f",
+        "version_id": "v2026",
+        "warnings": [
+          "未识别到条款或节标题，已按段落切分：1 段"
+        ]
+      },
+      {
+        "articles": 1,
+        "blocks": 0,
+        "doc_id": "agri-committee-degree",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "5ab7475e97ff755c776a6d05b1bd312644773eecada13a4d1f488b071d3fc75c",
+        "version_id": "v2026",
+        "warnings": [
+          "未识别到条款或节标题，已按段落切分：1 段"
+        ]
+      },
+      {
+        "articles": 1,
+        "blocks": 0,
+        "doc_id": "agri-committee-teaching",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "5ee5c490335f477b9bcf6382358cdff2d500ec13fc626dd843bbae94ddf5a3d9",
+        "version_id": "v2026",
+        "warnings": [
+          "未识别到条款或节标题，已按段落切分：1 段"
+        ]
+      },
+      {
+        "articles": 8,
+        "blocks": 1,
+        "doc_id": "agri-competition-notice-2026",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "904977d6439c1054a5e05cea219065e14db0e71278e218cc88f6a14e6e5ab399",
+        "version_id": "v2026",
+        "warnings": [
+          "未识别到“第X条”，已按节切分：7 节",
+          "索引文本已脱敏：mobile=1, personal_email=1"
+        ]
+      },
+      {
+        "articles": 7,
+        "blocks": 1,
+        "doc_id": "agri-crop-discipline-report-2024",
+        "parser_version": "campusguide-pdf-0.1.0+pymupdf-2.0",
+        "source_sha256": "0cad6d334ccf09e84138c9e7d67ded4b40199a33294666785bfcf06b88e9a56d",
+        "version_id": "v2024",
+        "warnings": [
+          "未识别到“第X条”，已按节切分：6 节"
+        ]
+      },
+      {
+        "articles": 1,
+        "blocks": 0,
+        "doc_id": "agri-dept-crop-info",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "82ac5c7988546eb0409705dd3f0d2ccc32b2086e65e263f381edf73306a3fc22",
+        "version_id": "v2026",
+        "warnings": [
+          "未识别到条款或节标题，已按段落切分：1 段"
+        ]
+      },
+      {
+        "articles": 1,
+        "blocks": 0,
+        "doc_id": "agri-dept-crop-tech",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "324e5884cf30bb31fc256b136c08cd8454c72135419aa241ac0f351ca90b95e0",
+        "version_id": "v2026",
+        "warnings": [
+          "未识别到条款或节标题，已按段落切分：1 段"
+        ]
+      },
+      {
+        "articles": 1,
+        "blocks": 0,
+        "doc_id": "agri-dept-plant-breeding",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "5847c1728eb0984f97272ce5fa81c0d2a09c3cb9c22f2957e582a27a7ff70f06",
+        "version_id": "v2026",
+        "warnings": [
+          "未识别到条款或节标题，已按段落切分：1 段"
+        ]
+      },
+      {
+        "articles": 1,
+        "blocks": 0,
+        "doc_id": "agri-dept-seed-engineering",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "ef5f373f1a6b2c479b3d153a5d45845633fc59914679907c27f50cbbb6637d42",
+        "version_id": "v2026",
+        "warnings": [
+          "未识别到条款或节标题，已按段落切分：1 段"
+        ]
+      },
+      {
+        "articles": 14,
+        "blocks": 1,
+        "doc_id": "agri-external-second-supervisor-rule-2025",
+        "parser_version": "campusguide-pdf-0.1.0+pymupdf-2.0",
+        "source_sha256": "10d674ed2a57df1eff86f90ca0c487c4dd5affb040c90f4e0842d0e9490babf3",
+        "version_id": "v2025",
+        "warnings": []
+      },
+      {
+        "articles": 26,
+        "blocks": 1,
+        "doc_id": "agri-external-supervisor-rule-2025",
+        "parser_version": "campusguide-pdf-0.1.0+pymupdf-2.0",
+        "source_sha256": "2a90b4a9827cc7d5b75c2274f459e11758a569ad9c5ea30a2ddd54740d7f9340",
+        "version_id": "v2025",
+        "warnings": []
+      },
+      {
+        "articles": 7,
+        "blocks": 0,
+        "doc_id": "agri-faculty-roster",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "97ed193e5657e240d90af332d27924e4379b8f48ec9c5b97d852da13d4ccb388",
+        "version_id": "v2026",
+        "warnings": [
+          "未识别到条款或节标题，已按段落切分：7 段"
+        ]
+      },
+      {
+        "articles": 25,
+        "blocks": 1,
+        "doc_id": "agri-grad-plan-agronomy-095131",
+        "parser_version": "campusguide-pdf-0.1.0+pymupdf-2.0",
+        "source_sha256": "0de8533ed75608bfa6e1aaaa8ee6c7326ff0d267d2c1f0632d1e8b92990a30ce",
+        "version_id": "v2025-2026",
+        "warnings": [
+          "未识别到“第X条”，已按节切分：14 节，章节导语单独建块 1 处"
+        ]
+      },
+      {
+        "articles": 48,
+        "blocks": 1,
+        "doc_id": "agri-grad-plan-crop-0901",
+        "parser_version": "campusguide-pdf-0.1.0+pymupdf-2.0",
+        "source_sha256": "3bef2b68bff5cc3ecc059b6f16d556d05b9b07d0f420312a1217ba391588108c",
+        "version_id": "v2025",
+        "warnings": [
+          "节标题重复：二、应具备的基本素质（第 2 次出现）",
+          "节标题重复：三、应具备的基本学术能力（第 2 次出现）",
+          "节标题重复：四、学位论文要求（第 2 次出现）",
+          "节标题重复：一、培养目标（第 2 次出现）",
+          "节标题重复：二、课程设置（第 2 次出现）",
+          "节标题重复：三、培养环节及时间安排（第 2 次出现）",
+          "节标题重复：四、培养环节具体标准及考核要求（第 2 次出现）",
+          "节标题重复：六、毕业与学位授予（第 2 次出现）",
+          "未识别到“第X条”，已按节切分：22 节，章节导语单独建块 2 处"
+        ]
+      },
+      {
+        "articles": 48,
+        "blocks": 1,
+        "doc_id": "agri-grad-plan-crop-0901",
+        "parser_version": "campusguide-pdf-0.1.0+pymupdf-2.0",
+        "source_sha256": "80970539eebf19730bd9ff7fef3d1a1d38a3c137c71403c0b6150398ac58227a",
+        "version_id": "v2026",
+        "warnings": [
+          "节标题重复：二、应具备的基本素质（第 2 次出现）",
+          "节标题重复：三、应具备的基本学术能力（第 2 次出现）",
+          "节标题重复：四、学位论文要求（第 2 次出现）",
+          "节标题重复：一、培养目标（第 2 次出现）",
+          "节标题重复：二、课程设置（第 2 次出现）",
+          "节标题重复：三、培养环节及时间安排（第 2 次出现）",
+          "节标题重复：四、培养环节具体标准及考核要求（第 2 次出现）",
+          "节标题重复：六、毕业与学位授予（第 2 次出现）",
+          "未识别到“第X条”，已按节切分：22 节，章节导语单独建块 2 处"
+        ]
+      },
+      {
+        "articles": 21,
+        "blocks": 1,
+        "doc_id": "agri-grad-scholarship-rule-2026",
+        "parser_version": "campusguide-pdf-0.1.0+pymupdf-2.0",
+        "source_sha256": "de82abd7f2c56c4a2d179a40e9d7c2116e31c5c00d341732f8ed68a89f84c413",
+        "version_id": "v2026",
+        "warnings": [
+          "未识别到“第X条”，已按节切分：8 节"
+        ]
+      },
+      {
+        "articles": 3,
+        "blocks": 1,
+        "doc_id": "agri-grad-scholarship-supplement-2026",
+        "parser_version": "campusguide-pdf-0.1.0+pymupdf-2.0",
+        "source_sha256": "735affc700df078167e29128592d66dc220800ef1c61d53b9b19037a5d875209",
+        "version_id": "v2026",
+        "warnings": [
+          "未识别到“第X条”，已按节切分：3 节"
+        ]
+      },
+      {
+        "articles": 1,
+        "blocks": 0,
+        "doc_id": "agri-leadership",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "c1d96804705085061ee6de255d565bf3fcb5ca7445f6317b84e3f72598f9d191",
+        "version_id": "v2026",
+        "warnings": [
+          "未识别到条款或节标题，已按段落切分：1 段"
+        ]
+      },
+      {
+        "articles": 4,
+        "blocks": 0,
+        "doc_id": "agri-majors-undergrad",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "ca3b09a3d7baeed243e3545e2dfd6a831e0cf3d14bb01b5a1d3edf65d202edf7",
+        "version_id": "v2026",
+        "warnings": [
+          "未识别到条款或节标题，已按段落切分：4 段"
+        ]
+      },
+      {
+        "articles": 9,
+        "blocks": 1,
+        "doc_id": "agri-master-admission-rule",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "2d18a74930a59b522910da2b70631268155e1af783d8cec3218c25d6596d4798",
+        "version_id": "v2025",
+        "warnings": [
+          "未识别到“第X条”，已按节切分：7 节",
+          "索引文本已脱敏：contact_name=1"
+        ]
+      },
+      {
+        "articles": 9,
+        "blocks": 1,
+        "doc_id": "agri-master-admission-rule",
+        "parser_version": "campusguide-pdf-0.1.0+pymupdf-2.0",
+        "source_sha256": "4fc01b6420dc5975fd308d1abd4a9057bb72f7aecadb269fb6bec0d40f39867c",
+        "version_id": "v2026",
+        "warnings": [
+          "未识别到“第X条”，已按节切分：7 节"
+        ]
+      },
+      {
+        "articles": 26,
+        "blocks": 1,
+        "doc_id": "agri-master-supervisor-rule-2025",
+        "parser_version": "campusguide-pdf-0.1.0+pymupdf-2.0",
+        "source_sha256": "981df76fec8c47598b31fe409141dbc2a188111e92d94e30b5846748e1a6f234",
+        "version_id": "v2025",
+        "warnings": []
+      },
+      {
+        "articles": 1,
+        "blocks": 0,
+        "doc_id": "agri-org-structure",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "a51111d64e1df569dbae69f7d4bcd320d4eaf5b8143424dbbe315c145dbaa143",
+        "version_id": "v2026",
+        "warnings": [
+          "未识别到条款或节标题，已按段落切分：1 段"
+        ]
+      },
+      {
+        "articles": 10,
+        "blocks": 1,
+        "doc_id": "agri-phd-admission-rule",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "95a0e54d873e389f8dd1836c915c38707a32cfb1f60863ce0f10ac7441dc4ce6",
+        "version_id": "v2025",
+        "warnings": [
+          "未识别到“第X条”，已按节切分：9 节",
+          "索引文本已脱敏：contact_name=1, personal_email=1"
+        ]
+      },
+      {
+        "articles": 10,
+        "blocks": 1,
+        "doc_id": "agri-phd-admission-rule",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "aa3fef13c74878aca161fd37c9a00432fccebc7a20426e393adae24729812ef4",
+        "version_id": "v2026",
+        "warnings": [
+          "未识别到“第X条”，已按节切分：9 节",
+          "索引文本已脱敏：contact_name=1, personal_email=1"
+        ]
+      },
+      {
+        "articles": 25,
+        "blocks": 1,
+        "doc_id": "agri-phd-supervisor-rule-2025",
+        "parser_version": "campusguide-pdf-0.1.0+pymupdf-2.0",
+        "source_sha256": "745d34e7fbda5bd4153069cd48f69ed2e0f54d606763a977b7bdbcc20476920e",
+        "version_id": "v2025",
+        "warnings": []
+      },
+      {
+        "articles": 36,
+        "blocks": 2,
+        "doc_id": "agri-postdoc-rule-2024",
+        "parser_version": "campusguide-pdf-0.1.0+pymupdf-2.0",
+        "source_sha256": "2354b0528f974f9ec85bc4b3cfca644e5d2b2adf9da21cbaf56779055b16d415",
+        "version_id": "v2024",
+        "warnings": [
+          "尾部文本已放入附录块，可能是落款或附件，请人工确认"
+        ]
+      },
+      {
+        "articles": 12,
+        "blocks": 2,
+        "doc_id": "agri-postgrad-recommendation-rule-2024",
+        "parser_version": "campusguide-pdf-0.1.0+pymupdf-2.0",
+        "source_sha256": "de9641d5c7972b6e8c4610e9cd9623f558bece2fa9fa41fe10a881286159f5eb",
+        "version_id": "v2024",
+        "warnings": [
+          "尾部附件/附录已单独建块"
+        ]
+      },
+      {
+        "articles": 2,
+        "blocks": 0,
+        "doc_id": "agri-practice-bases",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "34f1e81884e02796d434f94005c7f061bc6740eab2c68a5f0394af9006757372",
+        "version_id": "v2026",
+        "warnings": [
+          "未识别到条款或节标题，已按段落切分：2 段"
+        ]
+      },
+      {
+        "articles": 5,
+        "blocks": 0,
+        "doc_id": "agri-profile",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "d624c2323a4f999f101726fc6ce37467891076ea582eb79f04e8e91c03b8321a",
+        "version_id": "v2026",
+        "warnings": [
+          "未识别到条款或节标题，已按段落切分：5 段"
+        ]
+      },
+      {
+        "articles": 38,
+        "blocks": 0,
+        "doc_id": "agri-recent-lectures",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "f1e25adefa034100c933624df2a0c363c0728a9b3328ba95206e2d9bff75beff",
+        "version_id": "v2026",
+        "warnings": [
+          "未识别到条款或节标题，已按段落切分：38 段"
+        ]
+      },
+      {
+        "articles": 33,
+        "blocks": 0,
+        "doc_id": "agri-recent-news",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "79bf813f69aa452c6e308ead7ebfc8bbb0e216ec668369a26415919b088b3d61",
+        "version_id": "v2026",
+        "warnings": [
+          "未识别到条款或节标题，已按段落切分：33 段"
+        ]
+      },
+      {
+        "articles": 24,
+        "blocks": 0,
+        "doc_id": "agri-recent-notices",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "9382787cee197b8ac79f80558b17e81f06a2c979786141b5513f06bf703c08b8",
+        "version_id": "v2026",
+        "warnings": [
+          "未识别到条款或节标题，已按段落切分：24 段"
+        ]
+      },
+      {
+        "articles": 24,
+        "blocks": 0,
+        "doc_id": "agri-recent-research",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "0222f6d36619fad257e844dd9c636a33c9fc2ee011db4594df29365f3f01d786",
+        "version_id": "v2026",
+        "warnings": [
+          "未识别到条款或节标题，已按段落切分：24 段"
+        ]
+      },
+      {
+        "articles": 1,
+        "blocks": 0,
+        "doc_id": "agri-student-affairs-team",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "d0cee576b6fb652c03863319c161e969f29771158a38743c5045b109be57d900",
+        "version_id": "v2026",
+        "warnings": [
+          "未识别到条款或节标题，已按段落切分：1 段"
+        ]
+      },
+      {
+        "articles": 10,
+        "blocks": 1,
+        "doc_id": "agri-supervisors",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "9ed2978b5b8561f5b46bdb5f5488d06b11b461730144a23acc003ab11b26a5d4",
+        "version_id": "v2026",
+        "warnings": [
+          "未识别到“第X条”，已按节切分：3 节"
+        ]
+      },
+      {
+        "articles": 3,
+        "blocks": 0,
+        "doc_id": "agri-teacher-382234",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "6f1195cc16801657684974940e4fbf6273fe4979ee987a391db9c9b8e2084b3d",
+        "version_id": "v20240816",
+        "warnings": [
+          "未识别到条款或节标题，已按段落切分：3 段"
+        ]
+      },
+      {
+        "articles": 4,
+        "blocks": 0,
+        "doc_id": "agri-teacher-382235",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "15bf95ff18bb29315489baa390778b274e6ee6cef4450ee712f94a37c7a6bb76",
+        "version_id": "v20240816",
+        "warnings": [
+          "未识别到条款或节标题，已按段落切分：4 段"
+        ]
+      },
+      {
+        "articles": 92,
+        "blocks": 0,
+        "doc_id": "agri-teacher-382341",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "f6813177c68764ddd818f5537c1a27dbac1790cec7e8aac009e9095787c5685d",
+        "version_id": "v20240819",
+        "warnings": [
+          "未识别到条款或节标题，已按段落切分：92 段"
+        ]
+      },
+      {
+        "articles": 3,
+        "blocks": 0,
+        "doc_id": "agri-teacher-382342",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "e3a9ea4e5f59f8cfa0d82ffa204073b14bfdba65533f2bb2b97f02135058bddd",
+        "version_id": "v20240819",
+        "warnings": [
+          "未识别到条款或节标题，已按段落切分：3 段"
+        ]
+      },
+      {
+        "articles": 9,
+        "blocks": 0,
+        "doc_id": "agri-teacher-382351",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "a7dda4f6ceea7885ea73d5f571298aca10bd8284aad963fd76576ab9a2a8e6d4",
+        "version_id": "v20240819",
+        "warnings": [
+          "未识别到条款或节标题，已按段落切分：9 段"
+        ]
+      },
+      {
+        "articles": 4,
+        "blocks": 0,
+        "doc_id": "agri-teacher-382353",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "76ae4dca6425cff0f32c108cd81f0e70ffd4fb832f7e571c82805c6a5a7728d3",
+        "version_id": "v20240819",
+        "warnings": [
+          "未识别到条款或节标题，已按段落切分：4 段"
+        ]
+      },
+      {
+        "articles": 12,
+        "blocks": 0,
+        "doc_id": "agri-teacher-382354",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "d909d2c44d5e709e4f8b1ef4014d6da36d4f4995401011fc00c8e0113ae90a80",
+        "version_id": "v20240819",
+        "warnings": [
+          "未识别到条款或节标题，已按段落切分：12 段"
+        ]
+      },
+      {
+        "articles": 7,
+        "blocks": 0,
+        "doc_id": "agri-teacher-382355",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "16c33a95dd49ad3a4a7fb41a71c47189885b75a30a6fb1665cf48f0b20dfce8a",
+        "version_id": "v20240819",
+        "warnings": [
+          "未识别到条款或节标题，已按段落切分：7 段"
+        ]
+      },
+      {
+        "articles": 27,
+        "blocks": 0,
+        "doc_id": "agri-teacher-382357",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "09f8c6811336d8e7824ae5faeee7bd240a65f0b3e63cd2db68329cc347d8e09d",
+        "version_id": "v20240819",
+        "warnings": [
+          "未识别到条款或节标题，已按段落切分：27 段"
+        ]
+      },
+      {
+        "articles": 39,
+        "blocks": 0,
+        "doc_id": "agri-teacher-382358",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "c15fcced82a66df26505324b8d0265f824b0aa7897779ef677b61b9ba0f4735d",
+        "version_id": "v20240819",
+        "warnings": [
+          "未识别到条款或节标题，已按段落切分：39 段"
+        ]
+      },
+      {
+        "articles": 12,
+        "blocks": 0,
+        "doc_id": "agri-teacher-382359",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "b23daf86f4ced8b31381fe46b4662e9f7c4849d44d4a2da5c29d7019a0aa1e09",
+        "version_id": "v20240819",
+        "warnings": [
+          "未识别到条款或节标题，已按段落切分：12 段"
+        ]
+      },
+      {
+        "articles": 6,
+        "blocks": 0,
+        "doc_id": "agri-teacher-382360",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "fba7a36eeb5d6723ce440c2e1cc7054cb54f507f50d7b3d7de99d58933b94bce",
+        "version_id": "v20240819",
+        "warnings": [
+          "未识别到条款或节标题，已按段落切分：6 段"
+        ]
+      },
+      {
+        "articles": 13,
+        "blocks": 0,
+        "doc_id": "agri-teacher-382362",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "21be5f1396949e1fecdeebf3e57cf2493e48bfb681a593be0d8069e36a354376",
+        "version_id": "v20240819",
+        "warnings": [
+          "未识别到条款或节标题，已按段落切分：13 段"
+        ]
+      },
+      {
+        "articles": 5,
+        "blocks": 0,
+        "doc_id": "agri-teacher-382363",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "9d228bf574f9cfc25fd424d8a9f472b360b24a0ee7b265c26621af3eef2bcdfe",
+        "version_id": "v20240819",
+        "warnings": [
+          "未识别到条款或节标题，已按段落切分：5 段"
+        ]
+      },
+      {
+        "articles": 8,
+        "blocks": 0,
+        "doc_id": "agri-teacher-382364",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "7dac4f16f8d08eac27ecddee1ade0981835a0e97d858a64f2b0a7ec2ce7aa3e4",
+        "version_id": "v20240819",
+        "warnings": [
+          "未识别到条款或节标题，已按段落切分：8 段"
+        ]
+      },
+      {
+        "articles": 7,
+        "blocks": 0,
+        "doc_id": "agri-teacher-382365",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "77b12afd0d945ef02f98168636c150887b96208b9dfab61e4eb8fdeeaac1ac1c",
+        "version_id": "v20240819",
+        "warnings": [
+          "未识别到条款或节标题，已按段落切分：7 段"
+        ]
+      },
+      {
+        "articles": 7,
+        "blocks": 0,
+        "doc_id": "agri-teacher-382366",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "d96fb21395a93951a5562d850edb058ffbdd52b52f3c7f42f82b1053e366627c",
+        "version_id": "v20240819",
+        "warnings": [
+          "未识别到条款或节标题，已按段落切分：7 段"
+        ]
+      },
+      {
+        "articles": 6,
+        "blocks": 0,
+        "doc_id": "agri-teacher-382367",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "5242407fff41a15b29b390eb2d4ffa16759caa072f6a5dbe4658a527f4cf6606",
+        "version_id": "v20240819",
+        "warnings": [
+          "未识别到条款或节标题，已按段落切分：6 段"
+        ]
+      },
+      {
+        "articles": 10,
+        "blocks": 0,
+        "doc_id": "agri-teacher-382368",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "d17c04624722cf0fb8b7b7a7fe9aab31905f8c33a50b25e5096ee2e69da66d3f",
+        "version_id": "v20240819",
+        "warnings": [
+          "未识别到条款或节标题，已按段落切分：10 段"
+        ]
+      },
+      {
+        "articles": 2,
+        "blocks": 0,
+        "doc_id": "agri-teacher-382370",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "c0c2171739f1028b7aa5e70f987a83b73384e7849bb8da578128d3807c1f4d6d",
+        "version_id": "v20240819",
+        "warnings": [
+          "未识别到条款或节标题，已按段落切分：2 段"
+        ]
+      },
+      {
+        "articles": 6,
+        "blocks": 0,
+        "doc_id": "agri-teacher-382371",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "128d269d8cca1269613e3d7d8a47b726a87a374780245fe6e0a0f42386b8b315",
+        "version_id": "v20240819",
+        "warnings": [
+          "未识别到条款或节标题，已按段落切分：6 段"
+        ]
+      },
+      {
+        "articles": 49,
+        "blocks": 0,
+        "doc_id": "agri-teacher-382372",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "fdc48e588d9867346251721c0702bc4624bce639074407d6f6c18b099813e728",
+        "version_id": "v20240819",
+        "warnings": [
+          "未识别到条款或节标题，已按段落切分：49 段"
+        ]
+      },
+      {
+        "articles": 17,
+        "blocks": 0,
+        "doc_id": "agri-teacher-382373",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "527ccf839df5290651f96acb7aa1d3b57a2acef710d9f4573c66e2c2e877d0aa",
+        "version_id": "v20240819",
+        "warnings": [
+          "未识别到条款或节标题，已按段落切分：17 段"
+        ]
+      },
+      {
+        "articles": 6,
+        "blocks": 0,
+        "doc_id": "agri-teacher-382375",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "364ea6e910a45c48a2029cf3885b3e79fb7b0208db444b2cb32a8685f0392036",
+        "version_id": "v20240819",
+        "warnings": [
+          "未识别到条款或节标题，已按段落切分：6 段"
+        ]
+      },
+      {
+        "articles": 10,
+        "blocks": 0,
+        "doc_id": "agri-teacher-382376",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "3e22731c46f3214da9e6357f25ddecd067429dd3a5d236896eba8031a90473fc",
+        "version_id": "v20240819",
+        "warnings": [
+          "未识别到条款或节标题，已按段落切分：10 段"
+        ]
+      },
+      {
+        "articles": 13,
+        "blocks": 0,
+        "doc_id": "agri-teacher-382378",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "243b3c63538163b5b240b95930755fe29401f2617cd277ce295059897d5e1994",
+        "version_id": "v20240819",
+        "warnings": [
+          "未识别到条款或节标题，已按段落切分：13 段"
+        ]
+      },
+      {
+        "articles": 13,
+        "blocks": 0,
+        "doc_id": "agri-teacher-382379",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "6c3e00b75850131822dab3ac4aa05f2b22e70811092fe6ec9ca7dbbcb9968b47",
+        "version_id": "v20240819",
+        "warnings": [
+          "未识别到条款或节标题，已按段落切分：13 段"
+        ]
+      },
+      {
+        "articles": 7,
+        "blocks": 0,
+        "doc_id": "agri-teacher-382380",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "aebc3a234d38aaeb1ebbbdb7bc256008701adcaca8285ec8b1aa6e9c9032dbe3",
+        "version_id": "v20240819",
+        "warnings": [
+          "未识别到条款或节标题，已按段落切分：7 段"
+        ]
+      },
+      {
+        "articles": 4,
+        "blocks": 0,
+        "doc_id": "agri-teacher-382381",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "dd127f26fcc2bff389de304ae8f5d7c1ed1daa059ff5d745048579a27f6e0daf",
+        "version_id": "v20240819",
+        "warnings": [
+          "未识别到条款或节标题，已按段落切分：4 段"
+        ]
+      },
+      {
+        "articles": 8,
+        "blocks": 0,
+        "doc_id": "agri-teacher-382382",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "4dd12307a277c119d64b41cdd59a5be268a9454d8d53464c7aa82d7298f5a20a",
+        "version_id": "v20240819",
+        "warnings": [
+          "未识别到条款或节标题，已按段落切分：8 段"
+        ]
+      },
+      {
+        "articles": 1,
+        "blocks": 0,
+        "doc_id": "agri-teacher-382383",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "f195b56703f9ac6be3e0a3ce20c757cfa7ecb8029ec3f5ed35020bbb8a9faa1f",
+        "version_id": "v20240819",
+        "warnings": [
+          "未识别到条款或节标题，已按段落切分：1 段"
+        ]
+      },
+      {
+        "articles": 7,
+        "blocks": 0,
+        "doc_id": "agri-teacher-382384",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "cbbb1e6732172d0c417734241814e95bda703b8be9ea880c53a4bc05db08feb2",
+        "version_id": "v20240819",
+        "warnings": [
+          "未识别到条款或节标题，已按段落切分：7 段"
+        ]
+      },
+      {
+        "articles": 5,
+        "blocks": 0,
+        "doc_id": "agri-teacher-382385",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "52d3326597100b2b4d161a04960b042e9c933afb3e6f933cde6c6cb0e19bbba4",
+        "version_id": "v20240819",
+        "warnings": [
+          "未识别到条款或节标题，已按段落切分：5 段"
+        ]
+      },
+      {
+        "articles": 2,
+        "blocks": 0,
+        "doc_id": "agri-teacher-382386",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "1a350c52daf432459808694c8d8b0cd9fb354f2ace9befe50c6704f1cb54e780",
+        "version_id": "v20240819",
+        "warnings": [
+          "未识别到条款或节标题，已按段落切分：2 段"
+        ]
+      },
+      {
+        "articles": 11,
+        "blocks": 0,
+        "doc_id": "agri-teacher-382388",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "3819f42ffb1a9e7fca3a199fef0b03afe1c5e0361daa53a96bccf1ec11f9d928",
+        "version_id": "v20240819",
+        "warnings": [
+          "未识别到条款或节标题，已按段落切分：11 段"
+        ]
+      },
+      {
+        "articles": 6,
+        "blocks": 0,
+        "doc_id": "agri-teacher-382389",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "982c5503a7c64d997097e4cb25f29146a38a9d0a47f0cfc25c63f1590945622a",
+        "version_id": "v20240819",
+        "warnings": [
+          "未识别到条款或节标题，已按段落切分：6 段"
+        ]
+      },
+      {
+        "articles": 5,
+        "blocks": 0,
+        "doc_id": "agri-teacher-382390",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "0e014425d1e71bf2c25aef8dbbd1740833d838e821acbebe787160a95564ca35",
+        "version_id": "v20240819",
+        "warnings": [
+          "未识别到条款或节标题，已按段落切分：5 段"
+        ]
+      },
+      {
+        "articles": 4,
+        "blocks": 0,
+        "doc_id": "agri-teacher-382391",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "0a99c8fce51b04959bccda0cf001ed852ecc4e6671e0f2d961ad2f76c4bd8087",
+        "version_id": "v20240819",
+        "warnings": [
+          "未识别到条款或节标题，已按段落切分：4 段"
+        ]
+      },
+      {
+        "articles": 7,
+        "blocks": 0,
+        "doc_id": "agri-teacher-382392",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "31880fed3d39d1ea91137be4c81c1d318351cc3f872a1d5f2a9a9fd1bda47ff8",
+        "version_id": "v20240819",
+        "warnings": [
+          "未识别到条款或节标题，已按段落切分：7 段"
+        ]
+      },
+      {
+        "articles": 6,
+        "blocks": 0,
+        "doc_id": "agri-teacher-382393",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "a6dae324554bd9faebc66297059a5d071f0a66228f35b4a6083b6547678545e5",
+        "version_id": "v20240819",
+        "warnings": [
+          "未识别到条款或节标题，已按段落切分：6 段"
+        ]
+      },
+      {
+        "articles": 10,
+        "blocks": 0,
+        "doc_id": "agri-teacher-382394",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "40fe8748c4d1116736d5e8dea2fca264606c92b2c135ae575e2425c3ea528f54",
+        "version_id": "v20240819",
+        "warnings": [
+          "未识别到条款或节标题，已按段落切分：10 段"
+        ]
+      },
+      {
+        "articles": 2,
+        "blocks": 0,
+        "doc_id": "agri-teacher-382395",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "dcbfd6050e9f3c9e33f30656209fd6367438c33076875efe1b5dd099b8e3921a",
+        "version_id": "v20240819",
+        "warnings": [
+          "未识别到条款或节标题，已按段落切分：2 段"
+        ]
+      },
+      {
+        "articles": 8,
+        "blocks": 0,
+        "doc_id": "agri-teacher-382396",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "e008cf3b12dec444ee6ebe02b293baa79d02aa81d7a353c9d60f31533597068f",
+        "version_id": "v20240819",
+        "warnings": [
+          "未识别到条款或节标题，已按段落切分：8 段"
+        ]
+      },
+      {
+        "articles": 5,
+        "blocks": 0,
+        "doc_id": "agri-teacher-382398",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "2a42dd0c85345bef49e33a3f103df73bd061d06bff3fd9220c32483c8cc0b513",
+        "version_id": "v20240819",
+        "warnings": [
+          "未识别到条款或节标题，已按段落切分：5 段"
+        ]
+      },
+      {
+        "articles": 10,
+        "blocks": 0,
+        "doc_id": "agri-teacher-382399",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "be57b079a1500b8d5f81db25f1139885e2fb04f12a08860961d18b6381f6d41e",
+        "version_id": "v20240819",
+        "warnings": [
+          "未识别到条款或节标题，已按段落切分：10 段"
+        ]
+      },
+      {
+        "articles": 8,
+        "blocks": 0,
+        "doc_id": "agri-teacher-382400",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "a47e02f9c5156e255b4ed943c6f3ecc5661bf86c53c1babeca067bdbecbe65bb",
+        "version_id": "v20240819",
+        "warnings": [
+          "未识别到条款或节标题，已按段落切分：8 段"
+        ]
+      },
+      {
+        "articles": 5,
+        "blocks": 0,
+        "doc_id": "agri-teacher-382401",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "a1473146870459349f76fc5f8e53888897d9e8d7821c219c2d3b344972b87b6d",
+        "version_id": "v20240819",
+        "warnings": [
+          "未识别到条款或节标题，已按段落切分：5 段"
+        ]
+      },
+      {
+        "articles": 9,
+        "blocks": 0,
+        "doc_id": "agri-teacher-382402",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "69d247facf5daabb154c6c5592042f2378a6049ae44600ef339479afc937d7db",
+        "version_id": "v20240819",
+        "warnings": [
+          "未识别到条款或节标题，已按段落切分：9 段"
+        ]
+      },
+      {
+        "articles": 7,
+        "blocks": 0,
+        "doc_id": "agri-teacher-382403",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "15060d71a3dba6cdc578c026dc91e8c9926d06e7af0ff96a43a25e23d231707d",
+        "version_id": "v20240819",
+        "warnings": [
+          "未识别到条款或节标题，已按段落切分：7 段"
+        ]
+      },
+      {
+        "articles": 2,
+        "blocks": 0,
+        "doc_id": "agri-teacher-382404",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "0e011b04234bc832218b84d0749b0bcc9281632bd1f95b7ac9e0d895599d14b6",
+        "version_id": "v20240819",
+        "warnings": [
+          "未识别到条款或节标题，已按段落切分：2 段"
+        ]
+      },
+      {
+        "articles": 4,
+        "blocks": 0,
+        "doc_id": "agri-teacher-382405",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "74cd1b50f1c03974f9505418fdfacd156fe71c252bf0175d0f820a0ba3f7dd11",
+        "version_id": "v20240819",
+        "warnings": [
+          "未识别到条款或节标题，已按段落切分：4 段"
+        ]
+      },
+      {
+        "articles": 4,
+        "blocks": 0,
+        "doc_id": "agri-teacher-382406",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "224c4909dce6f53efc0b26cce0291ee39eaf914bae8701eec195b86a55240f35",
+        "version_id": "v20240819",
+        "warnings": [
+          "未识别到条款或节标题，已按段落切分：4 段"
+        ]
+      },
+      {
+        "articles": 8,
+        "blocks": 0,
+        "doc_id": "agri-teacher-382407",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "a8943723f80548ae80494ad32d445ec7306dd740aa804ba586be2121447f0a8e",
+        "version_id": "v20240819",
+        "warnings": [
+          "未识别到条款或节标题，已按段落切分：8 段"
+        ]
+      },
+      {
+        "articles": 8,
+        "blocks": 0,
+        "doc_id": "agri-teacher-382408",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "d9490f68112703cb373bf6b32d815277217a4d19635f4597ea0c24de0782a591",
+        "version_id": "v20240819",
+        "warnings": [
+          "未识别到条款或节标题，已按段落切分：8 段"
+        ]
+      },
+      {
+        "articles": 1,
+        "blocks": 0,
+        "doc_id": "agri-teacher-382409",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "b770033fa55cf1dac887bc75c2cb1e95d3ab97af4c6a6471f9b2984f59733e53",
+        "version_id": "v20240819",
+        "warnings": [
+          "未识别到条款或节标题，已按段落切分：1 段"
+        ]
+      },
+      {
+        "articles": 7,
+        "blocks": 0,
+        "doc_id": "agri-teacher-382410",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "c968c333c1a6b3911221f415c7061e8cecd5af4f87390e68cba3dc8cb0a80bd6",
+        "version_id": "v20240819",
+        "warnings": [
+          "未识别到条款或节标题，已按段落切分：7 段"
+        ]
+      },
+      {
+        "articles": 3,
+        "blocks": 0,
+        "doc_id": "agri-teacher-382411",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "4f52090f9f5e71f5c37bdb698d007dccb63eb265cf085e83ba90adeaee7e10c3",
+        "version_id": "v20240819",
+        "warnings": [
+          "未识别到条款或节标题，已按段落切分：3 段"
+        ]
+      },
+      {
+        "articles": 9,
+        "blocks": 0,
+        "doc_id": "agri-teacher-382412",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "0151f0ad35cdf64b9466aee45c4c5fea2746b0ce47e281945c67b129d1e1a9ae",
+        "version_id": "v20240819",
+        "warnings": [
+          "未识别到条款或节标题，已按段落切分：9 段"
+        ]
+      },
+      {
+        "articles": 10,
+        "blocks": 0,
+        "doc_id": "agri-teacher-382413",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "afa94c8d74023af5d5c8b2effce5ae0de4299bf0eb23ebc0992d146f6000f691",
+        "version_id": "v20240819",
+        "warnings": [
+          "未识别到条款或节标题，已按段落切分：10 段"
+        ]
+      },
+      {
+        "articles": 7,
+        "blocks": 0,
+        "doc_id": "agri-teacher-382414",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "593f8be9bf4d9eefd3198ee1c1e81ab7157a8038908a330c953fc51f0997d4c4",
+        "version_id": "v20240819",
+        "warnings": [
+          "未识别到条款或节标题，已按段落切分：7 段"
+        ]
+      },
+      {
+        "articles": 3,
+        "blocks": 0,
+        "doc_id": "agri-teacher-382416",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "b4a2380ddc59bcf54c65d0a5b6386a3013842fc1ef20cb32f48379951a760f7e",
+        "version_id": "v20240819",
+        "warnings": [
+          "未识别到条款或节标题，已按段落切分：3 段"
+        ]
+      },
+      {
+        "articles": 11,
+        "blocks": 0,
+        "doc_id": "agri-teacher-382417",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "c0a467a4df479c39a5eb1b86cbcc9f8509bc3668739442cd1a4dc794351440bd",
+        "version_id": "v20240819",
+        "warnings": [
+          "未识别到条款或节标题，已按段落切分：11 段"
+        ]
+      },
+      {
+        "articles": 4,
+        "blocks": 0,
+        "doc_id": "agri-teacher-382418",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "a66bbd076cafdd2035891279bbabaeba6712683bf5478bc0e4d873643bc03e71",
+        "version_id": "v20240819",
+        "warnings": [
+          "未识别到条款或节标题，已按段落切分：4 段"
+        ]
+      },
+      {
+        "articles": 5,
+        "blocks": 0,
+        "doc_id": "agri-teacher-382420",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "0e3b0817c449266832cd379b8741b0a3e447eb9746cf0bb174f6fa26575f99f1",
+        "version_id": "v20240819",
+        "warnings": [
+          "未识别到条款或节标题，已按段落切分：5 段"
+        ]
+      },
+      {
+        "articles": 4,
+        "blocks": 0,
+        "doc_id": "agri-teacher-382421",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "3b765fe1d95c2fc9e76c2e33472c612149c067b70522fc51334a77f0556eee85",
+        "version_id": "v20240819",
+        "warnings": [
+          "未识别到条款或节标题，已按段落切分：4 段"
+        ]
+      },
+      {
+        "articles": 1,
+        "blocks": 0,
+        "doc_id": "agri-teacher-382422",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "17cd4e4de52583fa5c09a974883f308717fb3d45efabc7864e9c548c18d49d40",
+        "version_id": "v20240819",
+        "warnings": [
+          "未识别到条款或节标题，已按段落切分：1 段"
+        ]
+      },
+      {
+        "articles": 6,
+        "blocks": 0,
+        "doc_id": "agri-teacher-382423",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "d26b7f6de11798f51d11e8dc04cbe38a346f3ab78d6a9e10788c5d9a4f283184",
+        "version_id": "v20240819",
+        "warnings": [
+          "未识别到条款或节标题，已按段落切分：6 段"
+        ]
+      },
+      {
+        "articles": 5,
+        "blocks": 0,
+        "doc_id": "agri-teacher-382424",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "0dfc359125848b3618e99471883c4812fcd10444e784dfe261f562f271041dce",
+        "version_id": "v20240819",
+        "warnings": [
+          "未识别到条款或节标题，已按段落切分：5 段"
+        ]
+      },
+      {
+        "articles": 5,
+        "blocks": 0,
+        "doc_id": "agri-teacher-382426",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "4b3c3e7eea5b0ba0d3a513560aa20d9df7f615d06031da6b6900b8f743eaa562",
+        "version_id": "v20240819",
+        "warnings": [
+          "未识别到条款或节标题，已按段落切分：5 段"
+        ]
+      },
+      {
+        "articles": 5,
+        "blocks": 0,
+        "doc_id": "agri-teacher-382427",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "acb296664da2a14a5fb15636e48c5e08c5c42e92d07bd10dc14fe07eb2a37fe9",
+        "version_id": "v20240819",
+        "warnings": [
+          "未识别到条款或节标题，已按段落切分：5 段"
+        ]
+      },
+      {
+        "articles": 8,
+        "blocks": 0,
+        "doc_id": "agri-teacher-382428",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "6ad8975e5ca672d7f39bf87f6672c7b998396f142d034655619bc6a21b456e5f",
+        "version_id": "v20240819",
+        "warnings": [
+          "未识别到条款或节标题，已按段落切分：8 段"
+        ]
+      },
+      {
+        "articles": 5,
+        "blocks": 0,
+        "doc_id": "agri-teacher-382429",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "d9fd6372eab7955fb43c726f6eec04169ed2707515d47d163e3b6235854f6df4",
+        "version_id": "v20240819",
+        "warnings": [
+          "未识别到条款或节标题，已按段落切分：5 段"
+        ]
+      },
+      {
+        "articles": 3,
+        "blocks": 0,
+        "doc_id": "agri-teacher-382430",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "344e99872a1cadc84e63b0192e4d81a4c0891539d74a4306483913c2b27796ad",
+        "version_id": "v20240819",
+        "warnings": [
+          "未识别到条款或节标题，已按段落切分：3 段"
+        ]
+      },
+      {
+        "articles": 5,
+        "blocks": 0,
+        "doc_id": "agri-teacher-382431",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "155d8cd05c600d4253a9dc7ce1be4dd9b87e042f42126bdca7266016b3af0cd4",
+        "version_id": "v20240819",
+        "warnings": [
+          "未识别到条款或节标题，已按段落切分：5 段"
+        ]
+      },
+      {
+        "articles": 4,
+        "blocks": 0,
+        "doc_id": "agri-teacher-382432",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "379c0f2616d14aa2bc47ed21f82dbe0f9675f6703c43f8dd1d277d5535084387",
+        "version_id": "v20240819",
+        "warnings": [
+          "未识别到条款或节标题，已按段落切分：4 段"
+        ]
+      },
+      {
+        "articles": 9,
+        "blocks": 0,
+        "doc_id": "agri-teacher-382433",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "ccd020b02da3262264b5d09af24cb2cda84a96d5470fc5a8f4418b53607d47bc",
+        "version_id": "v20240819",
+        "warnings": [
+          "未识别到条款或节标题，已按段落切分：9 段"
+        ]
+      },
+      {
+        "articles": 2,
+        "blocks": 0,
+        "doc_id": "agri-teacher-382434",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "5076f9b74f5a2c36cb69924c172d67680f43c3086a8e10d533dab431b0e2abc8",
+        "version_id": "v20240819",
+        "warnings": [
+          "未识别到条款或节标题，已按段落切分：2 段"
+        ]
+      },
+      {
+        "articles": 1,
+        "blocks": 0,
+        "doc_id": "agri-teacher-382435",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "47e3c177556e70b9681d7698f7d855c3184e97f1d27428b608b4586e5d55c498",
+        "version_id": "v20240819",
+        "warnings": [
+          "未识别到条款或节标题，已按段落切分：1 段"
+        ]
+      },
+      {
+        "articles": 3,
+        "blocks": 0,
+        "doc_id": "agri-teacher-382436",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "36329791a54f84dc3238671bc62db22aac445532f85d439675b34f1ab0dc6df9",
+        "version_id": "v20240819",
+        "warnings": [
+          "未识别到条款或节标题，已按段落切分：3 段"
+        ]
+      },
+      {
+        "articles": 3,
+        "blocks": 0,
+        "doc_id": "agri-teacher-382437",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "6d4102080067b33133e6ae0d826c0ab713530da079f6bb93c0f3201a0487694f",
+        "version_id": "v20240819",
+        "warnings": [
+          "未识别到条款或节标题，已按段落切分：3 段"
+        ]
+      },
+      {
+        "articles": 10,
+        "blocks": 0,
+        "doc_id": "agri-teacher-382438",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "c7649544f145091fb08d698a3d1e507b01766bfd39bbe03bc31deb6a6742757a",
+        "version_id": "v20240819",
+        "warnings": [
+          "未识别到条款或节标题，已按段落切分：10 段"
+        ]
+      },
+      {
+        "articles": 8,
+        "blocks": 0,
+        "doc_id": "agri-teacher-382439",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "f1ed9e7291da46ca1edd2a948159770aa198e9b4f907b925dbd208cc77a5a267",
+        "version_id": "v20240819",
+        "warnings": [
+          "未识别到条款或节标题，已按段落切分：8 段"
+        ]
+      },
+      {
+        "articles": 5,
+        "blocks": 0,
+        "doc_id": "agri-teacher-382440",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "b8776c6c977bbdda7ca357734523eacb414de30d26ab041ba1f8608dd9e04d4d",
+        "version_id": "v20240819",
+        "warnings": [
+          "未识别到条款或节标题，已按段落切分：5 段"
+        ]
+      },
+      {
+        "articles": 3,
+        "blocks": 0,
+        "doc_id": "agri-teacher-382441",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "9e1354811b7b8fc290a662d35385bb41d7150f70b2c6faa85eaa4d379d9135b3",
+        "version_id": "v20240819",
+        "warnings": [
+          "未识别到条款或节标题，已按段落切分：3 段"
+        ]
+      },
+      {
+        "articles": 11,
+        "blocks": 0,
+        "doc_id": "agri-teacher-400929",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "1f5af53168e64904a42571d02308f0bac78e1e2dff3afc65c51e15e2ef2b7c71",
+        "version_id": "v20240819",
+        "warnings": [
+          "未识别到条款或节标题，已按段落切分：11 段"
+        ]
+      },
+      {
+        "articles": 8,
+        "blocks": 0,
+        "doc_id": "agri-teacher-400930",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "b69ff4991f77960cc4076e5295a87541a57800a0bb1524660888ecf30a263983",
+        "version_id": "v20240819",
+        "warnings": [
+          "未识别到条款或节标题，已按段落切分：8 段"
+        ]
+      },
+      {
+        "articles": 3,
+        "blocks": 0,
+        "doc_id": "agri-teacher-401676",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "82be6a740b371e23266ba7192713c9540de8dcfc19ca6c79d9f65d89d9ebcfb2",
+        "version_id": "v20240819",
+        "warnings": [
+          "未识别到条款或节标题，已按段落切分：3 段"
+        ]
+      },
+      {
+        "articles": 7,
+        "blocks": 0,
+        "doc_id": "agri-teacher-401787",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "ae76307c8ceef64d2b0330db388c08cba1ab8248f550524fb007c2190ed74564",
+        "version_id": "v20240819",
+        "warnings": [
+          "未识别到条款或节标题，已按段落切分：7 段"
+        ]
+      },
+      {
+        "articles": 5,
+        "blocks": 0,
+        "doc_id": "agri-teacher-402950",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "1aa37e06a4e72dc61321ccd228ee3c4cdd41f56004f1a1770d67eb8ef68cbb8f",
+        "version_id": "v20240819",
+        "warnings": [
+          "未识别到条款或节标题，已按段落切分：5 段"
+        ]
+      },
+      {
+        "articles": 6,
+        "blocks": 0,
+        "doc_id": "agri-teacher-403287",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "e39f3675dd747121894741025e3b16e1a0ef47a0e14ca0959e1c7286f1de69eb",
+        "version_id": "v20240819",
+        "warnings": [
+          "未识别到条款或节标题，已按段落切分：6 段"
+        ]
+      },
+      {
+        "articles": 5,
+        "blocks": 0,
+        "doc_id": "agri-teacher-428440",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "c3b7a19907a4114cd055bc4cdc308b4175071b1cbbb246b9f0754c26ace694c8",
+        "version_id": "v20260302",
+        "warnings": [
+          "未识别到条款或节标题，已按段落切分：5 段"
+        ]
+      },
+      {
+        "articles": 138,
+        "blocks": 0,
+        "doc_id": "agri-ug-plan-2022",
+        "parser_version": "campusguide-pdf-0.1.0+pymupdf-2.0",
+        "source_sha256": "d42e65dcb69a6b80e775d74db084813c205abd179847818c75208fc8edf2a0b3",
+        "version_id": "v2022",
+        "warnings": [
+          "节标题重复：一、专业名称（中英文）；专业代码（第 2 次出现）",
+          "节标题重复：二、培养目标（第 2 次出现）",
+          "节标题重复：三、培养规格（即在知识、能力、素质三个方面的具体要求）（第 2 次出现）",
+          "节标题重复：四、主干学科（第 2 次出现）",
+          "节标题重复：五、专业核心课程（第 2 次出现）",
+          "节标题重复：六、修业年限及授予学位（第 2 次出现）",
+          "节标题重复：七、课程结构及毕业要求（第 2 次出现）",
+          "节标题重复：八、人才培养目标实现矩阵（第 2 次出现）",
+          "节标题重复：九、培养计划进程表（第 2 次出现）",
+          "节标题重复：十、课程体系与培养要求的对应关系矩阵（第 2 次出现）",
+          "节标题重复：一、专业名称（中英文）；专业代码（第 3 次出现）",
+          "节标题重复：二、培养目标（第 3 次出现）",
+          "节标题重复：四、主干学科（第 3 次出现）",
+          "节标题重复：五、专业核心课程（第 3 次出现）",
+          "节标题重复：六、修业年限及授予学位（第 3 次出现）",
+          "节标题重复：七、课程结构及毕业要求（第 3 次出现）",
+          "节标题重复：八、人才培养目标实现矩阵（第 3 次出现）",
+          "节标题重复：九、培养计划进程表（第 3 次出现）",
+          "节标题重复：十、课程体系与培养要求的对应关系矩阵（第 3 次出现）",
+          "未识别到“第X条”，已按节切分：30 节"
+        ]
+      },
+      {
+        "articles": 44,
+        "blocks": 0,
+        "doc_id": "agri-ug-plan-agronomy-2024",
+        "parser_version": "campusguide-pdf-0.1.0+pymupdf-2.0",
+        "source_sha256": "c8cf339be257c80d4a18a747a6c09bef322b66aa5b500e4f2c7a3b1c1127d823",
+        "version_id": "v2024",
+        "warnings": [
+          "未识别到“第X条”，已按节切分：10 节"
+        ]
+      },
+      {
+        "articles": 42,
+        "blocks": 0,
+        "doc_id": "agri-ug-plan-agronomy-dingying-2024",
+        "parser_version": "campusguide-pdf-0.1.0+pymupdf-2.0",
+        "source_sha256": "61da53f9c11314d2e1fbd5f08686c2139a2b4d2a928543764ad6c312c443606a",
+        "version_id": "v2024",
+        "warnings": [
+          "未识别到“第X条”，已按节切分：10 节"
+        ]
+      },
+      {
+        "articles": 38,
+        "blocks": 0,
+        "doc_id": "agri-ug-plan-bio-breeding-2024",
+        "parser_version": "campusguide-pdf-0.1.0+pymupdf-2.0",
+        "source_sha256": "fb76247566aaf687ed22a7fb79a0cafc3f780f767d1695ca08cf947ef28fc7aa",
+        "version_id": "v2024",
+        "warnings": [
+          "未识别到“第X条”，已按节切分：10 节"
+        ]
+      },
+      {
+        "articles": 35,
+        "blocks": 0,
+        "doc_id": "agri-ug-plan-new-agronomy-2022",
+        "parser_version": "campusguide-pdf-0.1.0+pymupdf-2.0",
+        "source_sha256": "1d14ac4363f5b812154d2d898a59396d986eb0188622f14be0956670ad6cd178",
+        "version_id": "v2022",
+        "warnings": [
+          "未识别到“第X条”，已按节切分：9 节"
+        ]
+      },
+      {
+        "articles": 47,
+        "blocks": 0,
+        "doc_id": "agri-ug-plan-new-agronomy-2024",
+        "parser_version": "campusguide-pdf-0.1.0+pymupdf-2.0",
+        "source_sha256": "451d0abc970405fc2535f547b8f1f5a351d3ad2bfc684bbbb2f0ad829c66a80f",
+        "version_id": "v2024",
+        "warnings": [
+          "未识别到“第X条”，已按节切分：10 节"
+        ]
+      },
+      {
+        "articles": 37,
+        "blocks": 1,
+        "doc_id": "agri-ug-plan-new-agronomy-supplement-2024",
+        "parser_version": "campusguide-pdf-0.1.0+pymupdf-2.0",
+        "source_sha256": "2cca62dcb2c839646fab9c5627c2ac144f253eb6b46c06c4b879990b15e050bc",
+        "version_id": "v2024",
+        "warnings": [
+          "未识别到“第X条”，已按节切分：10 节"
+        ]
+      },
+      {
+        "articles": 38,
+        "blocks": 0,
+        "doc_id": "agri-ug-plan-seed-2024",
+        "parser_version": "campusguide-pdf-0.1.0+pymupdf-2.0",
+        "source_sha256": "c0babde9f968e5817d839c9e64a2b1d7d79fc3392175d62b881b0b1f9b8e7263",
+        "version_id": "v2024",
+        "warnings": [
+          "未识别到“第X条”，已按节切分：10 节"
+        ]
+      },
+      {
+        "articles": 5,
+        "blocks": 1,
+        "doc_id": "agri-undergrad-mentor-rule-2025",
+        "parser_version": "campusguide-pdf-0.1.0+pymupdf-2.0",
+        "source_sha256": "3e3727bb182c393f0894570614924c386d32b3ee14cabe82b8c6d9442a8e1836",
+        "version_id": "v2025",
+        "warnings": [
+          "未识别到“第X条”，已按节切分：5 节"
+        ]
+      },
+      {
+        "articles": 24,
+        "blocks": 2,
+        "doc_id": "archive-management",
+        "parser_version": "campusguide-pdf-0.1.0+pymupdf-2.0",
+        "source_sha256": "d2f2d8d912782af4c1606e51bdde040f7b95b1cfc04a6fecf1f064a88ab33e85",
+        "version_id": "v2026",
+        "warnings": [
+          "尾部文本已放入附录块，可能是落款或附件，请人工确认"
+        ]
+      },
+      {
+        "articles": 12,
+        "blocks": 1,
+        "doc_id": "bachelor-degree-rules",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "8e7522242a3672d556ef3af7470b3e10e3e24049881aae62e0560cc2863861ae",
+        "version_id": "v2018",
+        "warnings": []
+      },
+      {
+        "articles": 16,
+        "blocks": 1,
+        "doc_id": "bachelor-degree-rules",
+        "parser_version": "campusguide-pdf-0.1.0+pymupdf-2.0",
+        "source_sha256": "eeed66e05f32ab097d40a6eea85de963ef8433d37499c30c146b18ff8f6457e0",
+        "version_id": "v2025",
+        "warnings": []
+      },
+      {
+        "articles": 7,
+        "blocks": 1,
+        "doc_id": "class-adjustment",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "df7592e142268e89be136de17300f670a97b3c457f3892f188c186ca1aa887e2",
+        "version_id": "v2022",
+        "warnings": []
+      },
+      {
+        "articles": 37,
+        "blocks": 1,
+        "doc_id": "classroom-rules",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "20fee980d3af4dcf8ab8ebb8f53ca597af5275f255cad9d29a965c43c1d7fad2",
+        "version_id": "v2018",
+        "warnings": []
+      },
+      {
+        "articles": 8,
+        "blocks": 1,
+        "doc_id": "college-aid",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "64c7167f73406d90d8fd2f2fb75ab7f277d83a7191fcdb0516ab116907c4545f",
+        "version_id": "v2015",
+        "warnings": []
+      },
+      {
+        "articles": 29,
+        "blocks": 1,
+        "doc_id": "comprehensive-evaluation",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "367778ed0a6ab8287e468dd8ae180a10243741198e2aa08382bf6b8b4de1e524",
+        "version_id": "v2020",
+        "warnings": []
+      },
+      {
+        "articles": 4,
+        "blocks": 1,
+        "doc_id": "comprehensive-evaluation-2026-final-publicity",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "2cf8299ef0161ad1c4d777be86f9175adf8f3728487410a34aa1332f50bd6cda",
+        "version_id": "v2026",
+        "warnings": [
+          "未识别到“第X条”，已按节切分：4 节"
+        ]
+      },
+      {
+        "articles": 6,
+        "blocks": 1,
+        "doc_id": "comprehensive-evaluation-2026-info",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "420be483bf35aba08a34044dfa5a0757214cd313c39dd854b135a24e58463f3a",
+        "version_id": "v2026",
+        "warnings": [
+          "未识别到“第X条”，已按节切分：6 节"
+        ]
+      },
+      {
+        "articles": 41,
+        "blocks": 1,
+        "doc_id": "contract-management",
+        "parser_version": "campusguide-pdf-0.1.0+pymupdf-2.0",
+        "source_sha256": "bd0cb12efc9a630a8b49610b01bf1cefd2e87f26d9dc86ae91a76caa581345bf",
+        "version_id": "v2020",
+        "warnings": []
+      },
+      {
+        "articles": 16,
+        "blocks": 1,
+        "doc_id": "course-selection",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "92e98b60fb6108f65cdada638e6bc7ee09debf2bb387a9833f65e7c96677a03e",
+        "version_id": "v2016",
+        "warnings": []
+      },
+      {
+        "articles": 22,
+        "blocks": 1,
+        "doc_id": "course-study",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "9c7503259d5aed108fc7a37dc0d606a868dc94ef36a549c093b1fc01078c7200",
+        "version_id": "v2022",
+        "warnings": []
+      },
+      {
+        "articles": 20,
+        "blocks": 1,
+        "doc_id": "degree-committee-charter",
+        "parser_version": "campusguide-pdf-0.1.0+pymupdf-2.0",
+        "source_sha256": "4469903e7dd66fe3321b28ce0001c083a6a124de5d2ec29a7e48a17d110da119",
+        "version_id": "v2025",
+        "warnings": []
+      },
+      {
+        "articles": 31,
+        "blocks": 1,
+        "doc_id": "disciplinary-rules",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "42b3f4208e2f7ea281bec69192511b57bbaad335717b51720a1387a68d980912",
+        "version_id": "v2017",
+        "warnings": []
+      },
+      {
+        "articles": 21,
+        "blocks": 1,
+        "doc_id": "dual-bachelor-degree",
+        "parser_version": "campusguide-pdf-0.1.0+pymupdf-2.0",
+        "source_sha256": "33b0396367a29d87de2cea3e097f175f0986c35a3563b11b60b5a37e2bc0607c",
+        "version_id": "v2025",
+        "warnings": []
+      },
+      {
+        "articles": 7,
+        "blocks": 1,
+        "doc_id": "enrollment-certificate-fee-note-2026",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "8047ced39ececbdb66dd032b6e9aedef6422ecddf3c603545e0a2cb912625925",
+        "version_id": "v2026",
+        "warnings": [
+          "未识别到“第X条”，已按节切分：7 节"
+        ]
+      },
+      {
+        "articles": 5,
+        "blocks": 1,
+        "doc_id": "enrollment-certificate-grad-office",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "50a8bf97ff0f6216f03fa80d7818b4dd76e2f100d992c32c2f3b8189626f4411",
+        "version_id": "v2026",
+        "warnings": [
+          "未识别到“第X条”，已按节切分：5 节"
+        ]
+      },
+      {
+        "articles": 8,
+        "blocks": 1,
+        "doc_id": "enrollment-certificate-guide",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "53169bedd22cc7874de0cfc285b2d0ac14f78e33d969ff13d261c25c43d31e8b",
+        "version_id": "v2026",
+        "warnings": [
+          "未识别到“第X条”，已按节切分：8 节"
+        ]
+      },
+      {
+        "articles": 6,
+        "blocks": 1,
+        "doc_id": "enrollment-certificate-self-print-2024",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "c355b2dbf9a9d2b4336410160974a1815f2dcdfda90cf703dd996629a4ae610f",
+        "version_id": "v2024",
+        "warnings": [
+          "未识别到“第X条”，已按节切分：6 节"
+        ]
+      },
+      {
+        "articles": 34,
+        "blocks": 2,
+        "doc_id": "exam-room-rules",
+        "parser_version": "campusguide-pdf-0.1.0+pymupdf-2.0",
+        "source_sha256": "9d0fdcf1826dbd739e42a545495db10b2ac4fa9ab8cedb43a54ca2adcca9d0a1",
+        "version_id": "v2022",
+        "warnings": [
+          "尾部文本已放入附录块，可能是落款或附件，请人工确认"
+        ]
+      },
+      {
+        "articles": 19,
+        "blocks": 1,
+        "doc_id": "financial-hardship",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "40b1d63c61d7aedd7c991acec124f2dbbcd1fd9ab5917fb5daba7e23fd9d0ce4",
+        "version_id": "v2020",
+        "warnings": []
+      },
+      {
+        "articles": 27,
+        "blocks": 1,
+        "doc_id": "general-education-elective",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "58430e48a3b77f19debc30ff21ec9cb5f349008a0f187d7a69216ddaf8707118",
+        "version_id": "v2023",
+        "warnings": []
+      },
+      {
+        "articles": 30,
+        "blocks": 37,
+        "doc_id": "graduate-course-assessment",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "cf14c9c9f75de48657a58cef899bf5a54d8839c3f8c2f23f63a918b4558c3e00",
+        "version_id": "v2023",
+        "warnings": []
+      },
+      {
+        "articles": 10,
+        "blocks": 37,
+        "doc_id": "graduate-teaching-errors",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "4b499fb904de7fd6feff49fef1fdeb34d9e7fead6a8a5d4f913d08cd94608bea",
+        "version_id": "v2022",
+        "warnings": []
+      },
+      {
+        "articles": 19,
+        "blocks": 1,
+        "doc_id": "graduate-thesis-defense",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "33bb285bdf04db20d388b87e7baf06a61d212bb8c4c3d14648aa753a3575a081",
+        "version_id": "v2015",
+        "warnings": []
+      },
+      {
+        "articles": 44,
+        "blocks": 2,
+        "doc_id": "graduate-thesis-defense",
+        "parser_version": "campusguide-pdf-0.1.0+pymupdf-2.0",
+        "source_sha256": "b1dc0ce59070ab4dd811de2d2f01490366d759d07bc4427a0532e9f9840d08f3",
+        "version_id": "v2026",
+        "warnings": [
+          "尾部文本已放入附录块，可能是落款或附件，请人工确认"
+        ]
+      },
+      {
+        "articles": 9,
+        "blocks": 1,
+        "doc_id": "hardship-subsidy",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "c6945432195163d81d22caa1824cd8b6a8c158a6638e62e5ffc65079c7dfe6af",
+        "version_id": "v2015",
+        "warnings": []
+      },
+      {
+        "articles": 1,
+        "blocks": 1,
+        "doc_id": "info-admissions-graduate",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "83ceb5f04c3a4f6cfedea956bd97434a8785d5bdc27166aaac99c00bc87d8670",
+        "version_id": "v2026",
+        "warnings": [
+          "未识别到“第X条”，已按节切分：1 节"
+        ]
+      },
+      {
+        "articles": 1,
+        "blocks": 1,
+        "doc_id": "info-admissions-undergrad",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "6f69202f50d60f65ed21885c7dce2ee13f1966212710d0dc0211be275490968d",
+        "version_id": "v2026",
+        "warnings": [
+          "未识别到“第X条”，已按节切分：1 节"
+        ]
+      },
+      {
+        "articles": 1,
+        "blocks": 1,
+        "doc_id": "info-committees",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "d8e1576fb1d9358c3c5c70275fe3698390eec25c905b805dccfb205f0dd01146",
+        "version_id": "v2026",
+        "warnings": [
+          "未识别到“第X条”，已按节切分：1 节"
+        ]
+      },
+      {
+        "articles": 4,
+        "blocks": 1,
+        "doc_id": "info-competitions",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "0b8765f54602b6e3f941efa71471e8d03d89ba729aa4972ddef8e4eb43f94ff7",
+        "version_id": "v2026",
+        "warnings": [
+          "未识别到“第X条”，已按节切分：4 节"
+        ]
+      },
+      {
+        "articles": 42,
+        "blocks": 1,
+        "doc_id": "info-grad-agri-engineering-plan",
+        "parser_version": "campusguide-pdf-0.1.0+pymupdf-2.0",
+        "source_sha256": "c691c96af77bf1402b1ec5919b6ac5bb1fe8038c3dfab1b23cbe9619cd166acd",
+        "version_id": "v2026",
+        "warnings": [
+          "节标题重复：四、学位论文基本要求（第 2 次出现）",
+          "节标题重复：二、课程设置（第 2 次出现）",
+          "节标题重复：三、培养环节及时间安排（第 2 次出现）",
+          "节标题重复：四、培养环节具体标准及考核要求（第 2 次出现）",
+          "节标题重复：六、毕业与学位授予（第 2 次出现）",
+          "未识别到“第X条”，已按节切分：22 节，章节导语单独建块 2 处"
+        ]
+      },
+      {
+        "articles": 18,
+        "blocks": 1,
+        "doc_id": "info-grad-computer-tech-plan",
+        "parser_version": "campusguide-pdf-0.1.0+pymupdf-2.0",
+        "source_sha256": "823b228dd293083fa91ebca5bd65237d39aed33c65e6c77238a3afe9376827e4",
+        "version_id": "v2025-2026",
+        "warnings": [
+          "未识别到“第X条”，已按节切分：13 节，章节导语单独建块 1 处"
+        ]
+      },
+      {
+        "articles": 16,
+        "blocks": 1,
+        "doc_id": "info-grad-cs-plan",
+        "parser_version": "campusguide-pdf-0.1.0+pymupdf-2.0",
+        "source_sha256": "2b0ed903077ff0a23ad83c9e72ce8257df4ae2446423be749d975a502b1a1efd",
+        "version_id": "v2025-2026",
+        "warnings": [
+          "未识别到“第X条”，已按节切分：12 节，章节导语单独建块 1 处"
+        ]
+      },
+      {
+        "articles": 20,
+        "blocks": 1,
+        "doc_id": "info-grad-iem-plan",
+        "parser_version": "campusguide-pdf-0.1.0+pymupdf-2.0",
+        "source_sha256": "e95fb959bd9a8a5e0aef249302d6323aecba1c89a396f98e83f48d88dd7a6d79",
+        "version_id": "v2025-2026",
+        "warnings": [
+          "未识别到“第X条”，已按节切分：13 节，章节导语单独建块 1 处"
+        ]
+      },
+      {
+        "articles": 20,
+        "blocks": 1,
+        "doc_id": "info-grad-math-plan",
+        "parser_version": "campusguide-pdf-0.1.0+pymupdf-2.0",
+        "source_sha256": "cc1bcbf114a4e463a982274220d5653a64ca5d8d4a240c63f6e46a28c94ec710",
+        "version_id": "v2025-2026",
+        "warnings": [
+          "未识别到“第X条”，已按节切分：12 节，章节导语单独建块 2 处"
+        ]
+      },
+      {
+        "articles": 15,
+        "blocks": 1,
+        "doc_id": "info-grad-software-plan",
+        "parser_version": "campusguide-pdf-0.1.0+pymupdf-2.0",
+        "source_sha256": "458de566f866c3792fc0436a72102c151bd3d45d5eb2ab4c338be353f2192f1b",
+        "version_id": "v2025-2026",
+        "warnings": [
+          "未识别到“第X条”，已按节切分：12 节，章节导语单独建块 1 处"
+        ]
+      },
+      {
+        "articles": 1,
+        "blocks": 1,
+        "doc_id": "info-industry-colleges",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "f2a1709e6546f4e2ea897f541070185cd36b0c0b8af129c11f01a6bf47d07909",
+        "version_id": "v2026",
+        "warnings": [
+          "未识别到“第X条”，已按节切分：1 节"
+        ]
+      },
+      {
+        "articles": 1,
+        "blocks": 1,
+        "doc_id": "info-leadership",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "c8e0778f423ee4c4b9cff5cb552d2a73799f97ec2bceeb3b24cd9b186dbb643e",
+        "version_id": "v2026",
+        "warnings": [
+          "未识别到“第X条”，已按节切分：1 节"
+        ]
+      },
+      {
+        "articles": 8,
+        "blocks": 1,
+        "doc_id": "info-majors-graduate",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "57a122fde6362fcc4048829ae4c201def2001931f9013caa111082875c1eb761",
+        "version_id": "v2026",
+        "warnings": [
+          "未识别到“第X条”，已按节切分：5 节"
+        ]
+      },
+      {
+        "articles": 11,
+        "blocks": 1,
+        "doc_id": "info-majors-undergrad",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "8d7bdeb7c1c750032380d6db7af4ce5c8e6cf30f1f682595f83e8441e3a6a636",
+        "version_id": "v2026",
+        "warnings": [
+          "未识别到“第X条”，已按节切分：3 节"
+        ]
+      },
+      {
+        "articles": 4,
+        "blocks": 1,
+        "doc_id": "info-org-structure",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "8ad04d64901d1aa558a89fdf0ed34abb5e6b74b678ad4fbd73af464790c98369",
+        "version_id": "v2026",
+        "warnings": [
+          "未识别到“第X条”，已按节切分：4 节"
+        ]
+      },
+      {
+        "articles": 3,
+        "blocks": 1,
+        "doc_id": "info-practice-bases",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "3c3529f42022530747e0716fe44e91789a305c174a8475eca5426d9c4ea72321",
+        "version_id": "v2026",
+        "warnings": [
+          "未识别到“第X条”，已按节切分：3 节"
+        ]
+      },
+      {
+        "articles": 2,
+        "blocks": 1,
+        "doc_id": "info-profile",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "b4b2fdd45daae2b0b108de9fe1e7bae875327ca3708b70a0f3fded7ea4516a1e",
+        "version_id": "v2026",
+        "warnings": [
+          "未识别到“第X条”，已按节切分：1 节"
+        ]
+      },
+      {
+        "articles": 41,
+        "blocks": 0,
+        "doc_id": "info-recent-academic",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "c05203b6a5f75a461d7b88382966e8a253582e9748f00a0e318dde8b694424ae",
+        "version_id": "v2026",
+        "warnings": [
+          "未识别到条款或节标题，已按段落切分：41 段"
+        ]
+      },
+      {
+        "articles": 68,
+        "blocks": 0,
+        "doc_id": "info-recent-news",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "6277c2537a5ecf3a4a0f6fc9592f39537a52dc4841e51d5f5651469fb4a3e05d",
+        "version_id": "v2026",
+        "warnings": [
+          "未识别到条款或节标题，已按段落切分：68 段"
+        ]
+      },
+      {
+        "articles": 100,
+        "blocks": 0,
+        "doc_id": "info-recent-notices",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "28e297919a1ab9117f36905d14148a9d14aa59cd4fa4ca7947ca9e2eb90728a1",
+        "version_id": "v2026",
+        "warnings": [
+          "未识别到条款或节标题，已按段落切分：100 段"
+        ]
+      },
+      {
+        "articles": 7,
+        "blocks": 1,
+        "doc_id": "info-scholarships",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "278c72cb2ce31ef89ac4aabff0250dc0682d1baa7e3129ecb9840a4ec681e97a",
+        "version_id": "v2026",
+        "warnings": [
+          "未识别到“第X条”，已按节切分：4 节"
+        ]
+      },
+      {
+        "articles": 1,
+        "blocks": 1,
+        "doc_id": "info-student-affairs",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "d03424720ea5eff11e24869fb8684a9960810bb7a09abccb31b22a5f41d013f0",
+        "version_id": "v2026",
+        "warnings": [
+          "未识别到“第X条”，已按节切分：1 节"
+        ]
+      },
+      {
+        "articles": 1,
+        "blocks": 1,
+        "doc_id": "info-student-orgs",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "3333f889dd89fc71a7d6b12c6d2d2337b053f05584e2a98e06939c8bc6c21c78",
+        "version_id": "v2026",
+        "warnings": [
+          "未识别到“第X条”，已按节切分：1 节"
+        ]
+      },
+      {
+        "articles": 1,
+        "blocks": 1,
+        "doc_id": "info-supervisors",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "72578fef806b14095d373ea8ef6b36a744fe78a46ee7a01be3e3ade08ab8fd2d",
+        "version_id": "v2026",
+        "warnings": [
+          "未识别到“第X条”，已按节切分：1 节"
+        ]
+      },
+      {
+        "articles": 1,
+        "blocks": 1,
+        "doc_id": "info-teachers-cs",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "205b54ae1f84c4c8e1ea0b62772388012a739b8e48abd00a0d430dcfcbe2c128",
+        "version_id": "v2026",
+        "warnings": [
+          "未识别到“第X条”，已按节切分：1 节"
+        ]
+      },
+      {
+        "articles": 1,
+        "blocks": 1,
+        "doc_id": "info-teachers-ie",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "81098c1519d8275259e8d348c9b09e6db1d000d8f66ead4eb6351eef583f9963",
+        "version_id": "v2026",
+        "warnings": [
+          "未识别到“第X条”，已按节切分：1 节"
+        ]
+      },
+      {
+        "articles": 1,
+        "blocks": 1,
+        "doc_id": "info-teachers-math",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "e8d1944563adbea601f18e24b9526c95fc6c290a0a3f15f34c825c3134ac9828",
+        "version_id": "v2026",
+        "warnings": [
+          "未识别到“第X条”，已按节切分：1 节"
+        ]
+      },
+      {
+        "articles": 1,
+        "blocks": 1,
+        "doc_id": "info-teaching-centers",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "c7e43e1cbf0d8265cc90776c1b0ba7cf5a69d97f7efe7e6e91e4656a8f4c7f77",
+        "version_id": "v2026",
+        "warnings": [
+          "未识别到“第X条”，已按节切分：1 节"
+        ]
+      },
+      {
+        "articles": 29,
+        "blocks": 1,
+        "doc_id": "info-ug-bigdata-plan",
+        "parser_version": "campusguide-pdf-0.1.0+pymupdf-2.0",
+        "source_sha256": "e037d503ddaf8f156a991d878131a4d3c3cda06044f2403fbc07ee24bd1eb4fa",
+        "version_id": "v2022",
+        "warnings": [
+          "未识别到“第X条”，已按节切分：9 节"
+        ]
+      },
+      {
+        "articles": 33,
+        "blocks": 0,
+        "doc_id": "info-ug-bigdata-plan",
+        "parser_version": "campusguide-pdf-0.1.0+pymupdf-2.0",
+        "source_sha256": "c7802734278d10794db0782a31e84862af4834cc83807d3114bbf10ed9a708f2",
+        "version_id": "v2024",
+        "warnings": [
+          "未识别到“第X条”，已按节切分：10 节"
+        ]
+      },
+      {
+        "articles": 49,
+        "blocks": 1,
+        "doc_id": "info-ug-cs-plan",
+        "parser_version": "campusguide-pdf-0.1.0+pymupdf-2.0",
+        "source_sha256": "d38cea7d4d4ac0f53a2da384f8406142bb787f65e72f64c99536d2b894f144d8",
+        "version_id": "v2022",
+        "warnings": [
+          "未识别到“第X条”，已按节切分：10 节"
+        ]
+      },
+      {
+        "articles": 67,
+        "blocks": 1,
+        "doc_id": "info-ug-cs-plan",
+        "parser_version": "campusguide-pdf-0.1.0+pymupdf-2.0",
+        "source_sha256": "223da6349b426b05c4a6be881923d7d19bf6642132f601feb55786ed94b757ea",
+        "version_id": "v2024",
+        "warnings": [
+          "未识别到“第X条”，已按节切分：10 节"
+        ]
+      },
+      {
+        "articles": 46,
+        "blocks": 0,
+        "doc_id": "info-ug-ds-plan",
+        "parser_version": "campusguide-pdf-0.1.0+pymupdf-2.0",
+        "source_sha256": "c2004bde3b343b9210d19fe90f8d71fc61b9236a3e07524674f3ad4083dcb054",
+        "version_id": "v2022",
+        "warnings": [
+          "未识别到“第X条”，已按节切分：9 节"
+        ]
+      },
+      {
+        "articles": 53,
+        "blocks": 0,
+        "doc_id": "info-ug-ds-plan",
+        "parser_version": "campusguide-pdf-0.1.0+pymupdf-2.0",
+        "source_sha256": "33beec66629952fd8ca673d1b6c7d29bf96029fc7a06c965ad60314177ba60b5",
+        "version_id": "v2024",
+        "warnings": [
+          "未识别到“第X条”，已按节切分：11 节"
+        ]
+      },
+      {
+        "articles": 29,
+        "blocks": 1,
+        "doc_id": "info-ug-ics-plan",
+        "parser_version": "campusguide-pdf-0.1.0+pymupdf-2.0",
+        "source_sha256": "cda32490536b939b388f06b00ff19c38dd4a4e8f9fa420acd2cdf6f2331c51b0",
+        "version_id": "v2022",
+        "warnings": [
+          "未识别到“第X条”，已按节切分：9 节"
+        ]
+      },
+      {
+        "articles": 39,
+        "blocks": 0,
+        "doc_id": "info-ug-ics-plan",
+        "parser_version": "campusguide-pdf-0.1.0+pymupdf-2.0",
+        "source_sha256": "f268c4f8f5108c672209debdda9e21f91d71ab518857481b168c44c6795f4843",
+        "version_id": "v2024",
+        "warnings": [
+          "未识别到“第X条”，已按节切分：10 节"
+        ]
+      },
+      {
+        "articles": 32,
+        "blocks": 1,
+        "doc_id": "info-ug-imis-plan",
+        "parser_version": "campusguide-pdf-0.1.0+pymupdf-2.0",
+        "source_sha256": "59a7398c4f5e8cc2fc25b925541b914de01d57262fabdb531ef3b671b805a3bd",
+        "version_id": "v2022",
+        "warnings": [
+          "未识别到“第X条”，已按节切分：9 节"
+        ]
+      },
+      {
+        "articles": 37,
+        "blocks": 1,
+        "doc_id": "info-ug-imis-plan",
+        "parser_version": "campusguide-pdf-0.1.0+pymupdf-2.0",
+        "source_sha256": "fac77cdc507a00ed02f32586238de9443f5ed98bd6ec787217fa334c3d8fbb91",
+        "version_id": "v2024",
+        "warnings": [
+          "未识别到“第X条”，已按节切分：10 节"
+        ]
+      },
+      {
+        "articles": 33,
+        "blocks": 0,
+        "doc_id": "info-ug-math-plan",
+        "parser_version": "campusguide-pdf-0.1.0+pymupdf-2.0",
+        "source_sha256": "5a7fdd83083bb065887ee536b705987cfc58220b4b351ede5bbf2854825c3019",
+        "version_id": "v2022",
+        "warnings": [
+          "未识别到“第X条”，已按节切分：9 节"
+        ]
+      },
+      {
+        "articles": 40,
+        "blocks": 0,
+        "doc_id": "info-ug-math-plan",
+        "parser_version": "campusguide-pdf-0.1.0+pymupdf-2.0",
+        "source_sha256": "3ff054531a4143aaf2206a801b313d24862ccd8f7fadead04a02b20cbbe9e9aa",
+        "version_id": "v2024",
+        "warnings": [
+          "未识别到“第X条”，已按节切分：10 节"
+        ]
+      },
+      {
+        "articles": 50,
+        "blocks": 0,
+        "doc_id": "info-ug-se-plan",
+        "parser_version": "campusguide-pdf-0.1.0+pymupdf-2.0",
+        "source_sha256": "e7ed8be104f1ddd75c28efc2b09ba171c4e2f8497f18b15313ee7c487bf7382e",
+        "version_id": "v2022",
+        "warnings": [
+          "未识别到“第X条”，已按节切分：10 节"
+        ]
+      },
+      {
+        "articles": 49,
+        "blocks": 0,
+        "doc_id": "info-ug-se-plan",
+        "parser_version": "campusguide-pdf-0.1.0+pymupdf-2.0",
+        "source_sha256": "9bf9ae2bdd87668316c13536a7cd24abc3360eb7f6f653fa2290d365864c88a8",
+        "version_id": "v2024",
+        "warnings": [
+          "未识别到“第X条”，已按节切分：10 节"
+        ]
+      },
+      {
+        "articles": 35,
+        "blocks": 0,
+        "doc_id": "info-ug-stat-plan",
+        "parser_version": "campusguide-pdf-0.1.0+pymupdf-2.0",
+        "source_sha256": "117c6b2da7053186ea0a2a599b8c02bf0db5e5ecc0ea5531055afa4a712f645e",
+        "version_id": "v2022",
+        "warnings": [
+          "未识别到“第X条”，已按节切分：10 节"
+        ]
+      },
+      {
+        "articles": 42,
+        "blocks": 0,
+        "doc_id": "info-ug-stat-plan",
+        "parser_version": "campusguide-pdf-0.1.0+pymupdf-2.0",
+        "source_sha256": "e02e90a3fb64b98a98badddd894df958f84d3699a2ff1d3a894017a25f8285d8",
+        "version_id": "v2024",
+        "warnings": [
+          "未识别到“第X条”，已按节切分：11 节"
+        ]
+      },
+      {
+        "articles": 24,
+        "blocks": 1,
+        "doc_id": "innovation-training",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "fd2608b60ee0d5331d46cca04758548e4a53d5fd8aac4e80cf3f4790cc7b9803",
+        "version_id": "v2018",
+        "warnings": []
+      },
+      {
+        "articles": 29,
+        "blocks": 1,
+        "doc_id": "lab-safety",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "cfccfee8489f1ef000eaabd5db93f1a3b0c9344341ae54eaeba5360deee11a95",
+        "version_id": "v2015",
+        "warnings": []
+      },
+      {
+        "articles": 33,
+        "blocks": 1,
+        "doc_id": "master-doctor-degree-rules",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "e144d8f804a6ad7feff52697771f5b9a463f65613e6996dd066dde433eaba06f",
+        "version_id": "v2010",
+        "warnings": []
+      },
+      {
+        "articles": 36,
+        "blocks": 2,
+        "doc_id": "master-doctor-degree-rules",
+        "parser_version": "campusguide-pdf-0.1.0+pymupdf-2.0",
+        "source_sha256": "8296669193b283281fd28a89cec65589787c6f3fc657a92f5e88241423e85dcd",
+        "version_id": "v2025",
+        "warnings": [
+          "尾部文本已放入附录块，可能是落款或附件，请人工确认"
+        ]
+      },
+      {
+        "articles": 20,
+        "blocks": 1,
+        "doc_id": "micro-major",
+        "parser_version": "campusguide-pdf-0.1.0+pymupdf-2.0",
+        "source_sha256": "15f52f0eb92b74a640f5f65bf8b08dfb9c676f6dff35dfd2759656a2ac19512c",
+        "version_id": "v2024",
+        "warnings": []
+      },
+      {
+        "articles": 5,
+        "blocks": 1,
+        "doc_id": "national-aid-2026-agri-grant-publicity",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "650c8af3f6dd19d6c7f95054e1793e4df827a29d5f02990fd52ae5b43857de0e",
+        "version_id": "v2026",
+        "warnings": [
+          "未识别到“第X条”，已按节切分：5 节"
+        ]
+      },
+      {
+        "articles": 5,
+        "blocks": 1,
+        "doc_id": "national-aid-2026-agri-inspirational-publicity",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "d1ae7ef003f41c4a38a1004b3bc0e3b8dbf20e383bc7a7b6fdc8e4fb40184484",
+        "version_id": "v2026",
+        "warnings": [
+          "未识别到“第X条”，已按节切分：5 节"
+        ]
+      },
+      {
+        "articles": 8,
+        "blocks": 1,
+        "doc_id": "national-aid-2026-info-aid",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "b30101bbf5739672596cf9b4ac3b1c4d811949a997a1183a01ebd7512a3f21c0",
+        "version_id": "v2026",
+        "warnings": [
+          "未识别到“第X条”，已按节切分：8 节"
+        ]
+      },
+      {
+        "articles": 8,
+        "blocks": 1,
+        "doc_id": "national-aid-2026-info-merit",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "9fc20f4b398acecb4223a2de320097948dbf822baf4d62e1a66d69a3e5593993",
+        "version_id": "v2026",
+        "warnings": [
+          "未识别到“第X条”，已按节切分：8 节"
+        ]
+      },
+      {
+        "articles": 33,
+        "blocks": 1,
+        "doc_id": "national-aid-grad",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "1dbe911cb9811959b67e1e496b2251bcf9005191e4a982dafb70688f19887ce8",
+        "version_id": "v2022",
+        "warnings": []
+      },
+      {
+        "articles": 32,
+        "blocks": 1,
+        "doc_id": "national-aid-undergrad",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "b00d39adb09616769f3d5e24143bf5bd5fbb6bf365fd89a1787e618e821e6729",
+        "version_id": "v2021",
+        "warnings": []
+      },
+      {
+        "articles": 14,
+        "blocks": 1,
+        "doc_id": "official-reception",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "288e417e40b5478c171c699f47f232ee94b5507d137f8d2aa8d3698b332cf9ad",
+        "version_id": "v2017",
+        "warnings": []
+      },
+      {
+        "articles": 18,
+        "blocks": 1,
+        "doc_id": "outstanding-graduates",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "76e00573bf4f27efb781954007b98a33f07f15b0462702a0269fab5274769f04",
+        "version_id": "v2018",
+        "warnings": []
+      },
+      {
+        "articles": 12,
+        "blocks": 1,
+        "doc_id": "outstanding-graduates",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "91fa8bf9557e81e131b21d8da39f99e0eb8dca10f6b2f835ed79ba30686e2a80",
+        "version_id": "v2025",
+        "warnings": []
+      },
+      {
+        "articles": 10,
+        "blocks": 1,
+        "doc_id": "outstanding-thesis-award",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "0f096f0ba9284fdb9ac58677624b57fe75ea8d606a200554ca98db99349736d8",
+        "version_id": "v2010",
+        "warnings": []
+      },
+      {
+        "articles": 18,
+        "blocks": 2,
+        "doc_id": "outstanding-thesis-award",
+        "parser_version": "campusguide-pdf-0.1.0+pymupdf-2.0",
+        "source_sha256": "d05ba6f3bbf9a427d5b88b71c571055343593918c24f7bb0146a84bf1677a3e1",
+        "version_id": "v2021",
+        "warnings": [
+          "尾部文本已放入附录块，可能是落款或附件，请人工确认"
+        ]
+      },
+      {
+        "articles": 47,
+        "blocks": 1,
+        "doc_id": "postdoc-management",
+        "parser_version": "campusguide-pdf-0.1.0+pymupdf-2.0",
+        "source_sha256": "0e6bdee49d593c4f1366f7b20d5d594c24297129a3b08ec303acd02a2f35bb5d",
+        "version_id": "v2024",
+        "warnings": []
+      },
+      {
+        "articles": 28,
+        "blocks": 1,
+        "doc_id": "postgraduate-recommendation",
+        "parser_version": "campusguide-pdf-0.1.0+pymupdf-2.0",
+        "source_sha256": "4e31af06a672258940b78c6267e398a73741f13ef3dd6cbc8113946f37591f77",
+        "version_id": "v2025",
+        "warnings": []
+      },
+      {
+        "articles": 16,
+        "blocks": 37,
+        "doc_id": "professional-degree-reform",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "3d247085555c09233087a1942ee1241464c447b95b858615bb5a54a7c363eb66",
+        "version_id": "v2022",
+        "warnings": []
+      },
+      {
+        "articles": 11,
+        "blocks": 1,
+        "doc_id": "public-facilities",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "c12bb6a71dc1e438f8ea4e54ab7b1964b72a5648ab18a67ffa4674c47cec9219",
+        "version_id": "v2004",
+        "warnings": []
+      },
+      {
+        "articles": 6,
+        "blocks": 1,
+        "doc_id": "recommendation-2027-notice",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "640608ff61a0e337c0a9f1a01c277ff7e585068a5b3c13d4c38583fa5e29823c",
+        "version_id": "v2026",
+        "warnings": [
+          "未识别到“第X条”，已按节切分：6 节"
+        ]
+      },
+      {
+        "articles": 6,
+        "blocks": 1,
+        "doc_id": "recommendation-2027-publicity",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "2c7d55322aad1d23b9938e4a002ab9e47a38231c1c132b79242b1d6d3db886fe",
+        "version_id": "v2026",
+        "warnings": [
+          "未识别到“第X条”，已按节切分：6 节"
+        ]
+      },
+      {
+        "articles": 38,
+        "blocks": 1,
+        "doc_id": "student-financial-aid",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "799dda4ca5dc03b0330b1f9784d5a87ee414b191b649006236ebcfb36c8bb3c7",
+        "version_id": "v2022",
+        "warnings": []
+      },
+      {
+        "articles": 29,
+        "blocks": 1,
+        "doc_id": "student-loan",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "73c13c11ec09e90d752d4c9c799a540e40506e37941195ebe041e3ffed771ddb",
+        "version_id": "v2018",
+        "warnings": []
+      },
+      {
+        "articles": 20,
+        "blocks": 1,
+        "doc_id": "teaching-supervision",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "2b50a83b8a450f3c68d2cefcc39ff5c9210a5da7fa71ec1e59a2b01a4591866b",
+        "version_id": "v2023",
+        "warnings": []
+      },
+      {
+        "articles": 12,
+        "blocks": 1,
+        "doc_id": "undergraduate-academic-warning",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "1baf08c131e293a0ec9b910810faff9da7d6ef6e5d3df80d29902769ca1bb7b0",
+        "version_id": "v2015",
+        "warnings": []
+      },
+      {
+        "articles": 12,
+        "blocks": 1,
+        "doc_id": "undergraduate-academic-warning",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "d187c513a6e23da3db0e45e559dde7e4acff77525ecfea07a5dd9e50c994e9f0",
+        "version_id": "v2021",
+        "warnings": []
+      },
+      {
+        "articles": 13,
+        "blocks": 1,
+        "doc_id": "undergraduate-major-transfer",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "7c3732afe6bc8e3281e687e242bf991bb8221bd082a6941581a6b506ed0211e1",
+        "version_id": "v2015",
+        "warnings": []
+      },
+      {
+        "articles": 15,
+        "blocks": 1,
+        "doc_id": "undergraduate-major-transfer",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "aade118fec94c0d87a1cc25d2aae83b6a5fdc54c522289c4ad23ff8880a36a34",
+        "version_id": "v2021",
+        "warnings": []
+      },
+      {
+        "articles": 13,
+        "blocks": 1,
+        "doc_id": "undergraduate-mentor",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "9819a858d232931490083e431fa96c6663e7e7df281d5616d3f9ee4ab38eac97",
+        "version_id": "v2020",
+        "warnings": []
+      },
+      {
+        "articles": 19,
+        "blocks": 1,
+        "doc_id": "undergraduate-minor",
+        "parser_version": "campusguide-pdf-0.1.0+pymupdf-2.0",
+        "source_sha256": "60aff20ec8f3e7103d0ae1bf2bd5e6f3369a2cfe11546c14535f2e540c66915b",
+        "version_id": "v2025",
+        "warnings": []
+      },
+      {
+        "articles": 9,
+        "blocks": 1,
+        "doc_id": "undergraduate-school-transfer",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "9ac985b858d912005052b240b77b38772064a680badbeb0166075c2f7a60d935",
+        "version_id": "v2021",
+        "warnings": []
+      },
+      {
+        "articles": 58,
+        "blocks": 1,
+        "doc_id": "undergraduate-status-rules",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "d5b6d1fc5349f72ab3927021b61a4687214130c17c9595155c0cfc067c1e3661",
+        "version_id": "v2009",
+        "warnings": [
+          "已用宽松规则补充无分隔符条款：第二十四条"
+        ]
+      },
+      {
+        "articles": 57,
+        "blocks": 1,
+        "doc_id": "undergraduate-status-rules",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "9a74b0376b9cfdc1cd26df426067e8abc38c87bf3b8def165dcbc8bed531e945",
+        "version_id": "v2021",
+        "warnings": []
+      },
+      {
+        "articles": 43,
+        "blocks": 1,
+        "doc_id": "work-study",
+        "parser_version": "campusguide-html-0.1.0",
+        "source_sha256": "69f61a75df0116fba005ecaade54d655e98b79ec99bd1890dd1e09281454067f",
+        "version_id": "v2019",
+        "warnings": []
+      },
+      {
+        "articles": 18,
+        "blocks": 2,
+        "doc_id": "youben-direct-phd",
+        "parser_version": "campusguide-pdf-0.1.0+pymupdf-2.0",
+        "source_sha256": "b33a64181dc5ca496eea73d26af2bb4994c9a8607367f9f5c3b8829cdf0dae15",
+        "version_id": "v2024",
+        "warnings": [
+          "尾部文本已放入附录块，可能是落款或附件，请人工确认"
+        ]
+      }
+    ],
+    "warnings": [
+      "agri-committee-academic@v2026: 未识别到条款或节标题，已按段落切分：1 段",
+      "agri-committee-degree@v2026: 未识别到条款或节标题，已按段落切分：1 段",
+      "agri-committee-teaching@v2026: 未识别到条款或节标题，已按段落切分：1 段",
+      "agri-competition-notice-2026@v2026: 未识别到“第X条”，已按节切分：7 节",
+      "agri-competition-notice-2026@v2026: 索引文本已脱敏：mobile=1, personal_email=1",
+      "agri-crop-discipline-report-2024@v2024: 未识别到“第X条”，已按节切分：6 节",
+      "agri-dept-crop-info@v2026: 未识别到条款或节标题，已按段落切分：1 段",
+      "agri-dept-crop-tech@v2026: 未识别到条款或节标题，已按段落切分：1 段",
+      "agri-dept-plant-breeding@v2026: 未识别到条款或节标题，已按段落切分：1 段",
+      "agri-dept-seed-engineering@v2026: 未识别到条款或节标题，已按段落切分：1 段",
+      "agri-faculty-roster@v2026: 未识别到条款或节标题，已按段落切分：7 段",
+      "agri-grad-plan-agronomy-095131@v2025-2026: 未识别到“第X条”，已按节切分：14 节，章节导语单独建块 1 处",
+      "agri-grad-plan-crop-0901@v2025: 节标题重复：二、应具备的基本素质（第 2 次出现）",
+      "agri-grad-plan-crop-0901@v2025: 节标题重复：三、应具备的基本学术能力（第 2 次出现）",
+      "agri-grad-plan-crop-0901@v2025: 节标题重复：四、学位论文要求（第 2 次出现）",
+      "agri-grad-plan-crop-0901@v2025: 节标题重复：一、培养目标（第 2 次出现）",
+      "agri-grad-plan-crop-0901@v2025: 节标题重复：二、课程设置（第 2 次出现）",
+      "agri-grad-plan-crop-0901@v2025: 节标题重复：三、培养环节及时间安排（第 2 次出现）",
+      "agri-grad-plan-crop-0901@v2025: 节标题重复：四、培养环节具体标准及考核要求（第 2 次出现）",
+      "agri-grad-plan-crop-0901@v2025: 节标题重复：六、毕业与学位授予（第 2 次出现）",
+      "agri-grad-plan-crop-0901@v2025: 未识别到“第X条”，已按节切分：22 节，章节导语单独建块 2 处",
+      "agri-grad-plan-crop-0901@v2026: 节标题重复：二、应具备的基本素质（第 2 次出现）",
+      "agri-grad-plan-crop-0901@v2026: 节标题重复：三、应具备的基本学术能力（第 2 次出现）",
+      "agri-grad-plan-crop-0901@v2026: 节标题重复：四、学位论文要求（第 2 次出现）",
+      "agri-grad-plan-crop-0901@v2026: 节标题重复：一、培养目标（第 2 次出现）",
+      "agri-grad-plan-crop-0901@v2026: 节标题重复：二、课程设置（第 2 次出现）",
+      "agri-grad-plan-crop-0901@v2026: 节标题重复：三、培养环节及时间安排（第 2 次出现）",
+      "agri-grad-plan-crop-0901@v2026: 节标题重复：四、培养环节具体标准及考核要求（第 2 次出现）",
+      "agri-grad-plan-crop-0901@v2026: 节标题重复：六、毕业与学位授予（第 2 次出现）",
+      "agri-grad-plan-crop-0901@v2026: 未识别到“第X条”，已按节切分：22 节，章节导语单独建块 2 处",
+      "agri-grad-scholarship-rule-2026@v2026: 未识别到“第X条”，已按节切分：8 节",
+      "agri-grad-scholarship-supplement-2026@v2026: 未识别到“第X条”，已按节切分：3 节",
+      "agri-leadership@v2026: 未识别到条款或节标题，已按段落切分：1 段",
+      "agri-majors-undergrad@v2026: 未识别到条款或节标题，已按段落切分：4 段",
+      "agri-master-admission-rule@v2025: 未识别到“第X条”，已按节切分：7 节",
+      "agri-master-admission-rule@v2025: 索引文本已脱敏：contact_name=1",
+      "agri-master-admission-rule@v2026: 未识别到“第X条”，已按节切分：7 节",
+      "agri-org-structure@v2026: 未识别到条款或节标题，已按段落切分：1 段",
+      "agri-phd-admission-rule@v2025: 未识别到“第X条”，已按节切分：9 节",
+      "agri-phd-admission-rule@v2025: 索引文本已脱敏：contact_name=1, personal_email=1",
+      "agri-phd-admission-rule@v2026: 未识别到“第X条”，已按节切分：9 节",
+      "agri-phd-admission-rule@v2026: 索引文本已脱敏：contact_name=1, personal_email=1",
+      "agri-postdoc-rule-2024@v2024: 尾部文本已放入附录块，可能是落款或附件，请人工确认",
+      "agri-postgrad-recommendation-rule-2024@v2024: 尾部附件/附录已单独建块",
+      "agri-practice-bases@v2026: 未识别到条款或节标题，已按段落切分：2 段",
+      "agri-profile@v2026: 未识别到条款或节标题，已按段落切分：5 段",
+      "agri-recent-lectures@v2026: 未识别到条款或节标题，已按段落切分：38 段",
+      "agri-recent-news@v2026: 未识别到条款或节标题，已按段落切分：33 段",
+      "agri-recent-notices@v2026: 未识别到条款或节标题，已按段落切分：24 段",
+      "agri-recent-research@v2026: 未识别到条款或节标题，已按段落切分：24 段",
+      "agri-student-affairs-team@v2026: 未识别到条款或节标题，已按段落切分：1 段",
+      "agri-supervisors@v2026: 未识别到“第X条”，已按节切分：3 节",
+      "agri-teacher-382234@v20240816: 未识别到条款或节标题，已按段落切分：3 段",
+      "agri-teacher-382235@v20240816: 未识别到条款或节标题，已按段落切分：4 段",
+      "agri-teacher-382341@v20240819: 未识别到条款或节标题，已按段落切分：92 段",
+      "agri-teacher-382342@v20240819: 未识别到条款或节标题，已按段落切分：3 段",
+      "agri-teacher-382351@v20240819: 未识别到条款或节标题，已按段落切分：9 段",
+      "agri-teacher-382353@v20240819: 未识别到条款或节标题，已按段落切分：4 段",
+      "agri-teacher-382354@v20240819: 未识别到条款或节标题，已按段落切分：12 段",
+      "agri-teacher-382355@v20240819: 未识别到条款或节标题，已按段落切分：7 段",
+      "agri-teacher-382357@v20240819: 未识别到条款或节标题，已按段落切分：27 段",
+      "agri-teacher-382358@v20240819: 未识别到条款或节标题，已按段落切分：39 段",
+      "agri-teacher-382359@v20240819: 未识别到条款或节标题，已按段落切分：12 段",
+      "agri-teacher-382360@v20240819: 未识别到条款或节标题，已按段落切分：6 段",
+      "agri-teacher-382362@v20240819: 未识别到条款或节标题，已按段落切分：13 段",
+      "agri-teacher-382363@v20240819: 未识别到条款或节标题，已按段落切分：5 段",
+      "agri-teacher-382364@v20240819: 未识别到条款或节标题，已按段落切分：8 段",
+      "agri-teacher-382365@v20240819: 未识别到条款或节标题，已按段落切分：7 段",
+      "agri-teacher-382366@v20240819: 未识别到条款或节标题，已按段落切分：7 段",
+      "agri-teacher-382367@v20240819: 未识别到条款或节标题，已按段落切分：6 段",
+      "agri-teacher-382368@v20240819: 未识别到条款或节标题，已按段落切分：10 段",
+      "agri-teacher-382370@v20240819: 未识别到条款或节标题，已按段落切分：2 段",
+      "agri-teacher-382371@v20240819: 未识别到条款或节标题，已按段落切分：6 段",
+      "agri-teacher-382372@v20240819: 未识别到条款或节标题，已按段落切分：49 段",
+      "agri-teacher-382373@v20240819: 未识别到条款或节标题，已按段落切分：17 段",
+      "agri-teacher-382375@v20240819: 未识别到条款或节标题，已按段落切分：6 段",
+      "agri-teacher-382376@v20240819: 未识别到条款或节标题，已按段落切分：10 段",
+      "agri-teacher-382378@v20240819: 未识别到条款或节标题，已按段落切分：13 段",
+      "agri-teacher-382379@v20240819: 未识别到条款或节标题，已按段落切分：13 段",
+      "agri-teacher-382380@v20240819: 未识别到条款或节标题，已按段落切分：7 段",
+      "agri-teacher-382381@v20240819: 未识别到条款或节标题，已按段落切分：4 段",
+      "agri-teacher-382382@v20240819: 未识别到条款或节标题，已按段落切分：8 段",
+      "agri-teacher-382383@v20240819: 未识别到条款或节标题，已按段落切分：1 段",
+      "agri-teacher-382384@v20240819: 未识别到条款或节标题，已按段落切分：7 段",
+      "agri-teacher-382385@v20240819: 未识别到条款或节标题，已按段落切分：5 段",
+      "agri-teacher-382386@v20240819: 未识别到条款或节标题，已按段落切分：2 段",
+      "agri-teacher-382388@v20240819: 未识别到条款或节标题，已按段落切分：11 段",
+      "agri-teacher-382389@v20240819: 未识别到条款或节标题，已按段落切分：6 段",
+      "agri-teacher-382390@v20240819: 未识别到条款或节标题，已按段落切分：5 段",
+      "agri-teacher-382391@v20240819: 未识别到条款或节标题，已按段落切分：4 段",
+      "agri-teacher-382392@v20240819: 未识别到条款或节标题，已按段落切分：7 段",
+      "agri-teacher-382393@v20240819: 未识别到条款或节标题，已按段落切分：6 段",
+      "agri-teacher-382394@v20240819: 未识别到条款或节标题，已按段落切分：10 段",
+      "agri-teacher-382395@v20240819: 未识别到条款或节标题，已按段落切分：2 段",
+      "agri-teacher-382396@v20240819: 未识别到条款或节标题，已按段落切分：8 段",
+      "agri-teacher-382398@v20240819: 未识别到条款或节标题，已按段落切分：5 段",
+      "agri-teacher-382399@v20240819: 未识别到条款或节标题，已按段落切分：10 段",
+      "agri-teacher-382400@v20240819: 未识别到条款或节标题，已按段落切分：8 段",
+      "agri-teacher-382401@v20240819: 未识别到条款或节标题，已按段落切分：5 段",
+      "agri-teacher-382402@v20240819: 未识别到条款或节标题，已按段落切分：9 段",
+      "agri-teacher-382403@v20240819: 未识别到条款或节标题，已按段落切分：7 段",
+      "agri-teacher-382404@v20240819: 未识别到条款或节标题，已按段落切分：2 段",
+      "agri-teacher-382405@v20240819: 未识别到条款或节标题，已按段落切分：4 段",
+      "agri-teacher-382406@v20240819: 未识别到条款或节标题，已按段落切分：4 段",
+      "agri-teacher-382407@v20240819: 未识别到条款或节标题，已按段落切分：8 段",
+      "agri-teacher-382408@v20240819: 未识别到条款或节标题，已按段落切分：8 段",
+      "agri-teacher-382409@v20240819: 未识别到条款或节标题，已按段落切分：1 段",
+      "agri-teacher-382410@v20240819: 未识别到条款或节标题，已按段落切分：7 段",
+      "agri-teacher-382411@v20240819: 未识别到条款或节标题，已按段落切分：3 段",
+      "agri-teacher-382412@v20240819: 未识别到条款或节标题，已按段落切分：9 段",
+      "agri-teacher-382413@v20240819: 未识别到条款或节标题，已按段落切分：10 段",
+      "agri-teacher-382414@v20240819: 未识别到条款或节标题，已按段落切分：7 段",
+      "agri-teacher-382416@v20240819: 未识别到条款或节标题，已按段落切分：3 段",
+      "agri-teacher-382417@v20240819: 未识别到条款或节标题，已按段落切分：11 段",
+      "agri-teacher-382418@v20240819: 未识别到条款或节标题，已按段落切分：4 段",
+      "agri-teacher-382420@v20240819: 未识别到条款或节标题，已按段落切分：5 段",
+      "agri-teacher-382421@v20240819: 未识别到条款或节标题，已按段落切分：4 段",
+      "agri-teacher-382422@v20240819: 未识别到条款或节标题，已按段落切分：1 段",
+      "agri-teacher-382423@v20240819: 未识别到条款或节标题，已按段落切分：6 段",
+      "agri-teacher-382424@v20240819: 未识别到条款或节标题，已按段落切分：5 段",
+      "agri-teacher-382426@v20240819: 未识别到条款或节标题，已按段落切分：5 段",
+      "agri-teacher-382427@v20240819: 未识别到条款或节标题，已按段落切分：5 段",
+      "agri-teacher-382428@v20240819: 未识别到条款或节标题，已按段落切分：8 段",
+      "agri-teacher-382429@v20240819: 未识别到条款或节标题，已按段落切分：5 段",
+      "agri-teacher-382430@v20240819: 未识别到条款或节标题，已按段落切分：3 段",
+      "agri-teacher-382431@v20240819: 未识别到条款或节标题，已按段落切分：5 段",
+      "agri-teacher-382432@v20240819: 未识别到条款或节标题，已按段落切分：4 段",
+      "agri-teacher-382433@v20240819: 未识别到条款或节标题，已按段落切分：9 段",
+      "agri-teacher-382434@v20240819: 未识别到条款或节标题，已按段落切分：2 段",
+      "agri-teacher-382435@v20240819: 未识别到条款或节标题，已按段落切分：1 段",
+      "agri-teacher-382436@v20240819: 未识别到条款或节标题，已按段落切分：3 段",
+      "agri-teacher-382437@v20240819: 未识别到条款或节标题，已按段落切分：3 段",
+      "agri-teacher-382438@v20240819: 未识别到条款或节标题，已按段落切分：10 段",
+      "agri-teacher-382439@v20240819: 未识别到条款或节标题，已按段落切分：8 段",
+      "agri-teacher-382440@v20240819: 未识别到条款或节标题，已按段落切分：5 段",
+      "agri-teacher-382441@v20240819: 未识别到条款或节标题，已按段落切分：3 段",
+      "agri-teacher-400929@v20240819: 未识别到条款或节标题，已按段落切分：11 段",
+      "agri-teacher-400930@v20240819: 未识别到条款或节标题，已按段落切分：8 段",
+      "agri-teacher-401676@v20240819: 未识别到条款或节标题，已按段落切分：3 段",
+      "agri-teacher-401787@v20240819: 未识别到条款或节标题，已按段落切分：7 段",
+      "agri-teacher-402950@v20240819: 未识别到条款或节标题，已按段落切分：5 段",
+      "agri-teacher-403287@v20240819: 未识别到条款或节标题，已按段落切分：6 段",
+      "agri-teacher-428440@v20260302: 未识别到条款或节标题，已按段落切分：5 段",
+      "agri-ug-plan-2022@v2022: 节标题重复：一、专业名称（中英文）；专业代码（第 2 次出现）",
+      "agri-ug-plan-2022@v2022: 节标题重复：二、培养目标（第 2 次出现）",
+      "agri-ug-plan-2022@v2022: 节标题重复：三、培养规格（即在知识、能力、素质三个方面的具体要求）（第 2 次出现）",
+      "agri-ug-plan-2022@v2022: 节标题重复：四、主干学科（第 2 次出现）",
+      "agri-ug-plan-2022@v2022: 节标题重复：五、专业核心课程（第 2 次出现）",
+      "agri-ug-plan-2022@v2022: 节标题重复：六、修业年限及授予学位（第 2 次出现）",
+      "agri-ug-plan-2022@v2022: 节标题重复：七、课程结构及毕业要求（第 2 次出现）",
+      "agri-ug-plan-2022@v2022: 节标题重复：八、人才培养目标实现矩阵（第 2 次出现）",
+      "agri-ug-plan-2022@v2022: 节标题重复：九、培养计划进程表（第 2 次出现）",
+      "agri-ug-plan-2022@v2022: 节标题重复：十、课程体系与培养要求的对应关系矩阵（第 2 次出现）",
+      "agri-ug-plan-2022@v2022: 节标题重复：一、专业名称（中英文）；专业代码（第 3 次出现）",
+      "agri-ug-plan-2022@v2022: 节标题重复：二、培养目标（第 3 次出现）",
+      "agri-ug-plan-2022@v2022: 节标题重复：四、主干学科（第 3 次出现）",
+      "agri-ug-plan-2022@v2022: 节标题重复：五、专业核心课程（第 3 次出现）",
+      "agri-ug-plan-2022@v2022: 节标题重复：六、修业年限及授予学位（第 3 次出现）",
+      "agri-ug-plan-2022@v2022: 节标题重复：七、课程结构及毕业要求（第 3 次出现）",
+      "agri-ug-plan-2022@v2022: 节标题重复：八、人才培养目标实现矩阵（第 3 次出现）",
+      "agri-ug-plan-2022@v2022: 节标题重复：九、培养计划进程表（第 3 次出现）",
+      "agri-ug-plan-2022@v2022: 节标题重复：十、课程体系与培养要求的对应关系矩阵（第 3 次出现）",
+      "agri-ug-plan-2022@v2022: 未识别到“第X条”，已按节切分：30 节",
+      "agri-ug-plan-agronomy-2024@v2024: 未识别到“第X条”，已按节切分：10 节",
+      "agri-ug-plan-agronomy-dingying-2024@v2024: 未识别到“第X条”，已按节切分：10 节",
+      "agri-ug-plan-bio-breeding-2024@v2024: 未识别到“第X条”，已按节切分：10 节",
+      "agri-ug-plan-new-agronomy-2022@v2022: 未识别到“第X条”，已按节切分：9 节",
+      "agri-ug-plan-new-agronomy-2024@v2024: 未识别到“第X条”，已按节切分：10 节",
+      "agri-ug-plan-new-agronomy-supplement-2024@v2024: 未识别到“第X条”，已按节切分：10 节",
+      "agri-ug-plan-seed-2024@v2024: 未识别到“第X条”，已按节切分：10 节",
+      "agri-undergrad-mentor-rule-2025@v2025: 未识别到“第X条”，已按节切分：5 节",
+      "archive-management@v2026: 尾部文本已放入附录块，可能是落款或附件，请人工确认",
+      "comprehensive-evaluation-2026-final-publicity@v2026: 未识别到“第X条”，已按节切分：4 节",
+      "comprehensive-evaluation-2026-info@v2026: 未识别到“第X条”，已按节切分：6 节",
+      "enrollment-certificate-fee-note-2026@v2026: 未识别到“第X条”，已按节切分：7 节",
+      "enrollment-certificate-grad-office@v2026: 未识别到“第X条”，已按节切分：5 节",
+      "enrollment-certificate-guide@v2026: 未识别到“第X条”，已按节切分：8 节",
+      "enrollment-certificate-self-print-2024@v2024: 未识别到“第X条”，已按节切分：6 节",
+      "exam-room-rules@v2022: 尾部文本已放入附录块，可能是落款或附件，请人工确认",
+      "graduate-thesis-defense@v2026: 尾部文本已放入附录块，可能是落款或附件，请人工确认",
+      "info-admissions-graduate@v2026: 未识别到“第X条”，已按节切分：1 节",
+      "info-admissions-undergrad@v2026: 未识别到“第X条”，已按节切分：1 节",
+      "info-committees@v2026: 未识别到“第X条”，已按节切分：1 节",
+      "info-competitions@v2026: 未识别到“第X条”，已按节切分：4 节",
+      "info-grad-agri-engineering-plan@v2026: 节标题重复：四、学位论文基本要求（第 2 次出现）",
+      "info-grad-agri-engineering-plan@v2026: 节标题重复：二、课程设置（第 2 次出现）",
+      "info-grad-agri-engineering-plan@v2026: 节标题重复：三、培养环节及时间安排（第 2 次出现）",
+      "info-grad-agri-engineering-plan@v2026: 节标题重复：四、培养环节具体标准及考核要求（第 2 次出现）",
+      "info-grad-agri-engineering-plan@v2026: 节标题重复：六、毕业与学位授予（第 2 次出现）",
+      "info-grad-agri-engineering-plan@v2026: 未识别到“第X条”，已按节切分：22 节，章节导语单独建块 2 处",
+      "info-grad-computer-tech-plan@v2025-2026: 未识别到“第X条”，已按节切分：13 节，章节导语单独建块 1 处",
+      "info-grad-cs-plan@v2025-2026: 未识别到“第X条”，已按节切分：12 节，章节导语单独建块 1 处",
+      "info-grad-iem-plan@v2025-2026: 未识别到“第X条”，已按节切分：13 节，章节导语单独建块 1 处",
+      "info-grad-math-plan@v2025-2026: 未识别到“第X条”，已按节切分：12 节，章节导语单独建块 2 处",
+      "info-grad-software-plan@v2025-2026: 未识别到“第X条”，已按节切分：12 节，章节导语单独建块 1 处",
+      "info-industry-colleges@v2026: 未识别到“第X条”，已按节切分：1 节",
+      "info-leadership@v2026: 未识别到“第X条”，已按节切分：1 节",
+      "info-majors-graduate@v2026: 未识别到“第X条”，已按节切分：5 节",
+      "info-majors-undergrad@v2026: 未识别到“第X条”，已按节切分：3 节",
+      "info-org-structure@v2026: 未识别到“第X条”，已按节切分：4 节",
+      "info-practice-bases@v2026: 未识别到“第X条”，已按节切分：3 节",
+      "info-profile@v2026: 未识别到“第X条”，已按节切分：1 节",
+      "info-recent-academic@v2026: 未识别到条款或节标题，已按段落切分：41 段",
+      "info-recent-news@v2026: 未识别到条款或节标题，已按段落切分：68 段",
+      "info-recent-notices@v2026: 未识别到条款或节标题，已按段落切分：100 段",
+      "info-scholarships@v2026: 未识别到“第X条”，已按节切分：4 节",
+      "info-student-affairs@v2026: 未识别到“第X条”，已按节切分：1 节",
+      "info-student-orgs@v2026: 未识别到“第X条”，已按节切分：1 节",
+      "info-supervisors@v2026: 未识别到“第X条”，已按节切分：1 节",
+      "info-teachers-cs@v2026: 未识别到“第X条”，已按节切分：1 节",
+      "info-teachers-ie@v2026: 未识别到“第X条”，已按节切分：1 节",
+      "info-teachers-math@v2026: 未识别到“第X条”，已按节切分：1 节",
+      "info-teaching-centers@v2026: 未识别到“第X条”，已按节切分：1 节",
+      "info-ug-bigdata-plan@v2022: 未识别到“第X条”，已按节切分：9 节",
+      "info-ug-bigdata-plan@v2024: 未识别到“第X条”，已按节切分：10 节",
+      "info-ug-cs-plan@v2022: 未识别到“第X条”，已按节切分：10 节",
+      "info-ug-cs-plan@v2024: 未识别到“第X条”，已按节切分：10 节",
+      "info-ug-ds-plan@v2022: 未识别到“第X条”，已按节切分：9 节",
+      "info-ug-ds-plan@v2024: 未识别到“第X条”，已按节切分：11 节",
+      "info-ug-ics-plan@v2022: 未识别到“第X条”，已按节切分：9 节",
+      "info-ug-ics-plan@v2024: 未识别到“第X条”，已按节切分：10 节",
+      "info-ug-imis-plan@v2022: 未识别到“第X条”，已按节切分：9 节",
+      "info-ug-imis-plan@v2024: 未识别到“第X条”，已按节切分：10 节",
+      "info-ug-math-plan@v2022: 未识别到“第X条”，已按节切分：9 节",
+      "info-ug-math-plan@v2024: 未识别到“第X条”，已按节切分：10 节",
+      "info-ug-se-plan@v2022: 未识别到“第X条”，已按节切分：10 节",
+      "info-ug-se-plan@v2024: 未识别到“第X条”，已按节切分：10 节",
+      "info-ug-stat-plan@v2022: 未识别到“第X条”，已按节切分：10 节",
+      "info-ug-stat-plan@v2024: 未识别到“第X条”，已按节切分：11 节",
+      "master-doctor-degree-rules@v2025: 尾部文本已放入附录块，可能是落款或附件，请人工确认",
+      "national-aid-2026-agri-grant-publicity@v2026: 未识别到“第X条”，已按节切分：5 节",
+      "national-aid-2026-agri-inspirational-publicity@v2026: 未识别到“第X条”，已按节切分：5 节",
+      "national-aid-2026-info-aid@v2026: 未识别到“第X条”，已按节切分：8 节",
+      "national-aid-2026-info-merit@v2026: 未识别到“第X条”，已按节切分：8 节",
+      "outstanding-thesis-award@v2021: 尾部文本已放入附录块，可能是落款或附件，请人工确认",
+      "recommendation-2027-notice@v2026: 未识别到“第X条”，已按节切分：6 节",
+      "recommendation-2027-publicity@v2026: 未识别到“第X条”，已按节切分：6 节",
+      "undergraduate-status-rules@v2009: 已用宽松规则补充无分隔符条款：第二十四条",
+      "youben-direct-phd@v2024: 尾部文本已放入附录块，可能是落款或附件，请人工确认"
+    ]
+  },
+  "vector_manifest": {
+    "alias": "articles_current",
+    "block_types": {
+      "article": 1366,
+      "section": 2660
+    },
+    "built_at": "2026-10-25T06:13:25+00:00",
+    "collection": "articles_v1",
+    "dense_vector_name": "dense",
+    "device": "cuda",
+    "dimension": 1024,
+    "embedding_mode": "hybrid",
+    "embedding_model": "BAAI/bge-m3",
+    "embedding_text": "标题/章节/位置/正文",
+    "index_version": "articles_v1@hybrid-6bafb68410b9",
+    "max_seq_length": 1024,
+    "points": 4026,
+    "schema_version": "1.1",
+    "source_content_hash": "2a6219ba2c5394686a53f030213b917b4adfdf658ce75a1323ee11733cb32a81",
+    "source_manifest": "D:\\big-third-up\\campusguide-agent\\data\\manifest.json",
+    "sparse": {
+      "avg_doc_len": 408.9672131147541,
+      "b": 0.75,
+      "doc_count": 4026,
+      "enabled": true,
+      "idf_hash": "fe229722b77a9236a91b0997b6ffab25d06bcb140c99994ca1f29d451425beba",
+      "k1": 1.2,
+      "mode": "bm25",
+      "tokenizer_version": "cjk-char-bigram-v1",
+      "vector_name": "sparse",
+      "version": "bm25-k11.2-b0.75-fe229722b77a",
+      "vocab_file": "D:\\big-third-up\\campusguide-agent\\data\\sparse_vocab.json",
+      "vocab_sha256": "c625b1e31f2e2a1c5e05d0062370ab89b731403b09860529e3b005f7e30ef26d"
+    },
+    "warnings": []
+  },
+  "code_hashes_collected_after_run": {
+    "src/campusguide/agents/graph.py": "7066d75faa1cf42302ecd08891ba24163dd1003ca2948e5c70f862829b589efe",
+    "src/campusguide/agents/planner.py": "b54b7f99fc22e46e0ba8c1a699ac17b4cd0a50499ecfc1e4908c7ff1dad3ecc4",
+    "src/campusguide/agents/retriever.py": "8f0bc47cf57a1000cbb0984b4c1a8ff8bd7543cac98617af9e888d3d091845cf",
+    "src/campusguide/qa/guard.py": "a360cc1eef3733b32d192c92db987250329a8ad5380c5dc2c1f68e5c48c8a464",
+    "src/campusguide/retrieval/section_select.py": "5c98580e5b7e30271e7855d1b530e7598ede1708a543c4c08dade5b49df4dc36",
+    "src/campusguide/mcp/policy_search_server.py": "cdff0dad6ae682889231e9cbd695467d9be39a24dea9eb8654d81eb93407178d",
+    "configs/flows/scholarship-application.yaml": "33049fe4a0bc7748217cbe4f80ede9fbe3a329c3d9c583607693200a34f45428"
+  },
+  "process_observation": "UI is local Windows Python campusguide.ui.app with policy_search_server and policy_meta_server children; docker compose app logs empty. No restart performed."
+}

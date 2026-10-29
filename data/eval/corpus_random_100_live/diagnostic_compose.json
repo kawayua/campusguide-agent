@@ -1,0 +1,10 @@
+{
+  "compose_ps": {
+    "returncode": 1,
+    "output": "\nWARNING: Error loading config file: open C:\\Users\\y'y\\.docker\\config.json: Access is denied.\nWARNING: Error loading config file: open C:\\Users\\y'y\\.docker\\config.json: Access is denied.\npermission denied while trying to connect to the docker API at npipe:////./pipe/docker_engine\n"
+  },
+  "app_logs": {
+    "returncode": 1,
+    "output": "\nWARNING: Error loading config file: open C:\\Users\\y'y\\.docker\\config.json: Access is denied.\nWARNING: Error loading config file: open C:\\Users\\y'y\\.docker\\config.json: Access is denied.\npermission denied while trying to connect to the docker API at npipe:////./pipe/docker_engine\n"
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "system_proxies": {},
+  "checks": [
+    {
+      "mode": "default",
+      "ok": true,
+      "points": 4026,
+      "status": "green",
+      "elapsed_s": 0.295
+    },
+    {
+      "mode": "explicit_direct",
+      "ok": true,
+      "points": 4026,
+      "status": "green",
+      "elapsed_s": 0.189
+    }
+  ]
+}

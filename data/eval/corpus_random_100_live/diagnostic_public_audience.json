@@ -1,0 +1,20 @@
+[
+  {
+    "question": "数学与信息学院2026年10月20日发布了哪些活动新闻，其中招生宣讲面向哪一年的硕士研究生招生？",
+    "inferred_audience": "graduate",
+    "doc_id": "info-recent-news",
+    "counts": {
+      "no_audience": 68,
+      "keyword_audience": 0
+    }
+  },
+  {
+    "question": "农学院2026年10月发布的新闻有哪些，其中哪条与2026级本科生军训有关？",
+    "inferred_audience": "undergraduate",
+    "doc_id": "agri-recent-news",
+    "counts": {
+      "no_audience": 33,
+      "keyword_audience": 0
+    }
+  }
+]

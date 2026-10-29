@@ -1,0 +1,63 @@
+{
+  "versions": {
+    "httpx": "0.28.1",
+    "qdrant-client": "1.19.1",
+    "fastmcp": "4.1.3"
+  },
+  "sources": {
+    "httpx.Client.__init__": {
+      "file": "D:\\big-third-up\\campusguide-agent\\.venv\\Lib\\site-packages\\httpx\\_client.py",
+      "start_line": 639,
+      "signature": "(self, *, auth: 'AuthTypes | None' = None, params: 'QueryParamTypes | None' = None, headers: 'HeaderTypes | None' = None, cookies: 'CookieTypes | None' = None, verify: 'ssl.SSLContext | str | bool' = True, cert: 'CertTypes | None' = None, trust_env: 'bool' = True, http1: 'bool' = True, http2: 'bool' = False, proxy: 'ProxyTypes | None' = None, mounts: 'None | typing.Mapping[str, BaseTransport | None]' = None, timeout: 'TimeoutTypes' = Timeout(timeout=5.0), follow_redirects: 'bool' = False, limits: 'Limits' = Limits(max_connections=100, max_keepalive_connections=20, keepalive_expiry=5.0), max_redirects: 'int' = 20, event_hooks: 'None | typing.Mapping[str, list[EventHook]]' = None, base_url: 'URL | str' = '', transport: 'BaseTransport | None' = None, default_encoding: 'str | typing.Callable[[bytes], str]' = 'utf-8') -> 'None'",
+      "relevant_lines": [
+        "648:         trust_env: bool = True,",
+        "652:         mounts: None | (typing.Mapping[str, BaseTransport | None]) = None,",
+        "672:             trust_env=trust_env,",
+        "685:         allow_env_proxies = trust_env and transport is None",
+        "686:         proxy_map = self._get_proxy_map(proxy, allow_env_proxies)",
+        "691:             trust_env=trust_env,",
+        "697:         self._mounts: dict[URLPattern, BaseTransport | None] = {",
+        "704:                 trust_env=trust_env,",
+        "709:             for key, proxy in proxy_map.items()",
+        "711:         if mounts is not None:",
+        "712:             self._mounts.update(",
+        "713:                 {URLPattern(key): transport for key, transport in mounts.items()}",
+        "716:         self._mounts = dict(sorted(self._mounts.items()))"
+      ]
+    },
+    "httpx.get_environment_proxies": {
+      "file": "D:\\big-third-up\\campusguide-agent\\.venv\\Lib\\site-packages\\httpx\\_utils.py",
+      "start_line": 30,
+      "signature": "() -> 'dict[str, str | None]'",
+      "relevant_lines": [
+        "33:     # urllib.request.getproxies() falls back on System",
+        "34:     # Registry and Config for proxies on Windows and macOS.",
+        "37:     proxy_info = getproxies()",
+        "38:     mounts: dict[str, str | None] = {}",
+        "43:             mounts[f\"{scheme}://\"] = (",
+        "66:                 mounts[hostname] = None",
+        "68:                 mounts[f\"all://{hostname}\"] = None",
+        "70:                 mounts[f\"all://[{hostname}]\"] = None",
+        "72:                 mounts[f\"all://{hostname}\"] = None",
+        "74:                 mounts[f\"all://*{hostname}\"] = None",
+        "76:     return mounts"
+      ]
+    },
+    "QdrantRemote.__init__": {
+      "file": "D:\\big-third-up\\campusguide-agent\\.venv\\Lib\\site-packages\\qdrant_client\\qdrant_remote.py",
+      "start_line": 49,
+      "signature": "(self, url: str | None = None, port: int | None = 6333, grpc_port: int = 6334, prefer_grpc: bool = False, https: bool | None = None, api_key: str | None = None, prefix: str | None = None, timeout: int | None = None, host: str | None = None, grpc_options: dict[str, typing.Any] | None = None, auth_token_provider: Union[Callable[[], str], Callable[[], Awaitable[str]], NoneType] = None, check_compatibility: bool = True, pool_size: int | None = None, headers: dict[str, str] | None = None, **kwargs: Any)",
+      "relevant_lines": [
+        "65:         **kwargs: Any,",
+        "67:         super().__init__(**kwargs)",
+        "213:         self._rest_args = {\"headers\": self._rest_headers, \"http2\": http2, **kwargs}",
+        "216:             self._rest_args[\"limits\"] = limits",
+        "219:             self._rest_args[\"timeout\"] = _timeout",
+        "233:             self._rest_args[\"auth\"] = bearer_auth",
+        "235:         self.openapi_client: SyncApis[ApiClient] = SyncApis(",
+        "237:             **self._rest_args,",
+        "262:                     self._rest_args.get(\"auth\"),"
+      ]
+    }
+  }
+}
