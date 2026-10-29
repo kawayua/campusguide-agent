@@ -71,7 +71,7 @@ class GraphBackend:
             },
             "prompt_versions": {},
             "index_version": "—",
-            "graph_version": "w6-2026-10-25",
+            "graph_version": "w6-quality-2026-10-28",
             "warmup_ms": 0,
             "request_timeout_seconds": self.request_timeout_seconds,
         }
@@ -98,7 +98,7 @@ class GraphBackend:
             "models": dict(runtime.models),
             "prompt_versions": dict(runtime.prompt_versions),
             "index_version": runtime.index_version,
-            "graph_version": "w6-2026-10-25",
+            "graph_version": "w6-quality-2026-10-28",
             "warmup_ms": self._warmup_ms,
             "request_timeout_seconds": self.request_timeout_seconds,
         }

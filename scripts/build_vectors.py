@@ -16,6 +16,7 @@ from qdrant_client import QdrantClient
 
 from campusguide.config import load_retrieval_config
 from campusguide.env import load_dotenv
+from campusguide.retrieval.connections import qdrant_trust_env
 from campusguide.retrieval.embedder import BgeM3Embedder
 from campusguide.retrieval.indexer import (
     VectorIndexError,
@@ -119,6 +120,7 @@ def main() -> int:
     else:
         client = QdrantClient(
             url=args.qdrant_url or "http://localhost:6333",
+            trust_env=qdrant_trust_env(),
             timeout=30,
         )
 

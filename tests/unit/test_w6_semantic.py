@@ -76,7 +76,7 @@ def test_four_labels_and_provider_isolation() -> None:
 def test_prompt_version_and_temperature_zero() -> None:
     provider = FakeChatProvider([labels_json(("c1", "supported"))])
     SemanticVerifier(provider).check([make_claim()], make_evidence())
-    assert SEMANTIC_PROMPT_VERSION == "w6b-semantic-2026-10-25"
+    assert SEMANTIC_PROMPT_VERSION == "w6b-semantic-quality-2026-10-28"
     assert provider.options[0]["temperature"] == 0.0
 
 

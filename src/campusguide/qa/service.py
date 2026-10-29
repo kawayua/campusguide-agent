@@ -83,7 +83,7 @@ _MESSAGES = {
         "生成服务暂时不可用或输出不符合契约。请检查 LLM 配置后重试；系统不会在无引用情况下作答。"
     ),
     OutcomeCode.INDEX_UNAVAILABLE: (
-        "向量索引不可用（Qdrant 未启动或索引未构建）。请先启动 Qdrant 并运行 build_vectors.py。"
+        "检索服务连接失败或索引状态异常。请检查 Qdrant 连接、数据库代理设置及服务端诊断日志。"
     ),
     OutcomeCode.TOOL_UNAVAILABLE: (
         "检索工具不可用（MCP server 未启动、超时或重排模型不可用）。系统不会在无检索证据时作答。"

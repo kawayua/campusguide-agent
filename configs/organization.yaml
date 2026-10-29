@@ -127,3 +127,50 @@ majors:
     aliases: [生物育种科学, 生物育种]
     valid_from: null
     valid_to: null
+
+# 研究生学科专业：与本科专业同名时用 level 区分（报告 A4 / 041）。
+# 研究方向作为 aliases 登记，比较题的对象识别才能落到具体方向。
+  - major_id: agricultural-engineering
+    name: 农业工程
+    college_id: agri
+    major_code: "0828"
+    level: graduate
+    aliases: [农业工程]
+    directions: [农业电气化与自动化, 农业机械化工程, 农业水土工程]
+    valid_from: null
+    valid_to: null
+  - major_id: agricultural-engineering-info
+    name: 农业工程与信息技术
+    college_id: info
+    major_code: "095136"
+    level: graduate
+    aliases: [农业工程与信息技术, 农业信息化, 农业工程与信息技术领域]
+    valid_from: null
+    valid_to: null
+  - major_id: industrial-engineering-management
+    name: 工业工程与管理
+    college_id: info
+    major_code: "125603"
+    level: graduate
+    aliases: [工业工程与管理, 工业工程, 工程管理]
+    valid_from: null
+    valid_to: null
+
+# 班型：同一专业下的创新班、实验班、国际班等，培养方案不通用。
+# level 与 major.level 一致；majors 引用上面的 major_id。
+class_types:
+  - class_id: dingying-innovation
+    name: 丁颖创新班
+    level: undergraduate
+    majors: [agronomy]
+    aliases: [丁颖班, 创新班, 新农学创新班]
+  - class_id: agronomy-general
+    name: 农学普通班
+    level: undergraduate
+    majors: [agronomy]
+    aliases: [农学普通班, 农学班]
+  - class_id: info-innovation
+    name: 信息类创新班
+    level: undergraduate
+    majors: [computer-science, software-engineering, data-science]
+    aliases: [创新班, 实验班, 卓越班]

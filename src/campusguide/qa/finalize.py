@@ -48,7 +48,10 @@ def finalize(
     if semantic_unchecked:
         lines.extend([f"> {SEMANTIC_UNCHECKED_NOTICE}", ""])
     if partial:
-        lines.extend([f"> {PARTIAL_NOTICE}", f"> 已省略 {dropped_count} 条结论。", ""])
+        if dropped_count:
+            lines.extend([f"> {PARTIAL_NOTICE}", f"> 已省略 {dropped_count} 条结论。", ""])
+        else:
+            lines.extend(["> 以下为已核实内容；尚缺的回答部分见后文说明。", ""])
     lines.extend(["**结论要点：**", ""])
     cards: list[Citation] = []
     seen_cards: set[tuple[str, int, int, int]] = set()

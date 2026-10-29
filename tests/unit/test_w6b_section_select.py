@@ -4,6 +4,7 @@ from dataclasses import dataclass
 
 from campusguide.domain.enums import BlockType
 from campusguide.retrieval.section_select import (
+    allows_sections,
     allows_tables,
     is_table_like,
     select_sections,
@@ -91,6 +92,34 @@ def test_table_intent_query_allows_tables() -> None:
         max_table_sections=1,
     )
     assert len(selection.candidates) == 3
+
+
+def test_course_intent_recognizes_subject_and_elective_group() -> None:
+    query = "对于2024年入学的计算机科学与技术的学生来讲 我们的人工智能选修组有什么科目可以进行选择"
+    assert allows_sections(query) is True
+    assert allows_tables(query) is True
+    assert allows_sections("申请国家奖学金需要满足哪些条件") is False
+
+
+def test_table_intent_does_not_penalize_table_sections() -> None:
+    table = _section(
+        "plan@v2024#十、培养计划进程表",
+        "十、培养计划进程表",
+        "方向选修模块 | 人工智能方向\n课程代码 | 课程名称 | 学分\n613068 | 人工智能 | 2",
+    )
+    narrative = _section(
+        "plan@v2024#二、培养目标",
+        "二、培养目标",
+        "本专业培养具有社会责任感的复合型人才。",
+    )
+    table.rerank_score = 0.74
+    narrative.rerank_score = 0.71
+
+    broad = select_sections([table, narrative], query="培养方案", limit=2)
+    assert broad.candidates[0].article.article_id.endswith("#二、培养目标")
+
+    table_query = select_sections([table, narrative], query="人工智能选修组有哪些科目", limit=2)
+    assert table_query.candidates[0].article.article_id.endswith("#十、培养计划进程表")
 
 
 def test_job_intent_query_boosts_placement_section() -> None:

@@ -15,6 +15,11 @@ from campusguide.domain.enums import BlockType
 
 TABLE_INTENT_RE = re.compile(
     r"课程|学分|学时|进程|计划|安排|周|学期|矩阵|课程代码|课程名称|课程设置"
+    r"|科目|选修组|方向选修|选修模块"
+)
+SECTION_INTENT_RE = re.compile(
+    r"培养方案|培养目标|毕业要求|专业核心课程|课程结构|教学计划|进程表"
+    r"|课程|学分|学时|科目|选修组|选修模块|方向选修"
 )
 JOB_INTENT_RE = re.compile(r"就业|职业|去向|工作方向|毕业后|从事.{0,12}工作|工作方面")
 JOB_TEXT_RE = re.compile(
@@ -77,7 +82,7 @@ def selection_bonus(article: Any, *, query: str = "") -> float:
     bonus = 0.0
     if is_narrative_section(article):
         bonus += 0.02
-    if is_table_like(article):
+    if is_table_like(article) and not allows_tables(query):
         bonus -= 0.04
     if query and JOB_INTENT_RE.search(query) and JOB_TEXT_RE.search(article.text or ""):
         # 培养方案问“毕业后可从事的工作”时，把“人才培养目标/就业去向”
@@ -88,6 +93,11 @@ def selection_bonus(article: Any, *, query: str = "") -> float:
 
 def allows_tables(query: str) -> bool:
     return bool(TABLE_INTENT_RE.search(query))
+
+
+def allows_sections(query: str) -> bool:
+    """课程/培养方案类问题需要 section 级证据；其他问题默认仍只查条款。"""
+    return bool(SECTION_INTENT_RE.search(query))
 
 
 def select_sections(

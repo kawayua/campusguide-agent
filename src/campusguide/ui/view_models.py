@@ -799,6 +799,57 @@ def conversation_header_html(
     )
 
 
+PROGRESS_STEPS: tuple[tuple[str, str], ...] = (
+    ("planner", "规划"),
+    ("retrieval", "检索"),
+    ("advisor", "生成"),
+    ("verifier", "核对"),
+    ("finalize", "整理"),
+)
+_PROGRESS_ALIASES = {
+    "planner": "planner",
+    "retriever": "retrieval",
+    "retrieval": "retrieval",
+    "flow": "retrieval",
+    "advisor": "advisor",
+    "verifier": "verifier",
+    "coverage": "verifier",
+    "supplement": "verifier",
+    "finalize": "finalize",
+}
+
+
+def progress_html(label: str, *, nodes: list[str] | None = None) -> str:
+    """节点进度小圆点；nodes=None 时是普通状态/错误文案。"""
+    if nodes is None:
+        return f'<div class="w8-status-message">{html.escape(label or "正在处理")}</div>'
+    keys = [key for key in (_PROGRESS_ALIASES.get(str(node)) for node in nodes) if key]
+    current = max(
+        (PROGRESS_STEPS.index(step) for step in PROGRESS_STEPS if step[0] in keys), default=0
+    )
+    has_flow = "flow" in {str(node) for node in nodes} and "retriever" not in {
+        str(node) for node in nodes
+    }
+    items = []
+    for index, (_key, name) in enumerate(PROGRESS_STEPS):
+        if index == 1 and has_flow:
+            name = "流程"
+        state = "done" if index < current else "active" if index == current else "pending"
+        current_attr = ' aria-current="step"' if state == "active" else ""
+        items.append(
+            f'<li class="w8-progress-step {state}"{current_attr}>'
+            '<span class="w8-progress-dot"></span>'
+            f'<span class="w8-progress-label">{name}</span></li>'
+        )
+    return (
+        '<div class="w8-progress-stepper" role="status" aria-live="polite" '
+        f'aria-label="{html.escape(label or "正在处理")}">'
+        f'<ol class="w8-progress-dots">{"".join(items)}</ol>'
+        '<span class="w8-progress-note">只显示节点进度，不输出未核对答案</span>'
+        "</div>"
+    )
+
+
 def side_header_html(reply: Any, *, title: str = "", sub: str = "") -> str:
     if reply is None:
         return (

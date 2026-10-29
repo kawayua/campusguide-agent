@@ -61,6 +61,8 @@ _NODE_LABELS = {
     "retriever": "检索",
     "advisor": "生成",
     "verifier": "核对",
+    "coverage": "核对回答完整性",
+    "supplement": "补充遗漏内容",
     "finalize": "整理",
 }
 

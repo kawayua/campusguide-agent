@@ -376,3 +376,70 @@ def check_fact_coverage(claim_text: str, quote_texts: list[str]) -> FactCoverage
 
 def facts_not_covered(claim_text: str, quote_texts: list[str]) -> list[Fact]:
     return check_fact_coverage(claim_text, quote_texts).uncovered
+
+
+def check_evidence_fact_coverage(text: str, quotes: list[str], articles: list) -> FactCoverage:
+    """Permit only explicit intake-year metadata, never publication/deadline facts.
+
+    Intake years are trusted scope metadata. A bare year or year in any other role
+    still requires body support. Amounts, durations, courses and roles are unchanged.
+    """
+    result = check_fact_coverage(text, quotes)
+    supported_years = {
+        str(year)
+        for article in articles
+        if article.audience_detail
+        for year in article.audience_detail.intake_years
+    }
+    contextual = []
+    for fact in result.uncovered:
+        if fact.kind is not FactKind.DATE or not re.fullmatch(r"20\d{2}", fact.canonical):
+            continue
+        occurrences = list(re.finditer(re.escape(fact.canonical) + r"年", text))
+        if not occurrences:
+            continue
+
+        def supported_scope(match, year=fact.canonical):
+            suffix = text[match.end() :]
+            if suffix.startswith("入学") and year in supported_years:
+                return True
+            # An explicitly named notice's annual label is source scope, not a
+            # publication date, event date or deadline. Require a literal title match.
+            label = re.split(r"[，,。；;：:]", suffix)[0]
+            if not re.search(r"奖学金|助学金|招生|推免|培养方案|选拔|评审", label):
+                return False
+            return any(
+                (year + "年" + label[:size]) in article.doc_title
+                for size in range(min(len(label), 16), 5, -1)
+                for article in articles
+            )
+
+        if all(supported_scope(m) for m in occurrences):
+            contextual.append(fact)
+    # A numeric table cell supports credits only together with its explicitly
+    # quoted header in the same document/version/table, and an identified row.
+    if len(quotes) == len(articles):
+        headers = {
+            (a.doc_id, a.version_id, a.article_no)
+            for q, a in zip(quotes, articles, strict=True)
+            if re.search(r"课程代码\s*[|｜]\s*课程名称\s*[|｜]\s*学分", q)
+        }
+        table_values = set()
+        for quote, article in zip(quotes, articles, strict=True):
+            if (article.doc_id, article.version_id, article.article_no) not in headers:
+                continue
+            for row in re.finditer(
+                r"(?<!\d)\d{6}\s*[|｜]\s*([^|｜\n]+)[^|｜]{0,180}[|｜]\s*(\d+(?:\.\d+)?)\s*[|｜]\s*\d+(?:\.\d+)?\s*[|｜]",
+                quote,
+            ):
+                course = row[1].strip()
+                if course in text:
+                    table_values.add(f"{_format_number(float(row[2]))}学分")
+        contextual.extend(
+            fact
+            for fact in result.uncovered
+            if fact.kind is FactKind.NUMBER and fact.canonical in table_values
+        )
+    result.uncovered = [fact for fact in result.uncovered if fact not in contextual]
+    result.covered.extend(contextual)
+    return result

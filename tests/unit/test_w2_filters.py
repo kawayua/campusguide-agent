@@ -43,7 +43,7 @@ def test_filters_include_block_type_status_and_dates() -> None:
     audience_condition = next(
         item for item in result.must if isinstance(item, FieldCondition) and item.key == "audience"
     )
-    assert set(audience_condition.match.any) == {"undergraduate", "all"}
+    assert set(audience_condition.match.any) == {"undergraduate", "all", "public"}
 
 
 def test_filters_default_to_active_articles_and_skip_audience() -> None:

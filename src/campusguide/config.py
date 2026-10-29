@@ -205,6 +205,7 @@ class Major(BaseModel):
     name: str
     college_id: str
     major_code: str | None = None
+    level: str | None = None
     aliases: list[str] = Field(default_factory=list)
     valid_from: date | None = None
     valid_to: date | None = None
@@ -215,8 +216,28 @@ class Major(BaseModel):
             raise ValueError(f"major_id 必须是小写 slug：{self.major_id!r}")
         if not Slug.match(self.college_id):
             raise ValueError(f"major.college_id 必须是小写 slug：{self.college_id!r}")
+        if self.level is not None and self.level not in {"undergraduate", "graduate"}:
+            raise ValueError(f"major.level 只能是 undergraduate/graduate：{self.level!r}")
         if self.valid_to and self.valid_from and self.valid_to < self.valid_from:
             raise ValueError("major valid_to 不能早于 valid_from")
+        return self
+
+
+class ClassType(BaseModel):
+    """班型：同一专业的创新班、实验班、国际班等，培养方案不通用。"""
+
+    class_id: str
+    name: str
+    level: str = "undergraduate"
+    majors: list[str] = Field(default_factory=list)
+    aliases: list[str] = Field(default_factory=list)
+
+    @model_validator(mode="after")
+    def _validate_class_type(self) -> ClassType:
+        if not Slug.match(self.class_id):
+            raise ValueError(f"class_id 必须是小写 slug：{self.class_id!r}")
+        if self.level not in {"undergraduate", "graduate"}:
+            raise ValueError(f"class_type.level 只能是 undergraduate/graduate：{self.level!r}")
         return self
 
 
@@ -225,6 +246,7 @@ class OrganizationConfig(BaseModel):
     corpus_id: str = "scau"
     colleges: list[College] = Field(default_factory=list)
     majors: list[Major] = Field(default_factory=list)
+    class_types: list[ClassType] = Field(default_factory=list)
 
     @model_validator(mode="after")
     def _validate_registry(self) -> OrganizationConfig:
@@ -234,10 +256,20 @@ class OrganizationConfig(BaseModel):
         major_ids = [major.major_id for major in self.majors]
         if len(major_ids) != len(set(major_ids)):
             raise ValueError("存在重复 major_id")
+        class_ids = [class_type.class_id for class_type in self.class_types]
+        if len(class_ids) != len(set(class_ids)):
+            raise ValueError("存在重复 class_id")
         known_colleges = set(college_ids)
         for major in self.majors:
             if major.college_id not in known_colleges:
                 raise ValueError(f"{major.major_id} 引用了未登记的学院：{major.college_id}")
+        known_majors = set(major_ids)
+        for class_type in self.class_types:
+            for major_id in class_type.majors:
+                if major_id not in known_majors:
+                    raise ValueError(
+                        f"{class_type.class_id} 引用了未登记的专业：{major_id}"
+                    )
         return self
 
 

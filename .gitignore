@@ -51,3 +51,8 @@ Thumbs.db
 
 # Logs
 *.log
+.dsh_tmp/
+# pytest 运行留下的只读临时目录，不入库
+data/eval/answer_quality/pytest_*_tmp/
+data/eval/answer_quality/batch_retest_20261028_162015/
+data/eval/answer_quality/rate_limited_20261028_run01/

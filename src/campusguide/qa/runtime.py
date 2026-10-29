@@ -29,6 +29,7 @@ from campusguide.env import load_dotenv
 from campusguide.mcp.client import MCPClientConfig, MCPPolicyMetaClient, MCPPolicySearchClient
 from campusguide.observability.trace import TraceWriter
 from campusguide.qa.service import QAService, QASettings
+from campusguide.retrieval.connections import create_qdrant_client as create_qdrant_client
 from campusguide.verification.claims import ClaimValidator
 from campusguide.verification.verifier import Verifier
 
@@ -66,20 +67,6 @@ class RuntimePaths:
     text_manifest: Path = DEFAULT_TEXT_MANIFEST
     sparse_vocab: Path = DEFAULT_SPARSE_VOCAB
     trace_dir: Path = DEFAULT_TRACE_DIR
-
-
-def create_qdrant_client() -> QdrantClient:
-    from qdrant_client import QdrantClient
-
-    location = os.getenv("QDRANT_LOCATION", "").strip()
-    if location:
-        Path(location).mkdir(parents=True, exist_ok=True)
-        return QdrantClient(path=location)
-    return QdrantClient(
-        url=os.getenv("QDRANT_URL", "http://localhost:6333"),
-        api_key=os.getenv("QDRANT_API_KEY") or None,
-        timeout=10,
-    )
 
 
 def _read_manifest(path: Path) -> dict[str, Any]:
@@ -549,15 +536,21 @@ def create_graph_runtime(
         expected_index_version=expected_index_version,
         enable_repealed_probe=abstention.enable_repealed_probe,
     )
+    from campusguide.retrieval.profile_expand import ProfileLexicon
+
     planner = Planner(
         flow_catalog,
         provider=planner_provider,
         llm_enabled=graph_config.planner.llm_enabled,
         max_queries=graph_config.max_queries,
         max_clarify=graph_config.max_clarify,
+        profile_lexicon=ProfileLexicon.from_organization(
+            load_organization(ROOT / "configs" / "organization.yaml")
+        ),
     )
     advisor = Advisor(
         advisor_provider,
+        temperature=0.0,
         max_tokens=int(os.getenv("ADVISOR_MAX_TOKENS", "3000")),
     )
     semantic = SemanticVerifier(
@@ -568,7 +561,7 @@ def create_graph_runtime(
     )
     validator = ClaimValidator(
         min_quote_chars=abstention.min_quote_chars,
-        max_claims=abstention.max_claims,
+        max_claims=max(12, abstention.max_claims),
     )
     verifier = GraphVerifier(
         validator,
@@ -576,6 +569,8 @@ def create_graph_runtime(
         max_revise=graph_config.max_revise,
         semantic_mode=graph_config.semantic.on_unavailable,
     )
+    from campusguide.agents.coverage import CoverageChecker
+
     nodes = GraphNodes(
         planner=planner,
         retriever=retriever,
@@ -587,6 +582,7 @@ def create_graph_runtime(
         max_clarify=graph_config.max_clarify,
         max_revise=graph_config.max_revise,
         today=today,
+        coverage_checker=CoverageChecker(advisor_provider),
     )
     runner = GraphRunner(nodes, ttl_hours=graph_config.checkpointer.ttl_hours)
     service = ConversationService(
@@ -611,6 +607,7 @@ def create_graph_runtime(
             "advisor": W6B_ADVISOR_PROMPT_VERSION,
             "revise": REVISE_PROMPT_VERSION,
             "semantic": SEMANTIC_PROMPT_VERSION,
+            "coverage": "coverage-2026-10-28",
         },
         index_version=expected_index_version,
     )

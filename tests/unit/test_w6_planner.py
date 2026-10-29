@@ -145,31 +145,20 @@ def test_pending_flow_selection_by_index_or_name() -> None:
     assert explicit.intent is Intent.PROCEDURE_GUIDANCE
 
 
-def test_audience_both_without_profile_clarifies() -> None:
+def test_audience_comparison_without_profile_is_policy_query() -> None:
     plan = plan_for("本科生和研究生在奖学金评定上有什么区别？")
-    assert plan.needs_clarification is True
-    assert plan.clarification is not None
-    assert plan.clarification.reason == "AUDIENCE_UNKNOWN"
-    assert plan.clarification.allowed_values == ["本科生", "研究生"]
+    assert plan.needs_clarification is False
+    assert plan.flow_id is None
+    assert plan.queries
 
 
-def test_audience_clarify_follow_up_uses_original_question() -> None:
-    flow_catalog = catalog()
-    planner = Planner(flow_catalog, llm_enabled=False)
-    first = planner.plan(
-        PlannerContext(
-            message="本科生和研究生在奖学金评定上有什么区别？",
-            as_of=date(2026, 10, 25),
-        )
-    )
-    assert first.needs_clarification is True
+def test_legacy_audience_clarify_follow_up_uses_original_question() -> None:
+    planner = Planner(catalog(), llm_enabled=False)
     second = planner.plan(
         PlannerContext(
             message="本科生",
             as_of=date(2026, 10, 25),
-            pending_clarification=(
-                first.clarification.model_dump(mode="json") if first.clarification else None
-            ),
+            pending_clarification={"reason": "AUDIENCE_UNKNOWN"},
             pending_question="本科生和研究生在奖学金评定上有什么区别？",
         )
     )

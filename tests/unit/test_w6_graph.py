@@ -12,7 +12,7 @@ from campusguide.agents.graph import (
 )
 from campusguide.agents.plan import Plan, QueryPlanItem
 from campusguide.agents.providers import ChatProviderError
-from campusguide.domain.enums import GraphDecision, Intent
+from campusguide.domain.enums import BlockType, GraphDecision, Intent
 from tests.w6_helpers import (
     FakeSearchClient,
     article,
@@ -28,6 +28,21 @@ def quote() -> str:
 
 def nodes_of(state) -> list[str]:
     return [item["node"] for item in state.get("trace") or []]
+
+
+def test_curriculum_question_uses_section_block_types() -> None:
+    runner = make_runner()
+    state, _ = runner._prepare(
+        "block-types-curriculum",
+        "对于2024年入学的计算机科学与技术的学生来讲 我们的人工智能选修组有什么科目可以进行选择",
+    )
+    assert state["block_types"] == [BlockType.ARTICLE, BlockType.SECTION]
+
+    state, _ = runner._prepare(
+        "block-types-policy",
+        "申请国家奖学金需要满足哪些条件？",
+    )
+    assert state["block_types"] == [BlockType.ARTICLE, BlockType.SECTION]
 
 
 def test_policy_answer_has_complete_trace() -> None:

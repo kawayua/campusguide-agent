@@ -13,7 +13,7 @@ from campusguide.agents.advisor import ClaimDraft, normalize_kind
 from campusguide.domain.enums import IssueScope, IssueSeverity
 from campusguide.domain.models import Citation, Claim, Evidence, VerificationIssue
 from campusguide.domain.text import normalize_text
-from campusguide.verification.facts import check_fact_coverage
+from campusguide.verification.facts import check_evidence_fact_coverage
 from campusguide.verification.privacy import privacy_issue, scan_privacy
 from campusguide.verification.quotes import locate_quote
 
@@ -218,7 +218,16 @@ class ClaimValidator:
                 )
                 continue
 
-            coverage = check_fact_coverage(text, [citation.quote for citation in citations])
+            coverage = check_evidence_fact_coverage(
+                text,
+                [citation.quote for citation in citations],
+                [
+                    item.article
+                    for citation in citations
+                    for item in by_article.get(citation.article_id, [])
+                    if item.article.part_no == citation.part_no
+                ],
+            )
             record["fact_coverage"] = {
                 "claim_facts": [fact.canonical for fact in coverage.claim_facts],
                 "uncovered": [fact.canonical for fact in coverage.uncovered],

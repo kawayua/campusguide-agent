@@ -12,7 +12,7 @@ from dataclasses import dataclass, field
 from typing import Any
 
 from campusguide.domain.models import Evidence
-from campusguide.verification.facts import check_fact_coverage
+from campusguide.verification.facts import check_evidence_fact_coverage
 from campusguide.verification.quotes import locate_quote
 
 MIN_QUOTE_CHARS = 6
@@ -76,7 +76,16 @@ def find_quote_problems(drafts: list[Any], evidence: list[Evidence]) -> list[Quo
                 )
             ]
             if locatable_quotes:
-                coverage = check_fact_coverage(draft.text, locatable_quotes)
+                coverage = check_evidence_fact_coverage(
+                    draft.text,
+                    locatable_quotes,
+                    [
+                        item.article
+                        for citation in draft.citations
+                        for item in by_article.get(citation.article_id, [])
+                        if locate_quote(item.article.text, citation.quote)
+                    ],
+                )
                 if coverage.uncovered:
                     facts = "、".join(fact.canonical for fact in coverage.uncovered)
                     reasons.append(f"claim 的数字/期限未被 quote 覆盖：{facts}")
@@ -104,7 +113,7 @@ def build_repair_messages(
         "1. 每个 citation.quote 必须是对应 article_id 证据正文中的一个连续子串；",
         "2. 若结论在引导句、分项在下方，必须从引导句连续复制到该分项，允许包含中间分项；"
         "不得用省略号，不得跳过中间内容，不得把不相邻的句子拼接；",
-        "3. claim 中的时间/范围条件（如“一学期内”“每学年”）和数字、金额、期限必须原样出现在 quote 中；",
+        "3. 数字、金额、期限、角色必须由正文支持；仅适用主体和入学届别可由可信元数据支持；",
         "4. 无法用连续 quote 支持时，删除该 claim，不要保留无法定位的 quote；",
         '5. 输出完整 claims JSON（未失败的 claim 原样保留），结构仍为 {"claims": [...]}。',
         "",

@@ -38,6 +38,7 @@ from campusguide.config import (
 from campusguide.domain.models import Article, DocumentVersion
 from campusguide.ingest.parse import ParsedDocument, load_parsed_document
 from campusguide.ingest.segment import segment_document
+from campusguide.retrieval.connections import qdrant_trust_env
 
 INDEX_SCHEMA_VERSION = "1.2"
 INDEX_VERSION = "w2-articles-v1"
@@ -417,7 +418,8 @@ def build_index(
         if retrieval is None:
             raise BuildError("init_qdrant=True 时必须提供 retrieval 配置")
         client = qdrant_client or QdrantClient(
-            url=qdrant_url or os.getenv("QDRANT_URL", "http://localhost:6333")
+            url=qdrant_url or os.getenv("QDRANT_URL", "http://localhost:6333"),
+            trust_env=qdrant_trust_env(),
         )
         details, qdrant_warnings = init_qdrant_collection(
             client,

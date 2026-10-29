@@ -13,10 +13,10 @@ rrf_k: 60
 recall_top_k: 30
 # 先取 RRF top 20 做 rerank，再取 top 8；2026-10-24 与 top30 对比后启用。
 rerank_candidates: 20
-rerank_top_n: 8
+rerank_top_n: 12
 reranker_model: ${RERANKER_MODEL}
-token_budget: 4000
-max_articles: 8
+token_budget: 8000
+max_articles: 12
 # 宽问题下最多保留 2 个表格 section；query 明确要课程/学分/学时/计划时放开。
 max_table_sections: 2
 
@@ -28,6 +28,6 @@ min_score_margin: 0.0
 # W2 dense-only 检索参数
 query_top_k: 20
 max_evidence: 8
-max_chars_per_evidence: 800
+max_chars_per_evidence: 2400
 min_dense_score: 0.55   # 2026-10-22 用 dev_v0 校准：可答题最低证据 0.598，非可答题最高 0.545
 include_sections_default: false

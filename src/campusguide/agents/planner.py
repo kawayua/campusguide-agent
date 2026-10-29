@@ -14,6 +14,7 @@ from datetime import date
 
 from campusguide.agents.plan import Clarification, Plan, QueryPlanItem
 from campusguide.agents.providers import ChatProvider, ChatProviderError
+from campusguide.agents.question_units import cohort_years, decompose_question, query_profile
 from campusguide.domain.enums import (
     ArticleStatus,
     Audience,
@@ -27,8 +28,9 @@ from campusguide.flows.catalog import FlowCatalog
 from campusguide.flows.registry import FlowMatch, match_flows
 from campusguide.flows.slots import extract_slots, validate_slot_value
 from campusguide.qa.guard import MAX_QUERY_CHARS, check_guard, check_version_intent
+from campusguide.retrieval.profile_expand import ProfileLexicon
 
-PLANNER_PROMPT_VERSION = "w6b-planner-2026-10-25"
+PLANNER_PROMPT_VERSION = "w6b-planner-quality-2026-10-28"
 
 _PROCEDURE_RE = re.compile(
     r"怎么申请|如何申请|怎么办理|如何办理|怎么办|怎么开|如何开|"
@@ -39,7 +41,7 @@ _PROCEDURE_RE = re.compile(
 )
 _FACT_RE = re.compile(
     r"条件|资格|金额|标准|比例|多少|期限|几年|依据|规定|是什么|有哪些|"
-    r"要求|能否|是否|可以|奖励|档次|范围|对象|区别|差异|不同"
+    r"要求|能否|是否|可以|奖励|档次|范围|对象|区别|差异|不同|谁|哪|何时|发布|公示|新闻|消息"
 )
 _SWITCH_RE = re.compile(r"换(?:一个|个)?流程|改办|不办这个|另一个流程|退出流程|重新开始|取消")
 _ANAPHORA_RE = re.compile(r"这个|那个|它|上述|该政策|该办法|此规定")
@@ -128,6 +130,22 @@ def _split_subquestions(text: str) -> list[str]:
                 ):
                     chunks = split
             parts.extend(chunks)
+    merged: list[str] = []
+    context_prefix = ""
+    for part in parts:
+        if not re.search(
+            r"谁|哪|什么|如何|怎样|怎么|何时|是否|能否|有何|吗|多少|要求|区别|不同|变化|规定", part
+        ):
+            context_prefix = f"{context_prefix} {part}".strip()
+        else:
+            merged.append(f"{context_prefix}，{part}" if context_prefix else part)
+            context_prefix = ""
+    if context_prefix:
+        if merged:
+            merged[-1] += "，" + context_prefix
+        else:
+            merged = [context_prefix]
+    parts = merged
     deduped: list[str] = []
     seen: set[str] = set()
     for item in parts:
@@ -139,6 +157,61 @@ def _split_subquestions(text: str) -> list[str]:
     return deduped
 
 
+def _cohort_filters(text: str) -> dict:
+    if not re.search(r"培养|课程|学分|专业|选修|毕业|学制", text):
+        return {}
+    years = set(cohort_years(text))
+    if len(years) == 1:
+        return {"profile": {"intake_year": int(next(iter(years)))}}
+    return {}
+
+
+def _comparison_queries(text: str) -> list[str] | None:
+    """拆分明确并列的奖助项目或培养届别，不让单值流程槽位吞掉对象。"""
+    if not re.search(r"分别|区别|不同|差异|[和与]", text):
+        return None
+    # Explicit parallel policy objects share all requested aspects.
+    concepts = list(re.finditer(r"微专业|辅修学士学位|辅修专业", text))
+    if len({m.group() for m in concepts}) > 1:
+        return [
+            text[: concepts[0].start()] + m.group() + text[concepts[-1].end() :].replace("分别", "")
+            for m in concepts
+        ]
+    # A list of examination behaviors needs separate evidence, not one broad query.
+    if "考试" in text and re.search(r"分别|各自", text) and re.search(r"[，,]", text):
+        head, tail = re.split(r"[，,]", text, maxsplit=1)
+        actions = [p.strip() for p in re.split(r"、|或者|或是|以及", head) if p.strip()]
+        if len(actions) > 1:
+            return [
+                (p if "考试" in p else "考试" + p) + "，" + tail.replace("分别", "")
+                for p in actions
+            ]
+    awards = list(
+        re.finditer(
+            r"(?:20\d{2}(?:[—–-]20\d{2})?\s*学年)?(?:国家励志奖学金|国家奖学金|国家助学金)", text
+        )
+    )
+    if (
+        len(awards) > 1
+        and len(set(m.group() for m in awards)) > 1
+        and not re.search(r"[？?]", text[: awards[-1].end()])
+    ):
+        prefix, suffix = text[: awards[0].start()], text[awards[-1].end() :].replace("分别", "")
+        return [f"{prefix}{m.group()}{suffix}" for m in awards]
+    if re.search(r"培养方案|课程|学分|毕业", text):
+        cohorts = list(re.finditer(r"20\d{2}\s*(?:版|级)", text))
+        if len({m.group() for m in cohorts}) > 1:
+            return [
+                re.sub(
+                    r"[和与、]\s*(?=培养|课程|毕业|的)",
+                    "",
+                    text[: cohorts[0].start()] + m.group() + text[cohorts[-1].end() :],
+                )
+                for m in cohorts
+            ]
+    return None
+
+
 def _intent_flags(text: str) -> tuple[bool, bool]:
     return bool(_PROCEDURE_RE.search(text)), bool(_FACT_RE.search(text))
 
@@ -146,13 +219,13 @@ def _intent_flags(text: str) -> tuple[bool, bool]:
 def _topic_prefix(text: str) -> str:
     """从原问题提取可用于补全子查询的主语片段。"""
     marker = re.search(
-        r"怎么|如何|需要|有哪些|是什么|是多少|哪些|什么时候|何时|能否|是否|可以|的",
+        r"怎么|如何|需要|有哪些|有什么|有多少|有何|是什么|是多少|哪些|什么时候|何时|能否|是否|可以|分别",
         text,
     )
     prefix = text[: marker.start()] if marker else text
     prefix = prefix.strip(" ，,。.、？?！!；;")
     prefix = re.sub(r"^(请问|我想问|我想|想问|帮我看看|帮我)", "", prefix).strip()
-    return prefix[:30]
+    return prefix[:80]
 
 
 def _contextualize_queries(queries: list[str], original: str) -> list[str]:
@@ -162,7 +235,7 @@ def _contextualize_queries(queries: list[str], original: str) -> list[str]:
         return queries
     contextualized: list[str] = []
     for query in queries:
-        has_topic = topic in query or any(word in query for word in _ENTITY_WORDS)
+        has_topic = topic in query or query in topic or any(word in query for word in _ENTITY_WORDS)
         if has_topic or len(query) >= 24:
             contextualized.append(query)
         else:
@@ -170,14 +243,35 @@ def _contextualize_queries(queries: list[str], original: str) -> list[str]:
     return contextualized
 
 
+# R2：提问者身份 ≠ 文档适用对象。
+# “硕士复试包括哪些环节”“博士生导师选聘条件”里的“硕士/博士”是事项对象，
+# 不能据此断定提问人是在读研究生，否则会把招生、选聘、学位授予类文件过滤掉。
+_OBJECT_MARKERS = re.compile(
+    r"招生|复试|报考|申请考核|推免|免试|录取|调剂|选聘|招聘|遴选|导师|资格|"
+    r"面向|对象|名额|计划|目录|考试科目|学位授予|答辩|培养方案|"
+    r"博士后|院长|主任|谁|负责|领导|单位"
+)
+_ASKER_MARKERS = re.compile(
+    r"我是|本人是|我是一名|我是在读|作为一名?|我读|我们(?:本科生|研究生)"
+)
+
+
 def _audience_from_text(text: str) -> Audience | None:
+    """提问者身份，仅在问题的角色是“本人适用规则”时返回。
+
+    角色只作为事项对象（招生、选聘、学位授予等）出现时返回 None，
+    由检索按内容相关性召回，而不是按角色硬过滤。
+    """
     under = "本科生" in text or "本科" in text
     grad = "研究生" in text or "硕士" in text or "博士" in text
-    if under and not grad:
-        return Audience.UNDERGRADUATE
-    if grad and not under:
-        return Audience.GRADUATE
-    return None
+    if under and grad:
+        return None
+    if not under and not grad:
+        return None
+    explicit = bool(_ASKER_MARKERS.search(text))
+    if _OBJECT_MARKERS.search(text) and not explicit:
+        return None
+    return Audience.UNDERGRADUATE if under else Audience.GRADUATE
 
 
 def _answers_slot(definition, text: str) -> bool:
@@ -228,6 +322,7 @@ class Planner:
         max_clarify: int = 3,
         max_query_chars: int = MAX_QUERY_CHARS,
         known_doc_ids: set[str] | None = None,
+        profile_lexicon: ProfileLexicon | None = None,
     ) -> None:
         self._catalog = catalog
         self._provider = provider
@@ -236,9 +331,74 @@ class Planner:
         self._max_clarify = max_clarify
         self._max_query_chars = max_query_chars
         self._known_doc_ids = set(known_doc_ids or [])
+        self._profile_lexicon = profile_lexicon or ProfileLexicon({}, {})
+        # R8：最近一次供应商故障（分类/尝试次数/是否可恢复），由 graph 写入 trace。
+        self.last_provider_error: dict | None = None
 
     # ------------------------------------------------------------------ entry
     def plan(self, context: PlannerContext) -> Plan:
+        text = context.message.strip()
+        pending = context.pending_clarification or {}
+        if pending.get("reason") == "ENTITY_UNKNOWN" and context.pending_question:
+            original = re.sub(
+                r"两个学院|这两个学院|这个办法|该办法|这项规定", text, context.pending_question
+            )
+            context.message = (
+                original
+                if original != context.pending_question
+                else f"{text}：{context.pending_question}"
+            )
+            context.pending_clarification = None
+        plan = self._plan(context)
+        if not plan.is_guard:
+            plan.question_units = decompose_question(context.message, self._profile_lexicon)
+            for query in plan.queries:
+                query.filters.update(query_profile(query.text, self._profile_lexicon))
+                query.unit_ids = [
+                    u.unit_id
+                    for u in plan.question_units
+                    if (not u.subject or u.subject in query.text)
+                    and (u.cohort is None or str(u.cohort) in query.text)
+                ]
+            self._protect_unit_queries(plan, context.message)
+        return plan
+
+    def _protect_unit_queries(self, plan: Plan, text: str) -> None:
+        """R3：为未覆盖的对象×方面补一条定向查询，先保名额再算总分。
+
+        比较题的初检若只按原句拆分，预算会被先出现的对象占满；这里按
+        “对象 + 方面”各补一条，最多补到 4 条，且优先补完全没有查询的单元。
+        """
+        if len(plan.question_units) < 2:
+            return
+        covered = {unit_id for query in plan.queries for unit_id in query.unit_ids}
+        uncovered = [u for u in plan.question_units if u.unit_id not in covered]
+        if not uncovered:
+            return
+        audience = plan.queries[0].filters.get("audience") if plan.queries else None
+        budget = max(0, min(len(uncovered), 6 - len(plan.queries)))
+        for unit in uncovered[:budget]:
+            parts = [
+                f"{unit.cohort}级" if unit.cohort else (unit.version or ""),
+                unit.subject,
+                "、".join(unit.requested_aspects),
+                "培养方案" if re.search(r"培养方案|课程|学分", text) else "",
+            ]
+            query_text = " ".join(part for part in parts if part).strip()
+            if not query_text:
+                continue
+            item = QueryPlanItem(
+                query_id=f"unit_q{len(plan.queries) + 1}",
+                text=query_text[:200],
+                filters=dict(plan.queries[0].filters) if plan.queries else {},
+                unit_ids=[unit.unit_id],
+            )
+            if audience is not None and "audience" not in item.filters:
+                item.filters["audience"] = audience
+            item.filters.update(query_profile(query_text, self._profile_lexicon))
+            plan.queries.append(item)
+
+    def _plan(self, context: PlannerContext) -> Plan:
         text = context.message.strip()
         pending = context.pending_clarification or {}
         if pending.get("reason") == "AUDIENCE_UNKNOWN":
@@ -258,6 +418,7 @@ class Planner:
             context.audience = answer_audience
             if context.pending_question:
                 text = f"{context.pending_question} {text}".strip()
+                context.message = text
         guard = check_guard(text, max_chars=self._max_query_chars)
         if not guard.allowed:
             outcome = guard.outcome or OutcomeCode.INVALID_REQUEST
@@ -291,23 +452,37 @@ class Planner:
                 planner_source="rule",
             )
 
+        if not context.active_flow_id and not context.pending_question:
+            if re.search(r"两个学院|这两个学院|这个办法|这个规定|该办法", text) and not re.search(
+                r"农学院|数学与信息学院|《", text
+            ):
+                return Plan(
+                    needs_clarification=True,
+                    clarification=Clarification(
+                        reason="ENTITY_UNKNOWN",
+                        question="请说明具体是哪两个学院或哪一份办法，以便核对对应材料。",
+                    ),
+                )
+            if (
+                re.search(r"补考|重修", text)
+                and re.search(r"不及格|成绩.*记载", text)
+                and not re.search(r"本科|研究生|硕士|博士", text)
+                and context.audience is None
+            ):
+                return Plan(
+                    needs_clarification=True,
+                    clarification=Clarification(
+                        reason="AUDIENCE_UNKNOWN",
+                        question="本科生和研究生的补考、重修规则不同，请说明要查询哪一类？",
+                        allowed_values=["本科生", "研究生"],
+                    ),
+                )
+
         audience = (
             context.audience
             or _audience_from_text(text)
             or _audience_from_text(" ".join(str(item) for item in context.slots.values()))
         )
-        if self._needs_audience_clarify(text, context, audience):
-            return Plan(
-                intent=Intent.POLICY_QA,
-                needs_clarification=True,
-                clarification=Clarification(
-                    reason="AUDIENCE_UNKNOWN",
-                    question="你是本科生还是研究生？",
-                    allowed_values=["本科生", "研究生"],
-                    missing_slots=["level"],
-                ),
-                planner_source="rule",
-            )
 
         flows = self._list_flows(context, audience)
         selection = self._select_pending_flow(text, context, flows)
@@ -416,7 +591,20 @@ class Planner:
         flows: list[FlowDefinition],
         audience: Audience | None,
     ) -> Plan:
+        # 明确比较多个对象时属于知识咨询，不选择单个用户或单个办理槽位。
+        if _comparison_queries(text) is not None or (
+            ("本科" in text and re.search(r"研究生|硕士|博士", text))
+            and re.search(r"分别|区别|不同|差异|各自", text)
+        ):
+            return self._maybe_llm(
+                text, context, self._policy_plan(text, context, audience), flows, audience
+            )
         matches = match_flows(text, flows)
+        if matches and matches[0].matched == "奖学金":
+            # 通用名只能承接未命名的奖学金办理；不能把社会奖项套成国家奖项。
+            generic = re.search(r"(?:^|申请|办理|咨询|了解|的|关于)奖学金", text)
+            if generic is None:
+                return self._policy_plan(text, context, audience)
         if len(matches) > 1:
             candidates = [item.flow for item in matches]
             return Plan(
@@ -599,8 +787,10 @@ class Planner:
         context: PlannerContext,
         audience: Audience | None,
     ) -> Plan:
-        subs = _split_subquestions(text) or [text.strip()]
-        subs = _contextualize_queries(subs, text)
+        comparison = _comparison_queries(text)
+        subs = comparison or _split_subquestions(text) or [text.strip()]
+        if comparison is None:
+            subs = _contextualize_queries(subs, text)
         dropped = subs[self._max_queries :]
         queries = self._query_items(subs[: self._max_queries], audience)
         return Plan(
@@ -630,27 +820,10 @@ class Planner:
                     query_id=f"q{len(items) + 1}",
                     text=text.strip(),
                     route="policy",
-                    filters=dict(filters),
+                    filters={**filters, **_cohort_filters(text)},
                 )
             )
         return items
-
-    # ------------------------------------------------------------- audience
-    @staticmethod
-    def _needs_audience_clarify(
-        text: str,
-        context: PlannerContext,
-        audience: Audience | None,
-    ) -> bool:
-        if audience is not None or context.audience is not None:
-            return False
-        if context.profile is not None and not context.profile.is_empty:
-            return False
-        has_under = "本科生" in text or "本科" in text
-        has_grad = "研究生" in text or "硕士" in text or "博士" in text
-        if not (has_under and has_grad):
-            return False
-        return bool(re.search(r"分别|区别|不同|差异", text))
 
     # ------------------------------------------------------------------- llm
     def _maybe_llm(
@@ -671,6 +844,10 @@ class Planner:
         if llm_plan is None:
             rule_plan.planner_source = "fallback"
             return rule_plan
+        if not rule_plan.flow_id:
+            # LLM只补充知识查询，不能将已确认的事实问题改为办理流程。
+            llm_plan.flow_id = None
+            llm_plan.intent = Intent.POLICY_QA
         # 规则已匹配流程时，不允许 LLM 推翻流程。
         if rule_plan.flow_id and llm_plan.flow_id != rule_plan.flow_id:
             llm_plan.flow_id = rule_plan.flow_id
@@ -704,6 +881,12 @@ class Planner:
             max_queries=self._max_queries,
         )
         response = self._provider.complete(messages, temperature=0.0, max_tokens=800)
+        usage = {
+            "prompt_tokens": response.prompt_tokens,
+            "completion_tokens": response.completion_tokens,
+            "model_latency_ms": response.latency_ms,
+        }
+        rule_plan.model_usage = usage
         payload = _parse_json(response.content)
         if payload is None:
             repair = [
@@ -719,10 +902,13 @@ class Planner:
                 },
             ]
             response = self._provider.complete(repair, temperature=0.0, max_tokens=800)
+            usage["prompt_tokens"] += response.prompt_tokens
+            usage["completion_tokens"] += response.completion_tokens
+            usage["model_latency_ms"] += response.latency_ms
             payload = _parse_json(response.content)
         if payload is None:
             return None
-        return self._validate_llm_payload(
+        plan = self._validate_llm_payload(
             payload,
             text,
             context,
@@ -730,6 +916,9 @@ class Planner:
             flows,
             audience,
         )
+        if plan is not None:
+            plan.model_usage = usage
+        return plan
 
     def _validate_llm_payload(
         self,
@@ -769,6 +958,13 @@ class Planner:
             if not isinstance(query_text, str) or not query_text.strip():
                 continue
             query_text = query_text.strip()
+            original_units = decompose_question(text, self._profile_lexicon)
+            subjects = {u.subject for u in original_units if u.subject}
+            years = {u.cohort for u in original_units if u.cohort}
+            if len(subjects) == 1 and not any(subject in query_text for subject in subjects):
+                query_text = next(iter(subjects)) + " " + query_text
+            if len(years) == 1 and not any(str(y) in query_text for y in years):
+                query_text = f"{next(iter(years))}级 " + query_text
             if len(query_text) > 200:
                 continue
             if not _query_is_grounded(query_text, text):
@@ -776,6 +972,7 @@ class Planner:
                 continue
             route = item.get("route") if item.get("route") in {"policy", "flow"} else "policy"
             filters = self._validate_filters(item.get("filters"), flows, dropped)
+            filters.update(_cohort_filters(query_text))
             queries.append(
                 QueryPlanItem(
                     query_id=f"q{index}",

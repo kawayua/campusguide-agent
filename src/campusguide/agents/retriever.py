@@ -11,7 +11,7 @@ import contextlib
 import time
 from dataclasses import dataclass, field
 
-from campusguide.agents.plan import Plan
+from campusguide.agents.plan import Plan, QuestionUnit
 from campusguide.domain.enums import (
     ArticleStatus,
     Audience,
@@ -25,6 +25,7 @@ from campusguide.domain.models import (
     PolicyFilters,
     VerificationIssue,
 )
+from campusguide.domain.profiles import UserProfile
 from campusguide.mcp.client import SearchClient, SearchResponse
 from campusguide.mcp.schemas import (
     ErrorCode,
@@ -32,6 +33,8 @@ from campusguide.mcp.schemas import (
     ToolError,
     search_request_from_filters,
 )
+from campusguide.observability.errors import safe_error_summary
+from campusguide.retrieval.budget import evidence_cost
 from campusguide.verification.scope import apply_scope
 
 FLOW_CITATION_UNAVAILABLE = "FLOW_CITATION_UNAVAILABLE"
@@ -95,6 +98,10 @@ def _filters_for_query(base: PolicyFilters, query_filters: dict) -> PolicyFilter
     if isinstance(version_raw, str):
         with contextlib.suppress(ValueError):
             updates["version_mode"] = VersionMode(version_raw)
+    profile = query_filters.get("profile")
+    if isinstance(profile, dict):
+        base_profile = base.profile.model_dump() if base.profile is not None else {}
+        updates["profile"] = UserProfile.model_validate({**base_profile, **profile})
     doc_ids = query_filters.get("doc_ids")
     if isinstance(doc_ids, list) and doc_ids:
         updates["doc_ids"] = [str(item) for item in doc_ids]
@@ -171,6 +178,9 @@ class GraphRetriever:
                 response = self._search_with_retry(item.text, filters)
             except ToolError as exc:
                 failures.append((item.query_id, exc))
+                bundle.warnings.append(
+                    f"RETRIEVAL_ERROR:{item.query_id}:{exc.code.value}:{safe_error_summary(exc)}"
+                )
                 bundle.coverage[item.query_id] = []
                 timing[item.query_id] = round((time.perf_counter() - started) * 1000, 1)
                 continue
@@ -249,7 +259,7 @@ class GraphRetriever:
             for query_id, exc in failures:
                 bundle.warnings.append(f"{query_id}:{exc.code.value}")
 
-        selected = self._select(candidates, query_scores)
+        selected = self._select(candidates, query_scores, plan=plan, diagnostics=bundle.warnings)
 
         # 流程 citation 水合：不依赖检索命中，仍参与 H1/H3/H5/H6。
         hydrated, hydration_warnings = self._hydrate(flow_citations or [], selected)
@@ -341,14 +351,35 @@ class GraphRetriever:
         self,
         candidates: dict[tuple[str, int], _Candidate],
         query_scores: dict[str, dict[tuple[str, int], float]],
+        *,
+        plan: Plan | None = None,
+        diagnostics: list[str] | None = None,
     ) -> list[Evidence]:
         selected_keys: list[tuple[str, int]] = []
-        effective_max = max(self._max_evidence, len(query_scores))
+        unit_keys: set[tuple[str, int]] = set()
 
         def add(key: tuple[str, int]) -> None:
             if key not in selected_keys:
                 selected_keys.append(key)
 
+        # Protect a direct section for each requested object/aspect before global fill.
+        # R3：比较题按“对象×方面”各留名额，避免一个对象占满预算后另一个对象无证据。
+        per_unit = 2 if len(plan.question_units if plan else []) > 1 else 1
+        for unit in plan.question_units if plan else []:
+            scored = sorted(
+                ((self._unit_priority(unit, c.evidence), key) for key, c in candidates.items()),
+                key=lambda row: row[0],
+                reverse=True,
+            )
+            taken = 0
+            for score, key in scored:
+                if score < 1 or taken >= per_unit:
+                    break
+                add(key)
+                unit_keys.add(key)
+                taken += 1
+        # R3：受保护的对象×方面名额必须全部进入最终集合，不能被总上限截断。
+        effective_max = max(self._max_evidence, len(unit_keys) + len(query_scores))
         # 每个子查询至少保留一条最高分证据。
         for scores in query_scores.values():
             if not scores:
@@ -363,7 +394,7 @@ class GraphRetriever:
             if len(selected_keys) >= effective_max + len(query_scores):
                 break
 
-        must_keep = {
+        must_keep = unit_keys | {
             max(scores, key=lambda key: scores[key]) for scores in query_scores.values() if scores
         }
         doc_counts: dict[str, int] = {}
@@ -372,6 +403,10 @@ class GraphRetriever:
             evidence = candidates[key].evidence
             doc_id = evidence.article.doc_id
             if doc_counts.get(doc_id, 0) >= self._max_per_doc and key not in must_keep:
+                if diagnostics is not None:
+                    diagnostics.append(
+                        f"GRAPH_DOC_CAP:{evidence.article.article_id}:p{evidence.article.part_no}"
+                    )
                 continue
             doc_counts[doc_id] = doc_counts.get(doc_id, 0) + 1
             kept.append(evidence)
@@ -379,23 +414,84 @@ class GraphRetriever:
                 break
 
         # token budget：只在超出预算时丢弃最低分的非关键证据。
-        kept = self._cap_tokens(kept)
+        kept = self._cap_tokens(kept, protected_keys=unit_keys, diagnostics=diagnostics)
         kept.sort(key=lambda item: item.score, reverse=True)
         for index, item in enumerate(kept, start=1):
             item.rank = index
         return kept
 
-    def _cap_tokens(self, evidence: list[Evidence]) -> list[Evidence]:
+    @staticmethod
+    def _unit_priority(unit: QuestionUnit, evidence: Evidence) -> float:
+        import re
+
+        article = evidence.article
+        context = f"{article.doc_title} {' '.join(article.chapter_path)}"
+        detail = article.audience_detail
+        if (
+            unit.cohort
+            and detail
+            and detail.intake_years
+            and unit.cohort not in detail.intake_years
+        ):
+            return -1
+        score = evidence.score
+        if unit.subject:
+            if unit.subject in context:
+                score += 1
+            elif detail and (detail.colleges or detail.majors):
+                from campusguide.domain.source_context import trusted_context
+
+                metadata = trusted_context(article)
+                if any(
+                    unit.subject in label for label in [*metadata["colleges"], *metadata["majors"]]
+                ):
+                    score += 1
+                else:
+                    return -1
+        patterns = {
+            "核心课程": r"核心课程",
+            "培养目标": r"培养目标",
+            "毕业学分": r"课程结构|毕业要求",
+            "学制": r"学制",
+            "授予学位": r"学位",
+            "毕业要求": r"毕业要求",
+            "课程设置": r"课程设置|进程表",
+            "实践课程": r"集中实践|实践教学|进程表|教学计划",
+            "选修课程": r"进程表|教学计划|课程设置",
+            "毕业设计": r"进程表|毕业论文|毕业设计",
+            "研究方向": r"研究方向",
+            "师资归属": r"教师|师资",
+            "负责人": r"委员会|现任领导",
+        }
+        for aspect in unit.requested_aspects:
+            pattern = patterns.get(aspect)
+            if pattern and re.search(pattern, article.article_no):
+                score += 3
+            if aspect in {"实践课程", "毕业设计"} and re.search(
+                r"集中实践|毕业实习|毕业论文/设计|毕业设计", article.text
+            ):
+                score += 2
+        if "矩阵" in article.article_no and "矩阵" not in unit.original_span:
+            score -= 4
+        return score
+
+    def _cap_tokens(
+        self,
+        evidence: list[Evidence],
+        *,
+        protected_keys: set | None = None,
+        diagnostics: list[str] | None = None,
+    ) -> list[Evidence]:
         if not evidence:
             return evidence
-        total = sum(len(item.article.text) for item in evidence)
-        budget_chars = self._token_budget * 2
+        total = sum(evidence_cost(item.article) for item in evidence)
+        budget_chars = self._token_budget
         if total <= budget_chars:
             return evidence
         protected: set[int] = set()
         seen_queries: set[str] = set()
         for item in evidence:
-            if item.source == "flow":
+            if item.source == "flow" or item.key in (protected_keys or set()):
                 protected.add(id(item))
                 continue
             for query_id in item.matched_queries:
@@ -409,7 +505,13 @@ class GraphRetriever:
             if id(item) in protected:
                 continue
             kept.remove(item)
-            total -= len(item.article.text)
+            total -= evidence_cost(item.article)
+            if diagnostics is not None:
+                diagnostics.append(
+                    f"GRAPH_TOKEN_BUDGET:{item.article.article_id}:p{item.article.part_no}"
+                )
+        if total > budget_chars and diagnostics is not None:
+            diagnostics.append(f"PROTECTED_EVIDENCE_BUDGET:estimated={total}:budget={budget_chars}")
         return kept or evidence[: self._max_evidence]
 
     # --------------------------------------------------------------- hydration

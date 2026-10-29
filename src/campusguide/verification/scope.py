@@ -17,6 +17,7 @@ from campusguide.domain.enums import (
     IssueSeverity,
     OutcomeCode,
 )
+from campusguide.domain.audience_match import audience_matches
 from campusguide.domain.models import Evidence, VerificationIssue
 
 
@@ -143,7 +144,7 @@ def _filter_audience(
     issues: list[VerificationIssue] = []
     for item in evidence:
         audiences = set(item.article.audience)
-        if Audience.ALL in audiences or effective in audiences:
+        if audience_matches(audiences, effective):
             kept.append(item)
         else:
             issues.append(

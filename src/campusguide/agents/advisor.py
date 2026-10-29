@@ -12,6 +12,7 @@ from typing import Any
 
 from pydantic import BaseModel, Field
 
+from campusguide.agents.plan import QuestionUnit
 from campusguide.agents.providers import ChatProvider, ChatProviderError, ChatResponse
 from campusguide.agents.quote_repair import (
     build_repair_messages,
@@ -21,6 +22,9 @@ from campusguide.agents.quote_repair import (
 )
 from campusguide.domain.enums import Audience, BlockType, ClaimKind
 from campusguide.domain.models import Evidence
+from campusguide.domain.source_context import trusted_context
+from campusguide.retrieval.source_spans import source_spans
+from campusguide.verification.coverage_items import required_course_items
 
 
 class AdvisorError(RuntimeError):
@@ -36,11 +40,13 @@ class ClaimDraft(BaseModel):
     claim_id: str | None = None
     text: str = ""
     kind: str = "other"
+    unit_ids: list[str] = Field(default_factory=list)
     citations: list[CitationDraft] = Field(default_factory=list)
 
 
 class ClaimsDraft(BaseModel):
     claims: list[ClaimDraft] = Field(default_factory=list)
+    unanswered_questions: list[str] = Field(default_factory=list)
 
 
 @dataclass
@@ -53,6 +59,7 @@ class AdvisorResult:
     quote_repair_remaining: list[str] = field(default_factory=list)
     quote_repair_error: str = ""
     provider_retried: bool = False
+    unanswered_questions: list[str] = field(default_factory=list)
     json_empty_retried: bool = False
     json_truncation_retried: bool = False
     empty_claims_retried: bool = False
@@ -61,8 +68,8 @@ class AdvisorResult:
 
 PROMPT_VERSION = "w6a2.4-2026-10-24"
 # W6 图角色使用独立 prompt 版本；W6-A2 的契约常量保留给历史 run。
-W6B_ADVISOR_PROMPT_VERSION = "w6b-advisor-2026-10-25"
-REVISE_PROMPT_VERSION = "w6b-revise-2026-10-25"
+W6B_ADVISOR_PROMPT_VERSION = "w6b-advisor-quality-2026-10-28"
+REVISE_PROMPT_VERSION = "w6b-revise-quality-2026-10-28"
 
 FLOW_BOUNDARY_PROMPT = (
     "流程事实（步骤、材料、部门、截止时间）由系统 checklist 渲染；"
@@ -75,37 +82,40 @@ _MULTI_ASPECT_RE = re.compile(
 )
 _COURSE_CREDIT_INTENT_RE = re.compile(r"课程|学分|学时")
 
-SYSTEM_PROMPT = """你是华南农业大学制度问答助手。你只能依据本轮提供的“证据片段”回答。
-必须遵守：
-1. 只输出一个 JSON 对象，不要 Markdown 代码块，不要解释文字。
-2. JSON 结构：{"claims": [{"claim_id": "c1", "text": "...", "kind": "eligibility", "citations": [{"article_id": "...", "quote": "..."}]}]}。
-3. 生成 1-5 条 claim；每条 claim 只能包含一个事实性结论，并至少包含 1 个 citation。
-4. citation.article_id 必须逐字取自证据中的“引用ID”，不得编造、不得改写。
-5. citation.quote 必须从对应证据的“正文”中逐字复制**一个连续子串**，至少 6 个字；
-   不得改写、不得使用省略号、不得拼接不相邻的句子。
-   quote 必须包含 claim 的完整“条件 + 后果/结论”；不能只截取条件、只截取后果。
-   如果结论在引导句、分项在下方，必须从引导句连续复制到该分项，允许包含中间分项；
-   绝不能用省略号或跳过中间内容把“引导句 + 非相邻分项”拼成一段。
-   无法用连续 quote 支持时，缩短 claim、删除该 claim 或返回空 claims，不要拼接。
-6. claim 只能复述其 citation.quote 已经写出的事实。不得补充 quote 未出现的
-   条件、范围、时间、地点、受众、后果、版本号、条号或评价性概括；
-   不得用“问题”中的词补足 quote 没有的内容。
-   claim 中的时间/范围条件（如“一学期内”“每学年”）和数字、金额、期限必须原样
-   出现在 quote 中；quote 没有写出的范围/数字，claim 也不能写。
-7. 保留原文的限定词和强弱：一般、原则上、可以、应当、不得、至少、最多等；
-   不得把“可以/一般”改写成“必须/一律”，也不得反向弱化。
-8. 如果 claim 需要列举多项，quote 必须包含这些项的原文；否则不要展开具体内容，
-   只写 quote 明确写出的引用关系（如“应同时符合条件（一）至（五）”）。
-9. 不得使用证据之外的知识；证据不足时返回 {"claims": []}。
-10. 一条 claim 只表达一个条件、一个后果或一个数量；不要把多个条件或处分档次
-    合并成一条 claim；一条 claim 尽量只保留一个条件及其直接后果。
-    不要展开列表或概括条号；引用关系只能写到 quote 已明确写出的范围。
-11. 输出前逐条自检：claim 中每个主体、条件、数字/日期/金额/期限、后果和
-    限定词是否都能在 quote 中找到？找不到就删掉该部分、缩短 claim 或改选
-    更长的 quote；不要用条款上下文或其他证据补足。
-12. kind 只能取 eligibility / step / material / deadline / department / version / definition / other。
-13. 如果找不到能同时覆盖“条件 + 后果”的连续 quote，不要生成该 claim；
-    不要用两个不相邻 quote、省略号或“（一）至（五）”之类概括来掩盖缺失。"""
+SYSTEM_PROMPT = """你是华南农业大学公开知识问答助手。只依据本轮证据，输出一个 JSON 对象：
+{"claims":[{"claim_id":"c1","text":"直接回答问题的事实或完整列表","kind":"other",
+"unit_ids":["u1"],"citations":[{"quote_id":"source_1_body"}]}],"unanswered_questions":[]}
+规则：
+1. 完整覆盖用户所问的各对象、版本和方面。通常1—12条claim；同一对象/方面的完整列表可合为一条，
+   同一条件下的多个具体要求可合为一条。不要只复述“应符合（一）至（五）”，应说明具体条件。
+   不同奖项、导师制度、专业或年份分别说明，不得混用。所有事实均须引用。
+   只回答用户要求的方面；只问课程名称时不要额外添加课程代码、每门学分等数字。
+   表格数字必须结合原始表头解释并同时引用表头和对应行；没有表头时不要猜列含义。
+   用户未询问辅修或辅修学位时，不要把表格备注中的辅修学分要求当作普通主修学生的模块要求。
+   课程名单优先选择“课程代码+课程名称”的进程表原始行，不把“培养目标实现矩阵”的实现途径当课程要求。
+   实践课程包括实验教学和其他实践；只问集中实践时再按集中环节筛选，不能把实践课程默认为毕业实习。
+2. 优先使用证据提供的原文窗口ID作为citation.quote_id（如source_1_body或source_1_row_2），
+   系统会逐字取回该窗口正文和article_id，无需手工复制。窗口模式只输出quote_id，不再同时填写quote或article_id，避免冲突。
+   也可沿用quote字符串模式。article_id逐字取自证据。quote必须逐字复制对应正文中一个至少6字的连续子串。
+   不得省略、改写、跳过中间分项或拼接不相邻句子。需要多处分散证据时用多个citation，各自独立连续。
+   完整列表可引用包含引导句和所有分项的长quote，不要为了简短而删去必需答案。
+3. 逐条自检：条件 + 后果、限定词和证据必须匹配。不得补充证据以外的事实。不要展开无依据的内容。
+   主体归属、名单所属系、适用专业、表头含义可结合同一文档可信标题/章节解释。
+   姓名排版空格可按名单边界识别（例如姓名两字之间的单个空格），不得拼接两个相邻完整姓名。
+   此上下文不能补出正文没有的金额、期限、课程、角色关系、数字或明确的成员身份。
+4. 包括“一学期内”等时间范围必须有原文支持。一个条件、一个后果或一个数量都要完整核对；
+   允许同一方面的多个列表项合并，但不能混合不相容的条件。数字、金额、期限、日期、课程、第一/第二导师等实质关系必须由所引正文支持。
+   不得把标题的采集日期当新闻发布日期；日期列表行的开头才是该条消息发布日期。
+   “最新”仅限已提供的完整收录集合；不得把开会日期与发布日期互换。
+5. 保留原文“一般、原则上、可以、应当、不得、至少、最多”等限定。不能从科研平台数推断实验室总量，
+   不能从局部名单推断全院人数。不能套用别的专业或届别；引用标题应让读者知道适用对象。
+6. 列表/比较/多问题必须列全证据支持的核心项，并对缺少证据的方面明确标记缺口。
+   unanswered_questions只列本轮所有claim及系统流程清单均未回答的必要方面，全部答完才为空。
+   已由系统checklist回答的材料/时间/步骤不要再说漏答。
+7. 如果无法回答，claims可为空，但必须具体列出缺证据的方面。不猜测未收录事实。
+8. unit_ids只能使用系统提供的标识；未提供问题单元时可为空。
+9. kind只能取eligibility / step / material / deadline / department / version / definition / other。
+"""
 
 
 def _audience_label(audience: Audience | None) -> str:
@@ -125,18 +135,28 @@ def _audience_label(audience: Audience | None) -> str:
 
 def build_evidence_block(evidence: list[Evidence]) -> str:
     blocks: list[str] = []
-    for item in evidence:
+    spans = source_spans(evidence)
+    for index, item in enumerate(evidence, 1):
         article = item.article
-        location = "章节/段落" if article.block_type.value != "article" else article.article_no
+        pointers = [
+            f"{span.span_id}：{span.label}" + (f"；模块={span.module}" if span.module else "")
+            for span in spans.values()
+            if span.span_id.startswith(f"source_{index}_")
+        ]
+        location = article.article_no
         confidence = "（日期为锚点，非精确发布日）" if article.date_confidence == "low" else ""
         blocks.append(
             "\n".join(
                 [
                     f"[证据{item.rank}]",
                     f"引用ID：{article.article_id}",
-                    f"文档：{article.doc_title}",
+                    f"可信来源标题：{article.doc_title}",
+                    "可信来源元数据：" + json.dumps(trusted_context(article), ensure_ascii=False),
+                    f"可信章节：{' / '.join(article.chapter_path)}",
+                    f"原始片段part_no：{article.part_no}",
                     f"位置：{location}（{article.block_type.value}）",
                     f"生效日期：{article.effective_from.isoformat()}{confidence}",
+                    "原文窗口ID（可用citation.quote_id引用）：" + "；".join(pointers),
                     "正文：",
                     article.text,
                 ]
@@ -146,23 +166,31 @@ def build_evidence_block(evidence: list[Evidence]) -> str:
 
 
 def _generation_evidence(question: str, evidence: list[Evidence]) -> list[Evidence]:
-    """Keep neighboring sections from displacing a plan's multi-aspect goals answer."""
     if (
-        "培养方案" not in question
-        or not _MULTI_ASPECT_RE.search(question)
-        or _COURSE_CREDIT_INTENT_RE.search(question)
+        "培养方案" in question
+        and _MULTI_ASPECT_RE.search(question)
+        and not re.search(r"课程|学分|学时|科目|选修|实践|毕业设计", question)
     ):
-        return evidence
-    goal_sections = [
-        item
-        for item in evidence
-        if item.article.block_type is BlockType.SECTION and "培养目标" in item.article.article_no
-    ]
-    return goal_sections or evidence
+        goals = [item for item in evidence if "培养目标" in item.article.article_no]
+        # Restrict only a research/employment interpretation of the goals section.
+        if goals and _JOB_INTENT_RE.search(question):
+            return goals
+    return evidence
 
 
 def _subquestions(question: str) -> list[str]:
-    return [part.strip() for part in re.findall(r"[^？?]+[？?]", question)]
+    parts: list[str] = []
+    for sentence in re.split(r"[？?；;]+", question):
+        sentence = sentence.strip()
+        if not sentence:
+            continue
+        clauses = [part.strip() for part in re.split(r"[，,]+", sentence) if part.strip()]
+        interrogative = re.compile(r"吗|谁|哪|多少|什么|如何|怎样|怎么|何时|是否|能否|有何")
+        if len(clauses) > 1 and sum(bool(interrogative.search(c)) for c in clauses) > 1:
+            parts.extend(clauses)
+        else:
+            parts.append(sentence)
+    return parts
 
 
 def _needs_larger_budget(question: str) -> bool:
@@ -182,12 +210,30 @@ def build_messages(
     audience: Audience | None,
     *,
     flow_context: str = "",
+    question_units: list[QuestionUnit] | None = None,
 ) -> list[dict[str, str]]:
     generation_evidence = _generation_evidence(question, evidence)
     parts = [
         f"受众：{_audience_label(audience)}",
         f"问题：{question}",
     ]
+    if question_units:
+        parts.extend(
+            [
+                "",
+                "规范化问题单元（须全部检查，多个单元可共享一条claim）：",
+                json.dumps(
+                    [
+                        {
+                            **u.model_dump(mode="json"),
+                            "required_source_items": required_course_items(u, evidence),
+                        }
+                        for u in question_units
+                    ],
+                    ensure_ascii=False,
+                ),
+            ]
+        )
     if flow_context:
         parts.extend(["", f"流程边界：{flow_context}"])
     subquestions = _subquestions(question)
@@ -207,31 +253,19 @@ def build_messages(
             "",
             f"证据片段：\n{build_evidence_block(generation_evidence)}",
             "",
-            "请先为每条 claim 选择完整的 citation.quote，再写 claim；"
-            "quote 必须是同一证据正文中的连续子串；不得用省略号、不得跳过中间分项，"
-            "也不得把“引导句 + 非相邻分项”拼接起来。"
-            "claim 的时间/范围条件和数字/金额/期限必须原样出现在 quote 中。"
-            "一条 claim 只表达一个条件、一个后果或一个数量；"
-            "claim 不得超出 quote。quote 不完整时请缩短 claim、删除该 claim 或返回空 claims。",
+            "按对象与方面直接作答。完整列出原文支持的课程、条件或项目，不只写条号。"
+            "每个quote都须保持原文连续，分散的事实分别引用；保留范围和限定词。",
         ]
     )
     if _ENUMERATION_RE.search(question):
-        parts.append(
-            "问题要求“哪些”具体情形/条件/材料/要求时，必须逐项覆盖证据中的"
-            "（一）（二）……各分项；每个分项单独成 claim，不得只复述引导句，"
-            "也不得只写“有下列情形之一”。"
-        )
+        parts.append("不得只复述引导句，应列出原文支持的必要分项。")
     if _MULTI_ASPECT_RE.search(question):
-        parts.append(
-            "问题明确询问多个方面或对象时，先识别每个方面/对象并逐项作答，"
-            "每项至少一条 claim；只回答问题点名的内容，不要用相邻章节的其他要求替代，"
-            "也不要补充问题未询问的条件。"
-        )
-    if generation_evidence is not evidence:
-        parts.append(
-            "本题询问培养方案的多个方面；证据已聚焦到该方案的培养目标 section，"
-            "请按问题中的对象和方面逐项回答，不要引入其他章节的科研成果门槛或基本素质要求。"
-        )
+        parts.append("先识别每个方面/对象并逐项作答，不要用相邻章节的其他要求替代。")
+    if generation_evidence != evidence:
+        parts.append("不要引入其他章节的科研成果门槛，按对应培养目标解释研究与就业。")
+    parts.append(
+        "claim 不得超出 quote 与可信来源元数据的允许范围；正文引用必须为连续子串，不可拼接非相邻分项。"
+    )
     if _JOB_INTENT_RE.search(question) and any(
         item.article.block_type is BlockType.SECTION
         and _JOB_TEXT_RE.search(item.article.text or "")
@@ -261,6 +295,25 @@ REVISE_SYSTEM_PROMPT = """你是制度问答的 claim 修复器。只修复被�
 5. 流程事实由系统 checklist 渲染；不要补步骤、材料、部门或截止时间。"""
 
 
+def _requirements_block(requirements: list[dict[str, Any]] | None) -> str:
+    """方案 A2：把“必须逐项覆盖”的清单写成改写提示的一部分。"""
+    if not requirements:
+        return ""
+    lines = ["必须覆盖（只能使用原文出现的名称，不得改写、合并或补充）："]
+    for item in requirements:
+        type_word = item.get("type_word") or ""
+        names = item.get("required_items") or []
+        if not names:
+            continue
+        lines.append(f"- 类型：{type_word}")
+        lines.append("- 必须逐项列出：" + "；".join(names))
+        forbidden = item.get("forbidden_types") or []
+        if forbidden:
+            lines.append("- 不得把以下类型计入：" + "、".join(forbidden))
+    lines.append("未覆盖上述任一项时，不要输出该结论，留给缺口说明。")
+    return "\n".join(lines)
+
+
 def build_revise_messages(
     question: str,
     evidence: list[Evidence],
@@ -270,6 +323,7 @@ def build_revise_messages(
     previous_claims: list[ClaimDraft],
     audience: Audience | None,
     flow_context: str = "",
+    requirements: list[dict[str, Any]] | None = None,
 ) -> list[dict[str, str]]:
     previous = [
         {
@@ -291,6 +345,7 @@ def build_revise_messages(
             f"失败原因：{json.dumps(issues, ensure_ascii=False)}",
             f"上一轮 claims：{json.dumps(previous, ensure_ascii=False)}",
             ("流程边界：" + flow_context) if flow_context else "",
+            _requirements_block(requirements),
             "可用证据：",
             build_evidence_block(evidence),
             "",
@@ -342,7 +397,7 @@ def _retry_tokens(max_tokens: int) -> int:
     return min(6000, max(max_tokens * 2, 2000))
 
 
-def parse_claims_json(content: str) -> ClaimsDraft:
+def parse_claims_json(content: str, evidence: list[Evidence] | None = None) -> ClaimsDraft:
     if not content.strip():
         raise AdvisorError("模型返回空内容")
     text = _extract_json_text(content)
@@ -355,17 +410,32 @@ def parse_claims_json(content: str) -> ClaimsDraft:
     if not isinstance(payload["claims"], list):
         raise AdvisorError('"claims" 必须是数组')
     claims: list[ClaimDraft] = []
+    spans = source_spans(evidence or [])
     for item in payload["claims"]:
         if not isinstance(item, dict):
             raise AdvisorError("claims 数组元素必须是对象")
         citations = item.get("citations") or []
         if not isinstance(citations, list):
             raise AdvisorError("citations 必须是数组")
+        for citation in citations:
+            if isinstance(citation, dict) and citation.get("quote_id"):
+                span = spans.get(citation["quote_id"])
+                if span is None:
+                    raise AdvisorError("引用窗口ID不在本轮证据中")
+                if citation.get("article_id") and citation["article_id"] != span.article_id:
+                    raise AdvisorError("引用窗口与article_id不一致")
+                if citation.get("quote") and citation["quote"] != span.quote:
+                    raise AdvisorError("quote与登记窗口不一致")
+                citation["article_id"] = span.article_id
+                citation["quote"] = span.quote
         claims.append(
             ClaimDraft(
                 claim_id=item.get("claim_id") if isinstance(item.get("claim_id"), str) else None,
                 text=item.get("text") if isinstance(item.get("text"), str) else "",
                 kind=item.get("kind") if isinstance(item.get("kind"), str) else "other",
+                unit_ids=[v for v in item.get("unit_ids", []) if isinstance(v, str)]
+                if isinstance(item.get("unit_ids", []), list)
+                else [],
                 citations=[
                     CitationDraft(
                         article_id=(
@@ -384,7 +454,10 @@ def parse_claims_json(content: str) -> ClaimsDraft:
                 ],
             )
         )
-    return ClaimsDraft(claims=claims)
+    unanswered = payload.get("unanswered_questions", [])
+    if not isinstance(unanswered, list) or any(not isinstance(item, str) for item in unanswered):
+        raise AdvisorError('"unanswered_questions" 必须是字符串数组')
+    return ClaimsDraft(claims=claims, unanswered_questions=unanswered)
 
 
 def normalize_kind(value: str) -> ClaimKind:
@@ -417,8 +490,11 @@ class Advisor:
         audience: Audience | None = None,
         *,
         flow_context: str = "",
+        question_units: list[QuestionUnit] | None = None,
     ) -> AdvisorResult:
-        messages = build_messages(question, evidence, audience, flow_context=flow_context)
+        messages = build_messages(
+            question, evidence, audience, flow_context=flow_context, question_units=question_units
+        )
         responses: list[ChatResponse] = []
         provider_retried = False
         first_tokens = (
@@ -430,7 +506,9 @@ class Advisor:
                 temperature=self._temperature,
                 max_tokens=first_tokens,
             )
-        except ChatProviderError:
+        except ChatProviderError as exc:
+            if not exc.retryable:
+                raise
             # 端点偶发超时/空响应：整题从头重试一次，仍失败才判 GENERATION_FAILED。
             provider_retried = True
             first = self._provider.complete(
@@ -443,7 +521,7 @@ class Advisor:
         json_empty_retried = False
         json_truncation_retried = False
         try:
-            drafts = parse_claims_json(first.content).claims
+            drafts = parse_claims_json(first.content, evidence).claims
             draft_content = first.content
         except AdvisorError as first_error:
             # 首次输出为空或被截断时，直接提高 token 预算重试，避免在
@@ -479,7 +557,7 @@ class Advisor:
                 raise
             responses.append(second)
             try:
-                drafts = parse_claims_json(second.content).claims
+                drafts = parse_claims_json(second.content, evidence).claims
                 draft_content = second.content
                 json_repaired = True
                 if first_empty or first_truncated:
@@ -515,7 +593,7 @@ class Advisor:
                         raise
                     responses.append(third)
                     try:
-                        drafts = parse_claims_json(third.content).claims
+                        drafts = parse_claims_json(third.content, evidence).claims
                     except AdvisorError as third_error:
                         label = "空返回重试" if retry_reason == "empty" else "截断重试"
                         raise AdvisorError(
@@ -551,7 +629,7 @@ class Advisor:
                     max_tokens=first_tokens,
                 )
                 responses.append(empty_response)
-                retried_drafts = parse_claims_json(empty_response.content).claims
+                retried_drafts = parse_claims_json(empty_response.content, evidence).claims
                 if retried_drafts:
                     drafts = retried_drafts
                     draft_content = empty_response.content
@@ -572,6 +650,14 @@ class Advisor:
         result.empty_claims_retried = empty_claims_retried
         result.empty_claims_error = empty_claims_error
         result.provider_retried = provider_retried
+        result.unanswered_questions = parse_claims_json(
+            draft_content, evidence
+        ).unanswered_questions[:12]
+        if question_units:
+            known_ids = {unit.unit_id for unit in question_units}
+            for draft in result.drafts:
+                if set(draft.unit_ids) - known_ids:
+                    raise AdvisorError("模型返回未知问题单元标识")
         return result
 
     def revise(
@@ -584,6 +670,7 @@ class Advisor:
         previous_claims: list[ClaimDraft],
         audience: Audience | None = None,
         flow_context: str = "",
+        requirements: list[dict[str, Any]] | None = None,
     ) -> AdvisorResult:
         """只修失败 claim；不新增、不改通过项、不引用证据外 ID。"""
         if not failed_claim_ids:
@@ -596,6 +683,7 @@ class Advisor:
             previous_claims=previous_claims,
             audience=audience,
             flow_context=flow_context,
+            requirements=requirements,
         )
         responses: list[ChatResponse] = []
         try:
@@ -609,7 +697,7 @@ class Advisor:
         responses.append(response)
         repaired = False
         try:
-            drafts = parse_claims_json(response.content).claims
+            drafts = parse_claims_json(response.content, evidence).claims
         except AdvisorError:
             repair_messages: list[dict[str, Any]] = [
                 *messages,
@@ -626,7 +714,7 @@ class Advisor:
                 repair_messages, temperature=0.0, max_tokens=self._max_tokens
             )
             responses.append(second)
-            drafts = parse_claims_json(second.content).claims
+            drafts = parse_claims_json(second.content, evidence).claims
             repaired = True
         failed = set(failed_claim_ids)
         filtered = [draft for draft in drafts if draft.claim_id in failed]
@@ -671,7 +759,7 @@ class Advisor:
             return result
         responses.append(repaired_response)
         try:
-            repaired_drafts = parse_claims_json(repaired_response.content).claims
+            repaired_drafts = parse_claims_json(repaired_response.content, evidence).claims
         except AdvisorError as exc:
             result.quote_repair_error = str(exc)
             return result

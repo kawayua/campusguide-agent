@@ -15,7 +15,6 @@ from pathlib import Path
 from typing import Any, Protocol
 
 from fastmcp import FastMCP
-from qdrant_client import QdrantClient
 
 from campusguide.config import (
     OrganizationConfig,
@@ -35,6 +34,8 @@ from campusguide.mcp.schemas import (
     policy_filters_from_request,
     success,
 )
+from campusguide.observability.errors import safe_error_summary
+from campusguide.retrieval.connections import create_qdrant_client
 from campusguide.retrieval.embedder import BgeM3Embedder
 from campusguide.retrieval.hybrid import HybridRetriever, SearchResult, VersionConflictError
 from campusguide.retrieval.normalize import load_aliases
@@ -143,7 +144,13 @@ class PolicySearchService:
         except RerankUnavailable as exc:
             raise ToolError(ErrorCode.RERANK_UNAVAILABLE, str(exc)) from exc
         except (RetrievalError, FileNotFoundError, FileExistsError) as exc:
-            raise ToolError(ErrorCode.INDEX_UNAVAILABLE, str(exc)) from exc
+            cause = safe_error_summary(exc)
+            logger.warning("policy-search backend failure %s: %s", type(exc).__name__, cause)
+            raise ToolError(
+                ErrorCode.INDEX_UNAVAILABLE,
+                cause,
+                details={"exception_type": type(exc).__name__, "cause": cause},
+            ) from exc
         except Exception as exc:
             logger.exception("search_articles failed")
             raise ToolError(
@@ -236,18 +243,6 @@ def build_search_server(service: PolicySearchService) -> FastMCP:
     return mcp
 
 
-def create_qdrant_client() -> QdrantClient:
-    location = os.getenv("QDRANT_LOCATION", "").strip()
-    if location:
-        Path(location).mkdir(parents=True, exist_ok=True)
-        return QdrantClient(path=location)
-    return QdrantClient(
-        url=os.getenv("QDRANT_URL", "http://localhost:6333"),
-        api_key=os.getenv("QDRANT_API_KEY") or None,
-        timeout=10,
-    )
-
-
 def create_service(
     *,
     root: Path = ROOT,
@@ -305,6 +300,10 @@ def create_service(
         min_score_margin=retrieval.min_score_margin,
         aliases=aliases,
         profile_lexicon=profile_lexicon,
+        max_chars_per_evidence=retrieval.max_chars_per_evidence,
+        corpus_views=__import__(
+            "campusguide.retrieval.corpus_views", fromlist=["CorpusViews"]
+        ).CorpusViews.load(root / "data" / "processed" / "articles.jsonl", profile_lexicon),
     )
     registries = SearchRegistries(
         doc_ids=_load_doc_ids(root / "data" / "processed" / "documents.jsonl"),

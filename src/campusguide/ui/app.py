@@ -41,6 +41,7 @@ from campusguide.ui.view_models import (
     clarify_prompt_html,
     conversation_header_html,
     debug_html,
+    progress_html,
     side_header_html,
     visible_flow_step_count,
 )
@@ -397,6 +398,7 @@ class W8DemoUI:
         side_visible: bool,
         status: str = "",
         status_visible: bool = False,
+        progress_nodes: list[str] | None = None,
         clear_input: bool = False,
         send_interactive: bool = False,
     ) -> tuple[Any, ...]:
@@ -444,7 +446,7 @@ class W8DemoUI:
                 option_updates.append(gr.update(visible=False))
         skip_update = gr.update(visible=is_clarify)
         status_update = (
-            gr.update(value=self._progress_html(status), visible=True)
+            gr.update(value=progress_html(status, nodes=progress_nodes), visible=True)
             if status_visible
             else gr.update(visible=False)
         )
@@ -468,15 +470,6 @@ class W8DemoUI:
             gr.update(interactive=send_interactive),
             gr.update(value=str(ui.get("status_filter") or "all")),
             gr.update(value=bool(ui.get("show_na"))),
-        )
-
-    @staticmethod
-    def _progress_html(label: str) -> str:
-        return (
-            '<div class="w8-progress">'
-            '<span class="w8-spinner"></span>'
-            f"<strong>{label or '正在处理'}</strong>"
-            "<span>只显示节点进度，不输出未核对答案</span></div>"
         )
 
     # ----------------------------------------------------------- events
@@ -576,22 +569,26 @@ class W8DemoUI:
             side_visible=bool(session.get("reply")),
             status="正在规划与核对",
             status_visible=True,
+            progress_nodes=[],
             clear_input=True,
             send_interactive=False,
         )
 
         thread_id = str(session.get("thread_id") or session["id"])
         reply = None
-        seen: list[str] = []
+        seen_labels: list[str] = []
+        seen_nodes: list[str] = []
         try:
             for event in self.backend.stream(thread_id, text):
                 if isinstance(event, ProgressEvent):
-                    seen.append(event.label)
+                    seen_labels.append(event.label)
+                    seen_nodes.append(event.node)
                     yield self._pack(
                         store,
                         side_visible=bool(session.get("reply")),
-                        status=" → ".join(seen),
+                        status=" → ".join(seen_labels),
                         status_visible=True,
+                        progress_nodes=seen_nodes,
                         send_interactive=False,
                     )
                 else:

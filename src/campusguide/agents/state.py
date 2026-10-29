@@ -82,6 +82,8 @@ class GraphState(TypedDict, total=False):
     dropped_claim_ids: list[str]
     failed_claim_ids: list[str]
     revise_issues: list[dict[str, Any]]
+    # 方案 A2：改写时必须逐项覆盖的类型清单（来自问题与被引原文）。
+    revise_requirements: list[dict[str, Any]]
     history_claims: list[dict[str, Any]]
     decision: GraphDecision | None
     reason_code: OutcomeCode | None
@@ -89,6 +91,14 @@ class GraphState(TypedDict, total=False):
     retrieval_warnings: list[str]
     coverage: dict[str, list[str]]
     questions: list[str]
+    coverage_enabled: bool
+    unit_coverage: list[dict[str, Any]]
+    coverage_checked: bool
+    coverage_missing: list[str]
+    coverage_repair_pending: bool
+    coverage_repair_count: int
+    repair_verified_claims: list[Claim]
+    unanswered_questions: list[str]
     declined_slots: list[str]
     asked_slots: list[str]
     pending_slot: str | None

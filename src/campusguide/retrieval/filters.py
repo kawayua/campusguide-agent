@@ -21,6 +21,7 @@ from qdrant_client.models import (
     Range,
 )
 
+from campusguide.domain.audience_match import expand_audience
 from campusguide.domain.enums import ArticleStatus, Audience, VersionMode
 from campusguide.domain.models import PolicyFilters
 from campusguide.domain.profiles import UserProfile
@@ -127,8 +128,10 @@ def build_qdrant_filter(filters: PolicyFilters) -> Filter:
         )
 
     if filters.audience:
-        audiences = {audience.value for audience in filters.audience}
-        audiences.add(Audience.ALL.value)
+        audiences = {
+            audience.value for audience in expand_audience(list(filters.audience))
+        }
+        audiences.update({Audience.ALL.value, Audience.PUBLIC.value})
         must.append(
             FieldCondition(
                 key="audience",

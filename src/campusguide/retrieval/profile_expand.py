@@ -6,7 +6,7 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 from campusguide.config import OrganizationConfig
 from campusguide.domain.profiles import UserProfile
@@ -26,11 +26,15 @@ def _dedup_terms(terms: list[str]) -> tuple[str, ...]:
 class ProfileLexicon:
     college_terms: dict[str, tuple[str, ...]]
     major_terms: dict[str, tuple[str, ...]]
+    class_terms: dict[str, tuple[str, ...]] = field(default_factory=dict)
+    class_levels: dict[str, str] = field(default_factory=dict)
+    class_majors: dict[str, tuple[str, ...]] = field(default_factory=dict)
 
     @classmethod
     def from_organization(cls, organization: OrganizationConfig | None) -> ProfileLexicon:
         if organization is None:
             return cls(college_terms={}, major_terms={})
+        class_types = list(getattr(organization, "class_types", []) or [])
         return cls(
             college_terms={
                 college.college_id: _dedup_terms([college.name, *college.aliases])
@@ -40,11 +44,22 @@ class ProfileLexicon:
                 major.major_id: _dedup_terms([major.name, *major.aliases])
                 for major in organization.majors
             },
+            class_terms={
+                class_type.class_id: _dedup_terms([class_type.name, *class_type.aliases])
+                for class_type in class_types
+            },
+            class_levels={
+                class_type.class_id: class_type.level for class_type in class_types
+            },
+            class_majors={
+                class_type.class_id: tuple(class_type.majors)
+                for class_type in class_types
+            },
         )
 
     @property
     def is_empty(self) -> bool:
-        return not self.college_terms and not self.major_terms
+        return not (self.college_terms or self.major_terms or self.class_terms)
 
     def _first_missing(self, terms: tuple[str, ...], query: str) -> str | None:
         for term in terms:

@@ -179,3 +179,29 @@ def test_store_round_trip_and_invalid_input() -> None:
     normalized = ui_store.normalize_store(store)
     assert normalized["ui"] == {"status_filter": "closed", "show_na": True}
     assert normalized["requests"] == [1.0, 2.0]
+
+
+def test_progress_dots_mark_completed_active_and_pending() -> None:
+    initial = vm.progress_html("正在规划与核对", nodes=[])
+    assert initial.count('<li class="w8-progress-step') == 5
+    assert initial.count("w8-progress-step active") == 1
+    assert initial.count("w8-progress-step pending") == 4
+    assert initial.count("w8-progress-step done") == 0
+
+    started = vm.progress_html("正在检索", nodes=["planner", "retriever"])
+    assert started.count("w8-progress-step done") == 1
+    assert started.count("w8-progress-step active") == 1
+    assert "检索" in started
+    assert 'aria-current="step"' in started
+
+    flow = vm.progress_html("流程", nodes=["planner", "flow", "advisor"])
+    assert flow.count("w8-progress-step done") == 2
+    assert "流程" in flow
+    assert "生成" in flow
+
+
+def test_plain_status_message_does_not_render_stepper() -> None:
+    html = vm.progress_html("服务暂时不可用 < 请重试")
+    assert "w8-status-message" in html
+    assert "w8-progress-dots" not in html
+    assert "&lt;" in html

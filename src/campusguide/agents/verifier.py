@@ -12,6 +12,13 @@ from dataclasses import dataclass, field
 
 from campusguide.agents.advisor import ClaimDraft
 from campusguide.agents.plan import Clarification
+from campusguide.qa.list_claim import (
+    asked_entity_type,
+    build_list_claim,
+    claim_lists_type,
+    claim_lists_type_cleanly,
+)
+from campusguide.verification.entities import TYPE_WORDS, items_of_type
 from campusguide.domain.enums import (
     GraphDecision,
     IssueScope,
@@ -26,6 +33,7 @@ from campusguide.domain.models import (
     VerificationResult,
 )
 from campusguide.verification.claims import ClaimValidator
+from campusguide.verification.conditions import check_conditions
 from campusguide.verification.semantic import (
     SemanticLabel,
     SemanticReport,
@@ -49,6 +57,8 @@ class GraphVerifyReport:
     semantic_unchecked: bool = False
     failed_claim_ids: list[str] = field(default_factory=list)
     revise_issues: list[dict] = field(default_factory=list)
+    # 方案 A2：改写时必须逐项覆盖的类型清单（来自问题与被引原文）。
+    revise_requirements: list[dict] = field(default_factory=list)
     issues: list[VerificationIssue] = field(default_factory=list)
     reason_code: OutcomeCode | None = None
     detail: str = ""
@@ -104,7 +114,13 @@ class GraphVerifier:
         clarify_count: int = 0,
         max_clarify: int = 3,
         clarification: Clarification | None = None,
+        previously_verified: list[Claim] | None = None,
+        question: str = "",
+        retrieval_warnings: list[str] | None = None,
     ) -> GraphVerifyReport:
+        # 方案 A4：问题问某类实体清单、而草稿只列了别的类型时，用原文名称
+        # 补一条逐字引用型结论；它仍要过下面的全部核对。
+        drafts = self._with_list_fallback(question, drafts, evidence)
         hard = self._validator.check(drafts, evidence)
         issues = [*(scope_issues or []), *hard.issues]
         if clarification is not None and clarify_count < max_clarify:
@@ -135,8 +151,34 @@ class GraphVerifier:
         ]
         semantic_bad: set[str] = set()
 
+        # R1：条件断言确定性核对（阈值方向、义务方向、角色、实体类别）。
+        # 语义模型可能放过“30分钟后”写成“30分钟内”，这里独立拦截；
+        # 例外遗漏只作提示，不丢弃结论。
+        condition_issues, advisory_issues = self._condition_issues(kept)
+        if advisory_issues:
+            issues.extend(advisory_issues)
+        if condition_issues:
+            issues.extend(condition_issues)
+            for issue in condition_issues:
+                if issue.claim_id and issue.claim_id not in failed_ids:
+                    failed_ids.append(issue.claim_id)
+                failed_issues.append(issue)
+
         # H9：流程事实与 checklist 不一致即 blocking。
         h9_issues = self._flow_fact_issues(kept, checklist or [])
+        collection_scanned = any(
+            w.startswith("COLLECTION_SCAN:") for w in (retrieval_warnings or [])
+        )
+        if question and not collection_scanned and re.search(r"最近|最新", question):
+            h9_issues.extend(
+                _issue(
+                    "TEMPORAL_COLLECTION_UNVERIFIED",
+                    claim.claim_id,
+                    detail="未完成已收录消息集合的日期排序，不能断言最新",
+                )
+                for claim in kept
+                if re.search(r"最新|最近", claim.text)
+            )
         if h9_issues:
             issues.extend(h9_issues)
             for issue in h9_issues:
@@ -149,7 +191,18 @@ class GraphVerifier:
         if self._semantic is None:
             semantic_unchecked = True
         else:
-            semantic = self._semantic.check(kept, evidence)
+            previous = {claim.claim_id: claim for claim in (previously_verified or [])}
+            reused = [claim for claim in kept if previous.get(claim.claim_id) == claim]
+            reused_ids = {claim.claim_id for claim in reused}
+            semantic = self._semantic.check(
+                [claim for claim in kept if claim.claim_id not in reused_ids], evidence
+            )
+            if not semantic.unavailable:
+                for claim in reused:
+                    semantic.labels[claim.claim_id] = SemanticLabel.SUPPORTED
+                    semantic.details[claim.claim_id] = (
+                        "同一轮补答中保留的已核对结论；正文、引用和元数据均未改变"
+                    )
             if semantic.unavailable:
                 if self._semantic_mode == "strict":
                     issue = _issue(
@@ -177,6 +230,7 @@ class GraphVerifier:
                     if claim_id not in failed_ids:
                         failed_ids.append(claim_id)
 
+        list_requirements = self._list_requirements(question, kept, evidence)
         if hard.dropped_claim_ids and not kept and revision_count < self._max_revise and failed_ids:
             # 硬校验全部失败：没有可语义核对的 claim。
             return GraphVerifyReport(
@@ -186,6 +240,7 @@ class GraphVerifier:
                 semantic_unchecked=semantic_unchecked,
                 failed_claim_ids=failed_ids,
                 revise_issues=[issue.model_dump(mode="json") for issue in failed_issues],
+                revise_requirements=list_requirements,
                 issues=issues,
                 detail="硬校验失败，进入 revise",
             )
@@ -197,6 +252,7 @@ class GraphVerifier:
                 semantic_unchecked=semantic_unchecked,
                 failed_claim_ids=failed_ids,
                 revise_issues=[issue.model_dump(mode="json") for issue in failed_issues],
+                revise_requirements=list_requirements,
                 issues=issues,
                 detail="存在可修复失败项，进入 revise",
             )
@@ -259,6 +315,90 @@ class GraphVerifier:
             verification=result,
             reason_code=result.reason_code,
         )
+
+    # ---------------------------------------------------------- 方案 A4 / A2
+    @staticmethod
+    def _with_list_fallback(
+        question: str,
+        drafts: list[ClaimDraft],
+        evidence: list,
+    ) -> list[ClaimDraft]:
+        """问题问某类清单、草稿却一项未列时，补一条逐字引用型结论。"""
+        type_word = asked_entity_type(question)
+        if not type_word or claim_lists_type_cleanly(drafts, type_word):
+            return drafts
+        claim = build_list_claim(question, evidence)
+        if claim is None:
+            return drafts
+        if claim.claim_id in {draft.claim_id for draft in drafts}:
+            return drafts
+        return [*drafts, claim]
+
+    @staticmethod
+    def _list_requirements(question: str, claims: list, evidence: list) -> list[dict]:
+        """改写要求：必须逐项列出的名称，以及不得混入的类型。"""
+        type_word = asked_entity_type(question)
+        if not type_word:
+            return []
+        if claim_lists_type_cleanly(claims, type_word):
+            return []
+        required: list[str] = []
+        others: list[str] = []
+        for item in evidence:
+            text = item.article.text or ""
+            names = items_of_type(text, type_word)
+            if not names:
+                continue
+            required = names[:8]
+            others = [
+                word
+                for word in TYPE_WORDS
+                if word != type_word and word in text and type_word not in word
+            ][:3]
+            break
+        if not required:
+            return []
+        return [
+            {
+                "kind": "category",
+                "type_word": type_word,
+                "required_items": required,
+                "forbidden_types": others,
+            }
+        ]
+
+    @staticmethod
+    def _condition_issues(
+        claims: list[Claim],
+    ) -> tuple[list[VerificationIssue], list[VerificationIssue]]:
+        """Deterministic condition conflicts that a language model may miss.
+
+        Returns ``(blocking, advisory)``; a dropped exception is advisory because
+        the claim is still factually supported.
+        """
+        blocking: list[VerificationIssue] = []
+        advisory: list[VerificationIssue] = []
+        for claim in claims:
+            quotes = [citation.quote for citation in claim.citations if citation.quote]
+            for finding in check_conditions(claim.text, quotes):
+                if not finding.blocking:
+                    advisory.append(
+                        _issue(
+                            "EXCEPTION_DROPPED",
+                            claim.claim_id,
+                            detail=finding.detail,
+                            severity=IssueSeverity.WARNING,
+                        )
+                    )
+                    continue
+                blocking.append(
+                    _issue(
+                        "CONDITION_CONTRADICTED",
+                        claim.claim_id,
+                        detail=f"{finding.kind}: {finding.detail}",
+                    )
+                )
+        return blocking, advisory
 
     @staticmethod
     def _semantic_issues(

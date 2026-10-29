@@ -14,6 +14,7 @@ W4 默认失败关闭：reranker 不可用时抛 ``RerankUnavailable``，不返�
 
 from __future__ import annotations
 
+import re
 import time
 from dataclasses import dataclass, field
 from datetime import date
@@ -23,8 +24,11 @@ from qdrant_client import QdrantClient
 from qdrant_client.models import FieldCondition, Filter, MatchValue, SparseVector
 
 from campusguide.config import RetrievalConfig
+from campusguide.domain.audience_match import audience_matches
 from campusguide.domain.enums import Audience, VersionMode
 from campusguide.domain.models import Article, ArticlePublic, Evidence, PolicyFilters
+from campusguide.retrieval.budget import evidence_cost
+from campusguide.retrieval.corpus_views import CorpusViews
 from campusguide.retrieval.embedder import EmbeddingProvider
 from campusguide.retrieval.filters import (
     article_matches_profile,
@@ -35,6 +39,7 @@ from campusguide.retrieval.filters import (
 )
 from campusguide.retrieval.normalize import expand_query
 from campusguide.retrieval.profile_expand import ProfileLexicon
+from campusguide.retrieval.query_views import rerank_query_views
 from campusguide.retrieval.rerank import Reranker
 from campusguide.retrieval.section_select import select_sections
 from campusguide.retrieval.service import RetrievalError, article_from_payload
@@ -76,6 +81,8 @@ class _Candidate:
 def _passage(article: Article, *, max_chars: int = 1200) -> str:
     chapter = " / ".join(article.chapter_path) if article.chapter_path else "无"
     text = article.text if len(article.text) <= max_chars else article.text[:max_chars]
+    # Normalize layout spaces for ranking only; evidence and quote offsets stay original.
+    text = re.sub(r"(?<=[\u3400-\u9fff])[ \t]+(?=[\u3400-\u9fff])", "", text)
     return f"标题：{article.doc_title}\n章节：{chapter}\n位置：{article.article_no}\n正文：{text}"
 
 
@@ -131,6 +138,7 @@ class HybridRetriever:
         profile_lexicon: ProfileLexicon | None = None,
         max_query_variants: int = 2,
         use_rerank: bool = True,
+        corpus_views: CorpusViews | None = None,
     ) -> None:
         if not 1 <= rerank_candidates <= 50:
             raise ValueError("rerank_candidates 必须在 1..50")
@@ -158,6 +166,7 @@ class HybridRetriever:
         self._profile_lexicon = profile_lexicon or ProfileLexicon({}, {})
         self._max_query_variants = max_query_variants
         self._use_rerank = use_rerank
+        self._corpus_views = corpus_views
 
     @property
     def index_version(self) -> str:
@@ -179,6 +188,10 @@ class HybridRetriever:
         return combined[: self._max_query_variants]
 
     def warmup(self) -> None:
+        try:
+            self._client.get_collection(self._config.collection)
+        except Exception as exc:
+            raise RetrievalError(f"Qdrant 连接检查失败：{exc}") from exc
         self._embedder.embed_query("CampusGuide 预热")
         if self._use_rerank:
             if self._reranker is None:
@@ -261,6 +274,15 @@ class HybridRetriever:
         statuses = effective_statuses(filters)
         for key, candidate in candidates.items():
             article = candidate.article
+            if article.block_type not in filters.block_types:
+                warnings.append(f"BLOCK_TYPE_MISMATCH:{article.article_id}:p{article.part_no}")
+                continue
+            if filters.doc_ids and article.doc_id not in filters.doc_ids:
+                warnings.append(f"DOC_ID_MISMATCH:{article.article_id}:p{article.part_no}")
+                continue
+            if filters.flow_ids and not set(article.flow_ids) & set(filters.flow_ids):
+                warnings.append(f"FLOW_ID_MISMATCH:{article.article_id}:p{article.part_no}")
+                continue
             if article.status.value == "draft":
                 warnings.append(f"DROP_DRAFT: {article.article_id}")
                 continue
@@ -278,7 +300,7 @@ class HybridRetriever:
                     Audience.ALL not in audiences
                     and article.audience
                     and (
-                        Audience.ALL not in article.audience
+                        not set(article.audience) & {Audience.ALL, Audience.PUBLIC}
                         and not set(article.audience) & audiences
                     )
                 ):
@@ -300,11 +322,12 @@ class HybridRetriever:
         candidates: dict[tuple[str, int], _Candidate],
         filters: PolicyFilters,
     ) -> tuple[list[_Candidate], list[str]]:
-        by_article: dict[str, _Candidate] = {}
+        by_article: dict[tuple[str, int], _Candidate] = {}
         for candidate in candidates.values():
-            existing = by_article.get(candidate.article.article_id)
+            key = (candidate.article.article_id, candidate.article.part_no)
+            existing = by_article.get(key)
             if existing is None or candidate.rrf_score > existing.rrf_score:
-                by_article[candidate.article.article_id] = candidate
+                by_article[key] = candidate
 
         warnings: list[str] = []
         by_doc: dict[str, list[_Candidate]] = {}
@@ -398,7 +421,25 @@ class HybridRetriever:
                 rrf_k=self._rrf_k,
             )
 
+        source_matches = self._corpus_views.search(query) if self._corpus_views else None
+        exact_keys = source_matches.exact_keys if source_matches else set()
+        source_priority = (
+            {(a.article_id, a.part_no): rank for rank, a in enumerate(source_matches.articles)}
+            if source_matches
+            else {}
+        )
+        if source_matches:
+            if source_matches.collection_query:
+                # Semantic ranking cannot change the date-selected collection.
+                candidates = {}
+            for rank, article in enumerate(source_matches.articles, 1):
+                key = (article.article_id, article.part_no)
+                if key not in candidates:
+                    candidates[key] = _Candidate(article=article, retrieval_query=query)
+                candidates[key].rrf_score += 0.08 / (1 + rank * 0.04)
         candidates, warnings = self._post_filter(candidates, filters)
+        if source_matches:
+            warnings.extend(source_matches.warnings)
         aggregated, version_warnings = self._aggregate_and_check_versions(candidates, filters)
         warnings.extend(version_warnings)
         aggregated.sort(key=lambda item: item.rrf_score, reverse=True)
@@ -410,15 +451,33 @@ class HybridRetriever:
             if self._reranker is None:
                 raise RetrievalError("未配置 reranker；W4 默认失败关闭")
             started = time.perf_counter()
-            scores = self._reranker.score(
-                queries[0],
-                [_passage(candidate.article) for candidate in shortlist],
-            )
+            passages = [_passage(candidate.article) for candidate in shortlist]
+            views = rerank_query_views(queries[0])
+            scores = self._reranker.score(views[0], passages)
+            if len(scores) != len(shortlist):
+                raise RetrievalError("reranker 返回分数数量与候选数不一致")
+            for view in views[1:]:
+                facet_scores = self._reranker.score(view, passages)
+                if len(facet_scores) != len(shortlist):
+                    raise RetrievalError("reranker facet score count mismatch")
+                scores = [max(a, b) for a, b in zip(scores, facet_scores, strict=True)]
+            if len(views) > 1:
+                warnings.append("RERANK_QUERY_VIEWS:" + " | ".join(views))
             rerank_ms = (time.perf_counter() - started) * 1000
             if len(scores) != len(shortlist):
                 raise RetrievalError("reranker 返回分数数量与候选数不一致")
             for candidate, score in zip(shortlist, scores, strict=True):
                 candidate.rerank_score = float(score)
+                key = (candidate.article.article_id, candidate.article.part_no)
+                if key in exact_keys:
+                    # Exact roster membership/date selection/registered plan section
+                    # has a structural proof; this is not a lowered semantic threshold.
+                    candidate.rerank_score = max(
+                        float(score), 0.98 - source_priority.get(key, 15) * 0.004
+                    )
+                    warnings.append(
+                        f"STRUCTURED_MATCH:{candidate.article.article_id}:p{candidate.article.part_no}"
+                    )
             shortlist.sort(key=lambda item: item.rerank_score or 0.0, reverse=True)
             top_score = shortlist[0].rerank_score or 0.0
             if top_score < self._min_rerank_score + self._min_score_margin:
@@ -428,6 +487,11 @@ class HybridRetriever:
                 )
                 shortlist = []
             else:
+                warnings.extend(
+                    f"RERANK_DROP:{item.article.article_id}:p{item.article.part_no}:score={item.rerank_score:.4f}"
+                    for item in shortlist
+                    if (item.rerank_score or 0.0) < self._min_rerank_score
+                )
                 shortlist = [
                     item
                     for item in shortlist
@@ -452,9 +516,11 @@ class HybridRetriever:
                 article = article.model_copy(
                     update={"text": article.text[: self._max_chars_per_evidence]}
                 )
-            cost = len(article.text) + 80
+            cost = evidence_cost(article)
             if kept and used_chars + cost > self._token_budget:
-                warnings.append(f"TOKEN_BUDGET: 跳过 {article.article_id}")
+                warnings.append(
+                    f"TOKEN_BUDGET: 跳过 {article.article_id}:p{article.part_no}:cost={cost}"
+                )
                 continue
             used_chars += cost
             evidence = Evidence(

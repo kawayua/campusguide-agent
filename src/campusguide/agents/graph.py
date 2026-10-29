@@ -21,8 +21,11 @@ from campusguide.agents.advisor import (
     FLOW_BOUNDARY_PROMPT,
     Advisor,
     AdvisorError,
+    CitationDraft,
+    ClaimDraft,
     merge_revised_drafts,
 )
+from campusguide.agents.coverage import CoverageChecker
 from campusguide.agents.plan import Plan, QueryPlanItem
 from campusguide.agents.planner import Planner, PlannerContext
 from campusguide.agents.providers import ChatProviderError
@@ -42,6 +45,7 @@ from campusguide.domain.models import ChecklistItem, Claim, PolicyFilters
 from campusguide.domain.profiles import UserProfile
 from campusguide.flows.catalog import FlowCatalog
 from campusguide.handoff import resolve_handoff
+from campusguide.observability.errors import safe_error_summary
 from campusguide.observability.redact import redact_sensitive
 from campusguide.observability.trace import TraceWriter
 from campusguide.qa.finalize import (
@@ -52,9 +56,10 @@ from campusguide.qa.finalize import (
     finalize_flow_without_claims,
     finalize_mixed,
 )
+from campusguide.qa.merge import merge_claims
 from campusguide.qa.service import _MESSAGES as QA_MESSAGES
 
-GRAPH_VERSION = "w6-2026-10-25"
+GRAPH_VERSION = "w6-quality-2026-10-28"
 
 _DEFAULT_MESSAGES = {
     OutcomeCode.NO_EVIDENCE: "没有检索到可引用的现行条款。请补充具体事项或换一种说法。",
@@ -73,6 +78,33 @@ _DEFAULT_MESSAGES = {
 }
 
 
+MAX_COVERAGE_REPAIR_ROUNDS = 2
+
+_SCOPE_WARNING_PREFIXES = ("AUDIENCE_MISMATCH", "VERSION_MISMATCH", "MIXED_VERSIONS")
+
+
+def boundary_notes(state: dict[str, Any], reason: OutcomeCode | None) -> list[str]:
+    """R7：区分“语料缺失 / 检索遗漏 / 对象版本不一致”，不把服务问题写成缺资料。
+
+    只有确认本轮收录范围内没有对应文件时才提示可能未收录；被适用对象或版本
+    剔除的材料说明“学校有规定，但当前条件下不适用”。
+    """
+    if reason is not OutcomeCode.NO_EVIDENCE:
+        return []
+    warnings_list = [str(item) for item in (state.get("retrieval_warnings") or [])]
+    if any(item.startswith(_SCOPE_WARNING_PREFIXES) for item in warnings_list):
+        return [
+            "检索到相关材料，但按适用对象或版本被剔除；这不等于学校没有规定，"
+            "补充身份、年级或年份后可重试。"
+        ]
+    if state.get("evidence") or state.get("retrieval_hit_count"):
+        return ["检索到材料但未达到引用标准，不能据此认定知识库未收录该事项。"]
+    return [
+        "本轮收录范围内未命中对应文件；可能是确实未收录，也可能是表述不同未命中，"
+        "可换一种说法或提供文件名称。"
+    ]
+
+
 def _message_for(reason: OutcomeCode | None, fallback: str = "") -> str:
     if reason is None:
         return fallback or _DEFAULT_MESSAGES[OutcomeCode.UNVERIFIABLE]
@@ -84,12 +116,27 @@ def _message_for(reason: OutcomeCode | None, fallback: str = "") -> str:
     )
 
 
+def _default_block_types(question: str) -> list[BlockType]:
+    """公开知识同时存储为条款和段落；召回后再按相关性与表格配额选择。"""
+    return [BlockType.ARTICLE, BlockType.SECTION]
+
+
 def _append_trace(
     state: GraphState,
     node: str,
     started: float,
     **payload: Any,
 ) -> list[dict[str, Any]]:
+    def scrub(value):
+        if isinstance(value, str):
+            return redact_sensitive(value, max_chars=2400)
+        if isinstance(value, list):
+            return [scrub(item) for item in value]
+        if isinstance(value, dict):
+            return {key: scrub(item) for key, item in value.items()}
+        return value
+
+    payload = scrub(payload)
     trace = list(state.get("trace") or [])
     trace.append(
         {
@@ -161,7 +208,9 @@ class GraphNodes:
         max_clarify: int = 3,
         max_revise: int = 2,
         today: date | None = None,
+        coverage_checker: CoverageChecker | None = None,
     ) -> None:
+        self._coverage_checker = coverage_checker
         self._planner = planner
         self._retriever = retriever
         self._advisor = advisor
@@ -196,6 +245,7 @@ class GraphNodes:
             pending_question=state.get("pending_question", ""),
         )
         plan = self._planner.plan(context)
+        resolved_question = context.message
         clarify_count = int(state.get("clarify_count", 0) or 0)
         if plan.needs_clarification:
             clarify_count += 1
@@ -235,9 +285,12 @@ class GraphNodes:
             "planner",
             started,
             plan=plan.trace_payload(),
+            # R8：规划模型不可用时保留故障分类与尝试次数。
+            provider_error=getattr(self._planner, "last_provider_error", None),
         )
         update: dict[str, Any] = {
             "plan": plan,
+            "question": resolved_question,
             "intent": plan.intent,
             "flow_id": plan.flow_id,
             "flow_definition": flow_definition,
@@ -255,6 +308,7 @@ class GraphNodes:
             "revision_count": 0,
             "failed_claim_ids": [],
             "revise_issues": [],
+            "revise_requirements": [],
             "evidence": [],
             "drafts": [],
             "claims": [],
@@ -278,6 +332,14 @@ class GraphNodes:
             "checklist": [],
             "citations": [],
             "coverage": {},
+            "coverage_enabled": self._coverage_checker is not None,
+            "coverage_checked": False,
+            "unit_coverage": [],
+            "coverage_missing": [],
+            "coverage_repair_pending": False,
+            "coverage_repair_count": 0,
+            "repair_verified_claims": [],
+            "unanswered_questions": [],
             "retrieval_warnings": list(plan.warnings),
             "scope_issues": [],
             "final_answer": "",
@@ -313,7 +375,9 @@ class GraphNodes:
                 "flow",
                 started,
                 status="error",
-                error=type(exc).__name__,
+                error=__import__(
+                    "campusguide.observability.errors", fromlist=["safe_error_summary"]
+                ).safe_error_summary(exc),
             )
             return {
                 "decision": GraphDecision.ABSTAIN,
@@ -384,6 +448,17 @@ class GraphNodes:
             started,
             queries=[redact_sensitive(item.text) for item in plan.queries],
             evidence=len(bundle.evidence),
+            selected_evidence=[
+                {
+                    "article_id": e.article.article_id,
+                    "part_no": e.article.part_no,
+                    "doc_id": e.article.doc_id,
+                    "version_id": e.article.version_id,
+                    "score": e.score,
+                    "matched_queries": e.matched_queries,
+                }
+                for e in bundle.evidence
+            ],
             coverage=bundle.coverage,
             warnings=warnings,
             index_version=bundle.index_version,
@@ -427,26 +502,74 @@ class GraphNodes:
                     previous_claims=previous,
                     audience=audience,
                     flow_context=flow_context,
+                    # 方案 A2：把“必须逐项覆盖”的类型清单带进改写。
+                    requirements=list(state.get("revise_requirements") or []),
                 )
                 drafts = merge_revised_drafts(previous, result.drafts, failed)
                 mode = "revise"
             else:
+                extra = {}
+                if isinstance(self._advisor, Advisor) and state.get("plan"):
+                    extra["question_units"] = state["plan"].question_units
+                repair_claims = list(state.get("repair_verified_claims") or [])
+                generation_question = question
+                if state.get("coverage_repair_count", 0):
+                    generation_question += (
+                        "\n本轮只补充以下遗漏，保留先前已核实内容，不要重复："
+                        + str(state.get("coverage_missing") or [])
+                    )
+                    generation_question += "\n已核实结论：" + str([c.text for c in repair_claims])
                 result = self._advisor.generate(
-                    question,
+                    generation_question,
                     evidence,
                     audience,
                     flow_context=flow_context,
+                    **extra,
                 )
                 drafts = result.drafts
                 mode = "generate"
+                if state.get("coverage_repair_count", 0):
+                    previous_drafts = [
+                        ClaimDraft(
+                            claim_id=c.claim_id,
+                            text=c.text,
+                            kind=c.kind.value,
+                            citations=[
+                                CitationDraft(article_id=x.article_id, quote=x.quote)
+                                for x in c.citations
+                            ],
+                        )
+                        for c in repair_claims
+                    ]
+                    fresh = []
+                    known_texts = {c.text for c in repair_claims}
+                    for i, draft in enumerate(drafts, 1):
+                        if draft.text not in known_texts:
+                            fresh.append(draft.model_copy(update={"claim_id": f"supplement_{i}"}))
+                    drafts = [*previous_drafts, *fresh]
+                    mode = "supplement"
         except (ChatProviderError, AdvisorError) as exc:
             trace = _append_trace(
                 state,
                 "advisor",
                 started,
                 mode="error",
-                error=type(exc).__name__,
+                error=safe_error_summary(exc),
+                # A7：供应商故障分类、尝试次数与等待，供 trace 回答
+                # “哪个节点、几次尝试、是否恢复”，不落密钥。
+                provider_error=exc.as_dict() if isinstance(exc, ChatProviderError) else None,
             )
+            if state.get("coverage_repair_count") and state.get("repair_verified_claims"):
+                return {
+                    "claims": state["repair_verified_claims"],
+                    "coverage_missing": [
+                        *(state.get("coverage_missing") or []),
+                        "补答服务不可用，保留此前已核实内容",
+                    ],
+                    "coverage_checked": True,
+                    "decision": GraphDecision.ABSTAIN,
+                    "trace": trace,
+                }
             return {
                 "drafts": [],
                 "decision": GraphDecision.ABSTAIN,
@@ -460,6 +583,11 @@ class GraphNodes:
             mode=mode,
             model=(result.responses[-1].model if result.responses else ""),
             claims=len(drafts),
+            prompt_tokens=sum(r.prompt_tokens for r in result.responses),
+            completion_tokens=sum(r.completion_tokens for r in result.responses),
+            model_latency_ms=sum(r.latency_ms for r in result.responses),
+            claim_units={d.claim_id or "": d.unit_ids for d in drafts},
+            unanswered_questions=list(result.unanswered_questions),
             quote_repair_attempted=result.quote_repair_attempted,
             quote_repaired=result.quote_repaired,
             quote_repair_remaining=list(result.quote_repair_remaining),
@@ -467,6 +595,11 @@ class GraphNodes:
         )
         return {
             "drafts": drafts,
+            "unanswered_questions": (
+                list(state.get("unanswered_questions") or [])
+                if mode == "revise"
+                else list(result.unanswered_questions)
+            ),
             "history_claims": [
                 {
                     "claim_id": draft.claim_id,
@@ -483,6 +616,13 @@ class GraphNodes:
         started = time.perf_counter()
         drafts = list(state.get("drafts") or [])
         evidence = state.get("evidence") or []
+        verification_extra = {}
+        if isinstance(self._verifier, GraphVerifier):
+            verification_extra["previously_verified"] = list(
+                state.get("repair_verified_claims") or []
+            )
+            verification_extra["question"] = state.get("question", "")
+            verification_extra["retrieval_warnings"] = list(state.get("retrieval_warnings") or [])
         report = self._verifier.verify(
             drafts,
             evidence,
@@ -491,6 +631,7 @@ class GraphNodes:
             revision_count=int(state.get("revision_count", 0) or 0),
             clarify_count=int(state.get("clarify_count", 0) or 0),
             max_clarify=self._max_clarify,
+            **verification_extra,
         )
         semantic_payload = None
         if report.semantic is not None:
@@ -502,6 +643,8 @@ class GraphNodes:
                 "model": report.semantic.model,
                 "latency_ms": report.semantic.latency_ms,
                 "checked": report.semantic.checked,
+                "prompt_tokens": report.semantic.prompt_tokens,
+                "completion_tokens": report.semantic.completion_tokens,
                 "unavailable": report.semantic.unavailable,
                 "error": report.semantic.error,
             }
@@ -514,6 +657,8 @@ class GraphNodes:
             semantic=semantic_payload,
             semantic_unchecked=report.semantic_unchecked,
             detail=report.detail,
+            issues=[i.model_dump(mode="json", exclude_none=True) for i in report.issues],
+            draft_records=_serialize_records(report),
         )
         update: dict[str, Any] = {
             "decision": report.decision,
@@ -525,6 +670,7 @@ class GraphNodes:
             update["revision_count"] = int(state.get("revision_count", 0) or 0) + 1
             update["failed_claim_ids"] = list(report.failed_claim_ids)
             update["revise_issues"] = list(report.revise_issues)
+            update["revise_requirements"] = list(report.revise_requirements)
             return update
         if report.decision is GraphDecision.CLARIFY:
             update["clarification"] = {
@@ -548,6 +694,153 @@ class GraphNodes:
             update["reason_code"] = report.reason_code or OutcomeCode.UNVERIFIABLE
         return update
 
+    # ------------------------------------------------------ answer completeness
+    def coverage(self, state: GraphState) -> dict[str, Any]:
+        started = time.perf_counter()
+        plan = state.get("plan")
+        if self._coverage_checker is None or plan is None:
+            return {"coverage_repair_pending": False}
+        audit = self._coverage_checker.check(
+            state.get("question", ""),
+            plan.question_units,
+            list(state.get("claims") or []),
+            list(state.get("evidence") or []),
+            list(state.get("checklist") or []),
+            retrieval_warnings=list(state.get("retrieval_warnings") or []),
+        )
+        contradicted = (
+            "contradicted" in ((state.get("semantic") or {}).get("labels") or {}).values()
+        )
+        repair = bool(
+            audit.missing
+            and not audit.unavailable
+            and not contradicted
+            and state.get("coverage_repair_count", 0) < MAX_COVERAGE_REPAIR_ROUNDS
+            and any(
+                u.get("status") in {"generation_missing", "missing_evidence"} for u in audit.units
+            )
+        )
+        return {
+            "coverage_checked": True,
+            "unit_coverage": audit.units,
+            "coverage_missing": audit.missing,
+            "coverage_repair_pending": repair,
+            "trace": _append_trace(
+                state,
+                "coverage",
+                started,
+                units=audit.units,
+                missing=audit.missing,
+                unavailable=audit.unavailable,
+                error=audit.error,
+                provider_error=(
+                    {"kind": audit.error_kind, "attempts": audit.error_attempts}
+                    if audit.error_kind
+                    else None
+                ),
+                prompt_tokens=audit.prompt_tokens,
+                completion_tokens=audit.completion_tokens,
+                model_latency_ms=audit.latency_ms,
+                repair_pending=repair,
+            ),
+        }
+
+    def supplement(self, state: GraphState) -> dict[str, Any]:
+        """R4：按单元补查，最多两轮（首轮 3 条、次轮 2 条），不替换已核实内容。"""
+        started = time.perf_counter()
+        round_index = int(state.get("coverage_repair_count", 0))
+        if round_index >= MAX_COVERAGE_REPAIR_ROUNDS:
+            return {"coverage_repair_pending": False}
+        query_budget = 3 if round_index == 0 else 2
+        plan = state.get("plan")
+        if plan is None:
+            return {"coverage_repair_pending": False}
+        missing_ids = {
+            row["unit_id"]
+            for row in state.get("unit_coverage") or []
+            if row["status"] != "answered"
+        }
+        queries = []
+        seen = set()
+        for unit in plan.question_units:
+            if unit.unit_id not in missing_ids:
+                continue
+            row_missing = next(
+                (
+                    row.get("missing_items") or []
+                    for row in (state.get("unit_coverage") or [])
+                    if row["unit_id"] == unit.unit_id
+                ),
+                [],
+            )
+            focus = " ".join(
+                [
+                    str(unit.cohort) + "级" if unit.cohort else "",
+                    unit.subject,
+                    "、".join(unit.requested_aspects),
+                ]
+            )
+            # The original question provides unnamed subjects (e.g. committee names).
+            text = f"{unit.original_span[:100]} {focus} {'、'.join(row_missing)[:70]}"[:200]
+            if text in seen:
+                continue
+            seen.add(text)
+            filters = next((q.filters for q in plan.queries if unit.unit_id in q.unit_ids), {})
+            queries.append(
+                QueryPlanItem(
+                    query_id=f"repair_q{round_index + 1}_{len(queries) + 1}",
+                    text=text,
+                    filters=filters,
+                    unit_ids=[unit.unit_id],
+                )
+            )
+            if len(queries) == query_budget:
+                break
+        base = PolicyFilters(
+            block_types=state.get("block_types") or _default_block_types(state.get("question", "")),
+            as_of=state.get("as_of") or self._today or date.today(),
+            audience=[state["audience"]]
+            if state.get("audience") not in (None, Audience.ALL)
+            else None,
+            profile=state.get("user_profile"),
+        )
+        bundle = self._retriever.retrieve(Plan(queries=queries), base) if queries else None
+        evidence = list(state.get("evidence") or [])
+        known = {e.key for e in evidence}
+        if bundle is not None:
+            for hit in bundle.evidence:
+                if hit.key not in known:
+                    evidence.append(hit)
+                    known.add(hit.key)
+        for i, hit in enumerate(evidence, 1):
+            hit.rank = i
+        return {
+            "coverage_repair_count": round_index + 1,
+            "coverage_repair_pending": False,
+            "coverage_checked": False,
+            "repair_verified_claims": list(state.get("claims") or []),
+            "evidence": evidence,
+            "decision": None,
+            # 补查不能重置改写预算：否则每轮补查都会再触发两次“生成→核对”，
+            # 两轮下来超过 LangGraph 的 20 步上限，整轮回合被丢弃（049）。
+            "failed_claim_ids": [],
+            "revise_issues": [],
+            "revise_requirements": [],
+            "retrieval_warnings": [
+                *(state.get("retrieval_warnings") or []),
+                *(bundle.warnings if bundle else []),
+            ],
+            "trace": _append_trace(
+                state,
+                "supplement",
+                started,
+                queries=[q.model_dump(mode="json") for q in queries],
+                added_evidence=len(evidence) - len(state.get("evidence") or []),
+                preserved_claims=[c.claim_id for c in state.get("claims") or []],
+                warnings=bundle.warnings if bundle else [],
+            ),
+        }
+
     # ---------------------------------------------------------------- finalize
     def finalize(self, state: GraphState) -> dict[str, Any]:
         started = time.perf_counter()
@@ -555,6 +848,24 @@ class GraphNodes:
         flow = state.get("flow_definition")
         checklist: list[ChecklistItem] = list(state.get("checklist") or [])
         claims: list[Claim] = list(state.get("claims") or [])
+        # R6/A1：合并去重、同一事项只留一致表述，避免“未收录”与明确规则并存。
+        # 冲突不再按引用数或先后择一，而是并列保留并提示核实；信息性去重
+        # 日志不进入完整性判断。
+        merged = merge_claims(claims)
+        claims = merged.claims
+        merge_conflicts = [note.detail for note in merged.substantive_notes]
+        dropped_ids = set(merged.dropped_claim_ids)
+        if dropped_ids and state.get("coverage_checked"):
+            # 合并改变了 claim 集合，不能沿用合并前的覆盖状态（A1）。
+            refreshed = []
+            for row in state.get("unit_coverage") or []:
+                row = dict(row)
+                supported = [i for i in (row.get("claim_ids") or []) if i not in dropped_ids]
+                row["claim_ids"] = supported
+                if row.get("status") == "answered" and not supported:
+                    row["status"] = "generation_missing"
+                refreshed.append(row)
+            state["unit_coverage"] = refreshed
         reason = state.get("reason_code")
         semantic_unchecked = bool(state.get("semantic_unchecked"))
         missing_slots = list(state.get("missing_slots") or [])
@@ -567,7 +878,30 @@ class GraphNodes:
         answer = ""
         citations: list[dict[str, Any]] = []
         extra_warnings = self._coverage_warnings(state)
+        for part in (
+            state.get("coverage_missing")
+            if state.get("coverage_checked")
+            else state.get("unanswered_questions")
+        ) or []:
+            safe_part = redact_sensitive(str(part), max_chars=120)
+            status = next(
+                (
+                    r["status"]
+                    for r in (state.get("unit_coverage") or [])
+                    if str(part) in (r.get("missing_items") or [])
+                ),
+                "generation_missing",
+            )
+            explanation = {
+                "missing_evidence": "缺少直接证据",
+                "verification_failed": "尚未通过核对",
+                "clarification_needed": "需要补充查询条件",
+            }.get(status, "已找到相关材料，但尚未完整答出")
+            extra_warnings.append(f"尚缺“{safe_part}”：{explanation}。")
+        # 冲突提示只用于展示，不改变完整性状态（只有实质缺项才算不完整）。
+        display_warnings = [*extra_warnings, *merge_conflicts]
         closed = bool(state.get("closed"))
+        incomplete = bool(extra_warnings or (plan and plan.dropped_queries))
 
         if plan is not None and plan.is_guard:
             outcome_code = plan.outcome.value if plan.outcome else "INVALID_REQUEST"
@@ -586,7 +920,11 @@ class GraphNodes:
             answer = "\n".join(lines)
         elif claims and flow is not None and checklist:
             verification = state.get("verification_decision")
-            partial = verification is VerificationDecision.PARTIAL
+            partial = (
+                incomplete
+                if state.get("coverage_checked")
+                else (verification is VerificationDecision.PARTIAL or incomplete)
+            )
             mixed = finalize_mixed(
                 claims,
                 flow=flow,
@@ -597,14 +935,18 @@ class GraphNodes:
                 partial=partial,
                 dropped_count=len(state.get("failed_claim_ids") or []),
                 semantic_unchecked=semantic_unchecked,
-                extra_lines=extra_warnings,
+                extra_lines=display_warnings,
             )
             answer = mixed.answer_markdown
             citations = [item.model_dump(mode="json") for item in mixed.citations]
             outcome_code = "PARTIAL_ANSWER" if partial else "ANSWERED"
         elif claims:
             verification = state.get("verification_decision")
-            partial = verification is VerificationDecision.PARTIAL
+            partial = (
+                incomplete
+                if state.get("coverage_checked")
+                else (verification is VerificationDecision.PARTIAL or incomplete)
+            )
             finished = finalize(
                 claims,
                 partial=partial,
@@ -612,9 +954,9 @@ class GraphNodes:
                 semantic_unchecked=semantic_unchecked,
             )
             answer = finished.answer_markdown
-            if extra_warnings:
+            if display_warnings:
                 marker = "\n---\n" + DISCLAIMER
-                warning_text = "\n".join(f"> {item}" for item in extra_warnings)
+                warning_text = "\n".join(f"> {item}" for item in display_warnings)
                 if answer.endswith(marker):
                     answer = (
                         answer[: -len(marker)].rstrip() + "\n\n" + warning_text + "\n\n" + marker
@@ -622,7 +964,7 @@ class GraphNodes:
             citations = [item.model_dump(mode="json") for item in finished.citations]
             outcome_code = "PARTIAL_ANSWER" if partial else "ANSWERED"
         elif flow is not None and checklist:
-            extra = list(extra_warnings)
+            extra = list(display_warnings)
             if reason is not None:
                 extra.append(f"> {_message_for(reason)}")
             answer = finalize_flow(
@@ -633,7 +975,10 @@ class GraphNodes:
                 closed=closed,
                 extra_lines=extra,
             )
-            outcome_code = "PARTIAL_ANSWER" if missing_slots and not closed else "ANSWERED"
+            missing_facts = bool(plan and plan.queries and (incomplete or not claims))
+            outcome_code = (
+                "PARTIAL_ANSWER" if missing_facts or (missing_slots and not closed) else "ANSWERED"
+            )
         elif flow is not None and plan is not None and plan.intent is Intent.MIXED:
             answer = finalize_flow_without_claims(
                 flow=flow,
@@ -650,7 +995,7 @@ class GraphNodes:
                 message=_message_for(reason),
                 handoff=handoff,
                 missing_slots=missing_slots,
-                warnings=extra_warnings,
+                warnings=[*display_warnings, *boundary_notes(state, reason)],
                 semantic_unchecked=semantic_unchecked,
             )
 
@@ -664,6 +1009,8 @@ class GraphNodes:
             handoff=handoff.as_dict(),
             semantic_unchecked=semantic_unchecked,
             coverage=state.get("coverage") or {},
+            unit_coverage=state.get("unit_coverage") or [],
+            coverage_repair_count=state.get("coverage_repair_count", 0),
         )
         duration_ms = int(
             (time.perf_counter() - float(state.get("_started_perf", time.perf_counter()))) * 1000
@@ -703,7 +1050,7 @@ class GraphNodes:
     @staticmethod
     def _coverage_warnings(state: GraphState) -> list[str]:
         plan = state.get("plan")
-        if plan is None:
+        if plan is None or state.get("coverage_checked"):
             return []
         coverage = state.get("coverage") or {}
         warnings = []
@@ -754,7 +1101,13 @@ def route_after_verifier(state: GraphState) -> str:
         return "advisor"
     if decision is GraphDecision.CLARIFY:
         return "planner"
+    if state.get("coverage_enabled") and state.get("evidence"):
+        return "coverage"
     return "finalize"
+
+
+def route_after_coverage(state: GraphState) -> str:
+    return "supplement" if state.get("coverage_repair_pending") else "finalize"
 
 
 def build_graph(nodes: GraphNodes, *, checkpointer: Any | None = None):
@@ -764,6 +1117,8 @@ def build_graph(nodes: GraphNodes, *, checkpointer: Any | None = None):
     graph.add_node("retriever", nodes.retriever)
     graph.add_node("advisor", nodes.advisor)
     graph.add_node("verifier", nodes.verifier)
+    graph.add_node("coverage", getattr(nodes, "coverage", lambda state: {}))
+    graph.add_node("supplement", getattr(nodes, "supplement", lambda state: {}))
     graph.add_node("finalize", nodes.finalize)
 
     graph.add_edge(START, "planner")
@@ -790,8 +1145,17 @@ def build_graph(nodes: GraphNodes, *, checkpointer: Any | None = None):
     graph.add_conditional_edges(
         "verifier",
         route_after_verifier,
-        {"advisor": "advisor", "planner": "planner", "finalize": "finalize"},
+        {
+            "advisor": "advisor",
+            "planner": "planner",
+            "coverage": "coverage",
+            "finalize": "finalize",
+        },
     )
+    graph.add_conditional_edges(
+        "coverage", route_after_coverage, {"supplement": "supplement", "finalize": "finalize"}
+    )
+    graph.add_edge("supplement", "advisor")
     graph.add_edge("finalize", END)
     return graph.compile(checkpointer=checkpointer)
 
@@ -885,7 +1249,7 @@ class GraphRunner:
             "as_of": as_of or date.today(),
             "audience": audience,
             "user_profile": profile,
-            "block_types": list(block_types or [BlockType.ARTICLE]),
+            "block_types": list(block_types or _default_block_types(question)),
             "started_at": started_at.isoformat(timespec="seconds"),
             "_started_perf": time.perf_counter(),
             "trace": [],
@@ -912,12 +1276,14 @@ class GraphRunner:
             "flow_status": None,
             "citations": [],
             "coverage": {},
+            "unanswered_questions": [],
             "retrieval_warnings": [],
             "scope_issues": [],
             "final_answer": "",
             "answer_markdown": "",
             "failed_claim_ids": [],
             "revise_issues": [],
+            "revise_requirements": [],
             "revision_count": 0,
         }
         return state, config
