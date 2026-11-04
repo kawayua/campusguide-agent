@@ -2,7 +2,7 @@
 
 面向华南农业大学公开制度的**条款级问答与办事指引 Agent**（个人作品集项目）。
 
-答案由检索证据 + claim/quote 校验 + 语义核对生成；流程事实由流程 DSL 渲染成 checklist；证据不足、隐私、校外或版本不符时明确拒答或限答；部分回答只展示通过核验的结论并提示缺项。当前仍有漏答、误拒和虚报缺项，详见下方实测。
+答案由检索证据 + claim/quote 校验 + 语义核对生成；流程事实由流程 DSL 渲染成 checklist；证据不足、隐私、校外或版本不符时明确拒答或限答；部分回答只展示通过核验的结论并提示缺项。本轮已完成全量 OCR 与索引重建，内容及合理路由通过率为 86%，严格交付通过率为 78%，详见下方实验对比。
 
 > 个人演示项目，不构成官方答复。具体政策以学校官网和负责部门解释为准。请勿输入学号、身份证、成绩单等个人信息。
 
@@ -18,54 +18,93 @@
 - **可演示**：三栏页面、历史恢复、移动端抽屉/底部卡片、节点进度、引用与调试面板；
 - **可复现**：本地 host 或 Docker Compose；fake backend 不加载模型也能跑 UI 测试。
 
-## 架构
+## 项目结构与处理流程
+
+项目分为离线知识库建设与在线问答两条链路：**资料搜索与采集 → OCR 解析入库 → 检索 → 重排序 → LLM 基于证据回答 → 引用与事实核验**。当前实验语料已完成全量 OCR，主识别采用 Xiaomi OCR，Gemini 处理疑难区域；页覆盖与表格核验后，生成父子块和元数据并重建向量索引。
 
 ```text
-Browser
-  └─ Gradio 三栏 UI（历史 / 对话 / 清单·引用·调试；BrowserState）
-       └─ ConversationService（session / thread_id / 串行发送）
-            └─ LangGraph
-               Planner → FlowExecutor / Retriever → Advisor → Verifier → Finalize
-                    │              │
-                    │              └─ MCP policy-search（Qdrant；hybrid + rerank；规模随索引 manifest）
-                    └──────────────── MCP policy-meta（flow DSL / calendar / versions）
+离线：知识库建设
+公开制度资料搜索 / 来源清单（configs/sources.yaml）
+  → 抓取与保存原始文档、来源和版本
+  → 页面 / 区域准备 → Xiaomi OCR → Gemini 疑难区域处理
+  → 页覆盖核验 + 表格结构与来源核验
+  → 条款 / 表格父子块 + 文档、版本、页码、受众等元数据
+  → 生成 documents.jsonl / articles.jsonl / manifest.json
+  → bge-m3 dense + BM25 sparse → 重建 Qdrant 混合检索索引
+
+在线：证据驱动问答
+Browser → Gradio 三栏 UI → ConversationService → LangGraph
+  → Planner（识别问题、路由与澄清）
+  → Retriever / FlowExecutor
+      ├─ MCP policy-search → dense + sparse 检索 → RRF 融合
+      │                      → bge-reranker-v2-m3 重排序 → 证据选择
+      └─ MCP policy-meta → flow DSL / calendar / versions
+  → Advisor（LLM 基于证据与流程事实生成回答）
+  → Verifier（引用、quote、事实与覆盖核验）→ Finalize → 页面展示
 ```
 
-- 生成与语义核对使用 OpenAI-compatible 模型；
-- 向量：`BAAI/bge-m3` dense + BM25 sparse，RRF 融合后用 `bge-reranker-v2-m3` 重排；
-- 运行时只通过 MCP 读取 Qdrant/流程事实，UI 不直接访问 YAML、Qdrant 或 MCP。
+### 资料采集、全量 OCR 与入库
 
-## 当前状态（2026-11-04）
+资料入口由 `configs/sources.yaml` 管理，通过采集脚本保存公开制度快照及来源信息。OCR 处理覆盖本轮实验的全库语料：Xiaomi OCR 承担主识别，Gemini 处理疑难区域；随后核验页面覆盖、表格结构和来源，再把结果转换为可检索的条款、表格父子块与元数据。这里的“全量”指实验语料库，不表示已覆盖学校官网的全部资料或实时更新。
 
-本轮已结束调参，保留修改后的 V7 代码及实验记录。当前为可演示、可复核的研发版本，尚未通过正式上线验收；**全库 Xiaomi OCR 重建未完成**。
+父块保留表格整体结构与上下文，子块承载可检索的具体内容，通过 `table_id` / `parent_table_id` 建立关联。文档与块模型记录文档/版本身份、来源、页码、区域位置、表格关系及受众等信息，供版本过滤、上下文恢复和引用定位使用。文本索引产物与 manifest 用于追踪语料身份；向量索引在本轮 OCR 入库后重新构建，避免继续使用旧解析内容的向量。
 
-| 项目 | 已核实状态 |
+### 检索、重排序与回答
+
+检索层使用 `BAAI/bge-m3` 生成 dense 向量，同时以 BM25 sparse 做词项检索；两路候选经 RRF 融合，再由 `bge-reranker-v2-m3` 重排序。检索服务结合版本、受众和问题范围选择证据，控制上下文预算，并保留可定位的来源信息。
+
+LangGraph 负责问题规划、资料检索、流程执行、答案生成与核验。Advisor 使用 OpenAI-compatible LLM 基于证据生成回答；Verifier 检查 claim/quote、引用支持、事实与覆盖情况。办事步骤来自流程 DSL，隐私、校外、版本不符或证据不足时进入相应拒答、澄清或限答路由。生成与语义核对的模型通过环境变量配置，Gemini 的疑难区域 OCR 职责与在线回答职责分别配置。
+
+运行时通过 MCP 访问检索与流程事实；UI 通过 `ConversationService` 管理 session、thread_id 和串行发送，不直接读取 YAML、Qdrant 或 MCP。
+
+### 代码模块
+
+| 模块 / 路径 | 职责 |
 |---|---|
-| 原生解析诊断库 | 225 份文档、244 个版本，全部 `native_only`；10,047 个存储块，其中 9,589 个可检索、458 个表格父块 |
-| Xiaomi OCR | 本地模型、版面/区域路由和 Gemini 疑难区域回退已做实际实验；尚无全库 OCR 完成版本 |
-| OCR 接入 V7 | 3 份文档部分页面的 21 个影子块，19 个可检索；隔离增补库共 10,068 块；已完成同 8 题对照 |
-| 阈值 | 仓库配置仍为 `0.60`；本轮 `0.80` 是测评进程覆盖值，额外降阈值回退关闭，未写成生产校准结果 |
-| 工程验证 | 收尾离线测试 2,639 passed、9 个警告；编译通过。全库 lint 19 项、格式检查 164 文件未通过；测评期间 146 个源代码/配置文件哈希未变，尚不能视为 CI 或质量验收通过 |
+| `src/campusguide/ingest/` | 资料采集、解析、Xiaomi OCR、Gemini 区域处理、版面路由、结构化、分块、版本及索引产物 |
+| `src/campusguide/domain/` | 文档、条款、表格、来源位置与受众等数据模型和约束 |
+| `src/campusguide/retrieval/` | dense / sparse 编码与索引、混合检索、RRF、重排序、过滤与证据预算 |
+| `src/campusguide/mcp/` | `policy-search` / `policy-meta` 服务、工具协议与客户端 |
+| `src/campusguide/agents/` | LangGraph 状态和编排，Planner、Retriever、Advisor、Verifier 及覆盖处理 |
+| `src/campusguide/verification/` | 引用定位、语义支持、事实、条件、范围与覆盖核验 |
+| `src/campusguide/flows/` | 办事流程执行、槽位与 checklist |
+| `src/campusguide/conversation/`、`ui/` | 会话服务、历史恢复、流式进度与 Gradio 页面 |
+| `src/campusguide/eval/`、`qa/`、`observability/` | 评测、质量检查与运行观测 |
+| `configs/` | 来源、模型、OCR 路由、检索、图编排及流程配置 |
+| `scripts/`、`tests/` | 采集/解析/建库/评测入口及 unit、contract、integration 测试 |
 
-同一组历史 50 题，对原版 B 与修改后 V7 采用相同来源复核口径：
+## 当前状态与实验对比（2026-11-04）
 
-| 指标 | 原版 B | 修改后 V7（原生库，0.80） | V7 相对 B 的变化 |
+**本轮已完成全库 Xiaomi OCR → Gemini 疑难区域处理 → 页覆盖与表格核验 → 父子块及元数据入库 → 重建向量索引。** 最新实验结果由项目作者提供：内容正确完整及合理路由 **43/50（86%）**，严格交付通过 **39/50（78%）**，最终 Recall@12 **92.67%**，最终 MRR@12 **0.9630**，p95 **15.6 秒**。
+
+### 50 题实验结果
+
+| 指标 | 原版 B | 修改后 V7（原生库，0.80） | 最新全量 OCR 实验 |
 |---|---:|---:|---:|
-| 内容正确完整及合理路由 | 35/50（70%） | 32/50（64%） | −3 题 / −6 个百分点 |
-| 严格交付通过 | 15/50（30%） | 22/50（44%） | ＋7 题 / ＋14 个百分点 |
-| 最终 Recall@5 | 84.67% | 84.00% | −0.67 个百分点 |
-| 最终 Recall@8 | 86.67% | 88.00% | ＋1.33 个百分点 |
-| 最终 Recall@12 | 89.67% | 88.00% | −1.67 个百分点 |
-| 最终 MRR@12 | 0.9420 | 0.8900 | −0.0520 |
-| p95 | 50.26 秒 | 119.72 秒 | ＋69.45 秒（增加 138.19%） |
+| 内容正确完整及合理路由 | 35/50（70%） | 32/50（64%） | **43/50（86%）** |
+| 严格交付通过 | 15/50（30%） | 22/50（44%） | **39/50（78%）** |
+| 最终 Recall@5 | 84.67% | 84.00% | **87.33%** |
+| 最终 Recall@8 | 86.67% | 88.00% | **90.00%** |
+| 最终 Recall@12 | 89.67% | 88.00% | **92.67%** |
+| 最终 MRR@12 | 0.9420 | 0.8900 | **0.9630** |
+| p5 | 未记录 | 未记录 | **4.5 秒** |
+| p95 | 50.26 秒 | 119.72 秒 | **15.6 秒** |
 
-V7 的严格交付有改善，但内容通过率、MRR 和长尾延迟仍落后于原版 B。相较修复前冻结 V7，修改后内容通过率提高 4 个百分点、严格交付提高 8 个百分点，p95 缩短 18.21 秒；这是不同版本现有运行结果的对比，不能单独归因于阈值。
+相较原版 B，本轮内容通过增加 **8 题 / 16 个百分点**，严格交付增加 **24 题 / 48 个百分点**；Recall@5、@8、@12 分别提高 **2.66、3.33、3.00 个百分点**，MRR@12 提高 **0.0210**，p95 缩短 **34.66 秒（约 69.0%）**。相较原生库 V7，内容通过增加 **11 题 / 22 个百分点**，严格交付增加 **17 题 / 34 个百分点**，Recall@12 提高 **4.67 个百分点**，MRR@12 提高 **0.0730**，p95 缩短 **104.12 秒（约 87.0%）**。
 
-另做原生库与“原生库＋21 个 OCR 块”的 8 题定向对照：内容通过 **4/8 → 6/8**，严格交付 **1/8 → 1/8**；两组最终 Recall@5/@8/@12 均为 **87.50%**、MRR@12 均为 **0.8125**，p95 **86.76 → 134.08 秒**。6 题最终证据含 OCR、3 题最终引用 OCR；公选课题通过 OCR 表格行恢复了 6 学分/慕课 2 学分的答案，但覆盖判断仍虚报缺项。
+“内容正确完整及合理路由”和“严格交付通过”是不同判定口径，分别保留计数；Recall/MRR 衡量检索效果，不能等同于最终答案通过率。延迟按本轮提供的 **p5（第 5 百分位）**、p95 记录，不将 p5 改写为 p50。
 
-上述结果来自已暴露题集、单次模型输出和非盲来源复核，不是独立人工验收；50 题比较同时存在语料、配置和传输差异，8 题为局部增补实验。文档版本召回不等于条款/表格行召回，不能从局部结果外推全库 OCR 收益。
+以上为现有实验结果的版本对比。历史 B 与原生库 V7 来自已有报告；最新全量 OCR 数值依据作者本次实验汇总更新，未附新的逐题明细、运行配置及计时边界。因此，此表用于展示阶段变化；是否完全同题、同模型、同配置和同计时边界仍需以原始运行记录核对，提升幅度不能单独归因于 OCR。
 
-当前结论、残留问题、OCR 实际完成量及复现边界见 [V7 阶段总结](docs/reports/v7-final-report-20261104.md)；机器可读汇总见 [指标 JSON](docs/reports/v7-final-metrics-20261104.json)。早期 ultraspeed / W1–W8 数字保留在下方历史记录和 [评测文档](docs/evaluation.md)，不作为本轮 V7 成绩。提交范围和工程检查见 [Git 准备说明](docs/git-preparation-v7-20261104.md)。
+### 历史实验与复现边界
+
+全量 OCR 之前，原生解析诊断库记录为 225 份文档、244 个版本，全部 `native_only`，共 10,047 个存储块，其中 9,589 个可检索、458 个表格父块。这些是**历史诊断库规模**，不作为本轮全量 OCR 后的块数。
+
+早期还做过“原生库 + 21 个 OCR 影子块”的 8 题定向对照：内容通过 **4/8 → 6/8**，严格交付 **1/8 → 1/8**；两组最终 Recall@5/@8/@12 均为 **87.50%**、MRR@12 均为 **0.8125**，p95 **86.76 → 134.08 秒**。该实验仅验证局部 OCR 增补，与本次全库重建分开记录。
+
+历史 V7 使用过测评进程覆盖阈值 `0.80`，仓库 `configs/retrieval.yaml` 仍为 `0.60`；本轮全量 OCR 实验未提供阈值和索引标识，不据此修改默认运行配置。历史收尾离线测试为 2,639 passed、9 个警告，编译通过；当时全库 lint 有 19 项问题、格式检查有 164 文件未通过。这些检查属于此前记录，不代表本轮已重新执行或通过 CI。
+
+[历史 V7 阶段总结](docs/reports/v7-final-report-20261104.md)和[历史指标 JSON](docs/reports/v7-final-metrics-20261104.json)记录的是全量 OCR 完成之前的状态，其中“全库 OCR 未完成”的描述仅适用于当时；最新完成状态及成绩以本页为准。早期 W1–W8 记录见下方与[评测文档](docs/evaluation.md)，提交范围和历史工程检查见 [Git 准备说明](docs/git-preparation-v7-20261104.md)。
 
 ## UI 改动对比
 
@@ -89,7 +128,7 @@ make compose-up            # Qdrant
 make demo                  # Gradio 三栏页面
 ```
 
-打开 `http://127.0.0.1:7860/`。主界面不展示模型名；模型配置统一由 `.env` 注入。历史演示档为 `ultraspeed`；本轮 V7 问答实测使用 Gemini 3.5 Flash Lite，模型由环境变量选择。启动演示不会自动切换到实验索引。
+打开 `http://127.0.0.1:7860/`。主界面不展示模型名；模型配置统一由 `.env` 注入。历史演示档为 `ultraspeed`；历史 V7 问答实测使用 Gemini 3.5 Flash Lite；当前模型由环境变量选择。启动演示不会自动切换到本轮全量 OCR 实验索引，需核对运行配置与索引 manifest。
 
 ### Docker（推荐）
 
@@ -105,19 +144,23 @@ make demo-up               # preflight + docker compose up -d --build
 - Docker Hub 不可达时可将 `PYTHON_IMAGE` 设为可用镜像源（见 `.env.example` 注释）；
 - 查看日志：`docker compose logs -f app`。
 
-### 从零准备数据
+### 数据准备入口与全量 OCR 复现
 
 ```bash
 make init-w2
 make compose-up
 make fetch                 # 按 configs/sources.yaml 抓取/复制公开制度
-make parse-native          # 原生解析诊断；结果明确标记 native_only
+make parse-native          # 原生解析诊断；不会复现全量 OCR 实验
 make index
 make vector-index          # 对本地解析产物构建 hybrid 索引
 make demo
 ```
 
-`make parse` / `make parse-vision` 当前使用 `configs/vision.yaml` 的 Gemini 视觉链路，**不是 Xiaomi 全库 OCR 入口**；`make parse-native` 也不会调用 Xiaomi。上述从零命令重建本地默认数据，请先保留需要的旧索引；实验应显式使用独立输出路径。Xiaomi 现有批处理入口为 `scripts/run_xiaomi_ocr_local.py`，区域路由为 `scripts/run_ocr_router.py`，均用于显式影子实验；本地安装根目录为 `D:/xiaomi-ocr`。完整 OCR 语料桥接、覆盖核验及索引重建仍待完成。
+上述命令提供基础采集、原生诊断和建库流程。`make parse` / `make parse-vision` 使用 `configs/vision.yaml` 的 Gemini 视觉链路；`make parse-native` 不调用 Xiaomi。**这些默认命令不等同于本轮已完成的全量 Xiaomi OCR 实验流程。**
+
+仓库提供 Xiaomi 本地批处理入口 `scripts/run_xiaomi_ocr_local.py` 和区域路由入口 `scripts/run_ocr_router.py`，本地安装根目录为 `D:/xiaomi-ocr`。区域路由脚本本身只输出影子产物，不写入 Qdrant。复现全量实验需要准备对应的页面/区域清单与 OCR 运行环境，依次完成 Xiaomi 识别、Gemini 疑难区域处理、页覆盖及表格核验，再将父子块和元数据桥接至索引产物并重建向量索引；本轮专用编排命令与产物路径尚未在本页提供。
+
+重建前保留所需旧索引，实验使用独立输出路径与集合；在线服务启动前核对文档版本、manifest 和目标集合，确认使用本轮 OCR 产物。
 
 离线 UI（不加载模型、不需要 Qdrant）：
 
@@ -151,7 +194,7 @@ make demo-fake
 | W8 | 三栏 UI/移动端/历史恢复/节点进度；fake tests 646 passed；Docker/CI 落地 | 演示层完成 |
 
 W6-B ultraspeed 报告：[w6b-ultraspeed-final-dev-report.md](data/eval/w6b-ultraspeed-final-dev-report.md)。
-W7 的原始技术审计、指标和限制见 [评测与质量门](docs/evaluation.md)；本节保留早期 ultraspeed 记录；本轮 V7 的独立汇总见页面上方及阶段总结，跨题集指标不直接混比。
+W7 的原始技术审计、指标和限制见 [评测与质量门](docs/evaluation.md)；本节保留早期 ultraspeed 记录；最新全量 OCR 成绩见页面上方，历史 V7 详见阶段总结，跨题集指标不直接混比。
 
 ## 数据与合规
 
@@ -165,11 +208,11 @@ W7 的原始技术审计、指标和限制见 [评测与质量门](docs/evaluati
 
 ## 已知限制
 
-- **延迟仍有长尾**：UI/会话配置的超时与进程内测评不是同一计时边界；真实图测评存在超过 120 秒的题，不能承诺所有请求均在 120 秒内结束；
-- **单学校、公开制度**：不做跨学校或个人记录查询；指定年份、班型和文档关系仍需核对，存在范围错配与表格分类残留问题；
-- **Docker 体积**：CPU-only 镜像约 2.79GB，首次模型下载约 4.4GB；
-- **OCR 尚未全库落地**：21 块增补实验不代表全库 OCR；覆盖误判、重复补答、整体误拒及 p95 尚未满足发布要求。
-- 完整图/W7 历史评测见 [评测与质量门](docs/evaluation.md)，本轮停止调参结论见 [V7 阶段总结](docs/reports/v7-final-report-20261104.md)。
+- **答案仍有失败样本**：本轮内容及路由通过 43/50、严格交付通过 39/50，尚有 7 题和 11 题分别未达到对应标准；具体原因需结合逐题记录分析。
+- **单学校、公开制度**：不查询个人记录；全量 OCR 覆盖的是实验语料，指定年份、班型、文档关系和官网后续更新仍需核对。
+- **延迟有测量边界**：本轮 p5 4.5 秒、p95 15.6 秒是实验统计值，不代表所有请求均在 15.6 秒内完成；历史超时记录属于旧版本，跨版本需核对计时口径。
+- **复现信息待补齐**：最新实验的语料/索引标识、全量产物数量、逐题结果、模型配置及计时边界未随本次汇总提供；默认 Makefile 入口不会自动复现该实验，也不能仅凭汇总视为正式上线验收通过。
+- **Docker 体积**：历史 CPU-only 镜像约 2.79GB，首次检索模型下载约 4.4GB；本地 Xiaomi OCR 需另行准备运行环境与权重。
 
 ## 复现与目录
 
@@ -184,7 +227,7 @@ make demo-ui-smoke         # 真实页面 smoke（先启动 app）
 ```
 
 ```text
-src/campusguide/          # agents / conversation / retrieval / flows / mcp / ui
+src/campusguide/          # ingest / domain / retrieval / agents / verification / flows / mcp / conversation / ui
 configs/                  # graph、retrieval、flows、sources、organization
 data/processed/           # 本地生成，不提交
 data/eval/                # 历史评测；RAG/OCR 大型实验产物只在本地保存
