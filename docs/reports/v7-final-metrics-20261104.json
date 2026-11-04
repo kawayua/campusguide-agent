@@ -1,0 +1,484 @@
+{
+  "recorded_date": "2026-11-04",
+  "status": "tuning_stopped_code_preserved_not_release_accepted",
+  "scope": "Aggregated diagnostic results only; excludes source full text, raw answers, prompts, credentials and local absolute paths.",
+  "corpus_state": {
+    "document_versions": 244,
+    "native_only_versions": 244,
+    "native_stored_blocks": 10047,
+    "native_indexable_blocks": 9589,
+    "full_ocr_completed_document_versions": 0,
+    "partial_ocr_shadow_blocks": 21,
+    "partial_ocr_shadow_documents": 3,
+    "partial_ocr_indexable_blocks": 19,
+    "trial_combined_stored_blocks": 10068,
+    "full_ocr_dense_sparse_index_ready": false
+  },
+  "same50": {
+    "cases": 50,
+    "scope": "Same50 historical questions, unblinded Root source review; native corpus; NOT target OCR-V7 acceptance; corpus/config/transport differences prevent causal attribution.",
+    "candidate_threshold": 0.8,
+    "extra_fallback_enabled": false,
+    "versions": {
+      "original": {
+        "quality": {
+          "content_success": 35,
+          "strict_success": 15,
+          "wrong_fact": 3,
+          "false_refusal": 1,
+          "false_missing": 20,
+          "wrong_scope": 3,
+          "incomplete_not_detected": 3,
+          "coverage_verification_unresolved": 1,
+          "self_contradiction": 7,
+          "content_success_rate": 0.7,
+          "strict_success_rate": 0.3
+        },
+        "retrieval": {
+          "initial": {
+            "5": {
+              "recall_macro": 0.8366666666666667,
+              "recall_micro": 0.7887323943661971,
+              "hit_rate": 0.94,
+              "all_sources_rate": 0.74,
+              "mrr": 0.94,
+              "hits": 56,
+              "total": 71
+            },
+            "8": {
+              "recall_macro": 0.8566666666666667,
+              "recall_micro": 0.8169014084507042,
+              "hit_rate": 0.94,
+              "all_sources_rate": 0.78,
+              "mrr": 0.94,
+              "hits": 58,
+              "total": 71
+            },
+            "12": {
+              "recall_macro": 0.8866666666666667,
+              "recall_micro": 0.8591549295774648,
+              "hit_rate": 0.96,
+              "all_sources_rate": 0.82,
+              "mrr": 0.942,
+              "hits": 61,
+              "total": 71
+            }
+          },
+          "final": {
+            "5": {
+              "recall_macro": 0.8466666666666667,
+              "recall_micro": 0.8028169014084507,
+              "hit_rate": 0.94,
+              "all_sources_rate": 0.76,
+              "mrr": 0.94,
+              "hits": 57,
+              "total": 71
+            },
+            "8": {
+              "recall_macro": 0.8666666666666667,
+              "recall_micro": 0.8309859154929577,
+              "hit_rate": 0.94,
+              "all_sources_rate": 0.8,
+              "mrr": 0.94,
+              "hits": 59,
+              "total": 71
+            },
+            "12": {
+              "recall_macro": 0.8966666666666666,
+              "recall_micro": 0.8732394366197183,
+              "hit_rate": 0.96,
+              "all_sources_rate": 0.84,
+              "mrr": 0.942,
+              "hits": 62,
+              "total": 71
+            }
+          }
+        },
+        "latency_ms": {
+          "p50": 27801.5,
+          "p95": 50261.6,
+          "max": 78433,
+          "total": 1406971
+        },
+        "model_usage": null
+      },
+      "v7_085": {
+        "quality": {
+          "content_success": 30,
+          "strict_success": 18,
+          "wrong_fact": 2,
+          "false_refusal": 6,
+          "false_missing": 12,
+          "wrong_scope": 1,
+          "incomplete_not_detected": 2,
+          "coverage_verification_unresolved": 1,
+          "self_contradiction": 0,
+          "content_success_rate": 0.6,
+          "strict_success_rate": 0.36
+        },
+        "retrieval": {
+          "initial": {
+            "5": {
+              "recall_macro": 0.82,
+              "recall_micro": 0.7746478873239436,
+              "hit_rate": 0.88,
+              "all_sources_rate": 0.76,
+              "mrr": 0.8666666666666667,
+              "hits": 55,
+              "total": 71
+            },
+            "8": {
+              "recall_macro": 0.83,
+              "recall_micro": 0.7887323943661971,
+              "hit_rate": 0.88,
+              "all_sources_rate": 0.78,
+              "mrr": 0.8666666666666667,
+              "hits": 56,
+              "total": 71
+            },
+            "12": {
+              "recall_macro": 0.84,
+              "recall_micro": 0.8028169014084507,
+              "hit_rate": 0.9,
+              "all_sources_rate": 0.78,
+              "mrr": 0.8683333333333333,
+              "hits": 57,
+              "total": 71
+            }
+          },
+          "final": {
+            "5": {
+              "recall_macro": 0.82,
+              "recall_micro": 0.7746478873239436,
+              "hit_rate": 0.88,
+              "all_sources_rate": 0.76,
+              "mrr": 0.8666666666666667,
+              "hits": 55,
+              "total": 71
+            },
+            "8": {
+              "recall_macro": 0.86,
+              "recall_micro": 0.8309859154929577,
+              "hit_rate": 0.9,
+              "all_sources_rate": 0.82,
+              "mrr": 0.87,
+              "hits": 59,
+              "total": 71
+            },
+            "12": {
+              "recall_macro": 0.87,
+              "recall_micro": 0.8450704225352113,
+              "hit_rate": 0.9,
+              "all_sources_rate": 0.84,
+              "mrr": 0.87,
+              "hits": 60,
+              "total": 71
+            }
+          }
+        },
+        "latency_ms": {
+          "p50": 50672.621,
+          "p95": 137923.322,
+          "max": 226760.866,
+          "total": 3085690.885
+        },
+        "model_usage": {
+          "logical_calls": 337,
+          "successful": 336,
+          "failed": 1,
+          "prompt_tokens": 1811115,
+          "completion_tokens": 70965
+        }
+      },
+      "candidate_080": {
+        "quality": {
+          "content_success": 32,
+          "strict_success": 22,
+          "wrong_fact": 2,
+          "false_refusal": 4,
+          "false_missing": 12,
+          "wrong_scope": 3,
+          "incomplete_not_detected": 4,
+          "coverage_verification_unresolved": 1,
+          "self_contradiction": 3,
+          "content_success_rate": 0.64,
+          "strict_success_rate": 0.44
+        },
+        "retrieval": {
+          "initial": {
+            "5": {
+              "recall_macro": 0.84,
+              "recall_micro": 0.7887323943661971,
+              "hit_rate": 0.9,
+              "all_sources_rate": 0.78,
+              "mrr": 0.8866666666666667,
+              "hits": 56,
+              "total": 71
+            },
+            "8": {
+              "recall_macro": 0.85,
+              "recall_micro": 0.8028169014084507,
+              "hit_rate": 0.9,
+              "all_sources_rate": 0.8,
+              "mrr": 0.8866666666666667,
+              "hits": 57,
+              "total": 71
+            },
+            "12": {
+              "recall_macro": 0.86,
+              "recall_micro": 0.8169014084507042,
+              "hit_rate": 0.92,
+              "all_sources_rate": 0.8,
+              "mrr": 0.8883333333333333,
+              "hits": 58,
+              "total": 71
+            }
+          },
+          "final": {
+            "5": {
+              "recall_macro": 0.84,
+              "recall_micro": 0.7887323943661971,
+              "hit_rate": 0.9,
+              "all_sources_rate": 0.78,
+              "mrr": 0.8866666666666667,
+              "hits": 56,
+              "total": 71
+            },
+            "8": {
+              "recall_macro": 0.88,
+              "recall_micro": 0.8450704225352113,
+              "hit_rate": 0.92,
+              "all_sources_rate": 0.84,
+              "mrr": 0.89,
+              "hits": 60,
+              "total": 71
+            },
+            "12": {
+              "recall_macro": 0.88,
+              "recall_micro": 0.8450704225352113,
+              "hit_rate": 0.92,
+              "all_sources_rate": 0.84,
+              "mrr": 0.89,
+              "hits": 60,
+              "total": 71
+            }
+          }
+        },
+        "latency_ms": {
+          "p50": 31679.545,
+          "p95": 119716.053,
+          "max": 152304.981,
+          "total": 2303901.466
+        },
+        "model_usage": {
+          "logical_calls": 342,
+          "successful": 342,
+          "failed": 0,
+          "prompt_tokens": 1878446,
+          "completion_tokens": 73855
+        }
+      }
+    }
+  },
+  "paired8": {
+    "cases_per_arm": 8,
+    "scope": "Four historical and four source-derived targeted questions; additive21 OCR; not independent or full-corpus OCR acceptance.",
+    "threshold": 0.8,
+    "extra_fallback_enabled": false,
+    "versions": {
+      "native": {
+        "quality": {
+          "content_success": 4,
+          "strict_success": 1,
+          "wrong_fact": 0,
+          "false_missing": 3,
+          "false_refusal": 2
+        },
+        "retrieval": {
+          "initial": {
+            "5": {
+              "recall_macro": 0.875,
+              "recall_micro": 0.8,
+              "mrr": 0.8125,
+              "hit_rate": 0.875
+            },
+            "8": {
+              "recall_macro": 0.875,
+              "recall_micro": 0.8,
+              "mrr": 0.8125,
+              "hit_rate": 0.875
+            },
+            "12": {
+              "recall_macro": 0.875,
+              "recall_micro": 0.8,
+              "mrr": 0.8125,
+              "hit_rate": 0.875
+            }
+          },
+          "final": {
+            "5": {
+              "recall_macro": 0.875,
+              "recall_micro": 0.8,
+              "mrr": 0.8125,
+              "hit_rate": 0.875
+            },
+            "8": {
+              "recall_macro": 0.875,
+              "recall_micro": 0.8,
+              "mrr": 0.8125,
+              "hit_rate": 0.875
+            },
+            "12": {
+              "recall_macro": 0.875,
+              "recall_micro": 0.8,
+              "mrr": 0.8125,
+              "hit_rate": 0.875
+            }
+          }
+        },
+        "latency_ms": {
+          "p50": 39796.497,
+          "p95": 86760.6721,
+          "total": 345723.06299999997
+        },
+        "ocr_exposure": {
+          "ocr_search_ids": 0,
+          "ocr_initial_ids": 0,
+          "ocr_final_ids": 0,
+          "ocr_cited_ids": 0
+        },
+        "calls": {
+          "logical": 55,
+          "failed": 0,
+          "prompt_tokens": 278518,
+          "completion_tokens": 9411
+        }
+      },
+      "ocr21": {
+        "quality": {
+          "content_success": 6,
+          "strict_success": 1,
+          "wrong_fact": 0,
+          "false_missing": 5,
+          "false_refusal": 1
+        },
+        "retrieval": {
+          "initial": {
+            "5": {
+              "recall_macro": 0.875,
+              "recall_micro": 0.8,
+              "mrr": 0.8125,
+              "hit_rate": 0.875
+            },
+            "8": {
+              "recall_macro": 0.875,
+              "recall_micro": 0.8,
+              "mrr": 0.8125,
+              "hit_rate": 0.875
+            },
+            "12": {
+              "recall_macro": 0.875,
+              "recall_micro": 0.8,
+              "mrr": 0.8125,
+              "hit_rate": 0.875
+            }
+          },
+          "final": {
+            "5": {
+              "recall_macro": 0.875,
+              "recall_micro": 0.8,
+              "mrr": 0.8125,
+              "hit_rate": 0.875
+            },
+            "8": {
+              "recall_macro": 0.875,
+              "recall_micro": 0.8,
+              "mrr": 0.8125,
+              "hit_rate": 0.875
+            },
+            "12": {
+              "recall_macro": 0.875,
+              "recall_micro": 0.8,
+              "mrr": 0.8125,
+              "hit_rate": 0.875
+            }
+          }
+        },
+        "latency_ms": {
+          "p50": 81381.036,
+          "p95": 134079.08034999997,
+          "total": 614778.998
+        },
+        "ocr_exposure": {
+          "ocr_search_ids": 6,
+          "ocr_initial_ids": 6,
+          "ocr_final_ids": 6,
+          "ocr_cited_ids": 3
+        },
+        "calls": {
+          "logical": 62,
+          "failed": 0,
+          "prompt_tokens": 289102,
+          "completion_tokens": 10454
+        }
+      }
+    }
+  },
+  "production": {
+    "threshold_in_repository_config": 0.6,
+    "threshold080_is_eval_override_only": true,
+    "published": false
+  },
+  "limitations": [
+    "Document/version recall is not required-clause or table-row recall.",
+    "No independent atomic-fact coverage percentage is asserted.",
+    "Root source review is neither blinded nor independent human acceptance.",
+    "Single output per case; no statistically established improvement or production p95 guarantee.",
+    "Current full corpus is native_only; partial OCR additive experiment is not full replacement."
+  ],
+  "comparative_effects": {
+    "definition": "Delta is candidate minus comparator; positive latency means slower. Derived from existing results, not new evaluation. Same50 and paired8 remain separate experiments.",
+    "same50_original_to_candidate": {
+      "content_success_delta_cases": -3,
+      "content_success_delta_percentage_points": -6.0,
+      "strict_success_delta_cases": 7,
+      "strict_success_delta_percentage_points": 14.0,
+      "final_recall_delta_percentage_points": {
+        "5": -0.66666667,
+        "8": 1.33333333,
+        "12": -1.66666667
+      },
+      "final_mrr12_delta": -0.052,
+      "p95_delta_seconds": 69.454453,
+      "p95_relative_change_percent": 138.18591728
+    },
+    "same50_frozen_v7_to_candidate": {
+      "content_success_delta_cases": 2,
+      "content_success_delta_percentage_points": 4.0,
+      "strict_success_delta_cases": 4,
+      "strict_success_delta_percentage_points": 8.0,
+      "final_recall_delta_percentage_points": {
+        "5": 2.0,
+        "8": 2.0,
+        "12": 1.0
+      },
+      "final_mrr12_delta": 0.02,
+      "p95_delta_seconds": -18.207269,
+      "p95_relative_change_percent": -13.20100817
+    },
+    "paired8_native_to_ocr21": {
+      "content_success_delta_cases": 2,
+      "content_success_delta_percentage_points": 25.0,
+      "strict_success_delta_cases": 0,
+      "strict_success_delta_percentage_points": 0.0,
+      "final_recall_delta_percentage_points": {
+        "5": 0.0,
+        "8": 0.0,
+        "12": 0.0
+      },
+      "final_mrr12_delta": 0.0,
+      "p95_delta_seconds": 47.31840825,
+      "p95_relative_change_percent": 54.5390061
+    }
+  }
+}

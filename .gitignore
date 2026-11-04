@@ -56,3 +56,17 @@ Thumbs.db
 data/eval/answer_quality/pytest_*_tmp/
 data/eval/answer_quality/batch_retest_20261028_162015/
 data/eval/answer_quality/rate_limited_20261028_run01/
+
+# Local RAG/OCR experiments contain full source extracts, model responses,
+# corpus snapshots, Qdrant databases and temporary tests. Publish curated
+# aggregate reports under docs/reports instead; tracked history is preserved.
+/data/eval/answer_quality/*
+!/data/eval/answer_quality/ingestion_refactor_20261030/
+/data/eval/answer_quality/ingestion_refactor_20261030/*
+!/data/eval/answer_quality/ingestion_refactor_20261030/date_fields_to_materialize.json
+/data/eval/corpus_random_100_fixed/
+/answer_reliability_20261102/
+/.pytest_*/
+/.tmp_*
+/data/git-preparation/
+/data/experiments/

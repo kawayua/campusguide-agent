@@ -2,25 +2,21 @@
 
 from __future__ import annotations
 
-import json
+from pathlib import Path
 
 from campusguide.agents.coverage import CoverageChecker
 from campusguide.agents.graph import MAX_COVERAGE_REPAIR_ROUNDS
 from campusguide.agents.plan import Plan
 from campusguide.agents.planner import Planner
 from campusguide.agents.providers import FakeChatProvider
-from campusguide.agents.retriever import _Candidate, GraphRetriever
-from campusguide.domain.models import ChecklistItem
-from campusguide.verification.claims import ClaimValidator
-from campusguide.agents.advisor import CitationDraft, ClaimDraft
+from campusguide.agents.retriever import GraphRetriever, _Candidate
 from tests.w2_helpers import make_article, make_evidence
 
 
 def _plan_with_two_units() -> Plan:
-    from campusguide.config import load_organization
     from campusguide.agents.question_units import decompose_question
+    from campusguide.config import load_organization
     from campusguide.retrieval.profile_expand import ProfileLexicon
-    from pathlib import Path
 
     org = load_organization(Path("configs/organization.yaml"))
     lexicon = ProfileLexicon.from_organization(org)
@@ -50,19 +46,39 @@ def test_planner_protects_a_query_for_each_uncovered_unit() -> None:
 
 def test_retriever_keeps_two_slots_per_unit_in_comparisons() -> None:
     agro = make_evidence(
-        make_article("agro@v2026#a", doc_title="农业工程研究生培养方案", text="农业工程培养目标。"),
+        make_article(
+            "agro@v2026#a",
+            version_id="v2026",
+            doc_title="农业工程研究生培养方案",
+            text="农业工程培养目标。",
+        ),
         score=0.9,
     )
     agro2 = make_evidence(
-        make_article("agro@v2026#b", doc_title="农业工程研究生培养方案", text="农业工程课程设置。"),
+        make_article(
+            "agro@v2026#b",
+            version_id="v2026",
+            doc_title="农业工程研究生培养方案",
+            text="农业工程课程设置。",
+        ),
         score=0.8,
     )
     industrial = make_evidence(
-        make_article("ie@v2026#a", doc_title="工业工程与管理研究生培养方案", text="工业工程培养目标。"),
+        make_article(
+            "ie@v2026#a",
+            version_id="v2026",
+            doc_title="工业工程与管理研究生培养方案",
+            text="工业工程培养目标。",
+        ),
         score=0.7,
     )
     industrial2 = make_evidence(
-        make_article("ie@v2026#b", doc_title="工业工程与管理研究生培养方案", text="工业工程课程设置。"),
+        make_article(
+            "ie@v2026#b",
+            version_id="v2026",
+            doc_title="工业工程与管理研究生培养方案",
+            text="工业工程课程设置。",
+        ),
         score=0.6,
     )
     retriever = GraphRetriever.__new__(GraphRetriever)
@@ -83,7 +99,7 @@ def test_retriever_keeps_two_slots_per_unit_in_comparisons() -> None:
 
 def test_repair_rounds_are_bounded_and_per_unit() -> None:
     assert MAX_COVERAGE_REPAIR_ROUNDS == 2
-    text = open("src/campusguide/agents/graph.py", encoding="utf-8").read()
+    text = Path("src/campusguide/agents/graph.py").read_text(encoding="utf-8")
     assert "query_budget = 3 if round_index == 0 else 2" in text
     assert '"coverage_repair_count": round_index + 1' in text
 
@@ -112,13 +128,13 @@ def test_coverage_failure_is_recorded_as_service_error() -> None:
 
 
 def test_graph_trace_carries_provider_fields() -> None:
-    text = open("src/campusguide/agents/graph.py", encoding="utf-8").read()
+    text = Path("src/campusguide/agents/graph.py").read_text(encoding="utf-8")
     assert "provider_error=getattr(self._planner, \"last_provider_error\"" in text
     assert '"kind": audit.error_kind' in text
     assert "provider_error=exc.as_dict()" in text
 
 def test_supplement_does_not_reset_the_revise_budget() -> None:
     """049: 补查重置 revision_count 会让“生成→核对”重复到 LangGraph 上限。"""
-    text = open("src/campusguide/agents/graph.py", encoding="utf-8").read()
+    text = Path("src/campusguide/agents/graph.py").read_text(encoding="utf-8")
     supplement = text.split("def supplement", 1)[1].split("def ", 1)[0]
     assert '"revision_count": 0' not in supplement

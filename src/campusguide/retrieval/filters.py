@@ -18,6 +18,7 @@ from qdrant_client.models import (
     IsEmptyCondition,
     IsNullCondition,
     MatchAny,
+    MatchValue,
     Range,
 )
 
@@ -51,11 +52,71 @@ def academic_cycle(as_of: date) -> list[str]:
     return [str(start), f"{start}-{start + 1}"]
 
 
+def _cycle_forms(value: str) -> list[str]:
+    start = int(value.split("-", 1)[0])
+    return [str(start), f"{start}-{start + 1}"]
+
+
+def target_academic_cycle(filters: PolicyFilters) -> list[str]:
+    """明确目标学年优先；否则按 as_of 推导，避免把“今天”硬套到招生/届别文件。"""
+    if filters.academic_year:
+        return _cycle_forms(filters.academic_year)
+    if filters.profile is not None and filters.profile.academic_year:
+        return _cycle_forms(filters.profile.academic_year)
+    return academic_cycle(filters.as_of)
+
+
 def _empty_or_match(key: str, values: list[Any]) -> Filter:
     return Filter(
         should=[
             IsEmptyCondition(is_empty={"key": key}),
             FieldCondition(key=key, match=MatchAny(any=values)),
+        ]
+    )
+
+
+def _empty_or_value(key: str, value: Any) -> Filter:
+    return Filter(
+        should=[
+            IsNullCondition(is_null={"key": key}),
+            FieldCondition(key=key, match=MatchValue(value=value)),
+        ]
+    )
+
+
+LEARNING_PROGRAM_VALUES = ("full_time", "part_time")
+DEGREE_PROGRAM_VALUES = ("academic", "professional")
+
+
+def _preferred_or_legacy(
+    new_key: str,
+    legacy_key: str,
+    value: Any,
+    *,
+    legacy_domain_values: tuple[str, ...],
+) -> Filter:
+    """新字段优先、旧 ``program_types`` 仅在其确实描述该概念时兜底。
+
+    旧字段把学习方式和培养类型混在一起：文档只写了 ``academic`` 时不应被
+    “全日制”查询排除。因此只有旧字段含同类取值时才把它当作约束。
+    """
+    return Filter(
+        should=[
+            Filter(
+                must=[
+                    IsEmptyCondition(is_empty={"key": new_key}),
+                    Filter(
+                        must_not=[
+                            FieldCondition(
+                                key=legacy_key,
+                                match=MatchAny(any=list(legacy_domain_values)),
+                            )
+                        ]
+                    ),
+                ]
+            ),
+            FieldCondition(key=new_key, match=MatchAny(any=[value])),
+            FieldCondition(key=legacy_key, match=MatchAny(any=[value])),
         ]
     )
 
@@ -183,6 +244,26 @@ def build_qdrant_filter(filters: PolicyFilters) -> Filter:
             must.append(_empty_or_match("audience_stages", [profile.stage.value]))
         if profile.program_type is not None:
             must.append(_empty_or_match("audience_program_types", [profile.program_type.value]))
+        if profile.learning_mode is not None:
+            must.append(
+                _preferred_or_legacy(
+                    "audience_learning_modes",
+                    "audience_program_types",
+                    profile.learning_mode.value,
+                    legacy_domain_values=LEARNING_PROGRAM_VALUES,
+                )
+            )
+        if profile.degree_type is not None:
+            must.append(
+                _preferred_or_legacy(
+                    "audience_degree_types",
+                    "audience_program_types",
+                    profile.degree_type.value,
+                    legacy_domain_values=DEGREE_PROGRAM_VALUES,
+                )
+            )
+        if profile.class_types:
+            must.append(_empty_or_match("audience_class_types", list(profile.class_types)))
         if profile.groups:
             must.append(
                 _empty_or_match(
@@ -192,7 +273,21 @@ def build_qdrant_filter(filters: PolicyFilters) -> Filter:
             )
         if profile.status is not None:
             must.append(_empty_or_match("audience_status", [profile.status.value]))
-        must.append(_empty_or_match("audience_cycle", academic_cycle(filters.as_of)))
+
+    graduating_year = filters.graduating_year
+    admission_year = filters.admission_year
+    if profile is not None:
+        if graduating_year is None:
+            graduating_year = profile.graduating_year
+        if admission_year is None:
+            admission_year = profile.admission_year
+    if graduating_year is not None:
+        must.append(_empty_or_match("audience_graduating_years", [graduating_year]))
+    if admission_year is not None:
+        must.append(_empty_or_value("audience_admission_year", admission_year))
+
+    if (profile is not None and not profile.is_empty) or filters.academic_year:
+        must.append(_empty_or_match("audience_cycle", target_academic_cycle(filters)))
 
     return Filter(must=must)
 
@@ -210,6 +305,12 @@ def filter_explanations(filters: PolicyFilters) -> list[str]:
         applied.append("doc_ids=" + ",".join(filters.doc_ids))
     if filters.ignore_effective_dates:
         applied.append("effective_dates=ignored")
+    if filters.academic_year:
+        applied.append(f"academic_year={filters.academic_year}")
+    if filters.admission_year is not None:
+        applied.append(f"admission_year={filters.admission_year}")
+    if filters.graduating_year is not None:
+        applied.append(f"graduating_year={filters.graduating_year}")
     profile = filters.profile
     if profile is not None and not profile.is_empty:
         parts = []
@@ -223,6 +324,18 @@ def filter_explanations(filters: PolicyFilters) -> list[str]:
             parts.append(f"stage={profile.stage.value}")
         if profile.program_type is not None:
             parts.append(f"program_type={profile.program_type.value}")
+        if profile.learning_mode is not None:
+            parts.append(f"learning_mode={profile.learning_mode.value}")
+        if profile.degree_type is not None:
+            parts.append(f"degree_type={profile.degree_type.value}")
+        if profile.class_types:
+            parts.append("class_types=" + ",".join(profile.class_types))
+        if profile.graduating_year is not None:
+            parts.append(f"graduating_year={profile.graduating_year}")
+        if profile.admission_year is not None:
+            parts.append(f"admission_year={profile.admission_year}")
+        if profile.academic_year is not None:
+            parts.append(f"academic_year={profile.academic_year}")
         if profile.groups:
             parts.append("groups=" + ",".join(group.value for group in profile.groups))
         if profile.status is not None:
@@ -242,22 +355,58 @@ def article_matches_profile(
     profile: UserProfile | None,
     *,
     as_of: date,
+    academic_year: str | None = None,
+    admission_year: int | None = None,
+    graduating_year: int | None = None,
 ) -> tuple[bool, list[str]]:
     """Python 侧二次校验，防止 payload 索引缺失或 Qdrant 条件遗漏。
 
-    返回 ``(是否保留, 排除原因)``；用户未提供的字段永远不排除。
+    返回 ``(是否保留, 排除原因)``；用户未提供的字段永远不排除。``academic_year``
+    等显式年度优先于画像与 ``as_of``，避免把招生/届别文件套进当前学年。
     """
-    if profile is None or profile.is_empty:
-        detail = getattr(article, "audience_detail", None)
-        cycle = getattr(detail, "cycle", None) if detail else None
-        if cycle and cycle not in academic_cycle(as_of):
-            return False, [f"学年不匹配：文档={cycle}，当前={academic_cycle(as_of)}"]
-        return True, []
+    target_cycle = None
+    if academic_year:
+        target_cycle = _cycle_forms(academic_year)
+    elif profile is not None and profile.academic_year:
+        target_cycle = _cycle_forms(profile.academic_year)
+    if target_cycle is None:
+        target_cycle = academic_cycle(as_of)
+
+    target_graduating = graduating_year
+    target_admission = admission_year
+    if profile is not None:
+        if target_graduating is None:
+            target_graduating = profile.graduating_year
+        if target_admission is None:
+            target_admission = profile.admission_year
+
+    reasons: list[str] = []
+
+    def check_cohort(detail: Any) -> None:
+        cycle = getattr(detail, "cycle", None)
+        if cycle and cycle not in target_cycle:
+            reasons.append(f"学年不匹配：文档={cycle}，目标={target_cycle}")
+        if target_graduating is not None:
+            graduating = _detail_list(detail, "graduating_years")
+            if graduating and target_graduating not in graduating:
+                reasons.append(f"毕业届别不匹配：文档={graduating}，用户={target_graduating}")
+        if target_admission is not None:
+            doc_admission = getattr(detail, "admission_year", None)
+            if doc_admission is not None and doc_admission != target_admission:
+                reasons.append(
+                    f"招生年度不匹配：文档={doc_admission}，用户={target_admission}"
+                )
+
     detail = getattr(article, "audience_detail", None)
+    if profile is None or profile.is_empty:
+        if detail is not None:
+            check_cohort(detail)
+        return not reasons, reasons
     if detail is None:
         return True, []
 
-    reasons: list[str] = []
+    check_cohort(detail)
+
     colleges = _detail_list(detail, "colleges")
     if colleges and profile.colleges and not set(colleges) & set(profile.colleges):
         reasons.append(f"学院不匹配：文档={colleges}，用户={profile.colleges}")
@@ -289,6 +438,44 @@ def article_matches_profile(
             f"文档={[p.value for p in program_types]}，用户={profile.program_type.value}"
         )
 
+    if profile.learning_mode is not None:
+        modes = _detail_list(detail, "learning_modes")
+        legacy_modes = [
+            item for item in program_types if item.value in LEARNING_PROGRAM_VALUES
+        ]
+        if modes:
+            if profile.learning_mode not in modes:
+                reasons.append(
+                    "学习方式不匹配："
+                    f"文档={[m.value for m in modes]}，用户={profile.learning_mode.value}"
+                )
+        elif legacy_modes and profile.learning_mode not in legacy_modes:
+            reasons.append(
+                "学习方式不匹配（旧字段）："
+                f"文档={[m.value for m in legacy_modes]}，用户={profile.learning_mode.value}"
+            )
+
+    if profile.degree_type is not None:
+        degrees = _detail_list(detail, "degree_types")
+        legacy_degrees = [
+            item for item in program_types if item.value in DEGREE_PROGRAM_VALUES
+        ]
+        if degrees:
+            if profile.degree_type not in degrees:
+                reasons.append(
+                    "学位类型不匹配："
+                    f"文档={[d.value for d in degrees]}，用户={profile.degree_type.value}"
+                )
+        elif legacy_degrees and profile.degree_type not in legacy_degrees:
+            reasons.append(
+                "学位类型不匹配（旧字段）："
+                f"文档={[d.value for d in legacy_degrees]}，用户={profile.degree_type.value}"
+            )
+
+    class_types = _detail_list(detail, "class_types")
+    if class_types and profile.class_types and not set(class_types) & set(profile.class_types):
+        reasons.append(f"班型不匹配：文档={class_types}，用户={profile.class_types}")
+
     groups = _detail_list(detail, "groups")
     if groups and profile.groups and not set(groups) & set(profile.groups):
         reasons.append(
@@ -301,10 +488,6 @@ def article_matches_profile(
         reasons.append(
             f"学籍状态不匹配：文档={[s.value for s in statuses]}，用户={profile.status.value}"
         )
-
-    cycle = getattr(detail, "cycle", None)
-    if cycle and cycle not in academic_cycle(as_of):
-        reasons.append(f"学年不匹配：文档={cycle}，当前={academic_cycle(as_of)}")
 
     return not reasons, reasons
 

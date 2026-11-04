@@ -10,9 +10,10 @@ bm25_k1: 1.2
 bm25_b: 0.75
 rrf_k: 60
 
-recall_top_k: 30
-# 先取 RRF top 20 做 rerank，再取 top 8；2026-10-24 与 top30 对比后启用。
-rerank_candidates: 20
+# 4,026 块语料：每路召回 50，融合后重排 40，再压缩到 12 条。
+# 为多对象/多章节留候选名额；最终证据预算不随候选池一起扩大。
+recall_top_k: 50
+rerank_candidates: 40
 rerank_top_n: 12
 reranker_model: ${RERANKER_MODEL}
 token_budget: 8000
@@ -20,8 +21,9 @@ max_articles: 12
 # 宽问题下最多保留 2 个表格 section；query 明确要课程/学分/学时/计划时放开。
 max_table_sections: 2
 
-# 以下阈值用 dev_v0 校准（2026-10-24）；W7 发现 0.03 绝对 margin 会误杀
-# 多条款宽问题的相关证据（top 0.624），因此 margin 置 0；min 仍为 0.60。
+# 2026-10-30 修正重复 sigmoid，分数恢复为单次 sigmoid(logit)。
+# 旧 dev_v0 阈值校准已失效；0.60 暂保留为保守候选值，需独立 dev 集重校准。
+# 该分数是重排相关度，不是“答案正确概率”；margin 不用于多条款裁剪。
 min_rerank_score: 0.60
 min_score_margin: 0.0
 

@@ -7,6 +7,7 @@
 
 from __future__ import annotations
 
+import inspect
 import time
 from collections.abc import Iterator
 from dataclasses import dataclass
@@ -41,8 +42,9 @@ from campusguide.domain.enums import (
     OutcomeCode,
     VerificationDecision,
 )
-from campusguide.domain.models import ChecklistItem, Claim, PolicyFilters
+from campusguide.domain.models import ChecklistItem, Claim, Evidence, PolicyFilters
 from campusguide.domain.profiles import UserProfile
+from campusguide.domain.text import normalize_text
 from campusguide.flows.catalog import FlowCatalog
 from campusguide.handoff import resolve_handoff
 from campusguide.observability.errors import safe_error_summary
@@ -58,6 +60,14 @@ from campusguide.qa.finalize import (
 )
 from campusguide.qa.merge import merge_claims
 from campusguide.qa.service import _MESSAGES as QA_MESSAGES
+from campusguide.retrieval.budget import evidence_cost
+from campusguide.verification.request_scope import (
+    RequestedScope,
+    filter_evidence_for_request,
+    parse_requested_scope,
+    requested_scope_message,
+    source_applicability,
+)
 
 GRAPH_VERSION = "w6-quality-2026-10-28"
 
@@ -174,6 +184,53 @@ def _flow_citations(state: GraphState) -> list[str]:
     return list(dict.fromkeys(citations))[:12]
 
 
+def _checklist_scope_supported(
+    checklist: list[ChecklistItem],
+    evidence: list[Evidence],
+    scope: RequestedScope,
+) -> bool:
+    """Every rendered flow step must cite a source scoped to the asked future year."""
+    if not scope.has_future:
+        return True
+    by_article = {item.article.article_id: item.article for item in evidence}
+    by_doc = {item.article.doc_id: item.article for item in evidence}
+
+    def resolve(article_id: str):
+        article = by_article.get(article_id)
+        if article is not None:
+            return article
+        article = by_doc.get(article_id)
+        if article is not None:
+            return article
+        return by_doc.get(article_id.split("#", 1)[0])
+
+    for item in checklist:
+        if item.status == "not_applicable":
+            continue
+        if not item.citations:
+            return False
+        for target in scope.future_targets:
+            supported = False
+            for citation in item.citations:
+                article = resolve(citation)
+                if article is None:
+                    continue
+                if (
+                    source_applicability(
+                        article,
+                        target,
+                        question=scope.question,
+                        as_of=scope.as_of,
+                    ).status
+                    == "matched"
+                ):
+                    supported = True
+                    break
+            if not supported:
+                return False
+    return True
+
+
 def _serialize_records(report) -> list[dict[str, Any]]:
     records = []
     for record in report.hard.records:
@@ -194,6 +251,122 @@ def _serialize_records(report) -> list[dict[str, Any]]:
     return records
 
 
+def _merge_supplement_evidence(
+    base: list[Evidence],
+    additions: list[Evidence],
+    *,
+    max_evidence: int,
+    token_budget: int,
+    cited_keys: set[tuple[str, int]],
+) -> tuple[list[Evidence], list[str]]:
+    """Bound cumulative evidence while preserving citations and compared objects.
+
+    Priority: cited base evidence -> one fragment per prior document -> one new
+    fragment per supplement document -> extra supplement rows -> extra base rows.
+    Count and token limits are hard for ordinary evidence. Claim-cited evidence
+    and hydrated flow evidence (source=flow, required by the rendered checklist)
+    are retained even when over budget and reported separately; deleting them
+    would leave dangling citations or an incomplete flow.
+    """
+    max_evidence = max(1, max_evidence)
+    token_budget = max(1, token_budget)
+    warnings: list[str] = []
+    selected: dict[tuple[str, int], Evidence] = {}
+    used = 0
+
+    def try_add(item: Evidence, *, protected: bool = False) -> bool:
+        nonlocal used
+        if item.key in selected:
+            return False
+        cost = evidence_cost(item.article)
+        over_count = len(selected) >= max_evidence
+        over_budget = used + cost > token_budget
+        if (over_count or over_budget) and not protected:
+            reason = "count" if over_count else "token"
+            warnings.append(
+                f"SUPPLEMENT_BUDGET_SKIP:{item.article.article_id}:"
+                f"p{item.article.part_no}:reason={reason}"
+            )
+            return False
+        selected[item.key] = item
+        used += cost
+        return True
+
+    for item in base:
+        if item.key in cited_keys or getattr(item, "source", "") == "flow":
+            try_add(item, protected=True)
+    if len(selected) > max_evidence:
+        warnings.append(
+            f"SUPPLEMENT_PROTECTED_OVER_COUNT:{len(selected)}:{max_evidence}"
+        )
+    if used > token_budget:
+        warnings.append(f"SUPPLEMENT_PROTECTED_OVER_TOKEN:{used}:{token_budget}")
+
+    seen_docs = {item.article.doc_id for item in selected.values()}
+    for item in base:
+        if item.key in selected or item.article.doc_id in seen_docs:
+            continue
+        if try_add(item):
+            seen_docs.add(item.article.doc_id)
+    for item in additions:
+        if item.key in selected or item.article.doc_id in seen_docs:
+            continue
+        if try_add(item):
+            seen_docs.add(item.article.doc_id)
+    for item in additions:
+        if item.key in selected:
+            continue
+        try_add(item)
+    for item in base:
+        if item.key in selected:
+            continue
+        try_add(item)
+
+    merged: list[Evidence] = []
+    merged_keys: set[tuple[str, int]] = set()
+    for item in [*base, *additions]:
+        if item.key in selected and item.key not in merged_keys:
+            merged.append(item)
+            merged_keys.add(item.key)
+    return merged, warnings
+
+
+def _claim_signature(claim: Claim) -> str:
+    """Content + citation semantics; claim_id is deliberately excluded."""
+    citations = sorted(
+        "|".join(
+            [
+                citation.article_id,
+                str(citation.part_no),
+                str(citation.quote_start),
+                str(citation.quote_end),
+                normalize_text(citation.quote),
+            ]
+        )
+        for citation in claim.citations
+    )
+    return "|".join([normalize_text(claim.text), *citations])
+
+
+def _progress_signature(
+    missing: list[str],
+    evidence: list[Evidence],
+    claims: list[Claim],
+) -> dict[str, list[str]]:
+    """What must change for another supplement round to be worth running.
+
+    Regenerating the exact same verified content under a fresh claim ID is not
+    progress; new facts or citations still change the signature.
+    """
+    return {
+        "missing": sorted({str(item) for item in missing}),
+        "evidence": sorted(
+            f"{item.article.article_id}#p{item.article.part_no}" for item in evidence
+        ),
+        "claims": sorted({_claim_signature(claim) for claim in claims}),
+    }
+
+
 class GraphNodes:
     def __init__(
         self,
@@ -207,10 +380,14 @@ class GraphNodes:
         trace_writer: TraceWriter | None = None,
         max_clarify: int = 3,
         max_revise: int = 2,
+        max_evidence: int = 8,
+        token_budget: int = 4000,
         today: date | None = None,
         coverage_checker: CoverageChecker | None = None,
     ) -> None:
         self._coverage_checker = coverage_checker
+        self._max_evidence = max(1, max_evidence)
+        self._token_budget = max(1, token_budget)
         self._planner = planner
         self._retriever = retriever
         self._advisor = advisor
@@ -338,6 +515,7 @@ class GraphNodes:
             "coverage_missing": [],
             "coverage_repair_pending": False,
             "coverage_repair_count": 0,
+            "coverage_repair_last": None,
             "repair_verified_claims": [],
             "unanswered_questions": [],
             "retrieval_warnings": list(plan.warnings),
@@ -425,6 +603,7 @@ class GraphNodes:
                 "trace": trace,
             }
         as_of = state.get("as_of") or self._today or date.today()
+        requested_scope = parse_requested_scope(state.get("question", ""), as_of)
         block_types = state.get("block_types") or [BlockType.ARTICLE]
         base = PolicyFilters(
             block_types=list(block_types),
@@ -436,18 +615,39 @@ class GraphNodes:
             ),
             profile=state.get("user_profile"),
         )
-        bundle = self._retriever.retrieve(
-            plan,
-            base,
-            flow_citations=_flow_citations(state),
-        )
+        retrieve_kwargs: dict[str, Any] = {
+            "flow_citations": _flow_citations(state)
+        }
+        if "search_queries" in inspect.signature(
+            self._retriever.retrieve
+        ).parameters:
+            retrieve_kwargs["search_queries"] = [state.get("question", "")]
+        bundle = self._retriever.retrieve(plan, base, **retrieve_kwargs)
+        had_evidence = bool(bundle.evidence)
+        filtered = filter_evidence_for_request(bundle.evidence, requested_scope)
+        bundle.evidence = filtered.evidence
+        bundle.issues = [*bundle.issues, *filtered.issues]
+        if filtered.reason_code is not None and (
+            had_evidence
+            or bundle.reason_code in {None, OutcomeCode.NO_EVIDENCE, OutcomeCode.ONLY_REPEALED}
+        ):
+            bundle.reason_code = filtered.reason_code
         warnings = [*(state.get("retrieval_warnings") or []), *bundle.warnings]
+        warnings.extend(f"REQUESTED_SCOPE_DROP:{article_id}" for article_id in filtered.dropped)
         trace = _append_trace(
             state,
             "retriever",
             started,
             queries=[redact_sensitive(item.text) for item in plan.queries],
             evidence=len(bundle.evidence),
+            requested_scope={
+                "targets": [
+                    {"kind": target.kind, "year": target.start_year, "raw": target.raw}
+                    for target in requested_scope.targets
+                ],
+                "future": [target.label() for target in requested_scope.future_targets],
+                "dropped": list(filtered.dropped),
+            },
             selected_evidence=[
                 {
                     "article_id": e.article.article_id,
@@ -463,6 +663,7 @@ class GraphNodes:
             warnings=warnings,
             index_version=bundle.index_version,
             partial=bundle.partial,
+            fallback=getattr(bundle, "fallback", {}) or {},
         )
         update: dict[str, Any] = {
             "evidence": bundle.evidence,
@@ -541,11 +742,27 @@ class GraphNodes:
                         )
                         for c in repair_claims
                     ]
+                    reserved_ids = {c.claim_id for c in repair_claims if c.claim_id}
+                    reserved_ids.update(
+                        c.claim_id for c in state.get("claims") or [] if c.claim_id
+                    )
+                    # Every repair round must mint IDs outside the whole preserved
+                    # namespace; reusing supplement_1 in round two makes the hard
+                    # validator drop a legitimate new claim as DUPLICATE_CLAIM_ID.
+                    repair_round = int(state.get("coverage_repair_count", 0) or 0)
                     fresh = []
                     known_texts = {c.text for c in repair_claims}
-                    for i, draft in enumerate(drafts, 1):
-                        if draft.text not in known_texts:
-                            fresh.append(draft.model_copy(update={"claim_id": f"supplement_{i}"}))
+                    next_index = 1
+                    for draft in drafts:
+                        if draft.text in known_texts:
+                            continue
+                        candidate = f"supplement_{repair_round}_{next_index}"
+                        while candidate in reserved_ids:
+                            next_index += 1
+                            candidate = f"supplement_{repair_round}_{next_index}"
+                        reserved_ids.add(candidate)
+                        next_index += 1
+                        fresh.append(draft.model_copy(update={"claim_id": candidate}))
                     drafts = [*previous_drafts, *fresh]
                     mode = "supplement"
         except (ChatProviderError, AdvisorError) as exc:
@@ -592,8 +809,9 @@ class GraphNodes:
             quote_repaired=result.quote_repaired,
             quote_repair_remaining=list(result.quote_repair_remaining),
             repaired=result.repaired,
+            **({"revision_error": result.revision_error} if result.revision_error else {}),
         )
-        return {
+        update: dict[str, Any] = {
             "drafts": drafts,
             "unanswered_questions": (
                 list(state.get("unanswered_questions") or [])
@@ -610,12 +828,18 @@ class GraphNodes:
             ],
             "trace": trace,
         }
+        if result.revision_error:
+            # 严格契约连续失败已耗尽本轮的修订尝试；后续 Verifier 只丢弃
+            # 仍失败的 claim，不再重复改写已通过项。
+            update["revision_count"] = max(revision_count, self._max_revise)
+        return update
 
     # ---------------------------------------------------------------- verifier
     def verifier(self, state: GraphState) -> dict[str, Any]:
         started = time.perf_counter()
         drafts = list(state.get("drafts") or [])
         evidence = state.get("evidence") or []
+        as_of = state.get("as_of") or self._today or date.today()
         verification_extra = {}
         if isinstance(self._verifier, GraphVerifier):
             verification_extra["previously_verified"] = list(
@@ -623,6 +847,7 @@ class GraphNodes:
             )
             verification_extra["question"] = state.get("question", "")
             verification_extra["retrieval_warnings"] = list(state.get("retrieval_warnings") or [])
+            verification_extra["as_of"] = as_of
         report = self._verifier.verify(
             drafts,
             evidence,
@@ -711,10 +936,25 @@ class GraphNodes:
         contradicted = (
             "contradicted" in ((state.get("semantic") or {}).get("labels") or {}).values()
         )
+        previous = state.get("coverage_repair_last") or {}
+        signature = _progress_signature(
+            audit.missing,
+            list(state.get("evidence") or []),
+            list(state.get("claims") or []),
+        )
+        # A round that produced neither a new supported claim nor a smaller
+        # missing set would repeat the same queries and generation verbatim.
+        # Keep the honest partial instead of spending the second round.
+        converged = bool(
+            state.get("coverage_repair_count", 0)
+            and previous.get("round") == state.get("coverage_repair_count")
+            and previous.get("signature") == signature
+        )
         repair = bool(
             audit.missing
             and not audit.unavailable
             and not contradicted
+            and not converged
             and state.get("coverage_repair_count", 0) < MAX_COVERAGE_REPAIR_ROUNDS
             and any(
                 u.get("status") in {"generation_missing", "missing_evidence"} for u in audit.units
@@ -742,6 +982,7 @@ class GraphNodes:
                 completion_tokens=audit.completion_tokens,
                 model_latency_ms=audit.latency_ms,
                 repair_pending=repair,
+                repair_converged=converged,
             ),
         }
 
@@ -805,19 +1046,54 @@ class GraphNodes:
             profile=state.get("user_profile"),
         )
         bundle = self._retriever.retrieve(Plan(queries=queries), base) if queries else None
-        evidence = list(state.get("evidence") or [])
-        known = {e.key for e in evidence}
+        requested_scope = parse_requested_scope(state.get("question", ""), base.as_of)
+        requested_dropped: list[str] = []
+        if bundle is not None:
+            filtered = filter_evidence_for_request(bundle.evidence, requested_scope)
+            bundle.evidence = filtered.evidence
+            requested_dropped = filtered.dropped
+            bundle.warnings.extend(
+                f"REQUESTED_SCOPE_DROP:{article_id}" for article_id in filtered.dropped
+            )
+        base_evidence = list(state.get("evidence") or [])
+        additions: list[Evidence] = []
+        known = {e.key for e in base_evidence}
         if bundle is not None:
             for hit in bundle.evidence:
                 if hit.key not in known:
-                    evidence.append(hit)
+                    additions.append(hit)
                     known.add(hit.key)
+        cited_keys = {
+            (citation.article_id, citation.part_no)
+            for claim in state.get("claims") or []
+            for citation in claim.citations
+        }
+        evidence, budget_warnings = _merge_supplement_evidence(
+            base_evidence,
+            additions,
+            max_evidence=getattr(self, "_max_evidence", 8),
+            token_budget=getattr(self, "_token_budget", 4000),
+            cited_keys=cited_keys,
+        )
         for i, hit in enumerate(evidence, 1):
             hit.rank = i
         return {
             "coverage_repair_count": round_index + 1,
             "coverage_repair_pending": False,
             "coverage_checked": False,
+            "coverage_repair_last": {
+                "round": round_index + 1,
+                # Baseline before this round's add-only merge. A round that
+                # added evidence is progress even when claims and missing
+                # items are unchanged, so the next coverage pass must not
+                # report convergence against the post-merge state.
+                "signature": _progress_signature(
+                    list(state.get("coverage_missing") or []),
+                    base_evidence,
+                    list(state.get("claims") or []),
+                ),
+                "added_evidence": len(evidence) - len(base_evidence),
+            },
             "repair_verified_claims": list(state.get("claims") or []),
             "evidence": evidence,
             "decision": None,
@@ -829,14 +1105,18 @@ class GraphNodes:
             "retrieval_warnings": [
                 *(state.get("retrieval_warnings") or []),
                 *(bundle.warnings if bundle else []),
+                *budget_warnings,
             ],
             "trace": _append_trace(
                 state,
                 "supplement",
                 started,
                 queries=[q.model_dump(mode="json") for q in queries],
-                added_evidence=len(evidence) - len(state.get("evidence") or []),
+                added_evidence=len(evidence) - len(base_evidence),
+                evidence_count=len(evidence),
+                budget_warnings=budget_warnings,
                 preserved_claims=[c.claim_id for c in state.get("claims") or []],
+                requested_scope_dropped=requested_dropped,
                 warnings=bundle.warnings if bundle else [],
             ),
         }
@@ -854,19 +1134,57 @@ class GraphNodes:
         merged = merge_claims(claims)
         claims = merged.claims
         merge_conflicts = [note.detail for note in merged.substantive_notes]
-        dropped_ids = set(merged.dropped_claim_ids)
-        if dropped_ids and state.get("coverage_checked"):
+        retained_claim_ids = {claim.claim_id for claim in claims}
+        replacement_claim_ids = merged.replacement_claim_ids
+        unit_coverage = [dict(row) for row in (state.get("unit_coverage") or [])]
+
+        def _valid_flow_support_ids(
+            rendered_checklist: list[ChecklistItem],
+        ) -> set[str]:
+            if flow is None:
+                return set()
+            definition_ids = {step.id for step in flow.steps}
+            hydrated_ids = {
+                item.article.article_id for item in (state.get("evidence") or [])
+            }
+            return {
+                f"flow:{item.step_id}"
+                for item in rendered_checklist
+                if item.step_id in definition_ids
+                and item.status != "not_applicable"
+                and item.citations
+                and set(item.citations) <= hydrated_ids
+            }
+
+        if state.get("coverage_checked"):
             # 合并改变了 claim 集合，不能沿用合并前的覆盖状态（A1）。
+            # 重复 claim 的引用先映射到实际保留 ID；无映射的删除不得改指其他 claim。
+            # flow: 支持必须对应真实流程步骤、实际渲染的 checklist 和已水合依据，
+            # 不能仅凭前缀保留。
+            valid_flow_ids = _valid_flow_support_ids(checklist)
             refreshed = []
-            for row in state.get("unit_coverage") or []:
-                row = dict(row)
-                supported = [i for i in (row.get("claim_ids") or []) if i not in dropped_ids]
+            for row in unit_coverage:
+                supported: list[str] = []
+                for claim_id in row.get("claim_ids") or []:
+                    mapped_id = replacement_claim_ids.get(claim_id, claim_id)
+                    if mapped_id not in retained_claim_ids and mapped_id not in valid_flow_ids:
+                        continue
+                    if mapped_id not in supported:
+                        supported.append(mapped_id)
                 row["claim_ids"] = supported
                 if row.get("status") == "answered" and not supported:
                     row["status"] = "generation_missing"
                 refreshed.append(row)
-            state["unit_coverage"] = refreshed
+            unit_coverage = refreshed
         reason = state.get("reason_code")
+        as_of = state.get("as_of") or self._today or date.today()
+        requested_scope = parse_requested_scope(state.get("question", ""), as_of)
+
+        def reason_message() -> str:
+            if reason is OutcomeCode.VERSION_MISMATCH and requested_scope.targets:
+                return requested_scope_message(requested_scope)
+            return _message_for(reason)
+
         semantic_unchecked = bool(state.get("semantic_unchecked"))
         missing_slots = list(state.get("missing_slots") or [])
         handoff = resolve_handoff(
@@ -877,6 +1195,7 @@ class GraphNodes:
         outcome_code = "UNVERIFIABLE"
         answer = ""
         citations: list[dict[str, Any]] = []
+        rendered_claims: list[Claim] = []
         extra_warnings = self._coverage_warnings(state)
         for part in (
             state.get("coverage_missing")
@@ -900,8 +1219,31 @@ class GraphNodes:
             extra_warnings.append(f"尚缺“{safe_part}”：{explanation}。")
         # 冲突提示只用于展示，不改变完整性状态（只有实质缺项才算不完整）。
         display_warnings = [*extra_warnings, *merge_conflicts]
+        checklist_omitted_for_scope = False
+        if (
+            requested_scope.has_future
+            and claims
+            and checklist
+            and not _checklist_scope_supported(
+                checklist,
+                state.get("evidence") or [],
+                requested_scope,
+            )
+        ):
+            checklist_omitted_for_scope = True
+            extra_warnings.append(
+                "流程清单来源未证明适用于所问年度/学年，已省略流程步骤。"
+            )
+            display_warnings = [*extra_warnings, *merge_conflicts]
+            checklist = []
         closed = bool(state.get("closed"))
-        incomplete = bool(extra_warnings or (plan and plan.dropped_queries))
+        coverage_incomplete = bool(
+            state.get("coverage_checked")
+            and any(row.get("status") != "answered" for row in unit_coverage)
+        )
+        incomplete = bool(
+            extra_warnings or (plan and plan.dropped_queries) or coverage_incomplete
+        )
 
         if plan is not None and plan.is_guard:
             outcome_code = plan.outcome.value if plan.outcome else "INVALID_REQUEST"
@@ -939,6 +1281,7 @@ class GraphNodes:
             )
             answer = mixed.answer_markdown
             citations = [item.model_dump(mode="json") for item in mixed.citations]
+            rendered_claims = claims
             outcome_code = "PARTIAL_ANSWER" if partial else "ANSWERED"
         elif claims:
             verification = state.get("verification_decision")
@@ -962,11 +1305,28 @@ class GraphNodes:
                         answer[: -len(marker)].rstrip() + "\n\n" + warning_text + "\n\n" + marker
                     )
             citations = [item.model_dump(mode="json") for item in finished.citations]
+            rendered_claims = claims
             outcome_code = "PARTIAL_ANSWER" if partial else "ANSWERED"
+        elif (
+            flow is not None
+            and requested_scope.has_future
+            and reason in {None, OutcomeCode.VERSION_MISMATCH}
+        ):
+            outcome_code = "VERSION_MISMATCH"
+            answer = finalize_abstain(
+                message=requested_scope_message(requested_scope),
+                handoff=handoff,
+                missing_slots=missing_slots,
+                warnings=[
+                    *display_warnings,
+                    "流程清单来自当前批次，未证明适用于所问年度/学年。",
+                ],
+                semantic_unchecked=semantic_unchecked,
+            )
         elif flow is not None and checklist:
             extra = list(display_warnings)
             if reason is not None:
-                extra.append(f"> {_message_for(reason)}")
+                extra.append(f"> {reason_message()}")
             answer = finalize_flow(
                 flow,
                 checklist,
@@ -986,18 +1346,49 @@ class GraphNodes:
                 status=str(state.get("flow_status") or "unknown"),
                 handoff=handoff,
                 closed=closed,
-                reason_message=_message_for(reason),
+                reason_message=reason_message(),
             )
             outcome_code = reason.value if reason else "UNVERIFIABLE"
         else:
             outcome_code = reason.value if reason else "UNVERIFIABLE"
             answer = finalize_abstain(
-                message=_message_for(reason),
+                message=reason_message(),
                 handoff=handoff,
                 missing_slots=missing_slots,
                 warnings=[*display_warnings, *boundary_notes(state, reason)],
                 semantic_unchecked=semantic_unchecked,
             )
+
+        # 渲染后才确定实际交付的支持集合：claims 取 rendered_claims，
+        # flow 只认最终本地 checklist 中仍然有效且实际渲染的步骤。
+        # 被 guard/clarify/scope 省略掉的步骤不能继续给 unit 提供 answered 支持。
+        rendered_checklist = (
+            list(checklist)
+            if checklist
+            and flow is not None
+            and outcome_code in {"ANSWERED", "PARTIAL_ANSWER"}
+            and not (plan is not None and plan.is_guard)
+            else []
+        )
+        rendered_support_ids = {claim.claim_id for claim in rendered_claims}
+        rendered_support_ids.update(_valid_flow_support_ids(rendered_checklist))
+        reconciled: list[dict[str, Any]] = []
+        for row in unit_coverage:
+            previous_ids = list(row.get("claim_ids") or [])
+            supported = [
+                claim_id for claim_id in previous_ids if claim_id in rendered_support_ids
+            ]
+            row["claim_ids"] = supported
+            if row.get("status") == "answered" and not supported:
+                row["status"] = (
+                    "verification_failed" if previous_ids else "generation_missing"
+                )
+            reconciled.append(row)
+        unit_coverage = reconciled
+        if outcome_code == "ANSWERED" and any(
+            row.get("status") != "answered" for row in unit_coverage
+        ):
+            outcome_code = "PARTIAL_ANSWER"
 
         trace = _append_trace(
             state,
@@ -1005,11 +1396,16 @@ class GraphNodes:
             started,
             outcome=outcome_code,
             citations=len(citations),
-            checklist=len(checklist),
+            checklist=len(rendered_checklist),
             handoff=handoff.as_dict(),
             semantic_unchecked=semantic_unchecked,
+            requested_scope={
+                "targets": [target.label() for target in requested_scope.targets],
+                "future": [target.label() for target in requested_scope.future_targets],
+                "checklist_omitted": checklist_omitted_for_scope,
+            },
             coverage=state.get("coverage") or {},
-            unit_coverage=state.get("unit_coverage") or [],
+            unit_coverage=unit_coverage,
             coverage_repair_count=state.get("coverage_repair_count", 0),
         )
         duration_ms = int(
@@ -1021,6 +1417,9 @@ class GraphNodes:
             # checkpoint 只保留脱敏后的当前问题，不落原始隐私文本。
             "question": redact_sensitive(state.get("question", "")),
             "citations": citations,
+            "claims": rendered_claims,
+            "checklist": rendered_checklist,
+            "unit_coverage": unit_coverage,
             "handoff": handoff.as_dict(),
             "outcome": {"code": outcome_code, "message": ""},
             "trace": trace,

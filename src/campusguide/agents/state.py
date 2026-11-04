@@ -97,6 +97,8 @@ class GraphState(TypedDict, total=False):
     coverage_missing: list[str]
     coverage_repair_pending: bool
     coverage_repair_count: int
+    # 上一轮补查后的进展签名：证据、已保留 claim 与缺项均未变化即收敛。
+    coverage_repair_last: dict[str, Any] | None
     repair_verified_claims: list[Claim]
     unanswered_questions: list[str]
     declined_slots: list[str]

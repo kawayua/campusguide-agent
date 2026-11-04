@@ -83,6 +83,27 @@ FORCE_LIGHT_JS = """
       document.getElementById('w8-history')?.classList.remove('mobile-open');
     }
   });
+  const bindComposer = () => {
+    const input = document.querySelector('#w8-input textarea');
+    if (!input || input.dataset.w8EnterBound === '1') return;
+    input.dataset.w8EnterBound = '1';
+    input.addEventListener('keydown', (event) => {
+      if (
+        event.key !== 'Enter' ||
+        event.shiftKey ||
+        event.isComposing ||
+        event.keyCode === 229
+      ) return;
+      event.preventDefault();
+      event.stopPropagation();
+      const send = document.getElementById('w8-send');
+      if (send && !send.disabled) send.click();
+    }, true);
+  };
+  bindComposer();
+  const composerObserver = new MutationObserver(bindComposer);
+  composerObserver.observe(document.body, {childList:true, subtree:true});
+  setTimeout(() => composerObserver.disconnect(), 15000);
 }
 """
 PANEL_TOGGLE_JS = """
@@ -692,9 +713,6 @@ class W8DemoUI:
         ).then(fn=None, js=OPEN_RESULT_JS)
         self.search.change(self.on_search, inputs=[self.store, self.search], outputs=[self.history])
         self.panel_toggle.click(fn=None, js=PANEL_TOGGLE_JS)
-        self.input.submit(self.on_send, inputs=[self.store, self.input], outputs=outputs).then(
-            fn=None, js=CLOSE_RESULT_JS
-        )
         self.send_btn.click(self.on_send, inputs=[self.store, self.input], outputs=outputs).then(
             fn=None, js=CLOSE_RESULT_JS
         )

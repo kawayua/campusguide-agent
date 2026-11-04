@@ -14,7 +14,10 @@ from pydantic import BaseModel, Field, field_validator, model_validator
 from campusguide.domain.enums import (
     Audience,
     AudienceStage,
+    DegreeType,
+    LearningMode,
     ProgramType,
+    ScopeStatus,
     StudentGroup,
     StudentStatus,
 )
@@ -39,6 +42,35 @@ def has_student_audience(audience: list[Audience]) -> bool:
     return Audience.ALL in audience or bool(STUDENT_AUDIENCES.intersection(audience))
 
 
+class AudienceScope(BaseModel):
+    """合订本中按章节原文收窄适用专业/班型；必须附原文依据。"""
+
+    match: str
+    majors: list[str] = Field(default_factory=list)
+    class_types: list[str] = Field(default_factory=list)
+    evidence: str
+
+    @field_validator("majors", "class_types")
+    @classmethod
+    def _validate_scope_slugs(cls, value: list[str]) -> list[str]:
+        for item in value:
+            if not Slug.match(item):
+                raise ValueError(f"章节适用范围 ID 必须是小写 slug：{item!r}")
+        if len(value) != len(set(value)):
+            raise ValueError("章节适用范围 ID 不能重复")
+        return value
+
+    @model_validator(mode="after")
+    def _validate_scope(self) -> AudienceScope:
+        if not self.match.strip():
+            raise ValueError("章节适用范围必须提供章节匹配文本")
+        if not (self.majors or self.class_types):
+            raise ValueError("章节适用范围必须至少收窄专业或班型")
+        if not self.evidence.strip():
+            raise ValueError("章节适用范围必须提供原文依据")
+        return self
+
+
 class AudienceDetail(BaseModel):
     """角色之外的适用范围；不填表示不限制。"""
 
@@ -47,11 +79,17 @@ class AudienceDetail(BaseModel):
     intake_years: list[int] = Field(default_factory=list)
     intake_from: int | None = None
     graduating_years: list[int] = Field(default_factory=list)
+    admission_year: int | None = None
     stages: list[AudienceStage] = Field(default_factory=list)
     program_types: list[ProgramType] = Field(default_factory=list)
+    learning_modes: list[LearningMode] = Field(default_factory=list)
+    degree_types: list[DegreeType] = Field(default_factory=list)
     groups: list[StudentGroup] = Field(default_factory=list)
     status: list[StudentStatus] = Field(default_factory=list)
+    class_types: list[str] = Field(default_factory=list)
     cycle: str | None = None
+    scope_status: ScopeStatus = ScopeStatus.UNKNOWN
+    scope_evidence: str | None = None
     note: str | None = None
 
     @field_validator("colleges", "majors")
@@ -62,6 +100,23 @@ class AudienceDetail(BaseModel):
                 raise ValueError(f"学院/专业 ID 必须是小写 slug：{item!r}")
         if len(value) != len(set(value)):
             raise ValueError("学院/专业 ID 不能重复")
+        return value
+
+    @field_validator("class_types")
+    @classmethod
+    def _validate_class_types(cls, value: list[str]) -> list[str]:
+        for item in value:
+            if not Slug.match(item):
+                raise ValueError(f"班型 ID 必须是小写 slug：{item!r}")
+        if len(value) != len(set(value)):
+            raise ValueError("班型 ID 不能重复")
+        return value
+
+    @field_validator("admission_year")
+    @classmethod
+    def _validate_admission_year(cls, value: int | None) -> int | None:
+        if value is not None and not MIN_YEAR <= value <= MAX_YEAR:
+            raise ValueError(f"招生年度超出合理范围：{value}")
         return value
 
     @field_validator("intake_years", "graduating_years")
@@ -98,7 +153,32 @@ class AudienceDetail(BaseModel):
     def _validate_cohort_rule(self) -> AudienceDetail:
         if self.intake_years and self.intake_from is not None:
             raise ValueError("intake_years 与 intake_from 不能同时填写")
+        if self.scope_status is ScopeStatus.EXACT and not (self.scope_evidence or "").strip():
+            raise ValueError("scope_status=exact 必须提供 scope_evidence 原文依据")
+        if self.scope_status is ScopeStatus.UNRESTRICTED and self.has_scope_constraints:
+            raise ValueError("scope_status=unrestricted 不能同时携带适用范围限制")
         return self
+
+    @property
+    def has_scope_constraints(self) -> bool:
+        return any(
+            (
+                self.colleges,
+                self.majors,
+                self.intake_years,
+                self.intake_from is not None,
+                self.graduating_years,
+                self.admission_year is not None,
+                self.stages,
+                self.program_types,
+                self.learning_modes,
+                self.degree_types,
+                self.groups,
+                self.status,
+                self.class_types,
+                self.cycle,
+            )
+        )
 
     @property
     def has_student_constraints(self) -> bool:
@@ -110,8 +190,11 @@ class AudienceDetail(BaseModel):
                 self.graduating_years,
                 self.stages,
                 self.program_types,
+                self.learning_modes,
+                self.degree_types,
                 self.groups,
                 self.status,
+                self.class_types,
             )
         )
 
@@ -128,11 +211,17 @@ class AudienceDetail(BaseModel):
                 self.intake_years,
                 self.intake_from is not None,
                 self.graduating_years,
+                self.admission_year is not None,
                 self.stages,
                 self.program_types,
+                self.learning_modes,
+                self.degree_types,
                 self.groups,
                 self.status,
+                self.class_types,
                 self.cycle,
+                self.scope_status is not ScopeStatus.UNKNOWN,
+                self.scope_evidence,
                 self.note,
             )
         )

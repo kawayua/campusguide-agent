@@ -845,7 +845,6 @@ def progress_html(label: str, *, nodes: list[str] | None = None) -> str:
         '<div class="w8-progress-stepper" role="status" aria-live="polite" '
         f'aria-label="{html.escape(label or "正在处理")}">'
         f'<ol class="w8-progress-dots">{"".join(items)}</ol>'
-        '<span class="w8-progress-note">只显示节点进度，不输出未核对答案</span>'
         "</div>"
     )
 

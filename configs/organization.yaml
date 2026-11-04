@@ -163,14 +163,19 @@ class_types:
     name: 丁颖创新班
     level: undergraduate
     majors: [agronomy]
-    aliases: [丁颖班, 创新班, 新农学创新班]
+    aliases: [丁颖班]
+  - class_id: new-agronomy-innovation
+    name: 新农学创新班
+    level: undergraduate
+    majors: [agronomy]
+    aliases: [新农学本博班]
   - class_id: agronomy-general
     name: 农学普通班
     level: undergraduate
     majors: [agronomy]
-    aliases: [农学普通班, 农学班]
+    aliases: [农学普通班, 农学班, 普通农学]
   - class_id: info-innovation
     name: 信息类创新班
     level: undergraduate
     majors: [computer-science, software-engineering, data-science]
-    aliases: [创新班, 实验班, 卓越班]
+    aliases: [信息类实验班, 信息类卓越班]

@@ -81,6 +81,7 @@ class BgeReranker:
                 self._model_name,
                 device=self._device,
                 max_length=self._max_length,
+                activation_fn=torch.nn.Identity(),
                 local_files_only=True,
             )
         except Exception as first_error:
@@ -89,6 +90,7 @@ class BgeReranker:
                     self._model_name,
                     device=self._device,
                     max_length=self._max_length,
+                    activation_fn=torch.nn.Identity(),
                 )
             except Exception as exc:  # pragma: no cover - 需要真实模型
                 raise RerankUnavailable(
@@ -117,6 +119,8 @@ class BgeReranker:
         except Exception as exc:
             raise RerankUnavailable(f"reranker 推理失败：{type(exc).__name__}: {exc}") from exc
 
+        # CrossEncoder defaults to Sigmoid for a single logit. Explicit Identity
+        # above guarantees raw logits, so normalization happens exactly once.
         output: list[float] = []
         for row in predictions:
             if hasattr(row, "tolist"):

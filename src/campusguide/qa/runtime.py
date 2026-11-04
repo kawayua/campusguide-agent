@@ -526,6 +526,11 @@ def create_graph_runtime(
         "VERIFIER_MODEL", graph_config.semantic.timeout_seconds
     )
 
+    from campusguide.retrieval.profile_expand import ProfileLexicon
+
+    profile_lexicon = ProfileLexicon.from_organization(
+        load_organization(ROOT / "configs" / "organization.yaml")
+    )
     retriever = GraphRetriever(
         search_client,
         top_k=retrieval.recall_top_k,
@@ -535,23 +540,21 @@ def create_graph_runtime(
         token_budget=graph_config.token_budget,
         expected_index_version=expected_index_version,
         enable_repealed_probe=abstention.enable_repealed_probe,
+        profile_lexicon=profile_lexicon,
     )
-    from campusguide.retrieval.profile_expand import ProfileLexicon
-
     planner = Planner(
         flow_catalog,
         provider=planner_provider,
         llm_enabled=graph_config.planner.llm_enabled,
         max_queries=graph_config.max_queries,
         max_clarify=graph_config.max_clarify,
-        profile_lexicon=ProfileLexicon.from_organization(
-            load_organization(ROOT / "configs" / "organization.yaml")
-        ),
+        profile_lexicon=profile_lexicon,
     )
     advisor = Advisor(
         advisor_provider,
         temperature=0.0,
         max_tokens=int(os.getenv("ADVISOR_MAX_TOKENS", "3000")),
+        profile_lexicon=profile_lexicon,
     )
     semantic = SemanticVerifier(
         semantic_provider,
@@ -569,7 +572,7 @@ def create_graph_runtime(
         max_revise=graph_config.max_revise,
         semantic_mode=graph_config.semantic.on_unavailable,
     )
-    from campusguide.agents.coverage import CoverageChecker
+    from campusguide.agents.coverage import COVERAGE_PROMPT_VERSION, CoverageChecker
 
     nodes = GraphNodes(
         planner=planner,
@@ -581,8 +584,12 @@ def create_graph_runtime(
         trace_writer=trace_writer or TraceWriter(paths.trace_dir),
         max_clarify=graph_config.max_clarify,
         max_revise=graph_config.max_revise,
+        max_evidence=graph_config.max_evidence,
+        token_budget=graph_config.token_budget,
         today=today,
-        coverage_checker=CoverageChecker(advisor_provider),
+        coverage_checker=CoverageChecker(
+            advisor_provider, profile_lexicon=profile_lexicon
+        ),
     )
     runner = GraphRunner(nodes, ttl_hours=graph_config.checkpointer.ttl_hours)
     service = ConversationService(
@@ -607,7 +614,7 @@ def create_graph_runtime(
             "advisor": W6B_ADVISOR_PROMPT_VERSION,
             "revise": REVISE_PROMPT_VERSION,
             "semantic": SEMANTIC_PROMPT_VERSION,
-            "coverage": "coverage-2026-10-28",
+            "coverage": COVERAGE_PROMPT_VERSION,
         },
         index_version=expected_index_version,
     )

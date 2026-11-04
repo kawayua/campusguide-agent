@@ -50,11 +50,17 @@ AUDIENCE_DETAIL_PAYLOAD_FIELDS = {
     "audience_intake_years": "intake_years",
     "audience_intake_from": "intake_from",
     "audience_graduating_years": "graduating_years",
+    "audience_admission_year": "admission_year",
     "audience_stages": "stages",
     "audience_program_types": "program_types",
+    "audience_learning_modes": "learning_modes",
+    "audience_degree_types": "degree_types",
+    "audience_class_types": "class_types",
     "audience_groups": "groups",
     "audience_status": "status",
     "audience_cycle": "cycle",
+    "audience_scope_status": "scope_status",
+    "audience_scope_evidence": "scope_evidence",
 }
 
 

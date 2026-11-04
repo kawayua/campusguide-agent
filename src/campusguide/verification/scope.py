@@ -10,6 +10,7 @@ from collections import defaultdict
 from dataclasses import dataclass, field
 from datetime import date
 
+from campusguide.domain.audience_match import audience_matches
 from campusguide.domain.enums import (
     ArticleStatus,
     Audience,
@@ -17,8 +18,8 @@ from campusguide.domain.enums import (
     IssueSeverity,
     OutcomeCode,
 )
-from campusguide.domain.audience_match import audience_matches
 from campusguide.domain.models import Evidence, VerificationIssue
+from campusguide.domain.profiles import UserProfile
 
 
 @dataclass
@@ -157,13 +158,61 @@ def _filter_audience(
     return kept, issues, not kept
 
 
+def _filter_profile(
+    evidence: list[Evidence],
+    profile: UserProfile | None,
+    *,
+    as_of: date,
+    academic_year: str | None,
+    admission_year: int | None,
+    graduating_year: int | None,
+) -> tuple[list[Evidence], list[VerificationIssue]]:
+    # 惰性导入：verification.scope 被 qa.runtime 顶层引入，不能在导入期
+    # 拉起 qdrant_client（轻量客户端边界）。
+    from campusguide.retrieval.filters import article_matches_profile
+
+    if (
+        (profile is None or profile.is_empty)
+        and admission_year is None
+        and graduating_year is None
+        and academic_year is None
+    ):
+        return list(evidence), []
+    kept: list[Evidence] = []
+    issues: list[VerificationIssue] = []
+    for item in evidence:
+        matches, reasons = article_matches_profile(
+            item.article,
+            profile,
+            as_of=as_of,
+            academic_year=academic_year,
+            admission_year=admission_year,
+            graduating_year=graduating_year,
+        )
+        if matches:
+            kept.append(item)
+        else:
+            issues.append(
+                _evidence_issue(
+                    "PROFILE_MISMATCH",
+                    item,
+                    "；".join(reasons),
+                )
+            )
+    return kept, issues
+
+
 def apply_scope(
     evidence: list[Evidence],
     *,
     audience: Audience | None = None,
     as_of: date | None = None,
+    profile: UserProfile | None = None,
+    academic_year: str | None = None,
+    admission_year: int | None = None,
+    graduating_year: int | None = None,
 ) -> ScopeResult:
-    """按版本 → 冲突 → 受众顺序过滤 evidence，并给出全部剔除时的原因码。"""
+    """按版本 → 冲突 → 受众 → 画像顺序过滤 evidence，并给出全部剔除时的原因码。"""
     if not evidence:
         return ScopeResult(reason_code=OutcomeCode.NO_EVIDENCE)
 
@@ -184,4 +233,16 @@ def apply_scope(
     if all_filtered:
         return ScopeResult(issues=issues, reason_code=OutcomeCode.UNVERIFIABLE)
 
-    return ScopeResult(evidence=audience_valid, issues=issues)
+    profile_valid, profile_issues = _filter_profile(
+        audience_valid,
+        profile,
+        as_of=as_of,
+        academic_year=academic_year,
+        admission_year=admission_year,
+        graduating_year=graduating_year,
+    )
+    issues.extend(profile_issues)
+    if not profile_valid:
+        return ScopeResult(issues=issues, reason_code=OutcomeCode.UNVERIFIABLE)
+
+    return ScopeResult(evidence=profile_valid, issues=issues)

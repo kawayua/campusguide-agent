@@ -57,6 +57,8 @@ class LocalHybridSearchClient:
                 matched_spans=list(item.matched_spans),
                 retrieval_query=item.retrieval_query,
                 rank=item.rank,
+                structured=item.structured,
+                structured_rank=item.structured_rank,
             )
             for item in result.evidence
         ]
@@ -81,9 +83,24 @@ class LocalHybridSearchClient:
         article = self._retriever.get_article(article_id, part_no)
         if article is None:
             raise LookupError(article_id)
+        parent = None
+        if article.parent_article_id and article.parent_article_id != article.article_id:
+            parent_article = self._retriever.get_article(article.parent_article_id)
+            if parent_article is not None:
+                parent = ArticlePublic.from_article(parent_article)
         return GetArticleData(
             article=ArticlePublic.from_article(article),
-            metadata={"article_id": article.article_id, "part_no": article.part_no},
+            parent=parent,
+            metadata={
+                "article_id": article.article_id,
+                "part_no": article.part_no,
+                "block_kind": article.block_kind,
+                "parent_article_id": article.parent_article_id,
+                "table_id": article.table_id,
+                "row_id": article.row_id,
+                "row_index": article.row_index,
+                "source_cell_ids": list(article.source_cell_ids),
+            },
         )
 
     def close(self) -> None:

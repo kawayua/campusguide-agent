@@ -1,0 +1,37 @@
+# Xiaomi-OCR-0 影子适配器配置（opt-in，不接入生产解析链路）。
+# 适配器不会被任何现有解析入口自动加载；只有调用方显式读取本文件并传入
+# run_page_ocr 时才会发起本地推理。不得写入密钥、令牌或认证环境变量名。
+# 本配置只支持整页模式，不产生区域/版面证据，因此不得声称 two-stage 结果。
+enabled: false
+mode: page
+source_format: pdf
+# 0.2.0 起表格/块/行/单元格 ID 携带 ocr-page<page> 命名空间；旧缓存键不再命中。
+adapter_version: xiaomi-ocr-adapter-0.2.0
+
+# 本地推理后端：loopback-openai-compatible（本配置）或调用方自有的
+# local-transformers callable。两种后端都必须在本机执行。
+backend: loopback-openai-compatible
+model: SeerRay-Lab/Xiaomi-OCR-0
+# 必填：填写实际加载的 Hugging Face commit/revision；空值会被适配器拒绝。
+# 可变分支名会让缓存身份不稳定，也不会被自动展开为 commit。
+model_revision: ""
+
+# 仅允许回环 http 地址（127.0.0.1、localhost、::1），路径为空或 /v1。
+# 适配器拒绝重定向、禁用环境代理、不读取 API key/netrc，也不回退到远程端点。
+base_url: http://127.0.0.1:8000/v1
+timeout_seconds: 600.0
+max_tokens: 4096
+
+prompt_revision: xiaomi-ocr-official-document/1
+preprocess_revision: png-validate-identity/1
+# 必填：由 root 提供的官方后处理函数版本；空值会被适配器拒绝。
+postprocess_revision: ""
+
+# 仅在 enabled 为 true 且调用方显式传入 cache_dir 时读写。
+# 缓存键包含图像 SHA、来源 SHA、页码、模型 revision、prompt 文本哈希、
+# 前后处理 revision、max_tokens 和后端标识；命中缓存不会调用后端。
+cache_dir: data/processed/xiaomi_ocr_shadow
+
+# 成本口径：每次本地后端调用计 local_requests=1、cloud_requests=0；
+# 后端未报告 token 数时 prompt/completion/total 保持 null，不能记为 0。
+# 结果固定 publishable=false、visually_verified=false，需人工复核。

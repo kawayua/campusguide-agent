@@ -6,12 +6,15 @@ import argparse
 import sys
 from pathlib import Path
 
-from campusguide.ingest.parse import parse_corpus
+from campusguide.env import load_dotenv
+from campusguide.ingest.parse import parse_corpus, write_parse_report
 
 ROOT = Path(__file__).resolve().parents[1]
 
 
 def main() -> int:
+    # 与 build_vectors 一致：独立进程启动时加载本地环境变量，凭证不写入仓库。
+    load_dotenv(ROOT / ".env")
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--raw-dir", default=str(ROOT / "data" / "raw"))
     parser.add_argument("--processed-dir", default=str(ROOT / "data" / "processed"))
@@ -26,19 +29,77 @@ def main() -> int:
         default=None,
         help="只处理指定 doc_id 或 doc_id@version_id，可重复",
     )
+    mode = parser.add_mutually_exclusive_group()
+    mode.add_argument(
+        "--vision-first",
+        action="store_true",
+        help="默认新流程：逐页视觉识别并与原生文本交叉核对；未通过则显式失败",
+    )
+    mode.add_argument(
+        "--native-only",
+        action="store_true",
+        help="仅用原生文本/DOM 结构，明确标记 native_only，不冒充 vision_first",
+    )
+    parser.add_argument(
+        "--vision-config",
+        default=str(ROOT / "configs" / "vision.yaml"),
+        help="vision_first 使用的视觉配置",
+    )
+    parser.add_argument(
+        "--report",
+        default=None,
+        help="本次解析来源/哈希报告，默认 <processed-dir>/parse_report.json",
+    )
     args = parser.parse_args()
+
+    if not args.vision_first and not args.native_only:
+        print(
+            "error: 必须显式选择 --vision-first 或 --native-only，"
+            "避免把 native_only 结果当成新视觉流程。",
+            file=sys.stderr,
+        )
+        return 2
+
+    preparser = None
+    if args.vision_first:
+        from campusguide.ingest.visual import VisionConfig, VisionUnavailable, VisualPreparser
+
+        try:
+            vision_config = VisionConfig.from_yaml(Path(args.vision_config).resolve())
+            preparser = VisualPreparser(vision_config)
+        except VisionUnavailable as exc:
+            print(f"error: vision_first 不可用：{exc}", file=sys.stderr)
+            return 1
 
     raw_dir = Path(args.raw_dir).resolve()
     if not raw_dir.exists():
         print(f"raw 目录不存在：{raw_dir}")
         return 1
 
+    processed_dir = Path(args.processed_dir).resolve()
+    report_path = (
+        Path(args.report).resolve()
+        if args.report
+        else processed_dir / "parse_report.json"
+    )
+    # 先删旧报告：若本进程中途崩溃，build 会因缺少报告失败，而不是拿上次
+    # 成功清单和旧 parsed 文件继续构建。最终报告在本轮全部结果写完后原子生成。
+    report_path.unlink(missing_ok=True)
     results = parse_corpus(
         raw_dir=raw_dir,
-        processed_dir=Path(args.processed_dir).resolve(),
+        processed_dir=processed_dir,
         only=args.only,
         ocr_dir=Path(args.ocr_dir).resolve() if args.ocr_dir else None,
+        vision_preparser=preparser,
+        require_vision=args.vision_first,
     )
+    write_parse_report(
+        report_path,
+        results,
+        raw_dir=raw_dir,
+        processed_dir=processed_dir,
+    )
+    print(f"parse report: {report_path}")
     if not results:
         print("没有找到可解析的 meta.json，请先执行 make fetch。")
         return 0
@@ -46,7 +107,9 @@ def main() -> int:
     counts: dict[str, int] = {}
     for result in results:
         counts[result.status] = counts.get(result.status, 0) + 1
-        detail = result.error or f"cjk={result.cjk_count}"
+        detail = result.error or f"cjk={result.cjk_count} mode={result.ingestion_mode}"
+        if result.vision_pages:
+            detail += f" vision_pages={result.vision_pages}"
         if result.ocr_used:
             confidence = result.ocr_confidence or 0.0
             detail += f" ocr=yes confidence={confidence:.3f}"

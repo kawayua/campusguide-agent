@@ -14,6 +14,7 @@ W4 默认失败关闭：reranker 不可用时抛 ``RerankUnavailable``，不返�
 
 from __future__ import annotations
 
+import math
 import re
 import time
 from dataclasses import dataclass, field
@@ -24,7 +25,6 @@ from qdrant_client import QdrantClient
 from qdrant_client.models import FieldCondition, Filter, MatchValue, SparseVector
 
 from campusguide.config import RetrievalConfig
-from campusguide.domain.audience_match import audience_matches
 from campusguide.domain.enums import Audience, VersionMode
 from campusguide.domain.models import Article, ArticlePublic, Evidence, PolicyFilters
 from campusguide.retrieval.budget import evidence_cost
@@ -76,11 +76,29 @@ class _Candidate:
     retrieval_query: str = ""
     ranks: list[int] = field(default_factory=list)
     rerank_score: float | None = None
+    # Independent structural signal; never folded into rerank_score.
+    structured: bool = False
+    structured_rank: int | None = None
+
+
+def _is_structured_row(article: Article) -> bool:
+    return article.block_kind in {"table_row", "matrix_row"}
+
+
+def _evidence_article(article: Article, *, max_chars: int) -> Article:
+    """Structured rows stay whole: truncation would keep column metadata but lose cells."""
+    if _is_structured_row(article) or len(article.text) <= max_chars:
+        return article
+    return article.model_copy(update={"text": article.text[:max_chars]})
 
 
 def _passage(article: Article, *, max_chars: int = 1200) -> str:
     chapter = " / ".join(article.chapter_path) if article.chapter_path else "无"
-    text = article.text if len(article.text) <= max_chars else article.text[:max_chars]
+    # 结构化行是完整语义单元：截断会保留列元数据却丢掉行后部单元格。
+    if _is_structured_row(article) or len(article.text) <= max_chars:
+        text = article.text
+    else:
+        text = article.text[:max_chars]
     # Normalize layout spaces for ranking only; evidence and quote offsets stay original.
     text = re.sub(r"(?<=[\u3400-\u9fff])[ \t]+(?=[\u3400-\u9fff])", "", text)
     return f"标题：{article.doc_title}\n章节：{chapter}\n位置：{article.article_no}\n正文：{text}"
@@ -112,6 +130,21 @@ def _within_effective(article: Article, as_of: date) -> bool:
     if article.effective_from > as_of:
         return False
     return article.effective_to is None or as_of <= article.effective_to
+
+
+def _candidate_score(candidate: _Candidate) -> float:
+    if candidate.rerank_score is not None:
+        return candidate.rerank_score
+    return candidate.rrf_score
+
+
+def _candidate_order(candidate: _Candidate) -> tuple[int, float, float]:
+    """Structural proof first, then real model score; the score itself is unchanged."""
+    return (
+        1 if candidate.structured else 0,
+        -float(candidate.structured_rank or 0),
+        _candidate_score(candidate),
+    )
 
 
 class HybridRetriever:
@@ -161,6 +194,18 @@ class HybridRetriever:
         self._min_score_margin = (
             min_score_margin if min_score_margin is not None else config.min_score_margin
         )
+        self._fallback_min_score = config.rerank_fallback_min_score
+        self._fallback_max_articles = config.rerank_fallback_max_articles
+        if self._fallback_min_score is not None and (
+            not math.isfinite(self._fallback_min_score)
+            or not 0.0 <= self._fallback_min_score <= 1.0
+            or self._fallback_min_score >= self._min_rerank_score
+        ):
+            raise ValueError(
+                "rerank_fallback_min_score 必须有限、位于 0..1 且严格小于有效 min_rerank_score"
+            )
+        if not 1 <= self._fallback_max_articles <= 3:
+            raise ValueError("rerank_fallback_max_articles 必须在 1..3")
         self._rrf_k = rrf_k
         self._aliases = aliases or {}
         self._profile_lexicon = profile_lexicon or ProfileLexicon({}, {})
@@ -310,6 +355,9 @@ class HybridRetriever:
                 article,
                 filters.profile,
                 as_of=filters.as_of,
+                academic_year=filters.academic_year,
+                admission_year=filters.admission_year,
+                graduating_year=filters.graduating_year,
             )
             if not matches:
                 warnings.append(f"PROFILE_MISMATCH: {article.article_id} " + "；".join(reasons))
@@ -422,12 +470,12 @@ class HybridRetriever:
             )
 
         source_matches = self._corpus_views.search(query) if self._corpus_views else None
-        exact_keys = source_matches.exact_keys if source_matches else set()
         source_priority = (
             {(a.article_id, a.part_no): rank for rank, a in enumerate(source_matches.articles)}
             if source_matches
             else {}
         )
+        exact_keys = (source_matches.exact_keys & set(source_priority)) if source_matches else set()
         if source_matches:
             if source_matches.collection_query:
                 # Semantic ranking cannot change the date-selected collection.
@@ -436,15 +484,44 @@ class HybridRetriever:
                 key = (article.article_id, article.part_no)
                 if key not in candidates:
                     candidates[key] = _Candidate(article=article, retrieval_query=query)
-                candidates[key].rrf_score += 0.08 / (1 + rank * 0.04)
+                # Source views are a third ranked recall channel, with the same
+                # RRF contribution as dense/sparse; lexical overlap is not proof.
+                candidates[key].rrf_score += 1.0 / (self._rrf_k + rank)
         candidates, warnings = self._post_filter(candidates, filters)
+        for key in exact_keys:
+            candidate = candidates.get(key)
+            if candidate is None:
+                continue
+            candidate.structured = True
+            candidate.structured_rank = source_priority[key] + 1
+            warnings.append(f"STRUCTURED_MATCH:{candidate.article.article_id}:p{candidate.article.part_no}")
         if source_matches:
             warnings.extend(source_matches.warnings)
         aggregated, version_warnings = self._aggregate_and_check_versions(candidates, filters)
         warnings.extend(version_warnings)
         aggregated.sort(key=lambda item: item.rrf_score, reverse=True)
         candidate_limit = min(top_k, self._rerank_candidates) if self._use_rerank else top_k
-        shortlist = aggregated[:candidate_limit]
+        # Protect exact source sections before RRF truncation. The reranker still
+        # sees all other candidates and the normal threshold remains in force.
+        protected = sorted(
+            (
+                item
+                for item in aggregated
+                if (item.article.article_id, item.article.part_no) in exact_keys
+            ),
+            key=lambda item: source_priority[(item.article.article_id, item.article.part_no)],
+        )
+        reserved = protected[: min(candidate_limit // 2, len(protected))]
+        reserved_keys = {(item.article.article_id, item.article.part_no) for item in reserved}
+        shortlist = [
+            *reserved,
+            *(
+                item
+                for item in aggregated
+                if (item.article.article_id, item.article.part_no) not in reserved_keys
+            ),
+        ][:candidate_limit]
+        shortlist.sort(key=_candidate_order, reverse=True)
 
         rerank_ms = 0.0
         if self._use_rerank and shortlist:
@@ -456,10 +533,14 @@ class HybridRetriever:
             scores = self._reranker.score(views[0], passages)
             if len(scores) != len(shortlist):
                 raise RetrievalError("reranker 返回分数数量与候选数不一致")
+            if any(not math.isfinite(float(score)) for score in scores):
+                raise RetrievalError("reranker 返回非有限分数")
             for view in views[1:]:
                 facet_scores = self._reranker.score(view, passages)
                 if len(facet_scores) != len(shortlist):
                     raise RetrievalError("reranker facet score count mismatch")
+                if any(not math.isfinite(float(score)) for score in facet_scores):
+                    raise RetrievalError("reranker 返回非有限分数")
                 scores = [max(a, b) for a, b in zip(scores, facet_scores, strict=True)]
             if len(views) > 1:
                 warnings.append("RERANK_QUERY_VIEWS:" + " | ".join(views))
@@ -467,36 +548,92 @@ class HybridRetriever:
             if len(scores) != len(shortlist):
                 raise RetrievalError("reranker 返回分数数量与候选数不一致")
             for candidate, score in zip(shortlist, scores, strict=True):
+                # The model's score is stored verbatim; structural proof is a
+                # separate selection signal, never a synthetic rerank score.
                 candidate.rerank_score = float(score)
-                key = (candidate.article.article_id, candidate.article.part_no)
-                if key in exact_keys:
-                    # Exact roster membership/date selection/registered plan section
-                    # has a structural proof; this is not a lowered semantic threshold.
-                    candidate.rerank_score = max(
-                        float(score), 0.98 - source_priority.get(key, 15) * 0.004
-                    )
-                    warnings.append(
-                        f"STRUCTURED_MATCH:{candidate.article.article_id}:p{candidate.article.part_no}"
-                    )
-            shortlist.sort(key=lambda item: item.rerank_score or 0.0, reverse=True)
-            top_score = shortlist[0].rerank_score or 0.0
+            shortlist.sort(key=_candidate_order, reverse=True)
+            top_score = max(item.rerank_score or 0.0 for item in shortlist)
+            structured_items = [item for item in shortlist if item.structured]
+            semantic_items = [item for item in shortlist if not item.structured]
             if top_score < self._min_rerank_score + self._min_score_margin:
                 warnings.append(
                     f"RERANK_BELOW_MARGIN: top={top_score:.4f} < "
                     f"{self._min_rerank_score + self._min_score_margin:.4f}"
                 )
-                shortlist = []
+                semantic_items = []
             else:
                 warnings.extend(
                     f"RERANK_DROP:{item.article.article_id}:p{item.article.part_no}:score={item.rerank_score:.4f}"
-                    for item in shortlist
+                    for item in semantic_items
                     if (item.rerank_score or 0.0) < self._min_rerank_score
                 )
-                shortlist = [
+                semantic_items = [
                     item
-                    for item in shortlist
+                    for item in semantic_items
                     if (item.rerank_score or 0.0) >= self._min_rerank_score
                 ]
+            for item in structured_items:
+                score = item.rerank_score or 0.0
+                if score < self._min_rerank_score:
+                    warnings.append(
+                        f"STRUCTURED_THRESHOLD_BYPASS:"
+                        f"{item.article.article_id}:p{item.article.part_no}:score={score:.4f}"
+                    )
+            # Opt-in bounded recovery: only when the normal threshold/margin
+            # selected no semantic evidence and structured proof is absent.
+            fallback_items: list[_Candidate] | None = None
+            if self._fallback_min_score is not None:
+                if not semantic_items and not structured_items:
+                    fallback_items = sorted(
+                        (
+                            item
+                            for item in shortlist
+                            if item.rerank_score is not None
+                            and math.isfinite(item.rerank_score)
+                            and item.rerank_score >= self._fallback_min_score
+                        ),
+                        key=lambda item: float(item.rerank_score),
+                        reverse=True,
+                    )[: self._fallback_max_articles]
+                    warnings.append(
+                        f"RERANK_FALLBACK:applied={str(bool(fallback_items)).lower()}"
+                        f":strong={self._min_rerank_score:.4f}"
+                        f":floor={self._fallback_min_score:.4f}"
+                        f":accepted={len(fallback_items)}"
+                    )
+                    warnings.extend(
+                        f"RERANK_FALLBACK_ACCEPT:{item.article.article_id}:p{item.article.part_no}"
+                        f":score={item.rerank_score:.4f}"
+                        for item in fallback_items
+                    )
+                    rejected = sorted(
+                        (
+                            item
+                            for item in shortlist
+                            if item.rerank_score is not None
+                            and math.isfinite(item.rerank_score)
+                            and item.rerank_score < self._fallback_min_score
+                        ),
+                        key=lambda item: float(item.rerank_score),
+                        reverse=True,
+                    )[:5]
+                    warnings.extend(
+                        f"RERANK_FALLBACK_REJECT:{item.article.article_id}:p{item.article.part_no}"
+                        f":score={item.rerank_score:.4f}"
+                        for item in rejected
+                    )
+                else:
+                    warnings.append(
+                        f"RERANK_FALLBACK:applied=false"
+                        f":strong={self._min_rerank_score:.4f}"
+                        f":floor={self._fallback_min_score:.4f}"
+                        ":reason=normal_evidence_present"
+                    )
+            shortlist = (
+                fallback_items
+                if fallback_items is not None
+                else [*structured_items, *semantic_items]
+            )
             selection = select_sections(
                 shortlist,
                 query=queries[0],
@@ -506,22 +643,38 @@ class HybridRetriever:
             warnings.extend(selection.warnings)
             shortlist = selection.candidates
 
+        structured_rank_by_key = {
+            (item.article.article_id, item.article.part_no): item.structured_rank
+            for item in shortlist
+            if item.structured
+        }
         kept: list[Evidence] = []
         used_chars = 0
         for candidate in shortlist:
             if len(kept) >= min(self._max_articles, rerank_top_n):
                 break
-            article = candidate.article
-            if len(article.text) > self._max_chars_per_evidence:
-                article = article.model_copy(
-                    update={"text": article.text[: self._max_chars_per_evidence]}
+            article = _evidence_article(
+                candidate.article, max_chars=self._max_chars_per_evidence
+            )
+            structured = _is_structured_row(article)
+            if structured and len(article.text) > self._max_chars_per_evidence:
+                # 绝不截断结构化行：保留完整列值，超出单条上限时显式告警。
+                warnings.append(
+                    f"STRUCTURED_ROW_FULL_TEXT:{article.article_id}:p{article.part_no}:"
+                    f"chars={len(article.text)}>max={self._max_chars_per_evidence}"
                 )
             cost = evidence_cost(article)
             if kept and used_chars + cost > self._token_budget:
+                prefix = "STRUCTURED_ROW_OVER_BUDGET" if structured else "TOKEN_BUDGET"
                 warnings.append(
-                    f"TOKEN_BUDGET: 跳过 {article.article_id}:p{article.part_no}:cost={cost}"
+                    f"{prefix}: 跳过 {article.article_id}:p{article.part_no}:cost={cost}"
                 )
                 continue
+            if structured and used_chars + cost > self._token_budget:
+                warnings.append(
+                    f"STRUCTURED_ROW_OVER_BUDGET: 保留首条完整行 "
+                    f"{article.article_id}:p{article.part_no}:cost={cost}"
+                )
             used_chars += cost
             evidence = Evidence(
                 article=article,
@@ -531,6 +684,8 @@ class HybridRetriever:
                 rerank_score=candidate.rerank_score,
                 retrieval_query=candidate.retrieval_query,
                 matched_spans=_matched_spans(article.text, queries[0]),
+                structured=candidate.structured,
+                structured_rank=candidate.structured_rank,
             )
             kept.append(evidence)
 
@@ -570,6 +725,11 @@ class HybridRetriever:
                     "dense_score": item.dense_score,
                     "sparse_score": item.sparse_score,
                     "rerank_score": item.rerank_score,
+                    "structured": (item.article.article_id, item.article.part_no)
+                    in structured_rank_by_key,
+                    "structured_rank": structured_rank_by_key.get(
+                        (item.article.article_id, item.article.part_no)
+                    ),
                 }
                 for item in kept
             ],
@@ -592,6 +752,10 @@ class HybridRetriever:
         except Exception as exc:
             raise RetrievalError(f"Qdrant scroll 失败：{exc}") from exc
         if not points:
+            # 表格父块不参与向量检索，只能从 articles.jsonl 的 corpus views 取回，
+            # 否则子行的 parent_article_id 会悬空。
+            if self._corpus_views is not None:
+                return self._corpus_views.article_by_id(article_id, part_no)
             return None
         points.sort(key=lambda point: int((point.payload or {}).get("part_no", 1)))
         return article_from_payload(points[0].payload or {})

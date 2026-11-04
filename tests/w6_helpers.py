@@ -179,6 +179,24 @@ def claims_json(article_id: str, quote: str, text: str = "这是一条可核对�
     )
 
 
+def claims_id_json(
+    quote_id: str, text: str = "这是一条可核对的结论。", claim_id: str = "c1"
+) -> str:
+    return json.dumps(
+        {
+            "claims": [
+                {
+                    "claim_id": claim_id,
+                    "text": text,
+                    "kind": "eligibility",
+                    "citations": [{"quote_id": quote_id}],
+                }
+            ]
+        },
+        ensure_ascii=False,
+    )
+
+
 DEFAULT_AS_OF = date(2026, 10, 25)
 
 
@@ -188,6 +206,7 @@ __all__ = [
     "FakeSearchClient",
     "article",
     "catalog",
+    "claims_id_json",
     "claims_json",
     "hit",
     "make_nodes",

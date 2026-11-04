@@ -42,6 +42,24 @@ class ProgramType(StrEnum):
     PROFESSIONAL = "professional"
 
 
+class LearningMode(StrEnum):
+    FULL_TIME = "full_time"
+    PART_TIME = "part_time"
+
+
+class DegreeType(StrEnum):
+    ACADEMIC = "academic"
+    PROFESSIONAL = "professional"
+
+
+class ScopeStatus(StrEnum):
+    """适用范围是否有原文依据，避免把“空值”同时当成无限制和未识别。"""
+
+    UNRESTRICTED = "unrestricted"
+    EXACT = "exact"
+    UNKNOWN = "unknown"
+
+
 class StudentGroup(StrEnum):
     FINANCIAL_AID = "financial_aid"
     DIRECTED = "directed"
@@ -64,6 +82,10 @@ class PolicyRelation(StrEnum):
     STANDALONE = "standalone"
     IMPLEMENTS = "implements"
     SUPPLEMENTS = "supplements"
+    # 上位依据/附件/替代关系：必须能由原文定位到具体目标版本。
+    BASIS = "basis"
+    ATTACHMENT = "attachment"
+    REPLACES = "replaces"
 
 
 class AuthorityLevel(StrEnum):

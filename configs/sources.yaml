@@ -30,6 +30,8 @@ documents:
     status: repealed
     format: html
     notes: 文号：华南农办〔2009〕91号；仅知印发年份，published_at 取年末锚点（date_confidence=low）。
+    date_confidence: low
+    date_source: "version.notes: 文号：华南农办〔2009〕91号；仅知印发年份，published_at 取年末锚点"
   - version_id: v2021
     url: https://jwc.scau.edu.cn/2021/0830/c5127a288407/page.htm
     published_at: '2021-08-30'
@@ -88,6 +90,8 @@ documents:
     status: repealed
     format: html
     notes: 文号：华南农办〔2015〕49号；仅知印发年份，published_at 取年末锚点（date_confidence=low）。
+    date_confidence: low
+    date_source: "version.notes: 文号：华南农办〔2015〕49号；仅知印发年份，published_at 取年末锚点"
   - version_id: v2021
     url: https://jwc.scau.edu.cn/2021/0830/c5127a288404/page.htm
     published_at: '2021-08-30'
@@ -373,6 +377,8 @@ documents:
     status: active
     format: html
     notes: 文号：华南农办〔2018〕117号；仅知印发年份，published_at 取年末锚点（date_confidence=low）。
+    date_confidence: low
+    date_source: "version.notes: 文号：华南农办〔2018〕117号；仅知印发年份，published_at 取年末锚点"
 - doc_id: undergraduate-mentor
   title: 华南农业大学本科生导师制实施办法
   doc_type: regulation
@@ -509,6 +515,8 @@ documents:
     status: active
     format: html
     notes: 文号：华农党发〔2021〕35号；仅知印发年份，published_at 取年末锚点（date_confidence=low）。
+    date_confidence: low
+    date_source: "version.notes: 文号：华农党发〔2021〕35号；仅知印发年份，published_at 取年末锚点"
 - doc_id: national-aid-grad
   title: 华南农业大学研究生国家奖助学金实施办法
   doc_type: regulation
@@ -611,6 +619,8 @@ documents:
     status: active
     format: html
     notes: 文号：华南农办〔2019〕29号；仅知印发年份，published_at 取年末锚点（date_confidence=low）。
+    date_confidence: low
+    date_source: "version.notes: 文号：华南农办〔2019〕29号；仅知印发年份，published_at 取年末锚点"
   audience_detail:
     groups:
     - financial_aid
@@ -637,6 +647,8 @@ documents:
     status: active
     format: html
     notes: 文号：华南农办〔2018〕81号；仅知印发年份，published_at 取年末锚点（date_confidence=low）。
+    date_confidence: low
+    date_source: "version.notes: 文号：华南农办〔2018〕81号；仅知印发年份，published_at 取年末锚点"
   audience_detail:
     groups:
     - financial_aid
@@ -730,6 +742,8 @@ documents:
     status: active
     format: html
     notes: 文号：华南农办〔2018〕119号；仅知印发年份，published_at 取年末锚点（date_confidence=low）。
+    date_confidence: low
+    date_source: "version.notes: 文号：华南农办〔2018〕119号；仅知印发年份，published_at 取年末锚点"
 - doc_id: master-doctor-degree-rules
   title: 华南农业大学硕士和博士学位授予工作细则
   doc_type: regulation
@@ -753,6 +767,8 @@ documents:
     status: repealed
     format: html
     notes: 文号：华南农办〔2010〕136号；仅知印发年份，published_at 取年末锚点（date_confidence=low）。
+    date_confidence: low
+    date_source: "version.notes: 文号：华南农办〔2010〕136号；仅知印发年份，published_at 取年末锚点"
   - version_id: v2025
     url: https://yjsy.scau.edu.cn/_upload/article/files/67/fd/b48244ec45f5889190898352d12f/2e1d108a-7dd5-44d3-8da5-3e60f16d85bb.pdf
     published_at: '2025-06-11'
@@ -783,6 +799,8 @@ documents:
     status: repealed
     format: html
     notes: 文号：华南农办〔2010〕70号；旧标题为《华南农业大学优秀博士、硕士学位论文评选与奖励办法》；仅知印发年份（date_confidence=low）。
+    date_confidence: low
+    date_source: "version.notes: 文号：华南农办〔2010〕70号；旧标题为《华南农业大学优秀博士、硕士学位论文评选与奖励办法》；仅知印发年份"
   - version_id: v2021
     url: https://yjsy.scau.edu.cn/_upload/article/files/a0/7c/271477b64394a94873f1bec22a32/830e0844-b828-46ee-8aab-fcd79bb9ec57.pdf
     published_at: '2021-09-01'
@@ -846,6 +864,8 @@ documents:
     status: active
     format: html
     notes: 文号：华南农办〔2014〕74号；仅知印发年份，published_at 取年末锚点（date_confidence=low）。
+    date_confidence: low
+    date_source: "version.notes: 文号：华南农办〔2014〕74号；仅知印发年份，published_at 取年末锚点"
 - doc_id: graduate-course-assessment
   title: 华南农业大学研究生课程考核与成绩管理规定
   doc_type: regulation
@@ -888,6 +908,8 @@ documents:
     status: active
     format: html
     notes: 文号：华南农办〔2022〕57号；仅知印发年份，published_at 取年末锚点（date_confidence=low）。
+    date_confidence: low
+    date_source: "version.notes: 文号：华南农办〔2022〕57号；仅知印发年份，published_at 取年末锚点"
 - doc_id: degree-committee-charter
   title: 华南农业大学学位评定委员会章程
   doc_type: regulation
@@ -931,6 +953,8 @@ documents:
     status: active
     format: html
     notes: 文号：华南农办〔2022〕27号；仅知印发年份，published_at 取年末锚点（date_confidence=low）。
+    date_confidence: low
+    date_source: "version.notes: 文号：华南农办〔2022〕27号；仅知印发年份，published_at 取年末锚点"
   audience_detail:
     program_types:
     - professional
@@ -958,6 +982,8 @@ documents:
     status: active
     format: html
     notes: 文号：华南农办〔2015〕150号；仅知印发年份，published_at 取年末锚点（date_confidence=low）；2026-04-30 为集中公开批次，不是发布日期。
+    date_confidence: low
+    date_source: "version.notes: 文号：华南农办〔2015〕150号；仅知印发年份，published_at 取年末锚点；2026-04-30 为集中公开批次，不是发布日期"
 - doc_id: public-facilities
   title: 华南农业大学公共设施管理办法
   doc_type: regulation
@@ -982,6 +1008,8 @@ documents:
     status: active
     format: html
     notes: 文号：华南农办〔2004〕57号；仅知印发年份，published_at 取年末锚点（date_confidence=low）；2026-04-30 为集中公开批次。
+    date_confidence: low
+    date_source: "version.notes: 文号：华南农办〔2004〕57号；仅知印发年份，published_at 取年末锚点；2026-04-30 为集中公开批次"
 - doc_id: official-reception
   title: 华南农业大学国内公务接待管理办法
   doc_type: regulation
@@ -1004,6 +1032,8 @@ documents:
     status: active
     format: html
     notes: 文号：华南农校办〔2017〕6号；仅知印发年份，published_at 取年末锚点（date_confidence=low）；2026-05-01 为集中公开批次。
+    date_confidence: low
+    date_source: "version.notes: 文号：华南农校办〔2017〕6号；仅知印发年份，published_at 取年末锚点；2026-05-01 为集中公开批次"
 - doc_id: contract-management
   title: 华南农业大学合同管理办法
   doc_type: regulation
@@ -1101,6 +1131,8 @@ documents:
     status: active
     format: html
     notes: 结构化转录自官网静态页；采集日期 2026-10-21；引用以官网原文为准。
+    date_confidence: low
+    date_source: "document.audience_detail.note: 静态页面；页面无明确发布日期，published_at 取核验日期"
 - doc_id: info-leadership
   title: 数学与信息学院、软件学院现任领导
   doc_type: guide
@@ -1127,6 +1159,8 @@ documents:
     status: active
     format: html
     notes: 结构化转录自官网静态页；采集日期 2026-10-21；引用以官网原文为准。
+    date_confidence: low
+    date_source: "document.audience_detail.note: 静态页面；页面无明确发布日期，published_at 取核验日期"
 - doc_id: info-committees
   title: 数学与信息学院、软件学院分委员会
   doc_type: guide
@@ -1154,6 +1188,8 @@ documents:
     status: active
     format: html
     notes: 结构化转录自官网静态页；采集日期 2026-10-21；引用以官网原文为准。
+    date_confidence: low
+    date_source: "document.audience_detail.note: 静态页面；页面无明确发布日期，published_at 取核验日期"
 - doc_id: info-student-affairs
   title: 数学与信息学院、软件学院学工队伍
   doc_type: guide
@@ -1180,6 +1216,8 @@ documents:
     status: active
     format: html
     notes: 结构化转录自官网静态页；采集日期 2026-10-21；引用以官网原文为准。
+    date_confidence: low
+    date_source: "document.audience_detail.note: 静态页面；页面无明确发布日期，published_at 取核验日期"
 - doc_id: info-supervisors
   title: 数学与信息学院、软件学院研究生导师
   doc_type: guide
@@ -1207,6 +1245,8 @@ documents:
     status: active
     format: html
     notes: 结构化转录自官网静态页；采集日期 2026-10-21；引用以官网原文为准。
+    date_confidence: low
+    date_source: "document.audience_detail.note: 静态页面；页面无明确发布日期，published_at 取核验日期"
 - doc_id: info-teachers-math
   title: 数学系教师名单
   doc_type: guide
@@ -1233,6 +1273,8 @@ documents:
     status: active
     format: html
     notes: 结构化转录自官网静态页；采集日期 2026-10-21；引用以官网原文为准。
+    date_confidence: low
+    date_source: "document.audience_detail.note: 静态页面；页面无明确发布日期，published_at 取核验日期"
 - doc_id: info-teachers-cs
   title: 计算机科学与工程系教师名单
   doc_type: guide
@@ -1259,6 +1301,8 @@ documents:
     status: active
     format: html
     notes: 结构化转录自官网静态页；采集日期 2026-10-21；引用以官网原文为准。
+    date_confidence: low
+    date_source: "document.audience_detail.note: 静态页面；页面无明确发布日期，published_at 取核验日期"
 - doc_id: info-teachers-ie
   title: 信息工程系教师名单
   doc_type: guide
@@ -1285,6 +1329,8 @@ documents:
     status: active
     format: html
     notes: 结构化转录自官网静态页；采集日期 2026-10-21；引用以官网原文为准。
+    date_confidence: low
+    date_source: "document.audience_detail.note: 静态页面；页面无明确发布日期，published_at 取核验日期"
 - doc_id: info-majors-undergrad
   title: 本科专业设置（数学与信息学院、软件学院）
   doc_type: guide
@@ -1312,6 +1358,8 @@ documents:
     status: active
     format: html
     notes: 结构化转录自官网静态页；采集日期 2026-10-21；引用以官网原文为准。
+    date_confidence: low
+    date_source: "document.audience_detail.note: 静态页面；页面无明确发布日期，published_at 取核验日期"
 - doc_id: info-majors-graduate
   title: 研究生学位点与招生专业（数学与信息学院、软件学院）
   doc_type: guide
@@ -1339,6 +1387,8 @@ documents:
     status: active
     format: html
     notes: 结构化转录自官网静态页；采集日期 2026-10-21；引用以官网原文为准。
+    date_confidence: low
+    date_source: "document.audience_detail.note: 静态页面；页面无明确发布日期，published_at 取核验日期"
 - doc_id: info-org-structure
   title: 数学与信息学院、软件学院党组织设置
   doc_type: guide
@@ -1365,6 +1415,8 @@ documents:
     status: active
     format: html
     notes: 结构化转录自官网静态页；采集日期 2026-10-21；引用以官网原文为准。
+    date_confidence: low
+    date_source: "document.audience_detail.note: 静态页面；页面无明确发布日期，published_at 取核验日期"
 - doc_id: info-practice-bases
   title: 数学与信息学院、软件学院实践基地
   doc_type: guide
@@ -1391,6 +1443,8 @@ documents:
     status: active
     format: html
     notes: 结构化转录自官网静态页；采集日期 2026-10-21；引用以官网原文为准。
+    date_confidence: low
+    date_source: "document.audience_detail.note: 静态页面；页面无明确发布日期，published_at 取核验日期"
 - doc_id: info-competitions
   title: 数学与信息学院、软件学院科创竞赛成绩
   doc_type: guide
@@ -1418,6 +1472,8 @@ documents:
     status: active
     format: html
     notes: 结构化转录自官网静态页；采集日期 2026-10-21；引用以官网原文为准。
+    date_confidence: low
+    date_source: "document.audience_detail.note: 静态页面；页面无明确发布日期，published_at 取核验日期"
 - doc_id: info-scholarships
   title: 数学与信息学院、软件学院奖助学金
   doc_type: guide
@@ -1445,6 +1501,8 @@ documents:
     status: active
     format: html
     notes: 结构化转录自官网静态页；采集日期 2026-10-21；引用以官网原文为准。
+    date_confidence: low
+    date_source: "document.audience_detail.note: 静态页面；页面无明确发布日期，published_at 取核验日期"
 - doc_id: info-teaching-centers
   title: 数学与信息学院、软件学院教学实验平台
   doc_type: guide
@@ -1471,6 +1529,8 @@ documents:
     status: active
     format: html
     notes: 结构化转录自官网静态页；采集日期 2026-10-21；引用以官网原文为准。
+    date_confidence: low
+    date_source: "document.audience_detail.note: 静态页面；页面无明确发布日期，published_at 取核验日期"
 - doc_id: info-industry-colleges
   title: 数学与信息学院、软件学院产业学院
   doc_type: guide
@@ -1497,6 +1557,8 @@ documents:
     status: active
     format: html
     notes: 结构化转录自官网静态页；采集日期 2026-10-21；引用以官网原文为准。
+    date_confidence: low
+    date_source: "document.audience_detail.note: 静态页面；页面无明确发布日期，published_at 取核验日期"
 - doc_id: info-admissions-undergrad
   title: 数学与信息学院、软件学院本科招生
   doc_type: guide
@@ -1523,6 +1585,8 @@ documents:
     status: active
     format: html
     notes: 结构化转录自官网静态页；采集日期 2026-10-21；引用以官网原文为准。
+    date_confidence: low
+    date_source: "document.audience_detail.note: 静态页面；页面无明确发布日期，published_at 取核验日期"
 - doc_id: info-admissions-graduate
   title: 数学与信息学院、软件学院研究生招生
   doc_type: guide
@@ -1549,6 +1613,8 @@ documents:
     status: active
     format: html
     notes: 结构化转录自官网静态页；采集日期 2026-10-21；引用以官网原文为准。
+    date_confidence: low
+    date_source: "document.audience_detail.note: 静态页面；页面无明确发布日期，published_at 取核验日期"
 - doc_id: info-student-orgs
   title: 数学与信息学院、软件学院学生组织
   doc_type: guide
@@ -1576,6 +1642,8 @@ documents:
     status: active
     format: html
     notes: 结构化转录自官网静态页；采集日期 2026-10-21；引用以官网原文为准。
+    date_confidence: low
+    date_source: "document.audience_detail.note: 静态页面；页面无明确发布日期，published_at 取核验日期"
 - doc_id: info-ug-math-plan
   title: 数学与应用数学专业人才培养方案
   doc_type: guide
@@ -2227,6 +2295,8 @@ documents:
     status: active
     format: html
     notes: 页面标注 2025-06 更新；published_at 取月份锚点 2025-06-30（date_confidence=low）。
+    date_confidence: low
+    date_source: "version.notes: 页面标注 2025-06 更新；published_at 取月份锚点 2025-06-30"
 - doc_id: agri-org-structure
   title: 农学院机构设置
   doc_type: guide
@@ -2303,6 +2373,8 @@ documents:
     status: active
     format: html
     notes: 采集日 2026-10-21；按官网原文入库；引用以官网原文为准。
+    date_confidence: low
+    date_source: "document.audience_detail.note: 静态页面；页面无明确发布日期，published_at 取采集日 2026-10-21"
 - doc_id: agri-committee-degree
   title: 农学院学位分委员会
   doc_type: guide
@@ -2328,6 +2400,8 @@ documents:
     status: active
     format: html
     notes: 采集日 2026-10-21；按官网原文入库；引用以官网原文为准。
+    date_confidence: low
+    date_source: "document.audience_detail.note: 静态页面；页面无明确发布日期，published_at 取采集日 2026-10-21"
 - doc_id: agri-committee-teaching
   title: 农学院教学指导委员会
   doc_type: guide
@@ -2378,6 +2452,8 @@ documents:
     status: active
     format: html
     notes: 采集日 2026-10-21；按官网原文入库；引用以官网原文为准。
+    date_confidence: low
+    date_source: "document.audience_detail.note: 静态页面；页面无明确发布日期，published_at 取采集日 2026-10-21"
 - doc_id: agri-dept-crop-info
   title: 作物信息与基因工程系
   doc_type: guide
@@ -2403,6 +2479,8 @@ documents:
     status: active
     format: html
     notes: 采集日 2026-10-21；按官网原文入库；引用以官网原文为准。
+    date_confidence: low
+    date_source: "document.audience_detail.note: 静态页面；页面无明确发布日期，published_at 取采集日 2026-10-21"
 - doc_id: agri-dept-crop-tech
   title: 作物科学技术系
   doc_type: guide
@@ -2428,6 +2506,8 @@ documents:
     status: active
     format: html
     notes: 采集日 2026-10-21；按官网原文入库；引用以官网原文为准。
+    date_confidence: low
+    date_source: "document.audience_detail.note: 静态页面；页面无明确发布日期，published_at 取采集日 2026-10-21"
 - doc_id: agri-dept-seed-engineering
   title: 种子工程与技术系
   doc_type: guide
@@ -2453,6 +2533,8 @@ documents:
     status: active
     format: html
     notes: 采集日 2026-10-21；按官网原文入库；引用以官网原文为准。
+    date_confidence: low
+    date_source: "document.audience_detail.note: 静态页面；页面无明确发布日期，published_at 取采集日 2026-10-21"
 - doc_id: agri-faculty-roster
   title: 农学院在编教师名录（按职称）
   doc_type: guide
@@ -2609,6 +2691,26 @@ documents:
     - seed-science
     intake_years:
     - 2022
+    scope_status: exact
+    scope_evidence: 合并册标题“农学院本科人才培养方案（2022版，农学/农学丁颖/种子科学与工程）”
+  # 合订本按章节标题收窄专业/班型：种子板块不得继承农学并集，丁颖/普通班不得混。
+  audience_scopes:
+  - match: 丁颖创新班
+    majors:
+    - agronomy
+    class_types:
+    - dingying-innovation
+    evidence: 章节标题“农学（丁颖创新班）人才培养方案”
+  - match: 种子科学与工程
+    majors:
+    - seed-science
+    evidence: 章节标题“种子科学与工程专业人才培养方案”
+  - match: 农学专业人才培养方案
+    majors:
+    - agronomy
+    class_types:
+    - agronomy-general
+    evidence: 章节标题“农学专业人才培养方案”
   topic_tags:
   - 培养方案
   - 本科
@@ -2628,6 +2730,8 @@ documents:
       majors: *id001
       intake_years:
       - 2022
+      scope_status: exact
+      scope_evidence: 合并册标题“农学院本科人才培养方案（2022版，农学/农学丁颖/种子科学与工程）”
 - doc_id: agri-ug-plan-new-agronomy-2022
   title: 新农学创新班本-博连读人才培养方案（2022版）
   doc_type: guide
@@ -2644,6 +2748,10 @@ documents:
     - agronomy
     intake_years:
     - 2022
+    class_types:
+    - new-agronomy-innovation
+    scope_status: exact
+    scope_evidence: 文件标题“新农学创新班本-博连读人才培养方案（2022版）”
   topic_tags:
   - 培养方案
   - 本科
@@ -2663,6 +2771,10 @@ documents:
       majors: *id002
       intake_years:
       - 2022
+      class_types:
+      - new-agronomy-innovation
+      scope_status: exact
+      scope_evidence: 文件标题“新农学创新班本-博连读人才培养方案（2022版）”
 - doc_id: agri-ug-plan-agronomy-2024
   title: 农学专业人才培养方案（2024版）
   doc_type: guide
@@ -2679,6 +2791,10 @@ documents:
     - agronomy
     intake_years:
     - 2024
+    class_types:
+    - agronomy-general
+    scope_status: exact
+    scope_evidence: 文件标题“农学专业人才培养方案（2024版）”；丁颖、新农学创新班方案同批单独发布
   topic_tags:
   - 培养方案
   - 本科
@@ -2698,6 +2814,10 @@ documents:
       majors: *id003
       intake_years:
       - 2024
+      class_types:
+      - agronomy-general
+      scope_status: exact
+      scope_evidence: 文件标题“农学专业人才培养方案（2024版）”；丁颖、新农学创新班方案同批单独发布
 - doc_id: agri-ug-plan-agronomy-dingying-2024
   title: 农学（丁颖创新班）人才培养方案（2024版）
   doc_type: guide
@@ -2714,6 +2834,10 @@ documents:
     - agronomy
     intake_years:
     - 2024
+    class_types:
+    - dingying-innovation
+    scope_status: exact
+    scope_evidence: 文件标题“农学（丁颖创新班）人才培养方案（2024版）”
   topic_tags:
   - 培养方案
   - 本科
@@ -2733,6 +2857,10 @@ documents:
       majors: *id004
       intake_years:
       - 2024
+      class_types:
+      - dingying-innovation
+      scope_status: exact
+      scope_evidence: 文件标题“农学（丁颖创新班）人才培养方案（2024版）”
 - doc_id: agri-ug-plan-new-agronomy-2024
   title: 新农学创新班（本-博连读）人才培养方案（2024版）
   doc_type: guide
@@ -2749,6 +2877,10 @@ documents:
     - agronomy
     intake_years:
     - 2024
+    class_types:
+    - new-agronomy-innovation
+    scope_status: exact
+    scope_evidence: 文件标题“新农学创新班（本-博连读）人才培养方案（2024版）”
   topic_tags:
   - 培养方案
   - 本科
@@ -2768,6 +2900,10 @@ documents:
       majors: *id005
       intake_years:
       - 2024
+      class_types:
+      - new-agronomy-innovation
+      scope_status: exact
+      scope_evidence: 文件标题“新农学创新班（本-博连读）人才培养方案（2024版）”
 - doc_id: agri-ug-plan-new-agronomy-supplement-2024
   title: 新农学创新班本科阶段人才培养方案（补充方案，2024版）
   doc_type: guide
@@ -2777,6 +2913,7 @@ documents:
   issuing_department: 农学院
   relation: supplements
   parent_doc_id: agri-ug-plan-new-agronomy-2024
+  parent_version_id: v2024
   audience:
   - undergraduate
   audience_detail:
@@ -2786,6 +2923,10 @@ documents:
     - agronomy
     intake_years:
     - 2024
+    class_types:
+    - new-agronomy-innovation
+    scope_status: exact
+    scope_evidence: 文件标题“新农学创新班本科阶段人才培养方案（补充方案，2024版）”
   topic_tags:
   - 培养方案
   - 本科
@@ -2805,6 +2946,10 @@ documents:
       majors: *id006
       intake_years:
       - 2024
+      class_types:
+      - new-agronomy-innovation
+      scope_status: exact
+      scope_evidence: 文件标题“新农学创新班本科阶段人才培养方案（补充方案，2024版）”
 - doc_id: agri-ug-plan-seed-2024
   title: 种子科学与工程专业人才培养方案（2024版）
   doc_type: guide
@@ -3150,6 +3295,7 @@ documents:
   issuing_department: 农学院
   relation: supplements
   parent_doc_id: agri-grad-scholarship-rule-2026
+  parent_version_id: v2026
   audience:
   - graduate
   audience_detail:
@@ -3192,7 +3338,7 @@ documents:
     audience_detail:
       colleges:
       - agri
-      cycle: '2025'
+      admission_year: 2025
   - version_id: v2026
     url: https://nxy.scau.edu.cn/_upload/article/files/72/58/be7a673e49b5b2afe7e583de37b9/662453cc-0072-4efa-a6ca-aaacb63bf77a.pdf
     published_at: '2026-03-19'
@@ -3204,7 +3350,7 @@ documents:
     audience_detail:
       colleges:
       - agri
-      cycle: '2026'
+      admission_year: 2026
 - doc_id: agri-phd-admission-rule
   title: 农学院“申请-考核”制博士研究生招生实施细则
   doc_type: regulation
@@ -3230,7 +3376,7 @@ documents:
     audience_detail:
       colleges:
       - agri
-      cycle: '2025'
+      admission_year: 2025
   - version_id: v2026
     url: https://nxy.scau.edu.cn/2025/1231/c18654a426004/page.htm
     published_at: '2025-12-31'
@@ -3242,7 +3388,7 @@ documents:
     audience_detail:
       colleges:
       - agri
-      cycle: '2026'
+      admission_year: 2026
 - doc_id: agri-competition-notice-2026
   title: 关于举办农学院 2026 年“丁颖杯”暨“挑战杯”大学生课外学术科技作品竞赛的通知
   doc_type: notice
@@ -5878,13 +6024,15 @@ documents:
   versions:
   - version_id: v2026
     url: https://info.scau.edu.cn/2026/1010/c3772a448289/page.htm
-    local_path: data/incoming/w5/national-aid-2026-info-merit.html
-    published_at: '2026-10-09'
+    local_path: data/incoming/official_full_20261101/national-aid-2026-info-merit/source.html
+    published_at: '2026-10-10'
     effective_from: '2026-10-09'
     effective_to: null
     status: active
     format: html
-    notes: 官网路径日期2026-10-10，页面/正文日期2026-10-09；本地转录为脱敏节选，引用以官网原文为准。
+    date_confidence: low
+    date_source: "网页实际发布时间 2026-10-10（页面“发布时间”字段），published_at 取此值；正文落款 2026-10-09；effective_from 仅为落款日期锚点，通知无生效条款、不证明实际生效日（推断，非原文）；标题“2026年”与正文“2025年/2025-2026学年”年份冲突保留；URL 路径 2026/1010 仅作旁证，不单独据 URL 推断日期。"
+    notes: 官网完整原文快照（2026-11-01 抓取，data/incoming/official_full_20261101/national-aid-2026-info-merit/source.html，SHA-256 9fcf35a36a0116e59eedb5cf089e1cb2956a19b730f7804ebbf36505ad8705f8）；网页发布时间2026-10-10（页面“发布时间”字段），正文落款2026-10-09；官网 URL 路径日期2026-10-10 仅作旁证；原文标题为“2026年”，正文首段及评审项目为“2025年/2025-2026学年”，标题与正文年份不一致；非脱敏节选，引用以官网原文为准。
 - doc_id: national-aid-2026-info-aid
   title: 关于做好我院2026年本科生国家助学金、国家励志奖学金评审工作的通知
   doc_type: notice
@@ -5907,13 +6055,13 @@ documents:
   versions:
   - version_id: v2026
     url: https://info.scau.edu.cn/2026/1013/c3772a448651/page.htm
-    local_path: data/incoming/w5/national-aid-2026-info-aid.html
+    local_path: data/incoming/official_full_20261101/national-aid-2026-info-aid/source.html
     published_at: '2026-10-13'
     effective_from: '2026-10-13'
     effective_to: null
     status: active
     format: html
-    notes: 2026年10月13日学院通知；本地转录为脱敏节选，引用以官网原文为准。
+    notes: 官网完整原文快照（2026-11-01 抓取，source.html，SHA-256 78711b9e…）；2026年10月13日学院通知，原文标题与正文均为2026年；非脱敏节选，引用以官网原文为准。
 - doc_id: national-aid-2026-agri-inspirational-publicity
   title: 关于农学院2025-2026学年本科生国家励志奖学金拟获奖人选的公示
   doc_type: notice
@@ -5993,13 +6141,13 @@ documents:
   versions:
   - version_id: v2026
     url: https://info.scau.edu.cn/2026/0917/c3772a446211/page.htm
-    local_path: data/incoming/w5/comprehensive-evaluation-2026-info.html
+    local_path: data/incoming/official_full_20261101/comprehensive-evaluation-2026-info/source.html
     published_at: '2026-09-17'
     effective_from: '2026-09-17'
     effective_to: null
     status: active
     format: html
-    notes: 2026年学院综测通知；本地转录为脱敏节选；不写国家级奖项事实。
+    notes: 官网完整原文快照（2026-11-01 抓取，source.html，SHA-256 92c62bf1…）；2026年学院综测通知，原文标题与正文均为2025-2026学年；非脱敏节选；不写国家级奖项事实。
 - doc_id: comprehensive-evaluation-2026-final-publicity
   title: 关于我院2025-2026学年度本科生综合测评拟获奖名单公示（最终版）
   doc_type: notice
@@ -6034,6 +6182,9 @@ documents:
   authority_level: operational
   issuer_level: university
   issuing_department: 本科生院（教务处）学籍科
+  relation: basis
+  parent_doc_id: postgraduate-recommendation
+  parent_version_id: v2025
   audience:
   - undergraduate
   flow_ids:
@@ -6043,6 +6194,8 @@ documents:
     - final_year
     status:
     - graduating
+    graduating_years:
+    - 2027
     note: 面向2027届应届本科毕业生。
   topic_tags:
   - 推免
@@ -6072,6 +6225,8 @@ documents:
     - final_year
     status:
     - graduating
+    graduating_years:
+    - 2027
     note: 面向2027届应届本科毕业生。
   topic_tags:
   - 推免
@@ -6182,3 +6337,5 @@ documents:
     status: active
     format: html
     notes: 页面现行；日期取核验日（date_confidence=low）；只作培养科导航，材料/费用/时限以培养科确认为准。
+    date_confidence: low
+    date_source: "version.notes: 页面现行；日期取核验日；只作培养科导航，材料/费用/时限以培养科确认为准"

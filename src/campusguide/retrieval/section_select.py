@@ -12,6 +12,7 @@ from dataclasses import dataclass
 from typing import Any, Protocol
 
 from campusguide.domain.enums import BlockType
+from campusguide.retrieval.source_spans import structured_table_row
 
 TABLE_INTENT_RE = re.compile(
     r"课程|学分|学时|进程|计划|安排|周|学期|矩阵|课程代码|课程名称|课程设置"
@@ -38,6 +39,8 @@ NARRATIVE_MARKERS = (
 )
 
 _TABLE_MARKERS = ("课程代码", "课程名称", "开课单位", "学分", "学时", "周学时")
+_MAX_LEAF_ROW_CHARS = 800
+_LEAF_ROW_KINDS = frozenset({"table_row", "matrix_row"})
 
 
 class SectionCandidate(Protocol):
@@ -69,6 +72,21 @@ def is_table_like(article: Any) -> bool:
     if digit_ratio > 0.30 and len(lines) >= 3:
         return True
     return any(marker in text[:200] for marker in _TABLE_MARKERS) and digit_ratio > 0.20
+
+
+def is_structured_leaf_row(article: Any) -> bool:
+    """完整结构化行是列表项，不是需要去拥挤的整张无结构大表。"""
+    if getattr(article, "block_kind", "") not in _LEAF_ROW_KINDS:
+        return False
+    if len(article.text or "") > _MAX_LEAF_ROW_CHARS:
+        return False
+    row = structured_table_row(article)
+    if row is None or not row.reliable:
+        return False
+    return bool(
+        row.columns
+        and len(row.columns) == len(row.values) == len(row.cell_spans)
+    )
 
 
 def is_narrative_section(article: Any) -> bool:
@@ -113,21 +131,34 @@ def select_sections(
     table_allowed = allows_tables(query)
     table_limit = limit if table_allowed else max(0, max_table_sections)
 
-    ordered = sorted(
-        candidates,
-        key=lambda item: (item.rerank_score or 0.0) + selection_bonus(item.article, query=query),
-        reverse=True,
-    )
+    def order_key(item: Any) -> tuple[int, float, float]:
+        structured = bool(getattr(item, "structured", False))
+        rank = getattr(item, "structured_rank", None)
+        # Structural hit order is independent from the model score; unknown rank
+        # sorts after known source ranks.
+        rank_key = -float(rank if isinstance(rank, int) else 10**6)
+        score = (item.rerank_score or 0.0) + selection_bonus(item.article, query=query)
+        return (1 if structured else 0, rank_key, score)
+
+    ordered = sorted(candidates, key=order_key, reverse=True)
     selected: list[Any] = []
     warnings: list[str] = []
     tables = 0
     for item in ordered:
         table_like = is_table_like(item.article)
-        if table_like and tables >= table_limit:
-            warnings.append(f"TABLE_SECTION_DEPRIORITIZED: {item.article.article_id}")
-            continue
+        structured = bool(getattr(item, "structured", False))
+        leaf_row = is_structured_leaf_row(item.article)
+        # 完整叶子行按 row 粒度参与全局 limit；大表 section 的 cap 只约束
+        # 整块无结构表格，不能把同一职务的第 3 条成员行裁掉。
+        if table_like and not leaf_row and tables >= table_limit:
+            if not structured:
+                warnings.append(f"TABLE_SECTION_DEPRIORITIZED: {item.article.article_id}")
+                continue
+            # Structurally proven table rows are retained explicitly; the total
+            # evidence limit still applies below.
+            warnings.append(f"STRUCTURED_TABLE_KEPT: {item.article.article_id}")
         selected.append(item)
-        if table_like:
+        if table_like and not leaf_row:
             tables += 1
         if len(selected) >= limit:
             break

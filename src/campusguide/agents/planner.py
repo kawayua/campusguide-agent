@@ -14,7 +14,7 @@ from datetime import date
 
 from campusguide.agents.plan import Clarification, Plan, QueryPlanItem
 from campusguide.agents.providers import ChatProvider, ChatProviderError
-from campusguide.agents.question_units import cohort_years, decompose_question, query_profile
+from campusguide.agents.question_units import decompose_question, query_profile
 from campusguide.domain.enums import (
     ArticleStatus,
     Audience,
@@ -158,12 +158,8 @@ def _split_subquestions(text: str) -> list[str]:
 
 
 def _cohort_filters(text: str) -> dict:
-    if not re.search(r"培养|课程|学分|专业|选修|毕业|学制", text):
-        return {}
-    years = set(cohort_years(text))
-    if len(years) == 1:
-        return {"profile": {"intake_year": int(next(iter(years)))}}
-    return {}
+    # 与 query_profile 共用一套年度语义：届别/招生年度/学年不能落成 intake_year。
+    return query_profile(text, ProfileLexicon({}, {}))
 
 
 def _comparison_queries(text: str) -> list[str] | None:

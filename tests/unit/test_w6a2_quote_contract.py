@@ -47,6 +47,21 @@ def _claims(*claims: tuple[str, str, str]) -> str:
     return json.dumps(payload, ensure_ascii=False)
 
 
+def _id_claims(*claims: tuple[str, str, str]) -> str:
+    payload = {
+        "claims": [
+            {
+                "claim_id": claim_id,
+                "text": text,
+                "kind": "other",
+                "citations": [{"quote_id": quote_id}],
+            }
+            for claim_id, text, quote_id in claims
+        ]
+    }
+    return json.dumps(payload, ensure_ascii=False)
+
+
 def _draft(claim_id: str, text: str, quote: str) -> ClaimDraft:
     return ClaimDraft.model_validate(
         {
@@ -89,15 +104,10 @@ def test_detects_scope_missing_but_number_present() -> None:
 
 def test_repair_uses_contiguous_full_quote_and_verifier_accepts() -> None:
     bad_quote = "学生有下列情形之一，给予开除学籍处分：（二）违反国家法律，情节严重的；"
-    good_quote = (
-        "学生有下列情形之一，给予开除学籍处分：\n"
-        "（一）违反宪法，反对四项基本原则的；\n"
-        "（二）违反国家法律，情节严重的；"
-    )
     provider = FakeChatProvider(
         [
             _claims(("c1", "违反国家法律，情节严重的，给予开除学籍处分。", bad_quote)),
-            _claims(("c1", "违反国家法律，情节严重的，给予开除学籍处分。", good_quote)),
+            _id_claims(("c1", "违反国家法律，情节严重的，给予开除学籍处分。", "source_1_body")),
         ]
     )
     result = Advisor(provider).generate("哪些情形会被开除学籍？", _evidence())
@@ -110,16 +120,15 @@ def test_repair_uses_contiguous_full_quote_and_verifier_accepts() -> None:
 
     check = ClaimValidator().check(result.drafts, _evidence())
     assert len(check.claims) == 1
-    assert check.claims[0].citations[0].quote == good_quote
+    assert check.claims[0].citations[0].quote == DISCIPLINE_TEXT
 
 
 def test_repair_restores_missing_scoped_number() -> None:
     bad_quote = "累计旷课30-39学时的，给予严重警告处分。"
-    good_quote = ATTENDANCE_TEXT
     provider = FakeChatProvider(
         [
             _claims(("c1", "一学期内累计旷课30-39学时的，给予严重警告处分。", bad_quote)),
-            _claims(("c1", "一学期内累计旷课30-39学时的，给予严重警告处分。", good_quote)),
+            _id_claims(("c1", "一学期内累计旷课30-39学时的，给予严重警告处分。", "source_1_body")),
         ]
     )
     result = Advisor(provider).generate("旷课多少学时会被处分？", _evidence(ATTENDANCE_TEXT))
@@ -175,12 +184,11 @@ def test_invalid_repair_json_keeps_original_draft_for_verifier() -> None:
 
 def test_json_repair_then_quote_repair_order() -> None:
     bad_quote = "学生有下列情形之一，给予开除学籍处分：（二）违反国家法律，情节严重的；"
-    good_quote = DISCIPLINE_TEXT[0:60]
     provider = FakeChatProvider(
         [
             "not json",
             _claims(("c1", "违反国家法律，情节严重的，给予开除学籍处分。", bad_quote)),
-            _claims(("c1", "违反国家法律，情节严重的，给予开除学籍处分。", good_quote)),
+            _id_claims(("c1", "违反国家法律，情节严重的，给予开除学籍处分。", "source_1_body")),
         ]
     )
     result = Advisor(provider).generate("哪些情形会被开除学籍？", _evidence())
@@ -199,8 +207,8 @@ def test_valid_quote_does_not_trigger_repair() -> None:
 
 
 def test_prompt_version_and_contract_phrases() -> None:
-    # w6a2.4 preserves course evidence in multi-aspect cultivation-plan questions.
-    assert PROMPT_VERSION == "w6a2.4-2026-10-24"
+    # w6a2.5-2026-10-31 保留 quote 连续性与范围/数量约束短语。
+    assert PROMPT_VERSION == "w6a2.5-2026-10-31"
     for phrase in ("连续子串", "跳过中间", "一学期内", "一个条件、一个后果或一个数量"):
         assert phrase in SYSTEM_PROMPT
     messages = build_messages("问题", _evidence(), None)

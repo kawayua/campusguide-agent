@@ -9,6 +9,7 @@ from tests.w6_helpers import (
     DEFAULT_AS_OF,
     FakeSearchClient,
     article,
+    claims_id_json,
     claims_json,
     make_runner,
     supported_json,
@@ -55,7 +56,7 @@ def test_scenario_2_overgeneralization_is_revised() -> None:
     runner = make_runner(
         advisor_responses=[
             bad_claims("所有本科生都可以申请国家奖学金。"),
-            bad_claims("国家奖学金要求二年级及以上。"),
+            claims_id_json("source_1_body", "国家奖学金要求二年级及以上。"),
         ],
         semantic_responses=[
             json.dumps(

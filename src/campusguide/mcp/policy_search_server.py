@@ -171,6 +171,8 @@ class PolicySearchService:
                 matched_spans=list(item.matched_spans),
                 retrieval_query=item.retrieval_query,
                 rank=item.rank,
+                structured=item.structured,
+                structured_rank=item.structured_rank,
             )
             for item in result.evidence
         ]
@@ -201,20 +203,45 @@ class PolicySearchService:
                 ErrorCode.NOT_FOUND,
                 f"未找到 article_id={article_id!r} part_no={part_no}",
             )
+        parent = None
+        if article.parent_article_id and article.parent_article_id != article.article_id:
+            try:
+                parent_article = self._backend.get_article(article.parent_article_id)
+            except Exception:
+                parent_article = None
+            if parent_article is not None:
+                parent = ArticlePublic.from_article(parent_article)
         data = GetArticleData(
             article=ArticlePublic.from_article(article),
+            parent=parent,
             metadata={
                 "article_id": article.article_id,
                 "doc_id": article.doc_id,
                 "version_id": article.version_id,
                 "part_no": article.part_no,
                 "block_type": article.block_type.value,
+                "block_kind": article.block_kind,
+                "parent_article_id": article.parent_article_id,
+                "parent_table_id": article.parent_table_id,
+                "table_id": article.table_id,
+                "row_id": article.row_id,
+                "row_index": article.row_index,
+                "table_headers": list(article.table_headers),
+                "header_paths": [list(path) for path in article.header_paths],
+                "cell_provenance": [
+                    cell.model_dump(mode="json") for cell in article.cell_provenance
+                ],
+                "page": article.page,
+                "bbox": list(article.bbox) if article.bbox else None,
+                "dom_path": article.dom_path,
+                "source_cell_ids": list(article.source_cell_ids),
                 "status": article.status.value,
                 "effective_from": article.effective_from.isoformat(),
                 "effective_to": (
                     article.effective_to.isoformat() if article.effective_to else None
                 ),
                 "date_confidence": article.date_confidence,
+                "date_source": article.date_source,
                 "source_url": str(article.source_url),
             },
         )

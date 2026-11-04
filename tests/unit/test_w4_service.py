@@ -23,7 +23,12 @@ ARTICLE_ID = "demo-policy@v2021#第一条"
 ARTICLE_TEXT = "申请奖学金应当学习成绩优异，品行端正。"
 
 
-def _claims_json(quote: str = "学习成绩优异") -> str:
+def _claims_json(quote: str = "学习成绩优异", *, quote_id: str = "") -> str:
+    citation = (
+        {"quote_id": quote_id}
+        if quote_id
+        else {"article_id": ARTICLE_ID, "quote": quote}
+    )
     return json.dumps(
         {
             "claims": [
@@ -31,7 +36,7 @@ def _claims_json(quote: str = "学习成绩优异") -> str:
                     "claim_id": "c1",
                     "text": "申请奖学金需要学习成绩优异。",
                     "kind": "eligibility",
-                    "citations": [{"article_id": ARTICLE_ID, "quote": quote}],
+                    "citations": [citation],
                 }
             ]
         },
@@ -198,7 +203,7 @@ def test_quote_repair_is_visible_in_trace(tmp_path: Path) -> None:
     provider = FakeChatProvider(
         [
             _claims_json(quote="原文中没有这句话"),
-            _claims_json(quote="学习成绩优异"),
+            _claims_json(quote_id="source_1_body"),
         ]
     )
     client = FakeSearchClient(lambda request: _response())

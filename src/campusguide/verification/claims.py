@@ -299,18 +299,49 @@ class ClaimValidator:
                 self._add_citation_issue(check, record, issue, citation_draft.article_id)
                 continue
 
+            # 已核对的 Citation 没有窗口字段；此时走原文 quote 定位。
+            trusted_part_no = getattr(citation_draft, "trusted_part_no", None)
+            if trusted_part_no is not None:
+                candidates = [
+                    item for item in candidates if item.article.part_no == trusted_part_no
+                ]
+                if not candidates:
+                    issue = _citation_issue(
+                        "CITATION_NOT_IN_EVIDENCE",
+                        claim_id=claim_id,
+                        article_id=citation_draft.article_id,
+                        detail=f"引用窗口登记的 part_no={trusted_part_no} 不在本轮 Evidence",
+                    )
+                    self._add_citation_issue(check, record, issue, citation_draft.article_id)
+                    continue
+
+            trusted_start = getattr(citation_draft, "trusted_start", None)
+            trusted_end = getattr(citation_draft, "trusted_end", None)
+            trusted_span = trusted_start is not None or trusted_end is not None
             located: tuple[Evidence, int, int] | None = None
-            for item in candidates:
-                span = locate_quote(item.article.text, quoted)
-                if span is not None:
-                    located = (item, span.start, span.end)
-                    break
+            if trusted_span:
+                located = self._locate_trusted_slice(
+                    candidates,
+                    quote=citation_draft.quote,
+                    start=trusted_start,
+                    end=trusted_end,
+                )
+            else:
+                for item in candidates:
+                    span = locate_quote(item.article.text, quoted)
+                    if span is not None:
+                        located = (item, span.start, span.end)
+                        break
             if located is None:
                 issue = _citation_issue(
                     "QUOTE_MISMATCH",
                     claim_id=claim_id,
                     article_id=citation_draft.article_id,
-                    detail="quote 无法映射回被引 part 的 article.text",
+                    detail=(
+                        "引用窗口登记的原文片段与被引 part 不一致"
+                        if trusted_span
+                        else "quote 无法映射回被引 part 的 article.text"
+                    ),
                 )
                 self._add_citation_issue(check, record, issue, citation_draft.article_id)
                 continue
@@ -337,6 +368,26 @@ class ClaimValidator:
                 )
             )
         return citations
+
+    @staticmethod
+    def _locate_trusted_slice(
+        candidates: list[Evidence],
+        *,
+        quote: str,
+        start: int | None,
+        end: int | None,
+    ) -> tuple[Evidence, int, int] | None:
+        """Trusted offsets only constrain the source text; they are never proof."""
+        if start is None or end is None or start < 0 or end <= start:
+            return None
+        for item in candidates:
+            text = item.article.text
+            if end > len(text):
+                continue
+            if text[start:end] != quote:
+                continue
+            return (item, start, end)
+        return None
 
     @staticmethod
     def _add_citation_issue(

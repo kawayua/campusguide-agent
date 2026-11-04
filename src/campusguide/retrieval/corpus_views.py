@@ -23,6 +23,10 @@ from campusguide.retrieval.profile_expand import ProfileLexicon
 from campusguide.retrieval.sparse import tokenize
 
 _NEWS = re.compile(r"(?m)^(20\d{2}-\d{2}-\d{2})[｜|]([^\n]+)[｜|](https?://\S+)\s*$")
+# 本科 6 位、研究生 14 位课程代码；课程行以代码开头。
+_COURSE_CODE_RE = re.compile(r"(?<!\d)(?:\d{14}|\d{6})(?!\d)")
+_COURSE_ROW_RE = re.compile(r"(?<!\d)(?:\d{14}|\d{6})(?!\d)\s*[|｜]")
+_STRUCTURED_ROW_KINDS = frozenset({"table_row", "matrix_row"})
 _ROLES = {"教授", "副教授", "讲师", "博士后", "高级实验师", "实验师", "助理实验师"}
 _STOP = {
     "什么",
@@ -55,7 +59,10 @@ _SECTION_PURPOSES = (
     (r"毕业要求", r"毕业要求"),
     (r"学制|授予|什么学位", r"学制|学位"),
     (r"毕业.*学分|总学分|学分.*分配", r"课程结构|毕业要求"),
-    (r"实践|毕业设计|选修|科目|课程安排|课程设置", r"进程表|教学计划|课程设置|实践|课程结构"),
+    (
+        r"实践|毕业设计|毕业论文|选修|科目|课程安排|课程设置",
+        r"进程表|教学计划|课程设置|实践|课程结构",
+    ),
     (r"研究方向", r"研究方向"),
 )
 
@@ -127,13 +134,15 @@ class SourceMatches:
 class CorpusViews:
     def __init__(self, articles: list[Article], lexicon: ProfileLexicon, *, source_hash: str = ""):
         self.articles = articles
+        # 表格父块只用于 article_by_id 水合，不参与结构化召回、候选上限或精确命中。
+        self._searchable = [article for article in articles if article.is_indexable]
         self.lexicon = lexicon
         self.source_hash = source_hash
         self.news: dict[str, list[NewsEntry]] = {}
         self.headers: dict[str, Article] = {}
         self.rosters: list[tuple[Article, dict[str, tuple[int, int]]]] = []
         self._texts = {(a.article_id, a.part_no): compact(a.text) for a in articles}
-        for article in articles:
+        for article in self._searchable:
             match = _NEWS.fullmatch(article.text.strip())
             if match:
                 self.news.setdefault(article.doc_id, []).append(
@@ -150,6 +159,18 @@ class CorpusViews:
                 self.headers[article.doc_id] = article
             if re.search(r"教师|师资", article.article_no) and len(article.text) < 12000:
                 self.rosters.append((article, roster_names(article.text)))
+
+    def article_by_id(self, article_id: str, part_no: int | None = None) -> Article | None:
+        """按 article_id 读取文章，包括不进入向量索引的表格父块。"""
+        matches = [
+            article
+            for article in self.articles
+            if article.article_id == article_id
+            and (part_no is None or article.part_no == part_no)
+        ]
+        if not matches:
+            return None
+        return min(matches, key=lambda article: article.part_no)
 
     @classmethod
     def load(cls, path: Path, lexicon: ProfileLexicon) -> CorpusViews:
@@ -182,12 +203,7 @@ class CorpusViews:
         # R3：层次与班型属于对象本身的一部分，本科表不能回答研究生实践，
         # 分流补充方案也不能替代创新班完整方案。
         level = mentioned_level(query)
-        class_terms = [
-            term
-            for _, terms in self.lexicon.class_terms.items()
-            for term in terms
-            if term and term in query
-        ]
+        class_terms = [name for _, name in mentioned_class_types(query, self.lexicon)]
         asks_supplement = bool(re.search(r"补充|分流|调整|修订", query))
 
         def college_matches(article: Article) -> bool:
@@ -287,17 +303,26 @@ class CorpusViews:
         # Supplement RRF with lexical title/heading/body relevance. This path still
         # requires the configured rerank threshold, except exact curriculum headings.
         terms = [t for t in set(tokenize(query)) if len(t) >= 2 and t not in _STOP]
+        query_codes = set(_COURSE_CODE_RE.findall(query))
+        # 同一文档/章节在候选循环里重复数百次；缓存只存活于本次 search，
+        # key 用未归一化的原字符串，不跨 search/lexicon 复用。
+        major_cache: dict[str, list[tuple[str, str]]] = {}
+
+        def major_hits(text: str) -> list[tuple[str, str]]:
+            if text not in major_cache:
+                major_cache[text] = mentioned_terms(text, self.lexicon.major_terms)
+            return major_cache[text]
+
         ranked: list[tuple[float, Article, bool]] = []
-        for article in self.articles:
+        for article in self._searchable:
             title = compact(article.doc_title)
             heading = compact(article.article_no)
             body = self._texts[(article.article_id, article.part_no)]
             chapter_title = " ".join(article.chapter_path)
-            chapter_majors = mentioned_terms(chapter_title, self.lexicon.major_terms)
+            chapter_majors = major_hits(chapter_title)
             plan_title = (
                 compact(chapter_title)
-                if chapter_majors
-                and len(mentioned_terms(article.doc_title, self.lexicon.major_terms)) > 1
+                if chapter_majors and len(major_hits(article.doc_title)) > 1
                 else title
             )
             exact_plan = (
@@ -353,7 +378,17 @@ class CorpusViews:
                     if re.search(intent, query) and re.search(section, article.article_no):
                         score += 7
                         direct = True
-                if re.search(r"实践|毕业设计", query) and re.search(
+                if (
+                    re.search(r"毕业设计|毕业论文", query)
+                    and re.search(r"毕业(?:论文\s*[/／]?\s*设计|论文|设计)", body)
+                    and re.search(r"进程表|教学计划", article.article_no)
+                ):
+                    score += 24
+                    # Prefer an actual coded course row over a matrix mentioning
+                    # the same course or a flattened PDF transcription.
+                    if _COURSE_ROW_RE.search(article.text):
+                        score += 10
+                if re.search(r"实践|毕业设计|毕业论文", query) and re.search(
                     r"进程表|教学计划", article.article_no
                 ):
                     if re.search(r"实验教学|通用技能实践|专业技能实践|集中实践", article.text):
@@ -373,17 +408,87 @@ class CorpusViews:
                 ):
                     score += 16
                     direct = True
+            if query_codes and any(
+                re.search(rf"(?<!\d){re.escape(code)}\s*[|｜]", article.text)
+                for code in query_codes
+            ):
+                # 精确课程代码（含 14 位研究生代码）是实体命中，不再依赖分词。
+                score += 30
+                direct = True
             if colleges and college_matches(article):
                 score += 1
+            if is_supplement(article.doc_title) and not asks_supplement:
+                direct = False
             if score > 0:
                 ranked.append((score, article, bool(direct)))
         ranked.sort(key=lambda row: row[0], reverse=True)
+        # Reserve one original fragment per document and requested section before
+        # filling by lexical score. A long timetable must not evict the short
+        # core-course/goal section, or every section of the comparison's other plan.
+        protected: list[tuple[float, Article, bool]] = []
+        seen_facets: set[tuple[str, str]] = set()
+        intents = [
+            (intent, section) for intent, section in _SECTION_PURPOSES if re.search(intent, query)
+        ]
+        for row in ranked:
+            _, article, direct = row
+            if not direct:
+                continue
+            for intent, section in intents:
+                facet = (article.doc_id, intent)
+                if re.search(section, article.article_no) and facet not in seen_facets:
+                    protected.append(row)
+                    seen_facets.add(facet)
+        ordered = []
+        ordered_keys = set()
+        for row in [*protected, *ranked]:
+            key = (row[1].article_id, row[1].part_no)
+            if key not in ordered_keys:
+                ordered.append(row)
+                ordered_keys.add(key)
         existing = {(a.article_id, a.part_no) for a in result.articles}
-        for _, article, direct in ranked[:limit]:
+        for _, article, direct in ordered[: max(0, limit - len(existing))]:
             key = (article.article_id, article.part_no)
             if key not in existing:
                 result.articles.append(article)
                 existing.add(key)
             if direct:
                 result.exact_keys.add(key)
+        # Child rows can start two chunks after their table header. Supply the
+        # nearest original header as separate evidence; never fabricate a joined
+        # quote or alter stored offsets. This works without rebuilding the index.
+        expanded = []
+        expanded_keys = set()
+        for article in result.articles:
+            key = (article.article_id, article.part_no)
+            if key not in expanded_keys:
+                expanded.append(article)
+                expanded_keys.add(key)
+            # 结构化行自带表头/列路径，无需再补父表或旧表头片段。
+            if article.block_kind in _STRUCTURED_ROW_KINDS or article.table_id:
+                continue
+            if not _COURSE_ROW_RE.search(article.text):
+                continue
+            headers = [
+                a
+                for a in self.articles
+                if a.article_id == article.article_id
+                and a.part_no <= article.part_no
+                and all(word in a.text for word in ("课程名称", "学分", "学时"))
+                and re.search(r"[|｜]", a.text)
+            ]
+            if not headers:
+                continue
+            header = max(headers, key=lambda a: a.part_no)
+            header_key = (header.article_id, header.part_no)
+            if header_key not in expanded_keys:
+                expanded.append(header)
+                expanded_keys.add(header_key)
+                if key in result.exact_keys:
+                    result.exact_keys.add(header_key)
+                result.warnings.append(
+                    f"TABLE_HEADER_CONTEXT:{article.article_id}:p{article.part_no}:header=p{header.part_no}"
+                )
+        result.articles = expanded[:limit]
+        result.exact_keys.intersection_update({(a.article_id, a.part_no) for a in result.articles})
         return result

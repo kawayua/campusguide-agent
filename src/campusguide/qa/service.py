@@ -134,6 +134,8 @@ class _RetrieverSearchClient:
                 matched_spans=list(item.matched_spans),
                 retrieval_query=item.retrieval_query,
                 rank=item.rank,
+                structured=getattr(item, "structured", False),
+                structured_rank=getattr(item, "structured_rank", None),
             )
             for item in result.evidence
         ]
@@ -164,6 +166,8 @@ def _evidence_from_hits(data: SearchArticlesData) -> list[Evidence]:
                 matched_spans=list(hit.matched_spans),
                 retrieval_query=hit.retrieval_query,
                 rank=hit.rank,
+                structured=hit.structured,
+                structured_rank=hit.structured_rank,
             )
         )
     return evidence
@@ -491,6 +495,10 @@ class QAService:
             evidence,
             audience=audience,
             as_of=filters.as_of,
+            profile=filters.profile,
+            academic_year=filters.academic_year,
+            admission_year=filters.admission_year,
+            graduating_year=filters.graduating_year,
         )
         if not scope.evidence:
             outcome = scope.reason_code or OutcomeCode.UNVERIFIABLE

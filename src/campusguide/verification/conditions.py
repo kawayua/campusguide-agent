@@ -17,6 +17,7 @@ ambiguous wording yields no finding, and the semantic check stays authoritative.
 
 from __future__ import annotations
 
+import itertools
 import re
 from dataclasses import dataclass
 
@@ -142,8 +143,18 @@ _CATEGORY_SUFFIXES = (
     "奖项",
     "项目",
 )
-_SEGMENT_STOP_RE = re.compile(r"[。；;\n]|另设|另有|此外|其他|其余|以及|还有")
 _ITEM_SPLIT_RE = re.compile(r"[、,，及和与]")
+# PDF extraction wraps lines mid-clause ("不超过\n185 学分", "文科类专业\n（含……）").
+# A line break is layout whitespace, not a logical branch delimiter: real branches
+# end at 。/；/;, while newline-only enumerations are bounded by their repeated
+# category heads in _category_groups.
+_BRANCH_SPLIT_RE = re.compile(r"[。；;]")
+_COMMA_RE = re.compile(r"[,，]")
+_CREDIT_RE = re.compile(r"(?P<num>\d+(?:\.\d+)?)\s*学分")
+_YEAR_SYSTEM_RE = re.compile(
+    r"(?P<num>[0-9]+|[〇零一二三四五六七八九十百两]+)\s*年制"
+)
+_PARENTHETICAL_RE = re.compile(r"[（(][^）)]*[）)]")
 
 # Two thresholds are only comparable when they regulate the same action; otherwise
 # "30分钟后禁止入场" and "30分钟内不得离场" would look like a contradiction.
@@ -183,6 +194,39 @@ _ACTION_VERBS = (
 )
 _CONTEXT_STOP_RE = re.compile(r"[。；;\n]")
 
+# 同一阈值只有属于同一分支时才可比。分支由“由教务处审批”这类经办主体
+# 绑定标识；多分支规则的相邻阈值不能跨分支比较。
+_BINDING_VERBS = (
+    "审批",
+    "审核",
+    "批准",
+    "审定",
+    "办理",
+    "负责",
+    "决定",
+    "同意",
+    "受理",
+    "备案",
+    "登记",
+    "处理",
+    "公示",
+    "公布",
+    "核准",
+    "出具",
+    "开具",
+)
+_BINDING_VERB_PATTERN = "|".join(_BINDING_VERBS)
+_BINDING_RE = re.compile(
+    r"(?:报送|报请|须经|需经|应经|由|经|报)"
+    r"(?P<actor>[\u4e00-\u9fa5A-Za-z0-9]{1,12}?)"
+    rf"(?:{_BINDING_VERB_PATTERN})"
+)
+_ACTOR_RE = re.compile(
+    rf"(?P<actor>[\u4e00-\u9fa5]{{1,10}}?"
+    r"(?:部门|办公室|委员会|学院|中心|处|院|系|科|室))"
+    rf"(?:{_BINDING_VERB_PATTERN})"
+)
+
 
 @dataclass(frozen=True)
 class Threshold:
@@ -193,6 +237,7 @@ class Threshold:
     span: str
     phase: str = ""
     context: str = ""
+    binding: str = ""
 
 
 @dataclass(frozen=True)
@@ -250,9 +295,39 @@ def _relation(prefix: str | None, suffix: str | None) -> str | None:
     return None
 
 
+def _binding(context: str) -> str:
+    match = _BINDING_RE.search(context) or _ACTOR_RE.search(context)
+    if match is None:
+        return ""
+    actor = re.sub(r"^(?:报送|报请|须经|需经|应经|由|经|报)", "", match.group("actor"))
+    return actor.strip().casefold()
+
+
+def _inside_parenthetical(text: str, position: int) -> bool:
+    head = text[:position]
+    opening = max(head.rfind("（"), head.rfind("("))
+    closing = max(head.rfind("）"), head.rfind(")"))
+    return opening > closing
+
+
+def _branch_starts(text: str, matches: list[re.Match[str]]) -> list[int]:
+    """Real branch starts; an unqualified number inside parentheses is appositive."""
+    return [
+        match.start()
+        for match in matches
+        if match.group("pre")
+        or match.group("suf")
+        or not _inside_parenthetical(text, match.start())
+    ]
+
+
 def extract_thresholds(text: str) -> list[Threshold]:
     found: list[Threshold] = []
-    for match in _THRESHOLD_RE.finditer(text):
+    matches = list(_THRESHOLD_RE.finditer(text))
+    starts = _branch_starts(text, matches)
+    # 相邻起点成对：上下文止于下一个真实分支，括号内复述的同一数字不算分支。
+    next_start = dict(itertools.pairwise(starts))
+    for match in matches:
         prefix, suffix = match.group("pre"), match.group("suf")
         if not prefix and not suffix:
             continue
@@ -269,7 +344,9 @@ def extract_thresholds(text: str) -> list[Threshold]:
         phase = {"before": "before", "after": "after"}.get(
             _PREFIX_REL.get(prefix or ""), ""
         )
-        tail = text[match.end() : match.end() + 60]
+        # 上下文止于句读或下一个真实分支，避免把相邻分支的主体/动作带入本分支。
+        tail_end = next_start.get(match.start(), len(text))
+        tail = text[match.end() : min(match.end() + 60, tail_end)]
         stop = _CONTEXT_STOP_RE.search(tail)
         context = match.group(0) + (tail[: stop.start()] if stop else tail)
         found.append(
@@ -281,6 +358,7 @@ def extract_thresholds(text: str) -> list[Threshold]:
                 span=match.group(0).strip(),
                 phase=phase,
                 context=context,
+                binding=_binding(context),
             )
         )
     return found
@@ -305,6 +383,44 @@ def _anchors_match(left: str, right: str) -> bool:
     return False
 
 
+def _bindings_match(left: str, right: str) -> bool:
+    if not left or not right:
+        return left == right
+    if left == right:
+        return True
+    return len(left) >= 2 and len(right) >= 2 and (
+        left.endswith(right) or right.endswith(left)
+    )
+
+
+def _branches_align(claim: Threshold, quote: Threshold) -> bool:
+    """Only thresholds bound to the same actor/result branch are comparable.
+
+    A one-sided binding is ambiguous (the other text may have paraphrased the
+    actor away), so it stays with the semantic checker instead of producing a
+    deterministic contradiction.
+    """
+    return _bindings_match(claim.binding, quote.binding)
+
+
+def _thresholds_comparable(claim: Threshold, quote: Threshold) -> bool:
+    return (
+        _branches_align(claim, quote)
+        and claim.unit == quote.unit
+        and _anchors_match(claim.anchor, quote.anchor)
+        and _same_action(claim, quote)
+    )
+
+
+def _thresholds_exact(claim: Threshold, quote: Threshold) -> bool:
+    """The same assertion inside the same branch, not merely an equal number."""
+    if claim.value != quote.value:
+        return False
+    if claim.phase and quote.phase and claim.phase != quote.phase:
+        return False
+    return frozenset({claim.relation, quote.relation}) not in _INCOMPATIBLE
+
+
 def compare_thresholds(claim_text: str, quote_texts: list[str]) -> list[Finding]:
     claim_items = extract_thresholds(claim_text)
     if not claim_items:
@@ -312,11 +428,11 @@ def compare_thresholds(claim_text: str, quote_texts: list[str]) -> list[Finding]
     quote_items = [item for text in quote_texts for item in extract_thresholds(text)]
     findings: list[Finding] = []
     for claim in claim_items:
-        for quote in quote_items:
-            if claim.unit != quote.unit or not _anchors_match(claim.anchor, quote.anchor):
-                continue
-            if not _same_action(claim, quote):
-                continue
+        aligned = [item for item in quote_items if _thresholds_comparable(claim, item)]
+        # 同一分支已有一致断言时，其他分支的阈值不能再用笛卡尔配对否定它。
+        if any(_thresholds_exact(claim, item) for item in aligned):
+            continue
+        for quote in aligned:
             if claim.value != quote.value:
                 if {claim.relation, quote.relation} & {"after", "within", "before"}:
                     findings.append(
@@ -461,23 +577,320 @@ def _split_items(raw: str) -> list[str]:
     return items
 
 
-def _category_groups(text: str) -> list[tuple[str, str]]:
-    """(category, item text) pairs from "C：a、b、c" or "C包括a、b"."""
-    groups: list[tuple[str, str]] = []
-    for separator in ("：", ":"):
-        for match in re.finditer(r"(?P<cat>[^，。；：:\n]{2,20})" + separator + r"\s*(?P<items>[^。；;\n]{4,160})", text):
-            groups.append((match.group("cat").strip(), match.group("items")))
-    for head in _CATEGORY_HEADS:
-        pattern = r"(?P<cat>[^，。；：:\n]{2,20}?)" + head + r"\s*(?P<items>[^。；;\n]{4,160})"
-        for match in re.finditer(pattern, text):
-            groups.append((match.group("cat").strip(), match.group("items")))
-    cleaned: list[tuple[str, str]] = []
-    for category, items in groups:
-        category = re.sub(r"^(?:学院|学校|其中|目前|现有|共|设|设有|开设)", "", category).strip()
-        if len(category) < 3 or not category.endswith(_CATEGORY_SUFFIXES):
+def _clean_category(raw: str) -> str:
+    category = re.sub(
+        r"^(?:学院|学校|其中|目前|现有|共|设|设有|开设)", "", raw.strip()
+    ).strip()
+    if len(category) < 3 or not category.endswith(_CATEGORY_SUFFIXES):
+        return ""
+    return category
+
+
+def _category_matches(left: str, right: str) -> bool:
+    if left == right:
+        return True
+    return (
+        len(left) >= 3
+        and len(right) >= 3
+        and (left.endswith(right) or right.endswith(left))
+    )
+
+
+def _compact_text(text: str) -> str:
+    return re.sub(r"\s+", "", text)
+
+
+def _item_key(text: str) -> str:
+    compact = _PARENTHETICAL_RE.sub("", _compact_text(text))
+    return compact.rstrip("的")
+
+
+def _year_systems(text: str) -> list[str]:
+    found: list[str] = []
+    for match in _YEAR_SYSTEM_RE.finditer(text):
+        value = _parse_number(match.group("num"))
+        if value is None:
             continue
-        cleaned.append((category, items))
-    return cleaned
+        normalized = f"{value:g}年制"
+        if normalized not in found:
+            found.append(normalized)
+    return found
+
+
+def _branch_credit(text: str) -> float | None:
+    values = {float(match.group("num")) for match in _CREDIT_RE.finditer(text)}
+    return next(iter(values)) if len(values) == 1 else None
+
+
+@dataclass(frozen=True)
+class _Branch:
+    start: int
+    end: int
+    text: str
+    year_system: str = ""
+    credit: float | None = None
+
+
+@dataclass(frozen=True)
+class _CategoryGroup:
+    category: str
+    items_text: str
+    start: int
+    end: int
+    year_system: str = ""
+    credit: float | None = None
+
+
+def _branches(text: str) -> list[_Branch]:
+    """Split at logical branch punctuation, carrying a year-system qualifier across ；.
+
+    Line breaks stay inside the branch: they are usually PDF layout wraps, and
+    newline-only enumerations are separated by their category heads below.
+    """
+    branches: list[_Branch] = []
+    year_system = ""
+    start = 0
+    boundaries = [match.start() for match in _BRANCH_SPLIT_RE.finditer(text)]
+    boundaries.append(len(text))
+    for end in boundaries:
+        segment = text[start:end]
+        own_years = _year_systems(segment)
+        if own_years:
+            year_system = own_years[0] if len(own_years) == 1 else ""
+        branches.append(
+            _Branch(
+                start=start,
+                end=end,
+                text=segment,
+                year_system=year_system,
+                credit=_branch_credit(segment),
+            )
+        )
+        if end < len(text) and text[end] == "。":
+            year_system = ""
+        start = end + 1
+    return branches
+
+
+def _category_candidates(text: str) -> list[tuple[str, str, int, int]]:
+    """Every valid ``category + head`` occurrence, including repeated branches."""
+    raw: list[tuple[str, str, int, int]] = []
+    for match in re.finditer(r"(?P<cat>[^，,。；;：:\n]{2,20})[：:]", text):
+        raw.append((match.group("cat"), "：", match.start("cat"), match.end()))
+    for head in _CATEGORY_HEADS:
+        pattern = r"(?P<cat>[^，,。；;：:\n]{2,20}?)" + re.escape(head)
+        for match in re.finditer(pattern, text):
+            raw.append((match.group("cat"), head, match.start("cat"), match.end()))
+    candidates: list[tuple[str, str, int, int]] = []
+    for raw_category, head, start, items_start in raw:
+        category = _clean_category(raw_category)
+        if category:
+            candidates.append((category, head, start, items_start))
+    candidates.sort(key=lambda candidate: (candidate[2], candidate[3]))
+    unique: dict[tuple[str, str, int, int], tuple[str, str, int, int]] = {}
+    for candidate in candidates:
+        unique.setdefault(candidate, candidate)
+    return list(unique.values())
+
+
+def _category_groups(text: str) -> list[_CategoryGroup]:
+    """Category enumerations bounded to their own branch, with year/credit binding.
+
+    An occurrence must not swallow a following ``第二主修专业为……`` branch, and
+    the consequence clause after an appositive enumeration (``……的，培养方案……``)
+    is not an item of that enumeration.
+    """
+    groups: list[_CategoryGroup] = []
+    for branch in _branches(text):
+        candidates = _category_candidates(branch.text)
+        for index, (category, head, start, items_start) in enumerate(candidates):
+            limit = len(branch.text)
+            later = [
+                other_start
+                for _, _, other_start, _ in candidates[index + 1 :]
+                if other_start > items_start
+            ]
+            if later:
+                limit = min(later)
+            region_end = limit
+            if head == "为":
+                comma = _COMMA_RE.search(branch.text, items_start, limit)
+                if comma is not None:
+                    intro = branch.text[items_start : comma.start()].strip()
+                    if intro.endswith("的") or "、" in intro:
+                        limit = comma.start()
+            items_text = branch.text[items_start:limit].strip(" \n　，,。；;：:")
+            if len(items_text) < 2:
+                continue
+            # Bind year/credit to this category head's own region, not the whole
+            # branch, so newline-only enumerations do not share one consequence.
+            region = branch.text[start:region_end]
+            own_years = _year_systems(region)
+            groups.append(
+                _CategoryGroup(
+                    category=category,
+                    items_text=items_text,
+                    start=branch.start + start,
+                    end=branch.start + limit,
+                    year_system=(
+                        own_years[0]
+                        if len(own_years) == 1
+                        else branch.year_system
+                    ),
+                    credit=_branch_credit(region),
+                )
+            )
+    unique: dict[tuple[int, str, str], _CategoryGroup] = {}
+    for group in groups:
+        unique.setdefault((group.start, group.category, group.items_text), group)
+    return list(unique.values())
+
+
+def _category_overlap(items: list[str], group: _CategoryGroup) -> int:
+    group_key = _item_key(group.items_text)
+    keys = [_item_key(item) for item in items]
+    return sum(1 for key in keys if key and key in group_key)
+
+
+def _outside_items(
+    items: list[str], group: _CategoryGroup, quote: str
+) -> list[str]:
+    group_key = _item_key(group.items_text)
+    quote_key = _item_key(quote)
+    return [
+        item
+        for item in items
+        if _item_key(item) not in group_key and _item_key(item) in quote_key
+    ]
+
+
+def _category_binding_notes(
+    claim: _CategoryGroup, quote: _CategoryGroup
+) -> list[str]:
+    notes: list[str] = []
+    if (
+        claim.year_system
+        and quote.year_system
+        and claim.year_system != quote.year_system
+    ):
+        notes.append(
+            f"原文对应分支为{quote.year_system}，结论写成{claim.year_system}"
+        )
+    if (
+        claim.credit is not None
+        and quote.credit is not None
+        and claim.credit != quote.credit
+    ):
+        notes.append(
+            f"原文同一分支为{quote.credit:g}学分，结论写成{claim.credit:g}学分"
+        )
+    return notes
+
+
+def _category_finding(
+    claim: _CategoryGroup,
+    quote: _CategoryGroup,
+    outside: list[str],
+    binding_notes: list[str],
+) -> Finding:
+    parts = [f"{claim.category}：{note}" for note in binding_notes]
+    if outside:
+        parts.append(
+            f"{claim.category}在原文同一列举中只到"
+            f"“{quote.items_text[:50].strip()}”，"
+            f"结论把{'、'.join(outside[:3])}也归入该类"
+        )
+    return Finding(
+        kind="category",
+        detail="实体类别越界：" + "；".join(parts),
+        claim_span=claim.items_text[:60],
+        quote_span=quote.items_text[:60],
+    )
+
+
+def _foreign_category_finding(
+    claim: _CategoryGroup, outside: list[str], quote: str
+) -> Finding:
+    return Finding(
+        kind="category",
+        detail=(
+            f"实体类别越界：原文未把{'、'.join(outside[:3])}归入"
+            f"{claim.category}，该列举出现在原文其他类别或分支中"
+        ),
+        claim_span=claim.items_text[:60],
+        quote_span=quote[:60],
+    )
+
+
+def _compare_category_group(
+    claim_group: _CategoryGroup, claim_items: list[str], quote: str
+) -> Finding | None:
+    all_groups = _category_groups(quote)
+    quote_groups = [
+        group
+        for group in all_groups
+        if _category_matches(group.category, claim_group.category)
+    ]
+    candidates: list[tuple[int, bool, bool, _CategoryGroup]] = []
+    for group in quote_groups:
+        candidates.append(
+            (
+                _category_overlap(claim_items, group),
+                not (
+                    claim_group.year_system
+                    and group.year_system
+                    and claim_group.year_system != group.year_system
+                ),
+                not (
+                    claim_group.credit is not None
+                    and group.credit is not None
+                    and claim_group.credit != group.credit
+                ),
+                group,
+            )
+        )
+    exact = [
+        candidate
+        for candidate in candidates
+        if candidate[0] and candidate[1] and candidate[2]
+    ]
+    if exact:
+        best = max(exact, key=lambda candidate: candidate[0])[3]
+        outside = _outside_items(claim_items, best, quote)
+        if outside:
+            return _category_finding(claim_group, best, outside, [])
+        return None
+    overlapping = [candidate for candidate in candidates if candidate[0]]
+    if overlapping:
+        best = max(
+            overlapping,
+            key=lambda candidate: (candidate[0], candidate[1], candidate[2]),
+        )[3]
+        outside = _outside_items(claim_items, best, quote)
+        notes = _category_binding_notes(claim_group, best)
+        if outside or notes:
+            return _category_finding(claim_group, best, outside, notes)
+        return None
+    outside = [
+        item
+        for item in claim_items
+        if _item_key(item) in _item_key(quote)
+        and not any(
+            _item_key(item) in _item_key(group.items_text) for group in quote_groups
+        )
+    ]
+    misfiled = [
+        item
+        for item in outside
+        if any(
+            not _category_matches(group.category, claim_group.category)
+            and _item_key(item) in _item_key(group.items_text)
+            for group in all_groups
+        )
+    ]
+    if misfiled:
+        return _foreign_category_finding(claim_group, misfiled, quote)
+    return None
 
 
 def compare_categories(claim_text: str, quote_texts: list[str]) -> list[Finding]:
@@ -500,32 +913,19 @@ def compare_categories(claim_text: str, quote_texts: list[str]) -> list[Finding]
                 )
             )
             return findings
-    for category, raw_items in _category_groups(claim_text):
-        items = _split_items(raw_items)
+    for claim_group in _category_groups(claim_text):
+        items = _split_items(claim_group.items_text)
         if len(items) < 2:
             continue
         for quote in quote_texts:
-            position = quote.find(category)
-            if position < 0:
-                continue
-            tail = quote[position + len(category) :]
-            stop = _SEGMENT_STOP_RE.search(tail)
-            segment = tail[: stop.start()] if stop else tail[:200]
-            outside = [item for item in items if item not in segment and item in tail]
-            if outside:
-                findings.append(
-                    Finding(
-                        kind="category",
-                        detail=(
-                            f"实体类别越界：{category}在原文同一列举中只到"
-                            f"“{segment[:50].strip()}”，结论把{'、'.join(outside[:3])}也归入该类"
-                        ),
-                        claim_span=raw_items[:60],
-                        quote_span=segment[:60],
-                    )
-                )
+            finding = _compare_category_group(claim_group, items, quote)
+            if finding is not None:
+                findings.append(finding)
                 break
-    return findings
+    unique: dict[tuple[str, str], Finding] = {}
+    for finding in findings:
+        unique.setdefault((finding.kind, finding.detail), finding)
+    return list(unique.values())
 
 
 _EXCEPTION_RE = re.compile(
@@ -660,7 +1060,7 @@ def compare_signature_branches(claim_text: str, quote_texts: list[str]) -> list[
         exclusive = bool(re.search(r"必须|须|应当|应|一律|均", claim_text))
         conflicts = [
             branch
-            for branch, allowed in zip(branches, allowed_all)
+            for branch, allowed in zip(branches, allowed_all, strict=True)
             # 全称“必须为X”还会排除分支允许的其他选项（035 双单位认可制）。
             if not set(claim_units) <= allowed
             or (exclusive and not allowed <= set(claim_units))

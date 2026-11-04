@@ -12,6 +12,7 @@ traceback 透传给客户端。
 
 from __future__ import annotations
 
+import re
 from datetime import date
 from enum import StrEnum
 from typing import Any
@@ -162,6 +163,10 @@ class SearchFilters(BaseModel):
     doc_ids: list[str] | None = None
     flow_ids: list[str] | None = None
     profile: UserProfile | None = None
+    # 明确目标年度：招生/毕业届别文件不按“今天所在学年”硬套。
+    academic_year: str | None = None
+    admission_year: int | None = None
+    graduating_year: int | None = None
     # 仅供 W3 废止探针使用：忽略生效区间，读取已过期版本。
     ignore_effective_dates: bool = False
 
@@ -187,6 +192,9 @@ class SearchHit(BaseModel):
     matched_spans: list[tuple[int, int]] = Field(default_factory=list)
     retrieval_query: str = ""
     rank: int = 0
+    # Optional structural provenance; older payloads default to not structured.
+    structured: bool = False
+    structured_rank: int | None = None
 
 
 class SearchArticlesData(BaseModel):
@@ -203,6 +211,8 @@ class SearchArticlesData(BaseModel):
 
 class GetArticleData(BaseModel):
     article: ArticlePublic
+    # 表格行块的原表父块；用于回溯完整表头与原始表格，不参与向量检索。
+    parent: ArticlePublic | None = None
     metadata: dict[str, Any] = Field(default_factory=dict)
 
 
@@ -280,6 +290,23 @@ def policy_filters_from_request(
         ) from exc
     as_of = validate_date(raw.as_of, "filters.as_of") or date.today()
 
+    if raw.academic_year and not re.fullmatch(r"\d{4}(?:-\d{4})?", raw.academic_year):
+        raise ToolError(
+            ErrorCode.INVALID_FILTER,
+            f"academic_year 必须是 2025 或 2025-2026 形式：{raw.academic_year!r}",
+            details={"field": "filters.academic_year"},
+        )
+    for field_name, year_value in (
+        ("admission_year", raw.admission_year),
+        ("graduating_year", raw.graduating_year),
+    ):
+        if year_value is not None and not 1980 <= year_value <= 2100:
+            raise ToolError(
+                ErrorCode.INVALID_FILTER,
+                f"{field_name} 超出合理范围：{year_value}",
+                details={"field": f"filters.{field_name}"},
+            )
+
     if raw.doc_ids and known_doc_ids:
         unknown = sorted(set(raw.doc_ids) - known_doc_ids)
         if unknown:
@@ -325,6 +352,9 @@ def policy_filters_from_request(
         doc_ids=list(raw.doc_ids) if raw.doc_ids else None,
         flow_ids=list(raw.flow_ids) if raw.flow_ids else None,
         profile=raw.profile,
+        academic_year=raw.academic_year,
+        admission_year=raw.admission_year,
+        graduating_year=raw.graduating_year,
         ignore_effective_dates=raw.ignore_effective_dates,
     )
 
@@ -361,6 +391,30 @@ def validate_profile(profile: UserProfile | None, organization: Any) -> None:
                 details={"field": "profile.majors"},
             )
 
+    class_types = list(getattr(organization, "class_types", []) or [])
+    if profile.class_types:
+        class_by_id = {class_type.class_id: class_type for class_type in class_types}
+        unknown_classes = sorted(set(profile.class_types) - set(class_by_id))
+        if unknown_classes:
+            raise ToolError(
+                ErrorCode.INVALID_FILTER,
+                f"未登记的班型 ID：{unknown_classes}",
+                details={"field": "profile.class_types"},
+            )
+        if profile.majors:
+            wrong_classes = sorted(
+                class_id
+                for class_id in profile.class_types
+                if class_by_id[class_id].majors
+                and not set(class_by_id[class_id].majors) & set(profile.majors)
+            )
+            if wrong_classes:
+                raise ToolError(
+                    ErrorCode.INVALID_FILTER,
+                    f"班型 {wrong_classes} 不属于所选专业 {profile.majors}",
+                    details={"field": "profile.class_types"},
+                )
+
 
 def search_request_from_filters(
     query: str,
@@ -385,6 +439,9 @@ def search_request_from_filters(
             doc_ids=list(filters.doc_ids) if filters.doc_ids else None,
             flow_ids=list(filters.flow_ids) if filters.flow_ids else None,
             profile=filters.profile,
+            academic_year=filters.academic_year,
+            admission_year=filters.admission_year,
+            graduating_year=filters.graduating_year,
             ignore_effective_dates=filters.ignore_effective_dates,
         ),
         top_k=top_k,

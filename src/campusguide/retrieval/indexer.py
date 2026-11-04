@@ -24,8 +24,17 @@ from campusguide.ingest.build_index import init_qdrant_collection
 from campusguide.retrieval.embedder import EmbeddingProvider
 from campusguide.retrieval.sparse import SparseEncoder
 
-VECTOR_MANIFEST_SCHEMA_VERSION = "1.1"
+VECTOR_MANIFEST_SCHEMA_VERSION = "1.2"
 POINT_NAMESPACE = "campusguide"
+TABLE_PARENT_KIND = "table_parent"
+TABLE_ROW_KINDS = {"table_row", "matrix_row"}
+PARENT_PROVENANCE_FIELDS = (
+    "table_continuation_of",
+    "table_header_source_id",
+    "table_header_source_page",
+    "table_column_bindings",
+)
+PARENT_SOURCE_FIELDS = ("source_sha256", "source_url")
 
 
 class VectorIndexError(RuntimeError):
@@ -67,35 +76,76 @@ def article_payload(article: Article) -> dict[str, Any]:
         "doc_type": article.doc_type.value,
         "authority_level": article.authority_level.value,
         "block_type": article.block_type.value,
+        "block_kind": article.block_kind,
         "chapter_path": list(article.chapter_path),
         "article_no": article.article_no,
         "article_index": article.article_index,
         "part_no": article.part_no,
         "text": article.text,
         "text_normalized": article.text_normalized,
+        "issuer_level": article.issuer_level.value,
+        "issuer_college_id": article.issuer_college_id,
+        "parent_doc_id": article.parent_doc_id,
+        "parent_version_id": article.parent_version_id,
+        "relation": article.relation.value,
+        "parent_article_id": article.parent_article_id,
+        "parent_table_id": article.parent_table_id,
+        "table_id": article.table_id,
+        "row_id": article.row_id,
+        "row_index": article.row_index,
+        "table_headers": list(article.table_headers),
+        "header_paths": [list(path) for path in article.header_paths],
+        "cell_provenance": [
+            cell.model_dump(mode="json") for cell in article.cell_provenance
+        ],
+        "table_column_bindings": [
+            binding.model_dump(mode="json")
+            for binding in article.table_column_bindings
+        ],
+        "table_continuation_of": article.table_continuation_of,
+        "table_header_source_id": article.table_header_source_id,
+        "table_header_source_page": article.table_header_source_page,
+        "is_indexable": article.is_indexable,
+        "page": article.page,
+        "bbox": list(article.bbox) if article.bbox else None,
+        "dom_path": article.dom_path,
+        "source_cell_ids": list(article.source_cell_ids),
         "audience": [audience.value for audience in article.audience],
         "audience_colleges": list(detail.colleges) if detail else [],
         "audience_majors": list(detail.majors) if detail else [],
         "audience_intake_years": list(detail.intake_years) if detail else [],
         "audience_intake_from": detail.intake_from if detail else None,
         "audience_graduating_years": list(detail.graduating_years) if detail else [],
+        "audience_admission_year": detail.admission_year if detail else None,
         "audience_stages": [stage.value for stage in detail.stages] if detail else [],
         "audience_program_types": (
             [program_type.value for program_type in detail.program_types] if detail else []
         ),
+        "audience_learning_modes": (
+            [mode.value for mode in detail.learning_modes] if detail else []
+        ),
+        "audience_degree_types": (
+            [degree.value for degree in detail.degree_types] if detail else []
+        ),
         "audience_groups": [group.value for group in detail.groups] if detail else [],
         "audience_status": [status.value for status in detail.status] if detail else [],
+        "audience_class_types": list(detail.class_types) if detail else [],
+        "audience_scope_status": detail.scope_status.value if detail else "unknown",
+        "audience_scope_evidence": detail.scope_evidence if detail else None,
         "audience_cycle": detail.cycle if detail else None,
         "status": article.status.value,
         "effective_from": _rfc3339(article.effective_from),
         "effective_to": _rfc3339(article.effective_to),
         "date_confidence": article.date_confidence,
+        "date_source": article.date_source,
         "source_url": str(article.source_url),
         "published_at": _rfc3339(article.published_at),
         "issuing_department": article.issuing_department,
         "topic_tags": list(article.topic_tags),
         "flow_ids": list(article.flow_ids),
         "source_sha256": article.source_sha256,
+        "metadata_source_status": article.metadata_source_status,
+        "metadata_source_audit_sha256": article.metadata_source_audit_sha256,
     }
 
 
@@ -129,6 +179,86 @@ def load_articles(path: str | Path) -> list[Article]:
     return articles
 
 
+def _validate_parent_links(
+    indexable: Sequence[Article],
+    parents: Sequence[Article],
+) -> None:
+    """在写入前拒绝重复点键和悬空/错绑的表格父子关系。"""
+    for parent in parents:
+        if parent.is_indexable:
+            raise VectorIndexError(
+                f"父表 {parent.article_id} 必须不可索引（is_indexable=False）"
+            )
+        if not parent.table_id:
+            raise VectorIndexError(f"父表 {parent.article_id} 的 table_id 为空")
+        if parent.parent_table_id != parent.table_id:
+            raise VectorIndexError(
+                f"父表 {parent.article_id} 的 parent_table_id={parent.parent_table_id!r} "
+                f"与 table_id={parent.table_id!r} 不一致"
+            )
+
+    parent_ids = Counter(parent.article_id for parent in parents)
+    duplicate_parent_ids = sorted(
+        article_id for article_id, count in parent_ids.items() if count > 1
+    )
+    if duplicate_parent_ids:
+        preview = ", ".join(duplicate_parent_ids[:5])
+        raise VectorIndexError(
+            f"同一 article_id 存在多个父表记录（行块仅按 article_id 引用）：{preview}"
+        )
+
+    keys = Counter(
+        (article.article_id, article.part_no) for article in (*indexable, *parents)
+    )
+    duplicates = sorted(key for key, count in keys.items() if count > 1)
+    if duplicates:
+        preview = ", ".join(
+            f"{article_id}#part{part_no}" for article_id, part_no in duplicates[:5]
+        )
+        raise VectorIndexError(f"存在重复点键（article_id + part_no）：{preview}")
+
+    parent_by_id = {parent.article_id: parent for parent in parents}
+    for row in indexable:
+        if not row.parent_article_id or row.block_kind not in TABLE_ROW_KINDS:
+            continue
+        parent = parent_by_id.get(row.parent_article_id)
+        if parent is None:
+            raise VectorIndexError(
+                f"行块 {row.article_id} 引用的父表 {row.parent_article_id} 未存储"
+            )
+        if parent.block_kind != TABLE_PARENT_KIND or parent.is_indexable:
+            raise VectorIndexError(
+                f"行块 {row.article_id} 的父块 {parent.article_id} 不是无向量的 "
+                f"table_parent（block_kind={parent.block_kind!r}, "
+                f"is_indexable={parent.is_indexable}）"
+            )
+        if (row.doc_id, row.version_id) != (parent.doc_id, parent.version_id):
+            raise VectorIndexError(
+                f"行块 {row.article_id} 与父表 {parent.article_id} 的 doc/version 不一致"
+            )
+        if not row.table_id or parent.table_id != row.table_id:
+            raise VectorIndexError(
+                f"行块 {row.article_id} 的 table_id={row.table_id!r} 与父表 "
+                f"{parent.article_id} 的 {parent.table_id!r} 不一致"
+            )
+        if not parent.parent_table_id or parent.parent_table_id != parent.table_id:
+            raise VectorIndexError(
+                f"父表 {parent.article_id} 的 parent_table_id={parent.parent_table_id!r} "
+                f"与 table_id={parent.table_id!r} 不一致"
+            )
+        if row.parent_table_id is not None and row.parent_table_id != row.table_id:
+            raise VectorIndexError(
+                f"行块 {row.article_id} 的 parent_table_id={row.parent_table_id!r} "
+                f"与 table_id={row.table_id!r} 不一致"
+            )
+        for field_name in (*PARENT_PROVENANCE_FIELDS, *PARENT_SOURCE_FIELDS):
+            if getattr(row, field_name) != getattr(parent, field_name):
+                raise VectorIndexError(
+                    f"行块 {row.article_id} 与父表 {parent.article_id} 的 "
+                    f"{field_name} 不一致"
+                )
+
+
 def build_vector_index(
     *,
     client: QdrantClient,
@@ -142,7 +272,12 @@ def build_vector_index(
     progress: Callable[[int, int], None] | None = None,
 ) -> dict[str, Any]:
     """写入 dense（+sparse）向量并返回 vector manifest 内容（不落盘）。"""
-    indexable = [article for article in articles if article.is_indexable]
+    parents = [article for article in articles if article.block_kind == TABLE_PARENT_KIND]
+    indexable = [
+        article
+        for article in articles
+        if article.is_indexable and article.block_kind != TABLE_PARENT_KIND
+    ]
     if not indexable:
         raise VectorIndexError("没有可索引块，拒绝构建空向量集合")
 
@@ -151,6 +286,8 @@ def build_vector_index(
             f"embedding 维度 {embedder.dimension} 与 collection 配置 "
             f"{retrieval.dense_vector_size} 不一致"
         )
+
+    _validate_parent_links(indexable, parents)
 
     warnings: list[str] = []
     details, init_warnings = init_qdrant_collection(
@@ -208,7 +345,26 @@ def build_vector_index(
         if progress is not None:
             progress(written, total)
 
-    counts = Counter(article.block_type.value for article in indexable)
+    # 父表块只存 payload：空 vector 不进入 dense/sparse 检索，但 scroll 可水合。
+    parent_points = [
+        PointStruct(
+            id=point_id(parent.article_id, parent.part_no),
+            vector={},
+            payload=article_payload(parent),
+        )
+        for parent in parents
+    ]
+    stored_parents = 0
+    for start in range(0, len(parent_points), batch_size):
+        batch = parent_points[start : start + batch_size]
+        client.upsert(
+            collection_name=retrieval.collection,
+            points=batch,
+            wait=True,
+        )
+        stored_parents += len(batch)
+
+    counts = Counter(article.block_type.value for article in (*indexable, *parents))
     embedding_mode = "hybrid" if sparse_encoder is not None else "dense-only"
     sparse_info: dict[str, Any] = {"enabled": sparse_encoder is not None}
     if sparse_encoder is not None:
@@ -235,7 +391,9 @@ def build_vector_index(
         "dimension": embedder.dimension,
         "dense_vector_name": retrieval.dense_vector_name,
         "sparse": sparse_info,
-        "points": written,
+        "points": written + stored_parents,
+        "indexable_points": written,
+        "stored_parent_points": stored_parents,
         "block_types": dict(sorted(counts.items())),
         "device": embedder.device,
         "built_at": datetime.now(UTC).isoformat(timespec="seconds"),

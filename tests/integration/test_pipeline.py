@@ -90,14 +90,23 @@ def test_local_html_from_fetch_to_index(tmp_path: Path) -> None:
         parsed_dir=processed_dir / "parsed",
         output_dir=processed_dir,
     )
-    assert result.articles_written == 3
+    # 3 条正文 + 2 行数据表可检索；父表块落盘供水合但不检索；前言仍算排除块。
+    assert result.articles_written == 5
+    assert result.stored_articles_written == 6
     assert result.manifest["counts"]["documents"] == 1
+    assert result.manifest["counts"]["indexable_articles"] == 5
+    assert result.manifest["counts"]["stored_articles"] == 6
     assert result.manifest["counts"]["blocks_excluded"] >= 1
 
     articles = [
         json.loads(line)
         for line in (processed_dir / "articles.jsonl").read_text("utf-8").splitlines()
     ]
+    parent = next(article for article in articles if article["block_kind"] == "table_parent")
+    row_articles = [article for article in articles if article["block_kind"] == "table_row"]
+    assert len(row_articles) == 2
+    assert all(row["parent_article_id"] == parent["article_id"] for row in row_articles)
+    assert "转专业申请表" in parent["text"]
     third = next(article for article in articles if article["article_no"] == "第三条")
     assert "转专业申请表" in third["text"]
     assert "13800138000" not in third["text"]
@@ -115,7 +124,9 @@ def test_local_html_from_fetch_to_index(tmp_path: Path) -> None:
     manifest_path = processed_dir / "manifest.json"
     manifest = json.loads(manifest_path.read_text("utf-8"))
     assert len(manifest["content_hash"]) == 64
-    assert manifest["sources"][0]["articles"] == 3
+    assert manifest["sources"][0]["articles"] == 5
+    assert manifest["sources"][0]["indexable_articles"] == 5
+    assert manifest["sources"][0]["stored_articles"] == 6
 
     rebuilt = build_index(
         sources_path=sources_path,

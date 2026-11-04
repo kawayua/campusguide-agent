@@ -24,6 +24,8 @@ class QuestionUnit(BaseModel):
     audience_scope: list[str] = Field(default_factory=list)
     cohort: int | None = None
     version: str | None = None
+    # 同一专业下培养方案不通用（创新班/普通班等）；None 表示未区分班型。
+    class_type: str | None = None
     requested_aspects: list[str] = Field(default_factory=list)
     answer_shape: Literal["fact", "list", "comparison", "procedure", "count", "latest"] = "fact"
     required_slots: list[str] = Field(default_factory=list)

@@ -1,0 +1,63 @@
+# 视觉优先预解析配置（不含凭证）。
+# 模型/接口沿用现有 Gemini 环境变量：VISION_MODEL 优先，其次 ADVISOR_MODEL；
+# base_url/api_key 依次回退到 ADVISOR_LLM_*、LLM_*。不得写入密钥。
+enabled: true
+provider: gemini
+dpi: 144
+max_pages: 40
+max_requests: 60
+max_retries: 1
+retry_backoff_seconds: 1.0
+timeout_seconds: 60.0
+max_tables_per_page: 8
+cache_dir: data/processed/vision
+# 缓存键包含源文件/页面图/渲染/prompt/provider/model/dpi 哈希；改动 prompt 会使旧缓存失效。
+# 5.x 缓存记录增加坐标顺序证据(coordinate_order/coordinate_order_applied)、
+# 区域精识别的 refined_tables 行证据与原生表覆盖审计；旧 4.x 及更早缓存会被拒绝并重识别。
+prompt_version: vision-structure-5
+# 区域二次识别：行列/表头/数值不一致、低置信度或结构校验失败时，按 bbox 裁剪原图并放大后重识别。
+# 无可靠 bbox 时使用高 DPI 全页回退；所有请求（含重试）共用 max_requests 预算。
+min_confidence: 0.6
+max_region_refinements_per_page: 3
+refine_dpi_scale: 2.0
+region_padding_ratio: 0.03
+# PDF 本页存在非 layout 原生表时，先重读原件文本层做 source guard（clip 只作审计信号，
+# 不回填、不发给模型），再用 audit.tables 与真实页尺寸让 Gemini 核验 native 网格；
+# 所有 correction/uncertain/needs-review/mismatch 格都走独立像素裁剪+resolver。
+# 只有显式 opt-in 且整页建议与独立裁剪两图一致时才允许改原生值；缓存键含原生网格、
+# source guard 与 HTML 几何哈希。2.0 缓存拒绝旧 1.0 模式，不复用。
+native_grid_verification: true
+allow_confirmed_native_corrections: false
+# HTML 的 data/matrix 原生表不拿 HTML 当 PDF：用本轮 Edge 渲染出的真实 PDF 解析几何，
+# 严格映射原 DOM 表 ID/行号；仅本页可见行进入上下文，跨页 header 取交集。
+# 全文件 expected/mapped/checked 行并集完整且几何无 unresolved 才可发布；像素 crop
+# 仍基于 parent PNG 与渲染 PDF 的 native_page_size。
+edge_path: "C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe"
+# HTML 先本地清理正文、按同域名白名单下载图片并校验 SHA，再用隐藏隔离配置的 Edge 离线打印。
+# 资源缓存目录持久化真实下载文件；清单为可选的经验证复用输入，null 表示不依赖清单。
+html_render_cache_dir: data/processed/html_render
+html_render_timeout_seconds: 90.0
+html_resource_cache_dir: data/processed/html_resources
+html_resource_manifest: null
+html_resource_max_bytes: 20971520
+html_resource_timeout_seconds: 20.0
+html_resource_max_redirects: 3
+html_allowed_hosts:
+  - scau.edu.cn
+# 429/限流：至少等待 180 秒（Retry-After 更长则遵守），再最多重试 1 次；
+# 休眠按 30 秒分段便于观测，失败尝试同样占用 max_requests 预算。
+rate_limit_min_wait_seconds: 180.0
+rate_limit_max_retries: 1
+rate_limit_sleep_segment_seconds: 30.0
+temperature: 0.0
+max_tokens: 8192
+model_env: VISION_MODEL
+fallback_model_env: ADVISOR_MODEL
+base_url_env: VISION_LLM_BASE_URL
+fallback_base_url_envs:
+  - ADVISOR_LLM_BASE_URL
+  - LLM_BASE_URL
+api_key_env: VISION_LLM_API_KEY
+fallback_api_key_envs:
+  - ADVISOR_LLM_API_KEY
+  - LLM_API_KEY

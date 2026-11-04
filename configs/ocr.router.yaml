@@ -1,0 +1,20 @@
+# 区域 OCR 路由影子配置（opt-in，不接入生产解析链路）。
+# 只有调用方显式读取本文件并把 RouterConfig 传给 route_region 时才生效；
+# 导入 ocr_router 或本文件不会加载本地模型、读取环境变量或发起云端请求。
+# 本地模型身份与 revision 由调用方注入，本文件不接受可变模型 pin，也不写入
+# 端点、密钥或认证环境变量名。
+schema_version: ocr-router/1
+enabled: true
+# 本批次只支持影子模式；success=true 仅表示结构校验通过，绝不代表可发布。
+mode: shadow
+primary: xiaomi-local
+secondary: gemini
+# 仅困难区域回退：本地结构校验通过时不调用云端。
+difficult_only: true
+fallback_enabled: true
+# 单区域云端请求上限；调用方仍可传入共享 VisionRequestBudget 收紧总量。
+max_cloud_requests_per_region: 2
+# 本地提示词按区域类型选择；token 上限只影响本地请求预算。
+max_text_tokens: 1024
+max_table_tokens: 4096
+max_formula_tokens: 1024

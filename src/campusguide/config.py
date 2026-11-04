@@ -7,6 +7,7 @@ sources.yaml 支持两种写法：
 
 from __future__ import annotations
 
+import math
 import os
 import re
 from datetime import date
@@ -16,7 +17,7 @@ from typing import Any, Literal
 import yaml
 from pydantic import BaseModel, Field, HttpUrl, ValidationError, model_validator
 
-from campusguide.domain.audience import AudienceDetail, has_student_audience
+from campusguide.domain.audience import AudienceDetail, AudienceScope, has_student_audience
 from campusguide.domain.enums import (
     ArticleStatus,
     Audience,
@@ -36,6 +37,13 @@ class OrganizationConfigError(ValueError):
 
 
 Slug = re.compile(r"^[a-z0-9][a-z0-9-]*$")
+DATE_CONFIDENCE_MARKER = "date_confidence=low"
+
+
+def _date_source_from_note(prefix: str, note: str) -> str:
+    """把低置信说明原样带入 date_source，保留文号/年份等可核对依据。"""
+    evidence = " ".join(note.replace(DATE_CONFIDENCE_MARKER, "").split()).strip("；;，, ")
+    return f"{prefix}: {evidence[:200]}" if evidence else f"{prefix}({DATE_CONFIDENCE_MARKER})"
 
 
 def _check_audience(audience: list[Audience]) -> list[Audience]:
@@ -70,6 +78,7 @@ class SourceVersion(BaseModel):
     audience: list[Audience] | None = None
     audience_detail: AudienceDetail | None = None
     date_confidence: Literal["high", "low"] = "high"
+    date_source: str | None = None
     notes: str | None = None
 
     @model_validator(mode="after")
@@ -82,8 +91,23 @@ class SourceVersion(BaseModel):
             raise ValueError("effective_to 不能早于 effective_from")
         if self.audience is not None:
             _check_audience(self.audience)
-        if self.notes and "date_confidence=low" in self.notes:
-            self.date_confidence = "low"
+        # 显式 date_confidence（包括 high）优先；只有旧清单没写该字段时，
+        # 才从版本 notes / audience_detail.note 的标记推断低置信。
+        if "date_confidence" not in self.model_fields_set:
+            notes = self.notes or ""
+            detail_note = self.audience_detail.note if self.audience_detail else None
+            if DATE_CONFIDENCE_MARKER in notes:
+                self.date_confidence = "low"
+                self.date_source = self.date_source or _date_source_from_note(
+                    "sources.notes", notes
+                )
+            elif detail_note and DATE_CONFIDENCE_MARKER in detail_note:
+                self.date_confidence = "low"
+                self.date_source = self.date_source or _date_source_from_note(
+                    "audience_detail.note", detail_note
+                )
+        if self.date_confidence == "low" and not self.date_source:
+            self.date_source = "sources.yaml 显式标注低置信"
         return self
 
 
@@ -95,10 +119,13 @@ class SourceDocument(BaseModel):
     issuer_level: IssuerLevel = IssuerLevel.UNIVERSITY
     issuer_college_id: str | None = None
     parent_doc_id: str | None = None
+    parent_version_id: str | None = None
     relation: PolicyRelation = PolicyRelation.STANDALONE
     issuing_department: str
     audience: list[Audience] = Field(default_factory=lambda: [Audience.ALL])
     audience_detail: AudienceDetail | None = None
+    # 合订本按章节标题收窄适用专业/班型；必须附章节原文依据。
+    audience_scopes: list[AudienceScope] = Field(default_factory=list)
     flow_ids: list[str] = Field(default_factory=list)
     topic_tags: list[str] = Field(default_factory=list)
     # 院系官网公开的教职工名录可设为 false：保留手机号、邮箱、联系人姓名，
@@ -130,11 +157,19 @@ class SourceDocument(BaseModel):
                 raise ValueError(f"parent_doc_id 必须是小写 slug：{self.parent_doc_id!r}")
             if self.parent_doc_id == self.doc_id:
                 raise ValueError("parent_doc_id 不能指向自身")
-        if self.relation in {PolicyRelation.IMPLEMENTS, PolicyRelation.SUPPLEMENTS}:
+        if self.relation in {
+            PolicyRelation.IMPLEMENTS,
+            PolicyRelation.SUPPLEMENTS,
+            PolicyRelation.BASIS,
+            PolicyRelation.ATTACHMENT,
+            PolicyRelation.REPLACES,
+        }:
             if not self.parent_doc_id:
                 raise ValueError(f"relation={self.relation.value} 时必须填写 parent_doc_id")
         elif self.parent_doc_id is not None:
             raise ValueError("relation=standalone 时不能填写 parent_doc_id")
+        if self.parent_version_id is not None and self.parent_doc_id is None:
+            raise ValueError("parent_version_id 必须与 parent_doc_id 同时填写")
 
         if (
             self.audience_detail is not None
@@ -142,6 +177,14 @@ class SourceDocument(BaseModel):
             and not has_student_audience(self.audience)
         ):
             raise ValueError("非学生角色的 audience 不能携带年级/阶段/学籍状态等学生约束")
+
+        scope_matches = [scope.match.strip() for scope in self.audience_scopes]
+        if len(scope_matches) != len(set(scope_matches)):
+            raise ValueError(f"{self.doc_id} 的 audience_scopes.match 不能重复")
+        if not has_student_audience(self.audience) and any(
+            scope.class_types for scope in self.audience_scopes
+        ):
+            raise ValueError("非学生角色的 audience 不能按班型收窄章节适用范围")
 
         version_ids = [version.version_id for version in self.versions]
         if len(version_ids) != len(set(version_ids)):
@@ -161,6 +204,40 @@ class SourceDocument(BaseModel):
             ):
                 raise ValueError(
                     f"{self.doc_id}@{version.version_id} 的 audience 与年级/阶段约束冲突"
+                )
+        # 招生年度字段迁移：只处理招生文件上的四位 cycle，避免误改学年。
+        if "admission" in self.doc_id:
+            for version in self.versions:
+                if version.audience_detail is not None:
+                    detail = version.audience_detail
+                    if detail.cycle and detail.cycle.isdigit() and detail.admission_year is None:
+                        version.audience_detail = detail.model_copy(
+                            update={"admission_year": int(detail.cycle), "cycle": None}
+                        )
+                elif self.audience_detail is not None:
+                    detail = self.audience_detail
+                    if detail.cycle and detail.cycle.isdigit() and detail.admission_year is None:
+                        self.audience_detail = detail.model_copy(
+                            update={"admission_year": int(detail.cycle), "cycle": None}
+                        )
+        # 旧清单只在文档级 audience_detail.note 写低置信说明；显式继承到
+        # 每个未自行声明置信度的版本，保持版本字段可审计，而不是靠下游
+        # 重新解析 note 推断。
+        document_note = self.audience_detail.note if self.audience_detail else None
+        if document_note and DATE_CONFIDENCE_MARKER in document_note:
+            inherited_source = _date_source_from_note(
+                "document.audience_detail.note", document_note
+            )
+            for index, version in enumerate(self.versions):
+                if version.date_confidence == "low":
+                    continue
+                if "date_confidence" in version.model_fields_set:
+                    continue
+                self.versions[index] = version.model_copy(
+                    update={
+                        "date_confidence": "low",
+                        "date_source": version.date_source or inherited_source,
+                    }
                 )
         return self
 
@@ -375,11 +452,25 @@ class RetrievalConfig(BaseModel):
     max_table_sections: int = 2
     min_rerank_score: float = 0.30
     min_score_margin: float = 0.03
+    # Opt-in bounded recovery when the normal threshold selects no evidence.
+    rerank_fallback_min_score: float | None = None
+    rerank_fallback_max_articles: int = Field(default=3, ge=1, le=3)
     query_top_k: int = 20
     max_evidence: int = 8
     max_chars_per_evidence: int = 800
     min_dense_score: float = 0.35
     include_sections_default: bool = False
+
+    @model_validator(mode="after")
+    def _validate_rerank_fallback(self) -> RetrievalConfig:
+        floor = self.rerank_fallback_min_score
+        if floor is None:
+            return self
+        if not math.isfinite(floor) or not 0.0 <= floor <= 1.0:
+            raise ValueError("rerank_fallback_min_score 必须是 0..1 的有限值")
+        if floor >= self.min_rerank_score:
+            raise ValueError("rerank_fallback_min_score 必须严格小于 min_rerank_score")
+        return self
 
 
 def load_yaml(path: str | Path) -> Any:
@@ -463,6 +554,9 @@ def validate_organization_refs(
     """检查 sources.yaml 中的院系/专业/上位文件引用是否自洽。"""
     college_ids = {college.college_id for college in organization.colleges}
     major_colleges = {major.major_id: major.college_id for major in organization.majors}
+    class_majors = {
+        class_type.class_id: set(class_type.majors) for class_type in organization.class_types
+    }
     doc_by_id = {document.doc_id: document for document in config.documents}
     errors: list[str] = []
 
@@ -478,6 +572,21 @@ def validate_organization_refs(
                 major_colleges=major_colleges,
             )
         )
+
+        for scope in document.audience_scopes:
+            label = f"{document.doc_id} 章节范围「{scope.match}」"
+            for major_id in scope.majors:
+                if major_id not in major_colleges:
+                    errors.append(f"{label} 引用了未登记的专业：{major_id}")
+            for class_id in scope.class_types:
+                if class_id not in class_majors:
+                    errors.append(f"{label} 引用了未登记的班型：{class_id}")
+                elif (
+                    scope.majors
+                    and class_majors[class_id]
+                    and not class_majors[class_id].intersection(scope.majors)
+                ):
+                    errors.append(f"{label} 的班型 {class_id} 不属于所列专业")
 
         for version in document.versions:
             if version.audience_detail is not None:
@@ -496,13 +605,23 @@ def validate_organization_refs(
                 errors.append(
                     f"{document.doc_id} 的 parent_doc_id 不存在：{document.parent_doc_id}"
                 )
-            elif (
-                document.issuer_level is IssuerLevel.UNIVERSITY
-                and parent.issuer_level is not IssuerLevel.UNIVERSITY
-            ):
-                errors.append(
-                    f"{document.doc_id} 是校级文件，不能以院/系级文件 {parent.doc_id} 为上位文件"
-                )
+            else:
+                if (
+                    document.parent_version_id is not None
+                    and document.parent_version_id
+                    not in {version.version_id for version in parent.versions}
+                ):
+                    errors.append(
+                        f"{document.doc_id} 的 parent_version_id 在 "
+                        f"{parent.doc_id} 下不存在：{document.parent_version_id}"
+                    )
+                if (
+                    document.issuer_level is IssuerLevel.UNIVERSITY
+                    and parent.issuer_level is not IssuerLevel.UNIVERSITY
+                ):
+                    errors.append(
+                        f"{document.doc_id} 是校级文件，不能以院/系级文件 {parent.doc_id} 为上位文件"
+                    )
 
             seen = {document.doc_id}
             current: str | None = document.parent_doc_id

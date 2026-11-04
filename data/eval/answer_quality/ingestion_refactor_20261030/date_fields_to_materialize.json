@@ -1,0 +1,568 @@
+{
+  "expected_low_from_source_notes": 42,
+  "runtime_low_count": 17,
+  "still_wrong_high": [
+    "info-profile@v2026",
+    "info-leadership@v2026",
+    "info-committees@v2026",
+    "info-student-affairs@v2026",
+    "info-supervisors@v2026",
+    "info-teachers-math@v2026",
+    "info-teachers-cs@v2026",
+    "info-teachers-ie@v2026",
+    "info-majors-undergrad@v2026",
+    "info-majors-graduate@v2026",
+    "info-org-structure@v2026",
+    "info-practice-bases@v2026",
+    "info-competitions@v2026",
+    "info-scholarships@v2026",
+    "info-teaching-centers@v2026",
+    "info-industry-colleges@v2026",
+    "info-admissions-undergrad@v2026",
+    "info-admissions-graduate@v2026",
+    "info-student-orgs@v2026",
+    "agri-committee-academic@v2026",
+    "agri-committee-degree@v2026",
+    "agri-dept-plant-breeding@v2026",
+    "agri-dept-crop-info@v2026",
+    "agri-dept-crop-tech@v2026",
+    "agri-dept-seed-engineering@v2026"
+  ],
+  "missing_explicit_low": 42,
+  "missing_explicit_source": 42,
+  "versions": [
+    {
+      "doc_id": "undergraduate-status-rules",
+      "version_id": "v2009",
+      "expected_date_confidence": "low",
+      "raw_date_confidence": null,
+      "runtime_date_confidence": "low",
+      "raw_date_source": null,
+      "recommended_date_source": "version.notes: 文号：华南农办〔2009〕91号；仅知印发年份，published_at 取年末锚点",
+      "notes": {
+        "version.notes": "文号：华南农办〔2009〕91号；仅知印发年份，published_at 取年末锚点（date_confidence=low）。"
+      }
+    },
+    {
+      "doc_id": "undergraduate-major-transfer",
+      "version_id": "v2015",
+      "expected_date_confidence": "low",
+      "raw_date_confidence": null,
+      "runtime_date_confidence": "low",
+      "raw_date_source": null,
+      "recommended_date_source": "version.notes: 文号：华南农办〔2015〕49号；仅知印发年份，published_at 取年末锚点",
+      "notes": {
+        "version.notes": "文号：华南农办〔2015〕49号；仅知印发年份，published_at 取年末锚点（date_confidence=low）。"
+      }
+    },
+    {
+      "doc_id": "classroom-rules",
+      "version_id": "v2018",
+      "expected_date_confidence": "low",
+      "raw_date_confidence": null,
+      "runtime_date_confidence": "low",
+      "raw_date_source": null,
+      "recommended_date_source": "version.notes: 文号：华南农办〔2018〕117号；仅知印发年份，published_at 取年末锚点",
+      "notes": {
+        "version.notes": "文号：华南农办〔2018〕117号；仅知印发年份，published_at 取年末锚点（date_confidence=low）。"
+      }
+    },
+    {
+      "doc_id": "national-aid-undergrad",
+      "version_id": "v2021",
+      "expected_date_confidence": "low",
+      "raw_date_confidence": null,
+      "runtime_date_confidence": "low",
+      "raw_date_source": null,
+      "recommended_date_source": "version.notes: 文号：华农党发〔2021〕35号；仅知印发年份，published_at 取年末锚点",
+      "notes": {
+        "version.notes": "文号：华农党发〔2021〕35号；仅知印发年份，published_at 取年末锚点（date_confidence=low）。"
+      }
+    },
+    {
+      "doc_id": "work-study",
+      "version_id": "v2019",
+      "expected_date_confidence": "low",
+      "raw_date_confidence": null,
+      "runtime_date_confidence": "low",
+      "raw_date_source": null,
+      "recommended_date_source": "version.notes: 文号：华南农办〔2019〕29号；仅知印发年份，published_at 取年末锚点",
+      "notes": {
+        "version.notes": "文号：华南农办〔2019〕29号；仅知印发年份，published_at 取年末锚点（date_confidence=low）。",
+        "document.audience_detail.note": "勤工助学岗位面向家庭经济困难学生"
+      }
+    },
+    {
+      "doc_id": "student-loan",
+      "version_id": "v2018",
+      "expected_date_confidence": "low",
+      "raw_date_confidence": null,
+      "runtime_date_confidence": "low",
+      "raw_date_source": null,
+      "recommended_date_source": "version.notes: 文号：华南农办〔2018〕81号；仅知印发年份，published_at 取年末锚点",
+      "notes": {
+        "version.notes": "文号：华南农办〔2018〕81号；仅知印发年份，published_at 取年末锚点（date_confidence=low）。",
+        "document.audience_detail.note": "助学贷款面向家庭经济困难学生"
+      }
+    },
+    {
+      "doc_id": "innovation-training",
+      "version_id": "v2018",
+      "expected_date_confidence": "low",
+      "raw_date_confidence": null,
+      "runtime_date_confidence": "low",
+      "raw_date_source": null,
+      "recommended_date_source": "version.notes: 文号：华南农办〔2018〕119号；仅知印发年份，published_at 取年末锚点",
+      "notes": {
+        "version.notes": "文号：华南农办〔2018〕119号；仅知印发年份，published_at 取年末锚点（date_confidence=low）。"
+      }
+    },
+    {
+      "doc_id": "master-doctor-degree-rules",
+      "version_id": "v2010",
+      "expected_date_confidence": "low",
+      "raw_date_confidence": null,
+      "runtime_date_confidence": "low",
+      "raw_date_source": null,
+      "recommended_date_source": "version.notes: 文号：华南农办〔2010〕136号；仅知印发年份，published_at 取年末锚点",
+      "notes": {
+        "version.notes": "文号：华南农办〔2010〕136号；仅知印发年份，published_at 取年末锚点（date_confidence=low）。"
+      }
+    },
+    {
+      "doc_id": "outstanding-thesis-award",
+      "version_id": "v2010",
+      "expected_date_confidence": "low",
+      "raw_date_confidence": null,
+      "runtime_date_confidence": "low",
+      "raw_date_source": null,
+      "recommended_date_source": "version.notes: 文号：华南农办〔2010〕70号；旧标题为《华南农业大学优秀博士、硕士学位论文评选与奖励办法》；仅知印发年份",
+      "notes": {
+        "version.notes": "文号：华南农办〔2010〕70号；旧标题为《华南农业大学优秀博士、硕士学位论文评选与奖励办法》；仅知印发年份（date_confidence=low）。"
+      }
+    },
+    {
+      "doc_id": "academic-misconduct",
+      "version_id": "v2014",
+      "expected_date_confidence": "low",
+      "raw_date_confidence": null,
+      "runtime_date_confidence": "low",
+      "raw_date_source": null,
+      "recommended_date_source": "version.notes: 文号：华南农办〔2014〕74号；仅知印发年份，published_at 取年末锚点",
+      "notes": {
+        "version.notes": "文号：华南农办〔2014〕74号；仅知印发年份，published_at 取年末锚点（date_confidence=low）。"
+      }
+    },
+    {
+      "doc_id": "graduate-teaching-errors",
+      "version_id": "v2022",
+      "expected_date_confidence": "low",
+      "raw_date_confidence": null,
+      "runtime_date_confidence": "low",
+      "raw_date_source": null,
+      "recommended_date_source": "version.notes: 文号：华南农办〔2022〕57号；仅知印发年份，published_at 取年末锚点",
+      "notes": {
+        "version.notes": "文号：华南农办〔2022〕57号；仅知印发年份，published_at 取年末锚点（date_confidence=low）。"
+      }
+    },
+    {
+      "doc_id": "professional-degree-reform",
+      "version_id": "v2022",
+      "expected_date_confidence": "low",
+      "raw_date_confidence": null,
+      "runtime_date_confidence": "low",
+      "raw_date_source": null,
+      "recommended_date_source": "version.notes: 文号：华南农办〔2022〕27号；仅知印发年份，published_at 取年末锚点",
+      "notes": {
+        "version.notes": "文号：华南农办〔2022〕27号；仅知印发年份，published_at 取年末锚点（date_confidence=low）。",
+        "document.audience_detail.note": "面向专业学位研究生"
+      }
+    },
+    {
+      "doc_id": "lab-safety",
+      "version_id": "v2015",
+      "expected_date_confidence": "low",
+      "raw_date_confidence": null,
+      "runtime_date_confidence": "low",
+      "raw_date_source": null,
+      "recommended_date_source": "version.notes: 文号：华南农办〔2015〕150号；仅知印发年份，published_at 取年末锚点；2026-04-30 为集中公开批次，不是发布日期",
+      "notes": {
+        "version.notes": "文号：华南农办〔2015〕150号；仅知印发年份，published_at 取年末锚点（date_confidence=low）；2026-04-30 为集中公开批次，不是发布日期。"
+      }
+    },
+    {
+      "doc_id": "public-facilities",
+      "version_id": "v2004",
+      "expected_date_confidence": "low",
+      "raw_date_confidence": null,
+      "runtime_date_confidence": "low",
+      "raw_date_source": null,
+      "recommended_date_source": "version.notes: 文号：华南农办〔2004〕57号；仅知印发年份，published_at 取年末锚点；2026-04-30 为集中公开批次",
+      "notes": {
+        "version.notes": "文号：华南农办〔2004〕57号；仅知印发年份，published_at 取年末锚点（date_confidence=low）；2026-04-30 为集中公开批次。"
+      }
+    },
+    {
+      "doc_id": "official-reception",
+      "version_id": "v2017",
+      "expected_date_confidence": "low",
+      "raw_date_confidence": null,
+      "runtime_date_confidence": "low",
+      "raw_date_source": null,
+      "recommended_date_source": "version.notes: 文号：华南农校办〔2017〕6号；仅知印发年份，published_at 取年末锚点；2026-05-01 为集中公开批次",
+      "notes": {
+        "version.notes": "文号：华南农校办〔2017〕6号；仅知印发年份，published_at 取年末锚点（date_confidence=low）；2026-05-01 为集中公开批次。"
+      }
+    },
+    {
+      "doc_id": "info-profile",
+      "version_id": "v2026",
+      "expected_date_confidence": "low",
+      "raw_date_confidence": null,
+      "runtime_date_confidence": "high",
+      "raw_date_source": null,
+      "recommended_date_source": "document.audience_detail.note: 静态页面；页面无明确发布日期，published_at 取核验日期",
+      "notes": {
+        "version.notes": "结构化转录自官网静态页；采集日期 2026-10-21；引用以官网原文为准。",
+        "document.audience_detail.note": "静态页面；页面无明确发布日期，published_at 取核验日期（date_confidence=low）。"
+      }
+    },
+    {
+      "doc_id": "info-leadership",
+      "version_id": "v2026",
+      "expected_date_confidence": "low",
+      "raw_date_confidence": null,
+      "runtime_date_confidence": "high",
+      "raw_date_source": null,
+      "recommended_date_source": "document.audience_detail.note: 静态页面；页面无明确发布日期，published_at 取核验日期",
+      "notes": {
+        "version.notes": "结构化转录自官网静态页；采集日期 2026-10-21；引用以官网原文为准。",
+        "document.audience_detail.note": "静态页面；页面无明确发布日期，published_at 取核验日期（date_confidence=low）。"
+      }
+    },
+    {
+      "doc_id": "info-committees",
+      "version_id": "v2026",
+      "expected_date_confidence": "low",
+      "raw_date_confidence": null,
+      "runtime_date_confidence": "high",
+      "raw_date_source": null,
+      "recommended_date_source": "document.audience_detail.note: 静态页面；页面无明确发布日期，published_at 取核验日期",
+      "notes": {
+        "version.notes": "结构化转录自官网静态页；采集日期 2026-10-21；引用以官网原文为准。",
+        "document.audience_detail.note": "静态页面；页面无明确发布日期，published_at 取核验日期（date_confidence=low）。"
+      }
+    },
+    {
+      "doc_id": "info-student-affairs",
+      "version_id": "v2026",
+      "expected_date_confidence": "low",
+      "raw_date_confidence": null,
+      "runtime_date_confidence": "high",
+      "raw_date_source": null,
+      "recommended_date_source": "document.audience_detail.note: 静态页面；页面无明确发布日期，published_at 取核验日期",
+      "notes": {
+        "version.notes": "结构化转录自官网静态页；采集日期 2026-10-21；引用以官网原文为准。",
+        "document.audience_detail.note": "静态页面；页面无明确发布日期，published_at 取核验日期（date_confidence=low）。"
+      }
+    },
+    {
+      "doc_id": "info-supervisors",
+      "version_id": "v2026",
+      "expected_date_confidence": "low",
+      "raw_date_confidence": null,
+      "runtime_date_confidence": "high",
+      "raw_date_source": null,
+      "recommended_date_source": "document.audience_detail.note: 静态页面；页面无明确发布日期，published_at 取核验日期",
+      "notes": {
+        "version.notes": "结构化转录自官网静态页；采集日期 2026-10-21；引用以官网原文为准。",
+        "document.audience_detail.note": "静态页面；页面无明确发布日期，published_at 取核验日期（date_confidence=low）。"
+      }
+    },
+    {
+      "doc_id": "info-teachers-math",
+      "version_id": "v2026",
+      "expected_date_confidence": "low",
+      "raw_date_confidence": null,
+      "runtime_date_confidence": "high",
+      "raw_date_source": null,
+      "recommended_date_source": "document.audience_detail.note: 静态页面；页面无明确发布日期，published_at 取核验日期",
+      "notes": {
+        "version.notes": "结构化转录自官网静态页；采集日期 2026-10-21；引用以官网原文为准。",
+        "document.audience_detail.note": "静态页面；页面无明确发布日期，published_at 取核验日期（date_confidence=low）。"
+      }
+    },
+    {
+      "doc_id": "info-teachers-cs",
+      "version_id": "v2026",
+      "expected_date_confidence": "low",
+      "raw_date_confidence": null,
+      "runtime_date_confidence": "high",
+      "raw_date_source": null,
+      "recommended_date_source": "document.audience_detail.note: 静态页面；页面无明确发布日期，published_at 取核验日期",
+      "notes": {
+        "version.notes": "结构化转录自官网静态页；采集日期 2026-10-21；引用以官网原文为准。",
+        "document.audience_detail.note": "静态页面；页面无明确发布日期，published_at 取核验日期（date_confidence=low）。"
+      }
+    },
+    {
+      "doc_id": "info-teachers-ie",
+      "version_id": "v2026",
+      "expected_date_confidence": "low",
+      "raw_date_confidence": null,
+      "runtime_date_confidence": "high",
+      "raw_date_source": null,
+      "recommended_date_source": "document.audience_detail.note: 静态页面；页面无明确发布日期，published_at 取核验日期",
+      "notes": {
+        "version.notes": "结构化转录自官网静态页；采集日期 2026-10-21；引用以官网原文为准。",
+        "document.audience_detail.note": "静态页面；页面无明确发布日期，published_at 取核验日期（date_confidence=low）。"
+      }
+    },
+    {
+      "doc_id": "info-majors-undergrad",
+      "version_id": "v2026",
+      "expected_date_confidence": "low",
+      "raw_date_confidence": null,
+      "runtime_date_confidence": "high",
+      "raw_date_source": null,
+      "recommended_date_source": "document.audience_detail.note: 静态页面；页面无明确发布日期，published_at 取核验日期",
+      "notes": {
+        "version.notes": "结构化转录自官网静态页；采集日期 2026-10-21；引用以官网原文为准。",
+        "document.audience_detail.note": "静态页面；页面无明确发布日期，published_at 取核验日期（date_confidence=low）。"
+      }
+    },
+    {
+      "doc_id": "info-majors-graduate",
+      "version_id": "v2026",
+      "expected_date_confidence": "low",
+      "raw_date_confidence": null,
+      "runtime_date_confidence": "high",
+      "raw_date_source": null,
+      "recommended_date_source": "document.audience_detail.note: 静态页面；页面无明确发布日期，published_at 取核验日期",
+      "notes": {
+        "version.notes": "结构化转录自官网静态页；采集日期 2026-10-21；引用以官网原文为准。",
+        "document.audience_detail.note": "静态页面；页面无明确发布日期，published_at 取核验日期（date_confidence=low）。"
+      }
+    },
+    {
+      "doc_id": "info-org-structure",
+      "version_id": "v2026",
+      "expected_date_confidence": "low",
+      "raw_date_confidence": null,
+      "runtime_date_confidence": "high",
+      "raw_date_source": null,
+      "recommended_date_source": "document.audience_detail.note: 静态页面；页面无明确发布日期，published_at 取核验日期",
+      "notes": {
+        "version.notes": "结构化转录自官网静态页；采集日期 2026-10-21；引用以官网原文为准。",
+        "document.audience_detail.note": "静态页面；页面无明确发布日期，published_at 取核验日期（date_confidence=low）。"
+      }
+    },
+    {
+      "doc_id": "info-practice-bases",
+      "version_id": "v2026",
+      "expected_date_confidence": "low",
+      "raw_date_confidence": null,
+      "runtime_date_confidence": "high",
+      "raw_date_source": null,
+      "recommended_date_source": "document.audience_detail.note: 静态页面；页面无明确发布日期，published_at 取核验日期",
+      "notes": {
+        "version.notes": "结构化转录自官网静态页；采集日期 2026-10-21；引用以官网原文为准。",
+        "document.audience_detail.note": "静态页面；页面无明确发布日期，published_at 取核验日期（date_confidence=low）。"
+      }
+    },
+    {
+      "doc_id": "info-competitions",
+      "version_id": "v2026",
+      "expected_date_confidence": "low",
+      "raw_date_confidence": null,
+      "runtime_date_confidence": "high",
+      "raw_date_source": null,
+      "recommended_date_source": "document.audience_detail.note: 静态页面；页面无明确发布日期，published_at 取核验日期",
+      "notes": {
+        "version.notes": "结构化转录自官网静态页；采集日期 2026-10-21；引用以官网原文为准。",
+        "document.audience_detail.note": "静态页面；页面无明确发布日期，published_at 取核验日期（date_confidence=low）。"
+      }
+    },
+    {
+      "doc_id": "info-scholarships",
+      "version_id": "v2026",
+      "expected_date_confidence": "low",
+      "raw_date_confidence": null,
+      "runtime_date_confidence": "high",
+      "raw_date_source": null,
+      "recommended_date_source": "document.audience_detail.note: 静态页面；页面无明确发布日期，published_at 取核验日期",
+      "notes": {
+        "version.notes": "结构化转录自官网静态页；采集日期 2026-10-21；引用以官网原文为准。",
+        "document.audience_detail.note": "静态页面；页面无明确发布日期，published_at 取核验日期（date_confidence=low）。"
+      }
+    },
+    {
+      "doc_id": "info-teaching-centers",
+      "version_id": "v2026",
+      "expected_date_confidence": "low",
+      "raw_date_confidence": null,
+      "runtime_date_confidence": "high",
+      "raw_date_source": null,
+      "recommended_date_source": "document.audience_detail.note: 静态页面；页面无明确发布日期，published_at 取核验日期",
+      "notes": {
+        "version.notes": "结构化转录自官网静态页；采集日期 2026-10-21；引用以官网原文为准。",
+        "document.audience_detail.note": "静态页面；页面无明确发布日期，published_at 取核验日期（date_confidence=low）。"
+      }
+    },
+    {
+      "doc_id": "info-industry-colleges",
+      "version_id": "v2026",
+      "expected_date_confidence": "low",
+      "raw_date_confidence": null,
+      "runtime_date_confidence": "high",
+      "raw_date_source": null,
+      "recommended_date_source": "document.audience_detail.note: 静态页面；页面无明确发布日期，published_at 取核验日期",
+      "notes": {
+        "version.notes": "结构化转录自官网静态页；采集日期 2026-10-21；引用以官网原文为准。",
+        "document.audience_detail.note": "静态页面；页面无明确发布日期，published_at 取核验日期（date_confidence=low）。"
+      }
+    },
+    {
+      "doc_id": "info-admissions-undergrad",
+      "version_id": "v2026",
+      "expected_date_confidence": "low",
+      "raw_date_confidence": null,
+      "runtime_date_confidence": "high",
+      "raw_date_source": null,
+      "recommended_date_source": "document.audience_detail.note: 静态页面；页面无明确发布日期，published_at 取核验日期",
+      "notes": {
+        "version.notes": "结构化转录自官网静态页；采集日期 2026-10-21；引用以官网原文为准。",
+        "document.audience_detail.note": "静态页面；页面无明确发布日期，published_at 取核验日期（date_confidence=low）。"
+      }
+    },
+    {
+      "doc_id": "info-admissions-graduate",
+      "version_id": "v2026",
+      "expected_date_confidence": "low",
+      "raw_date_confidence": null,
+      "runtime_date_confidence": "high",
+      "raw_date_source": null,
+      "recommended_date_source": "document.audience_detail.note: 静态页面；页面无明确发布日期，published_at 取核验日期",
+      "notes": {
+        "version.notes": "结构化转录自官网静态页；采集日期 2026-10-21；引用以官网原文为准。",
+        "document.audience_detail.note": "静态页面；页面无明确发布日期，published_at 取核验日期（date_confidence=low）。"
+      }
+    },
+    {
+      "doc_id": "info-student-orgs",
+      "version_id": "v2026",
+      "expected_date_confidence": "low",
+      "raw_date_confidence": null,
+      "runtime_date_confidence": "high",
+      "raw_date_source": null,
+      "recommended_date_source": "document.audience_detail.note: 静态页面；页面无明确发布日期，published_at 取核验日期",
+      "notes": {
+        "version.notes": "结构化转录自官网静态页；采集日期 2026-10-21；引用以官网原文为准。",
+        "document.audience_detail.note": "静态页面；页面无明确发布日期，published_at 取核验日期（date_confidence=low）。"
+      }
+    },
+    {
+      "doc_id": "agri-profile",
+      "version_id": "v2026",
+      "expected_date_confidence": "low",
+      "raw_date_confidence": null,
+      "runtime_date_confidence": "low",
+      "raw_date_source": null,
+      "recommended_date_source": "version.notes: 页面标注 2025-06 更新；published_at 取月份锚点 2025-06-30",
+      "notes": {
+        "version.notes": "页面标注 2025-06 更新；published_at 取月份锚点 2025-06-30（date_confidence=low）。",
+        "document.audience_detail.note": "页面标注 2025-06 更新；published_at 取月份锚点 2025-06-30（date_confidence=low）。"
+      }
+    },
+    {
+      "doc_id": "agri-committee-academic",
+      "version_id": "v2026",
+      "expected_date_confidence": "low",
+      "raw_date_confidence": null,
+      "runtime_date_confidence": "high",
+      "raw_date_source": null,
+      "recommended_date_source": "document.audience_detail.note: 静态页面；页面无明确发布日期，published_at 取采集日 2026-10-21",
+      "notes": {
+        "version.notes": "采集日 2026-10-21；按官网原文入库；引用以官网原文为准。",
+        "document.audience_detail.note": "静态页面；页面无明确发布日期，published_at 取采集日 2026-10-21（date_confidence=low）。"
+      }
+    },
+    {
+      "doc_id": "agri-committee-degree",
+      "version_id": "v2026",
+      "expected_date_confidence": "low",
+      "raw_date_confidence": null,
+      "runtime_date_confidence": "high",
+      "raw_date_source": null,
+      "recommended_date_source": "document.audience_detail.note: 静态页面；页面无明确发布日期，published_at 取采集日 2026-10-21",
+      "notes": {
+        "version.notes": "采集日 2026-10-21；按官网原文入库；引用以官网原文为准。",
+        "document.audience_detail.note": "静态页面；页面无明确发布日期，published_at 取采集日 2026-10-21（date_confidence=low）。"
+      }
+    },
+    {
+      "doc_id": "agri-dept-plant-breeding",
+      "version_id": "v2026",
+      "expected_date_confidence": "low",
+      "raw_date_confidence": null,
+      "runtime_date_confidence": "high",
+      "raw_date_source": null,
+      "recommended_date_source": "document.audience_detail.note: 静态页面；页面无明确发布日期，published_at 取采集日 2026-10-21",
+      "notes": {
+        "version.notes": "采集日 2026-10-21；按官网原文入库；引用以官网原文为准。",
+        "document.audience_detail.note": "静态页面；页面无明确发布日期，published_at 取采集日 2026-10-21（date_confidence=low）。"
+      }
+    },
+    {
+      "doc_id": "agri-dept-crop-info",
+      "version_id": "v2026",
+      "expected_date_confidence": "low",
+      "raw_date_confidence": null,
+      "runtime_date_confidence": "high",
+      "raw_date_source": null,
+      "recommended_date_source": "document.audience_detail.note: 静态页面；页面无明确发布日期，published_at 取采集日 2026-10-21",
+      "notes": {
+        "version.notes": "采集日 2026-10-21；按官网原文入库；引用以官网原文为准。",
+        "document.audience_detail.note": "静态页面；页面无明确发布日期，published_at 取采集日 2026-10-21（date_confidence=low）。"
+      }
+    },
+    {
+      "doc_id": "agri-dept-crop-tech",
+      "version_id": "v2026",
+      "expected_date_confidence": "low",
+      "raw_date_confidence": null,
+      "runtime_date_confidence": "high",
+      "raw_date_source": null,
+      "recommended_date_source": "document.audience_detail.note: 静态页面；页面无明确发布日期，published_at 取采集日 2026-10-21",
+      "notes": {
+        "version.notes": "采集日 2026-10-21；按官网原文入库；引用以官网原文为准。",
+        "document.audience_detail.note": "静态页面；页面无明确发布日期，published_at 取采集日 2026-10-21（date_confidence=low）。"
+      }
+    },
+    {
+      "doc_id": "agri-dept-seed-engineering",
+      "version_id": "v2026",
+      "expected_date_confidence": "low",
+      "raw_date_confidence": null,
+      "runtime_date_confidence": "high",
+      "raw_date_source": null,
+      "recommended_date_source": "document.audience_detail.note: 静态页面；页面无明确发布日期，published_at 取采集日 2026-10-21",
+      "notes": {
+        "version.notes": "采集日 2026-10-21；按官网原文入库；引用以官网原文为准。",
+        "document.audience_detail.note": "静态页面；页面无明确发布日期，published_at 取采集日 2026-10-21（date_confidence=low）。"
+      }
+    },
+    {
+      "doc_id": "enrollment-certificate-grad-office",
+      "version_id": "v2026",
+      "expected_date_confidence": "low",
+      "raw_date_confidence": null,
+      "runtime_date_confidence": "low",
+      "raw_date_source": null,
+      "recommended_date_source": "version.notes: 页面现行；日期取核验日；只作培养科导航，材料/费用/时限以培养科确认为准",
+      "notes": {
+        "version.notes": "页面现行；日期取核验日（date_confidence=low）；只作培养科导航，材料/费用/时限以培养科确认为准。"
+      }
+    }
+  ]
+}

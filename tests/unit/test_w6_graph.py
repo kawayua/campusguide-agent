@@ -16,6 +16,7 @@ from campusguide.domain.enums import BlockType, GraphDecision, Intent
 from tests.w6_helpers import (
     FakeSearchClient,
     article,
+    claims_id_json,
     claims_json,
     make_runner,
     supported_json,
@@ -80,7 +81,7 @@ def test_multi_query_reports_uncovered_subquestion() -> None:
 def test_revise_loop_only_rewrites_failed_claim() -> None:
     item = article("national-aid-undergrad@v2021#第九条")
     bad = claims_json(item.article_id, "不在原文中的连续片段但是够长")
-    good = claims_json(item.article_id, quote())
+    good = claims_id_json("source_1_body")
     runner = make_runner(
         advisor_responses=[bad, good],
         semantic_responses=[supported_json()],

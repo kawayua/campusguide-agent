@@ -9,16 +9,10 @@ from __future__ import annotations
 
 import re
 from dataclasses import dataclass, field
+from datetime import date
 
 from campusguide.agents.advisor import ClaimDraft
 from campusguide.agents.plan import Clarification
-from campusguide.qa.list_claim import (
-    asked_entity_type,
-    build_list_claim,
-    claim_lists_type,
-    claim_lists_type_cleanly,
-)
-from campusguide.verification.entities import TYPE_WORDS, items_of_type
 from campusguide.domain.enums import (
     GraphDecision,
     IssueScope,
@@ -32,8 +26,20 @@ from campusguide.domain.models import (
     VerificationIssue,
     VerificationResult,
 )
+from campusguide.qa.list_claim import (
+    asked_entity_type,
+    build_list_claim,
+    claim_lists_type_cleanly,
+)
 from campusguide.verification.claims import ClaimValidator
 from campusguide.verification.conditions import check_conditions
+from campusguide.verification.entities import TYPE_WORDS, items_of_type
+from campusguide.verification.request_scope import (
+    claim_scope_issues,
+    missing_future_targets,
+    parse_requested_scope,
+    requested_scope_message,
+)
 from campusguide.verification.semantic import (
     SemanticLabel,
     SemanticReport,
@@ -117,6 +123,7 @@ class GraphVerifier:
         previously_verified: list[Claim] | None = None,
         question: str = "",
         retrieval_warnings: list[str] | None = None,
+        as_of: date | None = None,
     ) -> GraphVerifyReport:
         # 方案 A4：问题问某类实体清单、而草稿只列了别的类型时，用原文名称
         # 补一条逐字引用型结论；它仍要过下面的全部核对。
@@ -150,6 +157,18 @@ class GraphVerifier:
             and issue.claim_id in failed_ids
         ]
         semantic_bad: set[str] = set()
+
+        requested_scope = parse_requested_scope(question, as_of)
+        scope_failed_ids: set[str] = set()
+        if requested_scope.targets:
+            for claim in kept:
+                for issue in claim_scope_issues(claim, requested_scope, evidence):
+                    issues.append(issue)
+                    failed_issues.append(issue)
+                    if issue.claim_id:
+                        scope_failed_ids.add(issue.claim_id)
+                        if issue.claim_id not in failed_ids:
+                            failed_ids.append(issue.claim_id)
 
         # R1：条件断言确定性核对（阈值方向、义务方向、角色、实体类别）。
         # 语义模型可能放过“30分钟后”写成“30分钟内”，这里独立拦截；
@@ -192,7 +211,12 @@ class GraphVerifier:
             semantic_unchecked = True
         else:
             previous = {claim.claim_id: claim for claim in (previously_verified or [])}
-            reused = [claim for claim in kept if previous.get(claim.claim_id) == claim]
+            reused = [
+                claim
+                for claim in kept
+                if previous.get(claim.claim_id) == claim
+                and claim.claim_id not in scope_failed_ids
+            ]
             reused_ids = {claim.claim_id for claim in reused}
             semantic = self._semantic.check(
                 [claim for claim in kept if claim.claim_id not in reused_ids], evidence
@@ -287,6 +311,7 @@ class GraphVerifier:
                 )
             )
         if not final_claims:
+            scope_unconfirmed = bool(requested_scope.targets and scope_failed_ids)
             return GraphVerifyReport(
                 decision=GraphDecision.ABSTAIN,
                 hard=hard,
@@ -295,9 +320,41 @@ class GraphVerifier:
                 failed_claim_ids=sorted(bad_ids),
                 issues=final_issues,
                 reason_code=(
-                    OutcomeCode.NO_VALID_CLAIM if not drafts else OutcomeCode.UNVERIFIABLE
+                    OutcomeCode.VERSION_MISMATCH
+                    if scope_unconfirmed
+                    else (
+                        OutcomeCode.NO_VALID_CLAIM
+                        if not drafts
+                        else OutcomeCode.UNVERIFIABLE
+                    )
                 ),
-                detail="没有通过核对的 claim",
+                detail=(
+                    requested_scope_message(requested_scope)
+                    if scope_unconfirmed
+                    else "没有通过核对的 claim"
+                ),
+            )
+        scope_missing = missing_future_targets(final_claims, requested_scope, evidence)
+        if scope_missing:
+            message = requested_scope_message(requested_scope)
+            final_issues.append(
+                _issue(
+                    "REQUESTED_SCOPE_UNANSWERED",
+                    None,
+                    detail=message,
+                    scope=IssueScope.EVIDENCE,
+                    severity=IssueSeverity.WARNING,
+                )
+            )
+            return GraphVerifyReport(
+                decision=GraphDecision.ABSTAIN,
+                hard=hard,
+                semantic=semantic,
+                semantic_unchecked=semantic_unchecked,
+                failed_claim_ids=sorted(bad_ids),
+                issues=final_issues,
+                reason_code=OutcomeCode.VERSION_MISMATCH,
+                detail=message,
             )
         result = decide(
             final_claims,

@@ -14,7 +14,7 @@ from __future__ import annotations
 
 import re
 
-from campusguide.agents.advisor import ClaimDraft, CitationDraft
+from campusguide.agents.advisor import CitationDraft, ClaimDraft
 from campusguide.domain.models import Evidence
 from campusguide.verification.conditions import check_conditions
 from campusguide.verification.entities import items_of_type, type_span
@@ -32,6 +32,25 @@ _TYPE_LABEL = {
     "工程中心": "工程中心",
 }
 
+# The interrogative must bind to the entity type, not merely co-occur with it:
+# “实验室安全有哪些规定” asks about regulations, not laboratories.
+_LIST_MARKER = r"(?:有哪些|哪几个|哪几家|哪几所|哪些)"
+_LIST_MODIFIER = (
+    r"(?:国家级|省级|省部级|市级|校级|院级|重点|主要|所有|全部|现有|在建|新增|"
+    r"直属|下属|内设|各类|各|个|所|家|的)*"
+)
+_LIST_SUFFIX = r"(?:的?(?:名称|名单|清单|名录))?"
+_LIST_TAIL = r"(?:等)?(?:[？?。！!，,；;]|$|呢|呀)"
+
+
+def _asks_for_list(question: str, type_word: str) -> bool:
+    """True only when an enumeration interrogative targets ``type_word`` itself."""
+    text = re.sub(r"\s+", "", question)
+    word = re.escape(type_word)
+    head = _LIST_MARKER + _LIST_MODIFIER + word + _LIST_SUFFIX + _LIST_TAIL
+    tail = word + _LIST_SUFFIX + r"(?:分别)?(?:是)?" + _LIST_MARKER + _LIST_SUFFIX + _LIST_TAIL
+    return re.search(head, text) is not None or re.search(tail, text) is not None
+
 
 def _subject(evidence: Evidence) -> str:
     title = (evidence.article.doc_title or "").strip()
@@ -40,7 +59,11 @@ def _subject(evidence: Evidence) -> str:
 
 
 def asked_entity_type(question: str) -> str:
-    """The single entity type a “哪些X” question asks about (most specific first)."""
+    """The single entity type an enumeration question asks about (most specific first).
+
+    A bare mention is not enough: “实验室安全有哪些规定” mentions 实验室 but asks
+    about regulations. Every caller wants list intent, so the gate lives here.
+    """
     for word in (
         "国家级实验教学示范中心",
         "省级实验教学示范中心",
@@ -51,7 +74,7 @@ def asked_entity_type(question: str) -> str:
         "工程中心",
         "实验室",
     ):
-        if word in question:
+        if word in question and _asks_for_list(question, word):
             return word
     return ""
 
@@ -59,7 +82,7 @@ def asked_entity_type(question: str) -> str:
 def build_list_claim(question: str, evidence: list[Evidence]) -> ClaimDraft | None:
     """Compose a claim that lists the asked entity type straight from the source."""
     type_word = asked_entity_type(question)
-    if not type_word:
+    if not type_word or not _asks_for_list(question, type_word):
         return None
     best: tuple[Evidence, list[str], tuple[int, int]] | None = None
     for item in evidence:
