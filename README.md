@@ -35,23 +35,32 @@ CampusGuide 是面向华南农业大学公开制度的条款级问答与办事�
 
 ## 🔄 工作流
 
-```mermaid
-flowchart LR
-    A[公开制度 HTML / PDF] --> B[解析、OCR、条款与表格分块]
-    B --> C[Qdrant 混合索引]
-    Q[Gradio 提问] --> P[Planner：规划与澄清]
-    P --> R[Retriever：检索或读取流程事实]
-    C --> R
-    R --> D[Advisor：组织回答]
-    D --> V[Verifier：检查引文与事实]
-    V --> O[回答、办理清单或拒答]
-```
+LangGraph 编排在线问答，MCP 提供检索和流程事实接口。整体架构分为离线语料构建和在线问答两部分，详见[系统架构](docs/architecture.md)。
 
-LangGraph 编排在线问答，MCP 提供检索和流程事实接口。离线语料构建、在线服务与 UI 的职责详见[系统架构](docs/architecture.md)。
+![CampusGuide 整体架构：离线建库、在线问答和应用界面](generated_images/campusguide-architecture-final.png)
+
+<details>
+<summary>查看 OCR、混合检索与 LangGraph 流程图</summary>
+
+**离线建库：OCR 识别、核验与结构化入库**
+
+![CampusGuide OCR 数据处理流程](generated_images/campusguide-ocr-pipeline-reference.png)
+
+**在线检索：向量与关键词召回、融合和重排序**
+
+![CampusGuide 混合检索技术路线](generated_images/campusguide-hybrid-rag.png)
+
+**问答编排：规划、检索、作答和证据核验**
+
+![CampusGuide LangGraph 问答工作流](generated_images/campusguide-langgraph-workflow.png)
+
+</details>
 
 ## 📊 评测结果
 
 项目记录的 **50 题全量 OCR 建库后实验**中，内容正确完整及合理路由通过 **43/50（86%）**，严格交付通过 **39/50（78%）**，Recall@12 为 **92.67%**，p95 问答耗时 **15.6 秒**。严格交付还检查正文是否完成归纳、是否误报缺项，以及核验是否完成。
+
+![CampusGuide 三个版本的答案质量、检索指标和延迟对比](generated_images/campusguide-benchmark.png)
 
 这组数据来自作者的阶段实验汇总。公开仓库未附本轮逐题明细、完整运行配置和计时边界，不能把改进单独归因于 OCR，也不能用默认启动命令重现整组数字。历史版本、指标口径与复现边界见[评测说明](docs/evaluation.md)。
 
