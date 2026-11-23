@@ -1,5 +1,5 @@
 # 查询别名表：只用于扩展检索文本，不改写用户原始问题。
-# 规则见 docs/superpowers/specs/2026-10-22-w2-single-turn-qa-design.md 4.1。
+# 检索与引用工作流见 docs/architecture.md。
 aliases:
   保研: [推免, 推荐免试]
   评奖: [奖学金, 奖学金评审]
